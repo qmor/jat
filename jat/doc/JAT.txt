@@ -1,0 +1,18 @@
+HOW JAT BEGAN
+
+A small group of aerospace engineering graduate students at the University of Texas at Austin decided to use Java for their homework assignments in Celestial Mechanics I, Estimation Theory and Optimal Spacecraft Trajectories classes. They started by sharing a numerical integrator and discussing homework problems. Frustrated by the lack of existing Java numerical and engineering code, they decided to create the Java Astrodynamics Toolkit.
+
+WHERE JAT IS GOING
+
+JAT is quickly becoming an excellent six degree-of-freedom space mission simulation environment. Many orbit and attitude propagation and estimation functions exist in JAT and 2D and 3D visualization tools are coming together. Over the next six months, the interfaces between the numerical propagation and visualization classes will be refined to enhance flexibility and ease of use.
+
+Eventually we would like JAT to be able to compete with existing commercial-off-the-shelf (COTS) space mission analysis and design software in terms of features, accuracy and ease of use but with more flexibility to serve the serious space mission designer. In the near term, we hope that JAT becomes the standard space mission analysis and design software in the Aerospace Engineering Department at the University of Texas. We hope that JAT will eventually become to the space mission design world what Linux is to the operating system world.
+
+WHY JAT AND WHY OPEN SOURCE?
+
+All of the well-established space mission design organizations have a large base of heritage software at their disposal. The problem with the heritage code is that most of it was developed in Fortran to run on large mainframe computers. The support for these computers and Fortran compilers has steadily grown more expensive as vendors abandon the market. Unfortunately it is a costly and time-consuming effort to port the existing heritage code to a modern programming language and most organizations do not have the time and money to dedicate to such an effort.
+
+Some organizations are turning to COTS software that has been developed over the last decade. The problem with this solution is cost and flexibility. Since the market for space mission analysis and design software is small, the COTS vendors must charge a very large licensing fee. Prices of $20,000 or more per single user are common, with additional charges for each new feature and for yearly upgrades. Furthermore, COTS software does not allow the users to modify the code as their needs change and the users are totally dependent on the vendor to provide fixes.
+
+By enlisting the help of many programmers via the Internet who donate their time and effort to JAT, we will be able to deliver a space mission simulation system that rivals existing software at a very low cost. Since the JAT code is written in Java, it is inherently portable so that it can be run on almost any hardware. Java compilers are freely available and there is a large and growing support infrastructure in place for the Java programming language. By making the code open source, it allows the user the flexibility to modify or fix the code as necessary. Furthermore, these tools may allow new companies to compete in the space mission analysis and design field which could help reduce the cost of future space missions.
+

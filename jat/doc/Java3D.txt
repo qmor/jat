@@ -1,0 +1,9 @@
+Getting Java 3D to run under Windows
+
+OpenGL installed (check Display-> properties-> settings-> advanced)
+download Java3D-JRE or SDK
+the system PATH must be set to where J3D.DLL resides
+or put the dll's to where the system PATH is set
+to compile: in CLASSPATH must be location of j3d... .jar
+
+
