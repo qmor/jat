@@ -81,17 +81,17 @@ public class Simulation {
                 boolean use_JGM2 = false;
                 String test = tests[i]+test_nums[j][i];
                 sim.initializeForces(force_flag[j], use_JGM2, test);
-                if(plot_traj){
-                    String stkfile = "C:/STK_Test_Files/delim/"+tests[i]+test_nums[j][i]+".txt";
-                    sim.set_truth_traj(stkfile);
-                }	            
+//                if(plot_traj){
+//                    String stkfile = "C:/STK_Test_Files/delim/"+tests[i]+test_nums[j][i]+".txt";
+//                    sim.set_truth_traj(stkfile);
+//                }	            
                 sim.runloop();
             }	        
         }
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
         System.out.println("Elapsed time [min]: "+elapsed);
         if(plot_traj){
-            	        jat.util.Celestia celestia = new jat.util.Celestia("C:/celestia_dev/");
+            	        jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_dev/celestia/");
             	        try{
             	            i--;
             	            j--;
@@ -158,7 +158,7 @@ public class Simulation {
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
         System.out.println("Elapsed time [min]: "+elapsed);
         if(plot_traj){
-            //	        jat.util.Celestia celestia = new jat.util.Celestia("C:/celestia_dev/");
+            //	        jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_dev/celestia/");
             //	        try{
             //	            i--;
             //	            j--;
@@ -177,6 +177,63 @@ public class Simulation {
         System.out.println("Finished");
     }
     
+    public void runSimTwo(){
+        SimModel sim = new SimModel();
+        double start = System.currentTimeMillis();
+        String fs = FileUtil.file_separator();
+        String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
+        
+        String[] tests = {"demo"};
+        //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
+        boolean[][] force_flag = 
+        {{false,true,true,false,false}};					//JGM3		0
+        String[][] test_nums = 
+        		{{""}};  							//JGM3		
+        
+        boolean plot_traj = true;
+        int i=0,j=0;
+        VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
+        r = r.times(1000);
+        VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
+        //v = v.times(1755);
+        v = v.times(1000);
+        double t0 = 0, tf = 86400;
+        double mjd_utc = 53157.5;  
+        //double mjd_utc = 53683;
+        double stepsize = 60;
+        String out = dir+"output"+fs+tests[i]+test_nums[j][i]+".txt";
+        SpacecraftModel sm = new SpacecraftModel(r,v,1.2,2.2,20,1000);
+        for(j=0; j<1; j++){
+            for(i=0; i<1; i++){
+                sim.initialize(sm,t0,tf,mjd_utc, stepsize, 1, out);
+                boolean use_JGM2 = false;
+                String test = tests[i]+test_nums[j][i];
+                sim.initializeForces(force_flag[j], use_JGM2, test);
+                sim.runloop();
+            }	        
+        }
+        double elapsed = (System.currentTimeMillis()-start)*0.001/60;
+        System.out.println("Elapsed time [min]: "+elapsed);
+        if(plot_traj){
+            	        jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+            	        try{
+            	            i--;
+            	            j--;
+            	            celestia.set_trajectory(sim.get_traj());
+            	            String name = tests[i]+test_nums[j][i]+"_jat";
+            	            celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
+            	            System.out.println("Wrote to Celestia");
+            	        }catch(java.io.IOException ioe){}
+            LinePrinter lp2 = new LinePrinter();
+//            RelativeTraj rel = sim.get_rel_traj(lp2);
+//            rel.setVerbose(false);
+//            double err = rel.get_max_error()*1000;
+//            System.out.println("error:  "+err);
+//            rel.process();
+        }
+        System.out.println("Finished");    	
+ 
+    }
     
     public void runSimMatlab() throws InterruptedException{
         MatlabControl input = new MatlabControl();
@@ -237,7 +294,7 @@ public class Simulation {
         System.out.println("Period [hr]: "+period+"  a: "+a+"  e: "+e);
         
         if(plot_traj){
-            jat.util.Celestia celestia = new jat.util.Celestia("C:/Code/celestia_dev/");
+            jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_dev/celestia/");
             try{
                 for(int k=0; k<sim.sc_formation.get_num_sc(); k++){
                     celestia.set_trajectory(sim.get_traj(k));
@@ -319,7 +376,7 @@ public class Simulation {
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
         System.out.println("Elapsed time [min]: "+elapsed);
         if(plot_traj){
-            jat.util.Celestia celestia = new jat.util.Celestia("C:/celestia_dev/");
+            jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_dev/celestia/");
             try{
                 for(int k=0; k<3; k++){
                     celestia.set_trajectory(sim.get_traj(k));
@@ -346,7 +403,7 @@ public class Simulation {
       
     public static void main(String[] args) throws InterruptedException {
         Simulation sim = new Simulation();
-        sim.runSimOne();
+        sim.runSimTwo();
         //sim.runSimMatlab();
         //sim.runSimFormation();
     }

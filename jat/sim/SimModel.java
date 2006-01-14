@@ -234,6 +234,37 @@ public class SimModel implements Derivatives {
     }
     
     /**
+     * This is the generic initialization method for the spacecraft and simulation
+     * properties.  It allows the user to create their own input parameters or 
+     * parsers and feed them into this method. 
+     * 
+     * @param sm An array of spacecraft models.  The first is considered the primary
+     * spacecraft of the formation.
+     * @param start The start offset for the simulation time [sec]
+     * @param finish The final time of the simulation [sec]
+     * @param mjd_utc Simulation epoch in Modified Julian Date of Universal Coordinated Time
+     * @param step Integrator timestep [sec]
+     * @param thin Thinning parameter.  Indicates how many timesteps between printing data.
+     * (thin = 1 means print all timesteps, thin = 2 means print every other timestep)
+     * @param output Filename for the tab-delimited output data
+     */
+    public void initialize(SpacecraftModel sm, double start, double finish, 
+            double mjd_utc, double step, double thin, String output){
+        this.use_formation = false;
+        sc = sm;
+        this.t0 = start;
+        this.tf = finish;
+        this.mjd_utc_start = mjd_utc;
+        this.stepsize = step;
+        lp = new LinePrinter(output);
+        lp.setThinning(thin);
+        //* Load Simulation
+        spacetime.set_time(mjd_utc_start);
+        jat = new Trajectory();
+        truth = new Trajectory();
+    }
+    
+    /**
      * Initialize the Simulation from a Matlab session.  Note this method does not work
      * when calling it from a standalone Java session.
      * @param init_sc Name of the Matlab function which returns the spacecraft state and parameters
@@ -465,6 +496,14 @@ public class SimModel implements Derivatives {
      */
     public Spacecraft get_Spacecraft(String id){
         return sc_formation.get_spacecraft(id);
+    }
+    
+    /**
+     * Get the number of spacecraft in the current simulation
+     * @return The number of spacecraft
+     */
+    public int get_number_of_spacecraft(){
+    	return sc_formation.get_num_sc();
     }
     
     /**
