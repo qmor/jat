@@ -19,7 +19,6 @@
  */
 package jat.sim;
 
-import jat.sim.xml.input.parse.XMLInput;
 import jat.spacecraft.*;
 import jat.spacetime.UniverseModel;
 import jat.traj.*;
@@ -169,33 +168,6 @@ public class SimModel implements Derivatives {
         spacetime = new UniverseModel();
     }
     
-    /**
-     * Initialize simulation input using an XML file following the schema found in
-     * jat.sim.input.sim_input.xsd
-     * @param input_file The XML input file
-     * @param output_file The name of the output file with extension
-     */
-    public void initializeXML(String input_file, String output_file){
-        //* read the input file
-        //TODO allow formations
-        XMLInput input = new XMLInput(input_file);
-        Spacecraft s = input.getSpacecraft();
-        s.set_use_params_in_state(false);
-        sc = new SpacecraftModel(s);        
-        t0 = input.getT0();
-        tf = input.getTf();
-        mjd_utc_start = input.getMJD();
-        //*	Integrator Setup
-        stepsize = input.getStepSize();
-        rk8.setStepSize(stepsize);
-        double thinning = input.getThinning();
-        lp = new LinePrinter(output_file);
-        lp.setThinning(thinning);
-        //* Load Simulation
-        spacetime.set_time(mjd_utc_start);     
-        jat = new Trajectory();
-	    truth = new Trajectory();
-    }
     
     /**
      * This is the generic initialization method for the spacecraft and simulation
@@ -802,74 +774,80 @@ public class SimModel implements Derivatives {
     
     /**
      * Main method to test the class.  For a generic way to run the simulation, see
-     * Simulation.java
+     * jat.demo.simulation.Simulation.java
      * 
-     * @see jat.sim.Simulation
+     * @see jat.demo.simulation.Simulation
      * @param args
      */
     public static void main(String[] args) {
+    	//* Initialize the simulation model
         SimModel sim = new SimModel();
+        //* Keep track of the runtime
         double start = System.currentTimeMillis();
+        //* Find the proper directory for input/output
         String fs = FileUtil.file_separator();
         String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
-        
-        String[] tests = {"ISS","Sun-Sync","GPS","Molniya","GEO"};
-	    //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
-	    boolean[][] force_flag = 
-	    	   {{false,false,false,false,false},						//JGM3		0
-	            {true,  true,  false,     false,          false},		//Sun		1
-	            {true,  false,  true,     false,          false},		//Moon		2
-	            {true,  false, false,     true,           false},		//HP		3
-	            {true,  false, false,     true,           false},		//NRL		4
-	            {true,  false, false,     false,          true},		//SRP		5
-	            {false, true, true, true, true},						//ALL HP	6
-	            {false, true, true, true, true}};						//ALL NRL	7
-	    String[][] test_nums = 
-	    	   {{"6","13","20","27","34"},  							//JGM3		
-	            {"3","10","17","24","31"},  							//Sun		
-	            {"2","9","16","23","30"},   							//Moon		
-	            {"4_HP","11_HP","18_HP","25_HP","32_HP"}, 				//HP
-	            {"4_NRL","11_NRL","18_NRL","25_NRL","32_NRL"},  		//NRL
-	            {"5","12","19","26","33"},								//SRP 
-	            {"7_HP","14_HP","21_HP","28_HP","35_HP"},				//All HP
-	            {"7_NRL","14_NRL","21_NRL","28_NRL","35_NRL"}};			//All NRL
-	    
-	    boolean plot_traj = true;
-	    int i=0,j=0;
-	    for(j=0; j<1; j++){
-	        for(i=0; i<1; i++){
-	            sim.initializeXML(dir+"input"+fs+tests[i]+".xml",
-	                    		  dir+"output"+fs+tests[i]+test_nums[j][i]+".txt");
-	            boolean use_JGM2 = false;
-	            String test = tests[i]+test_nums[j][i];
-	            sim.initializeForces(force_flag[j], use_JGM2, test);
-	            if(plot_traj){
-	                String stkfile = "C:/STK_Test_Files/delim/"+tests[i]+test_nums[j][i]+".txt";
-	                sim.truth.readFromFile(stkfile);
-	            }	            
-			    sim.runloop();
-	        }	        
-	    }
-	    double elapsed = (System.currentTimeMillis()-start)*0.001/60;
-		System.out.println("Elapsed time [min]: "+elapsed);
-	    if(plot_traj){
-	        jat.util.Celestia celestia = new jat.util.Celestia("C:/celestia_dev/");
-	        try{
-	            i--;
-	            j--;
-	            celestia.set_trajectory(sim.jat);
-	            String name = tests[i]+test_nums[j][i]+"_jat";
-	            celestia.write_trajectory(name,name,sim.mjd_utc_start);
-	            System.out.println("Wrote to Celestia");
-	        }catch(java.io.IOException ioe){}
-	        LinePrinter lp2 = new LinePrinter();
-	        RelativeTraj rel = new RelativeTraj(sim.jat,sim.truth,lp2);
-	        rel.setVerbose(false);
-	        double err = rel.get_max_error()*1000;
-	        System.out.println("error:  "+err);
-	        rel.process();
-	    }
-        System.out.println("Finished");
+        //* Name of the various spacecraft
+        String[] tests = {"demo"};
+        //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
+        boolean[][] force_flag = 
+        	{{false,true,true,false,false}};		
+        //* Optional string which appends test numbers to the spacecraft
+        String[][] test_nums = 	{{""}};  									
+        //* If plot_traj == true , then plot the output to Celestia
+        boolean plot_traj = true;
+        int i=0,j=0;
+        //* Initial radius [km]
+        VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
+        //* convert to SI units [m]
+        r = r.times(1000);
+        //* Initial velocity [km/s]
+        VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
+        //* convert to SI units [m/s]
+        v = v.times(1000);
+        //* Simulation parameters t0: initial time [sec]  tf: final time [sec]
+        double t0 = 0, tf = 86400;
+        //* Modified Julian Date (in UTC) at the initial time
+        double mjd_utc = 53157.5;  //* June 1, 2004 12:00 UTC
+        //* Simulation stepsize [sec]
+        double stepsize = 60;
+        //* Output directory (for the textual output data)
+        String out = dir+"output"+fs+tests[i]+test_nums[j][i]+".txt";
+        //* Coeff. of reflectivity, Drag Coeff., Cross-section [m*m], Mass [kg]
+        double cr=1.2, cd=2.2, area=20, mass=1000;
+        //* Add the spacecraft parameters to the spacecraft model
+        SpacecraftModel sm = new SpacecraftModel(r,v,cr,cd,area,mass);
+        //* Loop over the number of spacecraft and test-runs (here only one)
+        for(j=0; j<1; j++){
+            for(i=0; i<1; i++){
+            	//* Initialize the simulation (input simulation parameters)
+                sim.initialize(sm,t0,tf,mjd_utc, stepsize, 1, out);
+                String test = tests[i]+test_nums[j][i];
+                //* Add the force model to the simulation
+                sim.initializeForces(force_flag[j], false, test);
+                //* Here, add any other custom properties, controllers, or other models
+                //* Run the simulation loop
+                sim.runloop();
+            }	        
+        }
+        //* Stop the runtime counter
+        double elapsed = (System.currentTimeMillis()-start)*0.001/60;
+        System.out.println("Elapsed time [min]: "+elapsed);
+        //* Format and output the Celestia files for visualization
+        if(plot_traj){
+        	jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+        	try{
+        		i--;
+        		j--;
+        		celestia.set_trajectory(sim.get_traj());
+        		//* append '_jat' to identify objects originating from JAT
+        		String name = tests[i]+test_nums[j][i]+"_jat";
+        		celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
+        		System.out.println("Wrote to Celestia");
+        	}catch(java.io.IOException ioe){}
+        }
+        System.out.println("Finished");    	
+ 
         
     }
     
