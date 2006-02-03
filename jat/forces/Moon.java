@@ -59,6 +59,27 @@ public class Moon extends GravitationalBody {
     }
     
     /**
+     * Allows the initialization of the Moon vector using DE405 ephemerides
+     * @param mjd_utc Modified Julian Date in Universal Coordinated Time
+     */
+    public Moon(double mjd_utc){
+    	super();
+        this.mu = Constants.GM_Moon; 
+        String filesep = FileUtil.file_separator();
+        String directory;
+        try{
+            directory = FileUtil.getClassFilePath("jat.eph","DE405");
+        }catch(Exception e){
+            directory = "C:/Code/Jat/jat/eph";
+        }
+        directory = directory+filesep+"DE405data"+filesep;
+        jpl_ephemeris = new DE405(directory);
+        double jd_tdb = Time.TTtoTDB(Time.UTC2TT(mjd_utc))+2400000.5;
+        this.r_body = jpl_ephemeris.get_Geocentric_Moon_pos(jd_tdb);
+        this.v_body = jpl_ephemeris.get_Geocentric_Moon_vel(jd_tdb);
+    }
+    
+    /**
      * For use with matlab
      *
      */

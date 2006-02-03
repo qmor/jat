@@ -156,9 +156,11 @@ public class EarthRef implements BodyRef {
         }
         this.use_sun = use_sun;
         this.use_moon = use_moon;
-        double JD_TDB = MJD_TT+2400000.5;
-        if(this.use_sun) compute_JPL_Sun_Vector(JD_TDB);
-        if(this.use_moon) compute_JPL_Moon_Vector(JD_TDB);
+        //double JD_TDB = MJD_TT+2400000.5;
+        //if(this.use_sun) compute_JPL_Sun_Vector(JD_TDB);
+        if(this.use_sun) compute_JPL_Sun_Vector(MJD_TT);
+        //if(this.use_moon) compute_JPL_Moon_Vector(JD_TDB);
+        if(this.use_moon) compute_JPL_Moon_Vector(MJD_TT);
     }
 
 //    /**
@@ -196,6 +198,46 @@ public class EarthRef implements BodyRef {
         //this.E = eci2ecef();
     }
     
+    /**
+     * Initialize the JPL DE405 ephemerides and initialize the Moon vector.
+     *
+     */
+    public void initializeMoonEphem(double MJD_TT){
+    	this.use_moon = true;
+    	if(this.use_moon || this.use_sun){
+            String fs, dir_in;
+            fs = FileUtil.file_separator();
+            try{
+                dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs;
+            }catch(Exception e){
+                dir_in = "C:/Code/Jat/jat/eph/DE405data/";
+            }
+            jpl_ephem = new DE405(dir_in);
+        }
+    	//double JD_TDB = MJD_TT+2400000.5;
+    	compute_JPL_Moon_Vector(MJD_TT);
+    }
+    
+    /**
+     * Initialize the JPL DE405 ephemerides and initialize the Sun vector.
+     *
+     */
+    public void initializeSunEphem(double MJD_TT){
+    	this.use_sun = true;
+    	if(this.use_moon || this.use_sun){
+            String fs, dir_in;
+            fs = FileUtil.file_separator();
+            try{
+                dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs;
+            }catch(Exception e){
+                dir_in = "C:/Code/Jat/jat/eph/DE405data/";
+            }
+            jpl_ephem = new DE405(dir_in);
+        }
+    	//double JD_TDB = MJD_TT+2400000.5;
+    	compute_JPL_Sun_Vector(MJD_TT);
+    }
+
     /** Returns the (precalculated) ECI to ECEF (ICRF to ITRF) Transformation Matrix.
      * @return ECI to ECEF Transformation Matrix.
      */    

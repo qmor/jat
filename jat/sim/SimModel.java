@@ -110,6 +110,10 @@ public class SimModel implements Derivatives {
      * Reference trajectories for doing analysis on spacecraft formations
      */
     private Trajectory[] traj_formation;
+    /**
+     * Flag to tell whether to print the progress of the simulation.
+     */
+    private boolean verbose_timestep=false;
     
     /**
      * Default Constructor initializes the universe model, integrator, and prints
@@ -563,6 +567,14 @@ public class SimModel implements Derivatives {
     public void set_truth_traj(String filename){ truth.readFromFile(filename);}
     
     /**
+     * Set whether to show the time progression during the simulation loop
+     * @param b = true to print the time
+     */
+    public void set_showtimestep(boolean b){
+    	this.verbose_timestep = b;
+    }
+    
+    /**
      * Get the Trajectory obtained from propagating a single spacecraft
      * @return The trajectory: [MJD_UTC x y z xdot ydot zdot]
      */
@@ -625,9 +637,11 @@ public class SimModel implements Derivatives {
      * Updates the spacecraft state.
      * @param dt Timestep in seconds
      */
-    private void step(double dt){
+    public void step(double dt){
         
-        //System.out.println("step: "+t+" / "+tf+"    stepsize: "+dt+"  dr: "+sc_formation.get_spacecraftmodel(1).get_rel_pos(sc_formation.get_primarymodel()).mag());
+    	if(verbose_timestep){
+    		System.out.println("step: "+t+" / "+tf+"    stepsize: "+dt);
+    	}
         
         rk8.setStepSize(dt);
         //* update models
@@ -681,7 +695,7 @@ public class SimModel implements Derivatives {
      * @param dt Timestep in seconds
      * @param lp Printer to file or command line
      */
-    private void step(double dt, LinePrinter lp){
+    public void step(double dt, LinePrinter lp){
         step(dt);
         if(MathUtils.mod(iteration,lp.getThinning())== 0)
             print(lp);
@@ -701,7 +715,7 @@ public class SimModel implements Derivatives {
         while(t < tf){
             step(stepsize,lp);
         }
-        System.out.println("Finished");
+        System.out.println("Loop Finished");
         lp.close();
     }
 
@@ -851,4 +865,19 @@ public class SimModel implements Derivatives {
         
     }
     
+    /**
+     * Initialize the DE405 Ephemerides for use with the Moon.
+     *
+     */
+    public void initializeMoonEphem(){
+    	this.spacetime.initializeMoonEphem();
+    }
+    
+    /**
+     * Initialize the DE405 Ephemerides for use with the Sun.
+     *
+     */
+    public void initializeSunEphem(){
+    	this.spacetime.initializeSunEphem();
+    }
 }

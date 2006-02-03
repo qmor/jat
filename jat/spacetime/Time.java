@@ -92,9 +92,17 @@ public class Time {
     //** private class MJDTime { ts, MJDint, MJDfr, MJDTime(){}} ;
     
     /**
-     * Default constructor used only to access inner classes for TTtoTDB
+     * Default constructor initializes to current system time to nearest millisecond
      */
-    private Time(){}
+    public Time(){
+    	java.util.Date d = new java.util.Date();
+    	CalDate cd = new CalDate(1900+d.getYear(),1+d.getMonth(),d.getDay(),d.getHours(),
+    			d.getMinutes(),d.getSeconds());
+    	this.MJD_UTC = cd.mjd();
+        this.MJD_UTC_START = this.MJD_UTC;
+        this.MJD_TT = UTC2TT(this.MJD_UTC);
+        this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
+    }
     
     /**
      * Constructor.  Initializes all time values to the simulation epoch.

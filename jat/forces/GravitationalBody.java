@@ -95,12 +95,26 @@ public class GravitationalBody implements EarthForceModel, ForceModel {
 	 * Returns the inertial position of the gravitational body.
 	 * @return position vector [m]
 	 */
-	public VectorN getPosition(){ return r_body;}
+	public VectorN getPosition(){
+		try{
+			return r_body;
+		}catch(NullPointerException ne){
+			System.err.println("NullPointerException - call to getPosition when not stored");
+			return null;
+		}
+	}
 	/**
 	 * Returns the inertial position of the gravitational body.
 	 * @return velocity vector [m/s]
 	 */
-	public VectorN getVelocity(){ return v_body;}
+	public VectorN getVelocity(){ 
+		try{
+			return v_body;
+		}catch(NullPointerException ne){
+			System.err.println("NullPointerException - call to getVelocity when not stored");
+			return null;
+		}
+	}
 	
     /** Compute the acceleration due to a point mass gravity field (usually due to a third body).
      * @param r ECI position vector about the body [m].

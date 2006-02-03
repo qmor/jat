@@ -64,6 +64,7 @@ package jat.eph;
 
 import java.io.*;
 import jat.matvec.data.VectorN;
+import jat.util.FileUtil;
 
 /** compute planet positions and velocities from JPL DE405 Ephemerides
  */
@@ -144,6 +145,18 @@ public class DE405
 
 	protected VectorN r_moon_geo;
 	protected VectorN r_sun_geo;
+	
+	public DE405(){
+		String filesep = FileUtil.file_separator();
+        String directory;
+        try{
+            directory = FileUtil.getClassFilePath("jat.eph","DE405");
+        }catch(Exception e){
+        	System.err.println("Error: Could not read default DE405 path.");
+            directory = "C:/Code/Jat/jat/eph/";
+        }
+        this.path = directory+filesep+"DE405data"+filesep;
+	}
 	
 	public DE405(String DE405_path)
 	{
@@ -622,7 +635,7 @@ public class DE405
 	}
 	
 	/** the geocentric position of the moon at the given Julian date
-	 * @param jultime Julian Date
+	 * @param jultime Julian Date (TDB)
 	 * @return position of the moon [km]
 	 */
 	public VectorN get_Geocentric_Moon_pos(double jultime){
@@ -638,8 +651,23 @@ public class DE405
 		return new VectorN(planet_r[10][1],planet_r[10][2],planet_r[10][3]);
 	}
 	
+	/** the geocentric velocity of the moon at the given Julian date
+	 * @param jultime Julian Date (TDB)
+	 * @return velocity of the moon [km]
+	 */
+	public VectorN get_Geocentric_Moon_vel(double jultime){
+		double[] ephemeris_r = new double[4];
+		double[] ephemeris_rprime = new double[4];
+		get_planet_posvel(jultime, 10, ephemeris_r, ephemeris_rprime);
+		for (int j = 1; j <= 3; j++)
+		{
+			planet_rprime[10][j] = ephemeris_rprime[j];
+		}
+		return new VectorN(planet_rprime[10][1],planet_rprime[10][2],planet_rprime[10][3]);
+	}
+	
 	/** the geocentric position of the sun at the given Julian date
-	 * @param jultime Julian Date
+	 * @param jultime Julian Date (TDB)
 	 * @return position of the sun [km]
 	 */
 	public VectorN get_Geocentric_Sun_pos(double jultime){

@@ -316,5 +316,12 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
         return state.x;
     }
 
+    /**
+     * Apply an (instantaneous) delta-v to the spacecraft motion.
+     * @param dv Delta-v 3-vector [m/s]
+     */
+    public void applyDeltaV(VectorN dv){
+    	sc.v = (sc.v).plus(dv);
+    }
 
 }

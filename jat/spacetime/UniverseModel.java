@@ -85,7 +85,11 @@ public class UniverseModel {
      */
     public void set_time(double mjd_utc){
         time = new Time(mjd_utc);
+        boolean temp1 = earthRef.use_moon;
+        boolean temp2 = earthRef.use_sun;
         earthRef = new EarthRef(time.mjd_ut1(),time.mjd_tt());
+        earthRef.set_use_moon(temp1);
+        earthRef.set_use_sun(temp2);
     }
     
     /**
@@ -137,7 +141,22 @@ public class UniverseModel {
         forces.addForce(f);
     }
     
-   
+    /**
+     * Initializes the JPL DE405 ephemerides for use.
+     *
+     */
+    public void initializeMoonEphem(){
+    	earthRef.initializeMoonEphem(time.mjd_tt());
+    }
+    
+    /**
+     * Initializes the JPL DE405 ephemerides for use.
+     *
+     */
+    public void initializeSunEphem(){
+    	earthRef.initializeSunEphem(time.mjd_tt());
+    }
+
     /**
      * Update the models to 't' seconds since the start epoch.
      * @param t [sec]
