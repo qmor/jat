@@ -128,7 +128,7 @@ public class Lambert implements ScalarFunction
 
 		double dtheta = Math.acos(r0.dotProduct(rf) / (magr0 * magrf));
 
-		dtheta = 2.0 * Constants.pi - dtheta;
+		//dtheta = 2.0 * Constants.pi - dtheta;
 
 		System.out.println("dtheta = " + dtheta);
 
