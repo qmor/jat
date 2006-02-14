@@ -28,7 +28,7 @@ import com.sun.j3d.utils.geometry.*;
 /** Sphere class
  * @author Tobias Berthold
  */
-public class ColorCube3D extends ABody3D
+public class ColorCube3D extends Body3D
 {
 	//float size=100.f;
 

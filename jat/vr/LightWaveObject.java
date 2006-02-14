@@ -29,7 +29,7 @@ import com.sun.j3d.loaders.Scene;
 /** LightWaveObject class
  * @author Tobias Berthold
  */
-public class LightWaveObject extends ABody3D
+public class LightWaveObject extends Body3D
 {
 
 	public LightWaveObject(Applet myapplet, String filename, float scale)

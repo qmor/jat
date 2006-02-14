@@ -31,7 +31,7 @@ import com.sun.j3d.utils.geometry.*;
 /** Planet class
  * @author Tobias Berthold
  */
-public class Star3D extends ABody3D
+public class Star3D extends Body3D
 {
 	float radius;
 	String Texturefilename;

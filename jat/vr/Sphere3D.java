@@ -28,7 +28,7 @@ import com.sun.j3d.utils.geometry.*;
 /** Sphere class
  * @author Tobias Berthold
  */
-public class Sphere3D extends ABody3D
+public class Sphere3D extends Body3D
 {
 	public static float size_factor = 1.0f;
 	float radius;

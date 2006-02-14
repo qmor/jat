@@ -27,7 +27,7 @@ import javax.vecmath.*;
  * @author Tobias Berthold
  *
  */
-public class RGBAxis3D extends ABody3D
+public class RGBAxis3D extends Body3D
 {
 
 	float factor;

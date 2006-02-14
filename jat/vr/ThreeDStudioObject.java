@@ -31,7 +31,7 @@ import com.mnstarfire.loaders3d.Inspector3DS;
 /** 3DStudio Object class
  * @author Tobias Berthold
  */
-public class ThreeDStudioObject extends ABody3D
+public class ThreeDStudioObject extends Body3D
 {
 	Sphere3D left, right;
 	Cylinder3D lc,rc;

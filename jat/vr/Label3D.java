@@ -30,7 +30,7 @@ import javax.vecmath.*;
 /** Label3D class
  * @author Tobias Berthold
  */
-public class Label3D extends ABody3D
+public class Label3D extends Body3D
 {
 	float size;
 

@@ -30,7 +30,7 @@ import com.sun.j3d.loaders.Scene;
 /** WavefrontObject class
  * @author Tobias Berthold
  */
-public class WavefrontObject extends ABody3D
+public class WavefrontObject extends Body3D
 {
 
 	public WavefrontObject(Applet myapplet, String filename, float scale)

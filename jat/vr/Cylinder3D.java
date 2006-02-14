@@ -28,7 +28,7 @@ import com.sun.j3d.utils.geometry.*;
 /** 
  * @author Tobias Berthold
  */
-public class Cylinder3D extends ABody3D
+public class Cylinder3D extends Body3D
 {
 	public static float size_factor = 1.0f;
 	float radius, height;	

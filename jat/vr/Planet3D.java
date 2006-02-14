@@ -31,7 +31,7 @@ import com.sun.j3d.utils.geometry.*;
 /** Planet class
  * @author Tobias Berthold
  */
-public class Planet3D extends ABody3D
+public class Planet3D extends Body3D
 {
 	public static final int MERCURY = 1, VENUS = 2, EARTH = 3, MARS = 4, JUPITER = 5, MOON = 11;
 	float radius;

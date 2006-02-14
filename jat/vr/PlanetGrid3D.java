@@ -30,7 +30,7 @@ import javax.vecmath.*;
  * @author Tobias Berthold
  *
  */
-public class PlanetGrid3D extends ABody3D
+public class PlanetGrid3D extends Body3D
 {
 	double radius = 1000.;
 	double long_section = 10;

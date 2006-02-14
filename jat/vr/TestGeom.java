@@ -5,7 +5,7 @@ import javax.media.j3d.*;
 /**
  * Simple color-per-vertex cube with a different color for each face
  */
-public class TestGeom extends  ABody3D
+public class TestGeom extends  Body3D
 {
 	double scale;
 	Shape3D s;
