@@ -37,7 +37,7 @@ public class Orbit implements Printable
 	public Orbit(KeplerElements k_initial)
 	{
 
-		twobody = new TwoBody(k_initial, cm.mu);
+		twobody = new TwoBody( cm.mu, k_initial);
 
 	}
 

@@ -93,7 +93,7 @@ public class TwoBody implements Derivatives
 	 * @param k Kepler elements
 	 * @param mu 
 	 */
-	public TwoBody(KeplerElements k, double mu)
+	public TwoBody(double mu, KeplerElements k)
 	{
 		Constants c = new Constants();
 		this.a = k.a;
@@ -902,6 +902,14 @@ public class TwoBody implements Derivatives
 
 	public static void main(String args[])
 	{
+	}
+
+	/**
+	 * @param ta true anomaly in degrees
+	 */
+	public void setTa(double ta)
+	{
+		this.ta = ta* Constants.deg2rad;
 	}
 }
 

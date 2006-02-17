@@ -111,7 +111,7 @@ public class CSIExample
 
 		// create Two Body orbits (elliptical)
 		KeplerElements k_initial = new KeplerElements(10000.0, 0., 0.0, 0.0, 0.0, 0.0);
-		TwoBody initialorbit = new TwoBody(k_initial, cm.mu);
+		TwoBody initialorbit = new TwoBody(cm.mu, k_initial);
 		TwoBodyCSI trajectory = new TwoBodyCSI(k_initial, cm.mu, 3000., csi, 0.05, 10000);
 
 		// create an RungeKuttaFehlberg78 integrator

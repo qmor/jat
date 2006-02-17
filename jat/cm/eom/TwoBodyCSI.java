@@ -56,7 +56,7 @@ public class TwoBodyCSI extends TwoBody implements Derivatives /*, Printable*/
 	 */
 	public TwoBodyCSI(KeplerElements k, double mu, double m, VectorTimeFunction u, double T, double Isp)
 	{
-		super(k, mu);
+		super(mu, k);
 		this.u = u;
 		this.Isp = Isp;
 		this.c = Isp * g0;
