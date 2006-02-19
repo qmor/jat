@@ -39,6 +39,7 @@ public class Lambert implements ScalarFunction
 	private double mu = 0.0;
 	private boolean aflag = false;
 	private boolean bflag = false;
+	public boolean debug_print=false;
 
 	/** Contains the computed initial delta-v.
 	 */
@@ -50,9 +51,20 @@ public class Lambert implements ScalarFunction
 	/** time of flight */
 	public double tof;
 
+	
+	public void reset()
+	{
+		s = 0.0;
+		c = 0.0;
+		aflag = false;
+		bflag = false;
+		debug_print=false;
+	}
+	
+	
     /** Constructor with mu
      * @param mu mu of the central body
-     */        
+     */
 	public Lambert(double mu)
 	{
 		this.mu=mu;
@@ -114,6 +126,7 @@ public class Lambert implements ScalarFunction
 		VectorN vf,
 		double dt)
 	{
+		reset();
 		double tp = 0.0;
 
 		this.dt = dt;
@@ -124,13 +137,15 @@ public class Lambert implements ScalarFunction
 		this.c = dr.mag();
 		this.s = (magr0 + magrf + c) / 2.0;
 		double amin = s / 2.0;
-		System.out.println("amin = " + amin);
+		if(debug_print)
+			System.out.println("amin = " + amin);
 
 		double dtheta = Math.acos(r0.dotProduct(rf) / (magr0 * magrf));
 
 		//dtheta = 2.0 * Constants.pi - dtheta;
 
-		System.out.println("dtheta = " + dtheta);
+		if(debug_print)
+			System.out.println("dtheta = " + dtheta);
 
 		if (dtheta < Constants.pi)
 		{
@@ -147,12 +162,15 @@ public class Lambert implements ScalarFunction
 					/ 3.0;
 			this.bflag = true;
 		}
-		System.out.println("tp = " + tp);
+		
+		if(debug_print)
+			System.out.println("tp = " + tp);
 
 		double betam = getbeta(amin);
 		double tm = getdt(amin, Constants.pi, betam);
 
-		System.out.println("tm = " + tm);
+		if(debug_print)
+			System.out.println("tm = " + tm);
 
 		if (dtheta == Constants.pi)
 		{
@@ -163,9 +181,11 @@ public class Lambert implements ScalarFunction
 		double ahigh = 1000.0 * amin;
 		double npts = 3000.0;
 		//this.dt = (2.70-0.89)*86400;
-		System.out.println("dt = " + dt);
+		if(debug_print)
+			System.out.println("dt = " + dt);
 
-		System.out.println("************************************************");
+		if(debug_print)
+			System.out.println("************************************************");
 
 		if (this.dt < tp)
 		{
@@ -207,7 +227,8 @@ public class Lambert implements ScalarFunction
 		newv0.x[2] = (rf.x[2] - f * r0.x[2]) / g;
 
 		this.deltav0 = newv0.minus(v0);
-		this.deltav0.print("deltav-0");
+		if(debug_print)
+			this.deltav0.print("deltav-0");
 
 		double dv0 = deltav0.mag();
 
@@ -221,13 +242,15 @@ public class Lambert implements ScalarFunction
 
 		this.deltavf = vf.minus(newvf);
 		double dvf = deltavf.mag();
-		this.deltavf.print("deltav-f");
+		if(debug_print)
+			this.deltavf.print("deltav-f");
 
 		double totaldv = dv0 + dvf;
 
 		this.tof = dt;
 
-		System.out.println(
+		if(debug_print)
+			System.out.println(
 			"dt = "
 				+ dt
 				+ " dv0 = "
