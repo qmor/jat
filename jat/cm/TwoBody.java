@@ -910,6 +910,7 @@ public class TwoBody implements Derivatives
 	public void setTa(double ta)
 	{
 		this.ta = ta* Constants.deg2rad;
+		rv = new VectorN(randv());	//update cartesian elements
 	}
 }
 
