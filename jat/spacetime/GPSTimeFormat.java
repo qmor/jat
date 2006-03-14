@@ -203,7 +203,7 @@ public class GPSTimeFormat {
         CalDate out = new CalDate(this);
 
         // compute the difference between GPS and UTC
-        int utc_gps = TAI_GPS - CalDate.tai_utc(mjd);
+        int utc_gps = TAI_GPS - TimeUtils.tai_utc(mjd);
 
         // convert from GPS time to UTC time
         out.increment(utc_gps);

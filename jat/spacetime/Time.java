@@ -38,30 +38,6 @@ public class Time {
      * Simulation time in seconds since epoch.
      */
     protected double sim_time = 0; // [s]
-    /**
-     * Modified Julian Date of the J2000 Epoch.
-     */
-    public static final double MJD_J2000 = 51544.5;
-    /**
-     * Fraction of a day per second.
-     */
-    public static final double sec2days = 1.0/86400;
-    /**
-     * Seconds per day.
-     */
-    public static final double days2sec = 86400;
-    /**
-     * Constant used for conversion to Terrestrial Time.
-     */
-    public static final double TT_TAI = 32.184;  // constant
-
-    /**
-     * Constant used for conversion to GPS time.
-     */
-    public static final int TAI_GPS = 19;  // constant
-    /**
-     * Modified Julian Date of Terrestrial Time.
-     */
     private double MJD_TT;
     /**
      * Modified Julian Date of Barycentric Dynamical Time.
@@ -128,22 +104,6 @@ public class Time {
     }
 
     /**
-     * Converts modified julian date to julian date.
-     * @param MJD Modified Julian Date
-     * @return JD Julian Date
-     */
-    public static double MJDtoJD(double MJD){
-        return MJD+2400000.5;
-    }
-    /**
-     * Converts julian date to modified julian date.
-     * @param JD Julian Date
-     * @return MJD Modified Julian Date
-     */
-    public static double JDtoMJD(double JD){
-        return JD-2400000.5;
-    }
-    /**
      * Returns Universal Coordinated Time in modified julian date
      * @return MJD_UTC
      */
@@ -207,7 +167,7 @@ public class Time {
      */
     public void update(double t){
         sim_time = t;
-        this.MJD_UTC = this.MJD_UTC_START+t*sec2days;
+        this.MJD_UTC = this.MJD_UTC_START+t*TimeUtils.sec2days;
         this.MJD_TT = UTC2TT(this.MJD_UTC);
         this.MJD_TDB = TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
@@ -428,47 +388,6 @@ public class Time {
          return (t1+t2+t3+t4+t5+t24+t25+t29+t30) * 1.0e-6 ;
    }
 
-   /** Return the difference between TAI and UTC (known as leap seconds).
-    * Values from the USNO website: ftp://maia.usno.navy.mil/ser7/leapsec.dat
-    * As of July 19, 2002, no leap second in Dec 2002 so next opportunity for
-    * adding a leap second is July 2003. Check IERS Bulletin C.
-    * @param mjd Modified Julian Date
-    * @return number of leaps seconds.
-    */
-
-   public static int tai_utc(double mjd){
-       if (mjd < 0.0) {
-           System.out.println("MJD before the beginning of the leap sec table");
-           return 0;
-       }
-       if ((mjd >=41317.0)&&(mjd < 41499.0)) return 10;
-       if ((mjd >=41499.0)&&(mjd < 41683.0)) return 11;
-       if ((mjd >=41683.0)&&(mjd < 42048.0)) return 12;
-       if ((mjd >=42048.0)&&(mjd < 42413.0)) return 13;
-       if ((mjd >=42413.0)&&(mjd < 42778.0)) return 14;
-       if ((mjd >=42778.0)&&(mjd < 43144.0)) return 15;
-       if ((mjd >=43144.0)&&(mjd < 43509.0)) return 16;
-       if ((mjd >=43509.0)&&(mjd < 43874.0)) return 17;
-       if ((mjd >=43874.0)&&(mjd < 44239.0)) return 18;
-       if ((mjd >=44239.0)&&(mjd < 44786.0)) return 19;
-       if ((mjd >=44786.0)&&(mjd < 45151.0)) return 20;
-       if ((mjd >=45151.0)&&(mjd < 45516.0)) return 21;
-       if ((mjd >=45516.0)&&(mjd < 46247.0)) return 22;
-       if ((mjd >=46247.0)&&(mjd < 47161.0)) return 23;
-       if ((mjd >=47161.0)&&(mjd < 47892.0)) return 24;
-       if ((mjd >=47892.0)&&(mjd < 48257.0)) return 25;
-       if ((mjd >=48257.0)&&(mjd < 48804.0)) return 26;
-       if ((mjd >=48804.0)&&(mjd < 49169.0)) return 27;
-       if ((mjd >=49169.0)&&(mjd < 49534.0)) return 28;
-       if ((mjd >=49534.0)&&(mjd < 50083.0)) return 29;
-       if ((mjd >=50083.0)&&(mjd < 50630.0)) return 30;
-       if ((mjd >=50630.0)&&(mjd < 51179.0)) return 31;
-       if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
-       if  (mjd >= 53736.0) return 33;
-
-       System.out.println("Input MJD out of bounds");
-       return 0;
-   }
 
    /** Convert UTC time to TT.
     * @param mjd_utc MJD of Current UTC time
@@ -477,7 +396,7 @@ public class Time {
    public static double UTC2TT(double mjd_utc){
 
        // compute the difference between TT and UTC
-       double tt_utc = (double)(tai_utc(mjd_utc) + TT_TAI);
+       double tt_utc = (double)(TimeUtils.tai_utc(mjd_utc) + TimeUtils.TT_TAI);
        double out = mjd_utc + tt_utc/86400.0;
        return out;
    }

@@ -256,7 +256,7 @@ public class EarthRef implements BodyRef {
      *@return  Mean obliquity of the ecliptic
      */
     public double MeanObliquity(double MJD_TT) {
-        double T = (MJD_TT - Time.MJD_J2000)/36525.0;
+        double T = (MJD_TT - TimeUtils.MJD_J2000)/36525.0;
         //double T = (this.MJD_TDB - MJD_J2000)/36525.0; //* used prior to IERS1996 convention
 //      TODO
         return MathUtils.DEG2RAD *( 23.43929111-(46.8150+(0.00059-0.001813*T)*T)*T/3600.0 );
@@ -282,13 +282,13 @@ public class EarthRef implements BodyRef {
      *  @return  Precession transformation matrix
      */
     public Matrix PrecMatrix(double MJD_TT) {
-        double Mjd_1 = Time.MJD_J2000;  // Epoch given (Modified Julian Date TT)
+        double Mjd_1 = TimeUtils.MJD_J2000;  // Epoch given (Modified Julian Date TT)
         double Mjd_2 = MJD_TT;   // Epoch to precess to (Modified Julian Date TT)
         //double Mjd_2 = this.MJD_TDB;   //* used prior to IERS1996 convention
         
         // Constants
         final double Arcs = 1.0/MathUtils.ARCSEC2RAD;
-        final double T  = (Mjd_1-Time.MJD_J2000)/36525.0;
+        final double T  = (Mjd_1-TimeUtils.MJD_J2000)/36525.0;
         final double dT = (Mjd_2-Mjd_1)/36525.0;
         
         // Variables
@@ -319,7 +319,7 @@ public class EarthRef implements BodyRef {
         
         // Constants
         
-        final double T  = (Mjd_TT-Time.MJD_J2000)/36525.0;
+        final double T  = (Mjd_TT-TimeUtils.MJD_J2000)/36525.0;
         final double T2 = T*T;
         final double T3 = T2*T;
         final double rev = 360.0*3600.0;  // arcsec/revolution
@@ -568,7 +568,7 @@ public class EarthRef implements BodyRef {
         
         // Constants
         final double Arcs = 1.0/MathUtils.ARCSEC2RAD;
-        final double T  = (Mjd_TT-Time.MJD_J2000)/36525.0;
+        final double T  = (Mjd_TT-TimeUtils.MJD_J2000)/36525.0;
         
         // Variables
         double  ls, D, F, N;
@@ -639,8 +639,8 @@ public class EarthRef implements BodyRef {
         // Mean Sidereal Time
         Mjd_0 = Math.floor(Mjd_UT1);
         UT1   = Secs*(Mjd_UT1-Mjd_0);          // [s]
-        T_0   = (Mjd_0  - Time.MJD_J2000)/36525.0;
-        T     = (Mjd_UT1- Time.MJD_J2000)/36525.0;
+        T_0   = (Mjd_0  - TimeUtils.MJD_J2000)/36525.0;
+        T     = (Mjd_UT1- TimeUtils.MJD_J2000)/36525.0;
         
         gmst  = 24110.54841 + 8640184.812866*T_0 + 1.002737909350795*UT1
         	+ (0.093104-6.2e-6*T)*T*T;  // [s]
@@ -762,7 +762,7 @@ public class EarthRef implements BodyRef {
         // Constants
         
         double eps = Constants.eps*MathUtils.DEG2RAD;             // Obliquity of J2000 ecliptic
-        double T   = (Mjd_TT-Time.MJD_J2000)/36525.0;  // Julian cent. since J2000
+        double T   = (Mjd_TT-TimeUtils.MJD_J2000)/36525.0;  // Julian cent. since J2000
         
         
         // Mean anomaly, ecliptic longitude and radius
@@ -814,7 +814,7 @@ public class EarthRef implements BodyRef {
         
         // Mean Sidereal Time
         Mjd_0 = Math.floor(t.mjd_ut1());
-        double Tu   = (Mjd_0  - Time.MJD_J2000)/36525.0;
+        double Tu   = (Mjd_0  - TimeUtils.MJD_J2000)/36525.0;
         return 7292115.8553e-11 + 4.3e-15 * Tu;
     }
     
@@ -829,7 +829,7 @@ public class EarthRef implements BodyRef {
         
         // Mean Sidereal Time
         Mjd_0 = Math.floor(mjd_ut1);
-        double Tu   = (Mjd_0  - Time.MJD_J2000)/36525.0;
+        double Tu   = (Mjd_0  - TimeUtils.MJD_J2000)/36525.0;
         return 7292115.8553e-11 + 4.3e-15 * Tu;
     }
     
@@ -892,7 +892,7 @@ public class EarthRef implements BodyRef {
         double Mjd_TT = MJD_TT;
         
         double eps = Constants.eps*MathUtils.DEG2RAD;             // Obliquity of J2000 ecliptic
-        double T   = (Mjd_TT-Time.MJD_J2000)/36525.0;  // Julian cent. since J2000
+        double T   = (Mjd_TT-TimeUtils.MJD_J2000)/36525.0;  // Julian cent. since J2000
         
         
         // Mean elements of lunar orbit

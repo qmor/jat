@@ -21,6 +21,7 @@
 package jat.timeRef;
 import jat.math.*;
 import java.io.*;
+import jat.spacetime.*;
 
 /**
  * <P>
@@ -59,9 +60,6 @@ public class CalDate implements Serializable {
      */
     protected int DOY;
 
-    public static final double TT_TAI = 32.184;  // constant
-
-    public static final int TAI_GPS = 19;  // constant
 
     /** Construct a time object using a calendar date.
      * @param Yr Year.
@@ -368,39 +366,6 @@ public class CalDate implements Serializable {
      * @return number of leaps seconds.
      */
 
-    public static int tai_utc(double mjd){
-        if (mjd < 0.0) {
-            System.out.println("MJD before the beginning of the leap sec table");
-            return 0;
-        }
-        if ((mjd >=41317.0)&&(mjd < 41499.0)) return 10;
-        if ((mjd >=41499.0)&&(mjd < 41683.0)) return 11;
-        if ((mjd >=41683.0)&&(mjd < 42048.0)) return 12;
-        if ((mjd >=42048.0)&&(mjd < 42413.0)) return 13;
-        if ((mjd >=42413.0)&&(mjd < 42778.0)) return 14;
-        if ((mjd >=42778.0)&&(mjd < 43144.0)) return 15;
-        if ((mjd >=43144.0)&&(mjd < 43509.0)) return 16;
-        if ((mjd >=43509.0)&&(mjd < 43874.0)) return 17;
-        if ((mjd >=43874.0)&&(mjd < 44239.0)) return 18;
-        if ((mjd >=44239.0)&&(mjd < 44786.0)) return 19;
-        if ((mjd >=44786.0)&&(mjd < 45151.0)) return 20;
-        if ((mjd >=45151.0)&&(mjd < 45516.0)) return 21;
-        if ((mjd >=45516.0)&&(mjd < 46247.0)) return 22;
-        if ((mjd >=46247.0)&&(mjd < 47161.0)) return 23;
-        if ((mjd >=47161.0)&&(mjd < 47892.0)) return 24;
-        if ((mjd >=47892.0)&&(mjd < 48257.0)) return 25;
-        if ((mjd >=48257.0)&&(mjd < 48804.0)) return 26;
-        if ((mjd >=48804.0)&&(mjd < 49169.0)) return 27;
-        if ((mjd >=49169.0)&&(mjd < 49534.0)) return 28;
-        if ((mjd >=49534.0)&&(mjd < 50083.0)) return 29;
-        if ((mjd >=50083.0)&&(mjd < 50630.0)) return 30;
-        if ((mjd >=50630.0)&&(mjd < 51179.0)) return 31;
-        if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
-		if  (mjd >= 53736.0) return 33;
-
-        System.out.println("Input MJD out of bounds");
-        return 0;
-    }
 
     /** Convert UTC time to GPS time.
      * @return CalDate object with current UTC time.
@@ -410,7 +375,7 @@ public class CalDate implements Serializable {
         double mjd = this.mjd();
 
         // compute the difference between GPS and UTC
-        int gps_utc = tai_utc(mjd) - TAI_GPS;
+        int gps_utc = TimeUtils.tai_utc(mjd) - TimeUtils.TAI_GPS;
 
         // convert the current time to GPSTimeFormat format
         GPSTimeFormat out = new GPSTimeFormat(this);
@@ -427,7 +392,7 @@ public class CalDate implements Serializable {
     public static double UTC2TT(double mjd_utc){
 
         // compute the difference between TT and UTC
-        double tt_utc = (double)(tai_utc(mjd_utc) + TT_TAI);
+        double tt_utc = (double)(TimeUtils.tai_utc(mjd_utc) + TimeUtils.TT_TAI);
         double out = mjd_utc + tt_utc/86400.0;
         return out;
     }

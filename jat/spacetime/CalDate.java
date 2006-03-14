@@ -57,10 +57,6 @@ public class CalDate implements Serializable {
      */
     protected int DOY;
 
-    public static final double TT_TAI = 32.184;  // constant
-
-    public static final int TAI_GPS = 19;  // constant
-
     /** Construct a time object using a calendar date.
      * @param Yr Year.
      * @param Mon Month.
@@ -77,7 +73,7 @@ public class CalDate implements Serializable {
         this.Hour = Hr;
         this.Min = Mn;
         this.Sec = S;
-        this.DOY = day2doy(Yr, Mon, D);
+        this.DOY = TimeUtils.day2doy(Yr, Mon, D);
     }
 
     /** Construct a clone of a CalDate object.
@@ -129,7 +125,7 @@ public class CalDate implements Serializable {
         x = (Hours-Hour)*60.0;
         this.Min = (int) x;
         this.Sec = (x-Min)*60.0;
-        this.DOY = day2doy(this.Year, this.Month, this.Day);
+        this.DOY = TimeUtils.day2doy(this.Year, this.Month, this.Day);
     }
 
     /** Create a CalDate object using GPS Time. Translated code from the
@@ -155,8 +151,8 @@ public class CalDate implements Serializable {
 
         this.Year = (int)(years_so_far + delta_yrs);
         this.DOY = (int)(days_left - 365*delta_yrs + 1);
-        this.Month = doy2month(this.Year, this.DOY);
-        this.Day = doy2day(this.Year, this.DOY);
+        this.Month = TimeUtils.doy2month(this.Year, this.DOY);
+        this.Day = TimeUtils.doy2day(this.Year, this.DOY);
         this.Hour = (int)(fmjd*24.0);
         this.Min = (int)(fmjd*1440.0 - Hour*60.0);
         this.Sec = fmjd*86400.0 - Hour*3600.0 - Min*60.0;
@@ -206,86 +202,6 @@ public class CalDate implements Serializable {
         return out;
     }
 
-    /** Convert Day of Month to Day of Year.
-     * @param year Year.
-     * @param month Month.
-     * @param mday Day of month.
-     * @return Day of year.
-     */
-    public int day2doy(int year, int month, int mday){
-        int [] regu_month_day = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
-        int [] leap_month_day = {0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};
-        int yday = 0;
-
-        // check for leap year
-        if((year%4) == 0 ){
-            yday = leap_month_day[month - 1] + mday;
-        }
-        else {
-            yday = regu_month_day[month - 1] + mday;
-        }
-        return yday;
-    }
-
-    /** Compute the month from day of year. From GPS Toolkit code.
-     * @param year Year.
-     * @param doy Day of year.
-     * @return Month.
-     */
-    public int doy2month(int year, int doy){
-        int [] regu_month_day = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
-        int [] leap_month_day = {0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366};
-        int yday = 0;
-
-        int month = 0;
-        int mday = 0;
-
-        int guess = (int)(doy*0.032);
-        int more = 0;
-
-        // check for leap year
-        if((year%4) == 0 ){
-            if ((doy - leap_month_day[guess+1]) > 0) more = 1;
-            month = guess + more + 1;
-            mday = doy - leap_month_day[guess+more];
-        }
-        else {
-            if ((doy - regu_month_day[guess+1]) > 0) more = 1;
-            month = guess + more + 1;
-            mday = doy - regu_month_day[guess+more];
-        }
-        return month;
-    }
-
-    /** Compute the day of month from day of year. From GPS Toolkit code.
-     * @param year Year.
-     * @param doy Day of year.
-     * @return Day of month.
-     */
-    public int doy2day(int year, int doy){
-        int [] regu_month_day = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
-        int [] leap_month_day = {0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366};
-        int yday = 0;
-
-        int month = 0;
-        int mday = 0;
-
-        int guess = (int)(doy*0.032);
-        int more = 0;
-
-        // check for leap year
-        if((year%4) == 0 ){
-            if ((doy - leap_month_day[guess+1]) > 0) more = 1;
-            month = guess + more + 1;
-            mday = doy - leap_month_day[guess+more];
-        }
-        else {
-            if ((doy - regu_month_day[guess+1]) > 0) more = 1;
-            month = guess + more + 1;
-            mday = doy - regu_month_day[guess+more];
-        }
-        return mday;
-    }
 
     /** Increments time forward or backwards.
      * @param sec Increment to move time in seconds. Positive for forward, negative for backwards.
@@ -358,48 +274,6 @@ public class CalDate implements Serializable {
         return (this.Hour*3600.0 + this.Min*60.0 + this.Sec);
     }
 
-    /** Return the difference between TAI and UTC (known as leap seconds).
-     * Values from the USNO website: ftp://maia.usno.navy.mil/ser7/leapsec.dat
-     * As of July 19, 2002, no leap second in Dec 2002 so next opportunity for
-     * adding a leap second is July 2003. Check IERS Bulletin C.
-     * @param mjd Modified Julian Date
-     * @return number of leaps seconds.
-     */
-
-    public static int tai_utc(double mjd){
-        if (mjd < 0.0) {
-            System.out.println("MJD before the beginning of the leap sec table");
-            return 0;
-        }
-        if ((mjd >=41317.0)&&(mjd < 41499.0)) return 10;
-        if ((mjd >=41499.0)&&(mjd < 41683.0)) return 11;
-        if ((mjd >=41683.0)&&(mjd < 42048.0)) return 12;
-        if ((mjd >=42048.0)&&(mjd < 42413.0)) return 13;
-        if ((mjd >=42413.0)&&(mjd < 42778.0)) return 14;
-        if ((mjd >=42778.0)&&(mjd < 43144.0)) return 15;
-        if ((mjd >=43144.0)&&(mjd < 43509.0)) return 16;
-        if ((mjd >=43509.0)&&(mjd < 43874.0)) return 17;
-        if ((mjd >=43874.0)&&(mjd < 44239.0)) return 18;
-        if ((mjd >=44239.0)&&(mjd < 44786.0)) return 19;
-        if ((mjd >=44786.0)&&(mjd < 45151.0)) return 20;
-        if ((mjd >=45151.0)&&(mjd < 45516.0)) return 21;
-        if ((mjd >=45516.0)&&(mjd < 46247.0)) return 22;
-        if ((mjd >=46247.0)&&(mjd < 47161.0)) return 23;
-        if ((mjd >=47161.0)&&(mjd < 47892.0)) return 24;
-        if ((mjd >=47892.0)&&(mjd < 48257.0)) return 25;
-        if ((mjd >=48257.0)&&(mjd < 48804.0)) return 26;
-        if ((mjd >=48804.0)&&(mjd < 49169.0)) return 27;
-        if ((mjd >=49169.0)&&(mjd < 49534.0)) return 28;
-        if ((mjd >=49534.0)&&(mjd < 50083.0)) return 29;
-        if ((mjd >=50083.0)&&(mjd < 50630.0)) return 30;
-        if ((mjd >=50630.0)&&(mjd < 51179.0)) return 31;
-        if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
-        if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
-        if  (mjd >= 53736.0) return 33;
-
-       System.out.println("Input MJD out of bounds");
-        return 0;
-    }
 
     /** Convert UTC time to GPS time.
      * @return CalDate object with current UTC time.
@@ -409,7 +283,7 @@ public class CalDate implements Serializable {
         double mjd = this.mjd();
 
         // compute the difference between GPS and UTC
-        int gps_utc = tai_utc(mjd) - TAI_GPS;
+        int gps_utc = TimeUtils.tai_utc(mjd) - TimeUtils.TAI_GPS;
 
         // convert the current time to GPSTimeFormat format
         GPSTimeFormat out = new GPSTimeFormat(this);
@@ -426,7 +300,7 @@ public class CalDate implements Serializable {
     public static double UTC2TT(double mjd_utc){
 
         // compute the difference between TT and UTC
-        double tt_utc = (double)(tai_utc(mjd_utc) + TT_TAI);
+        double tt_utc = (double)(TimeUtils.tai_utc(mjd_utc) + TimeUtils.TT_TAI);
         double out = mjd_utc + tt_utc/86400.0;
         return out;
     }
