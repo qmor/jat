@@ -2,9 +2,9 @@
  *
  * Copyright (c) 2005 Emergent Space Technologies Inc. All rights reserved.
  *
- * This file is part of JAT. JAT is free software; you can 
- * redistribute it and/or modify it under the terms of the 
- * GNU General Public License as published by the Free Software 
+ * This file is part of JAT. JAT is free software; you can
+ * redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  */
 package jat.spacetime;
 
@@ -24,21 +24,21 @@ import java.lang.Math;
 /**
  * Time implements conversions between various time systems.
  * e.g. TT, TDB...
- * 
+ *
  * Translated from c by Richard C. Page III
- * 
+ *
  * @author Richard C. Page III
  *
  */
 public class Time {
 
     //*** See bottom of this file for the original c code headers for TT2TDB
-    
+
     /**
      * Simulation time in seconds since epoch.
      */
-    protected double sim_time = 0; // [s]    
-    /** 
+    protected double sim_time = 0; // [s]
+    /**
      * Modified Julian Date of the J2000 Epoch.
      */
     public static final double MJD_J2000 = 51544.5;
@@ -49,7 +49,7 @@ public class Time {
     /**
      * Seconds per day.
      */
-    public static final double days2sec = 86400; 
+    public static final double days2sec = 86400;
     /**
      * Constant used for conversion to Terrestrial Time.
      */
@@ -58,8 +58,8 @@ public class Time {
     /**
      * Constant used for conversion to GPS time.
      */
-    public static final int TAI_GPS = 19;  // constant        
-    /** 
+    public static final int TAI_GPS = 19;  // constant
+    /**
      * Modified Julian Date of Terrestrial Time.
      */
     private double MJD_TT;
@@ -90,7 +90,7 @@ public class Time {
 
     //** see below
     //** private class MJDTime { ts, MJDint, MJDfr, MJDTime(){}} ;
-    
+
     /**
      * Default constructor initializes to current system time to nearest millisecond
      */
@@ -103,7 +103,7 @@ public class Time {
         this.MJD_TT = UTC2TT(this.MJD_UTC);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
-    
+
     /**
      * Constructor.  Initializes all time values to the simulation epoch.
      * @param mjd_UTC Universal Coordinated Time in modified julian date
@@ -115,7 +115,7 @@ public class Time {
         this.MJD_TDB = TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
-    
+
     /**
      * Constructor.  Calculates the simulation epoch time from the given Calendar Date.
      * @param date Gregorian Calendar Date
@@ -126,7 +126,7 @@ public class Time {
         this.MJD_TT = UTC2TT(this.MJD_UTC);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
-    
+
     /**
      * Converts modified julian date to julian date.
      * @param MJD Modified Julian Date
@@ -184,23 +184,23 @@ public class Time {
      */
     public double jd_ut1(){
         return this.MJD_UT1+2400000.5;
-    }    
+    }
     /**
-     * Returns a count of seconds since the reference epoch. 
+     * Returns a count of seconds since the reference epoch.
      * @return sim_time [sec]
      */
     public double get_sim_time(){
         return this.sim_time; // [s]
     }
-    
+
     /**
      * Set the difference in seconds between Universal and Universal Coordinated Time
      * @param d [sec]
      */
     public void set_UT1_UTC(double d){
-        this.UT1_UTC = d;        
+        this.UT1_UTC = d;
     }
-    
+
     /**
      * Update simulation time since epoch.
      * @param t Seconds since epoch.
@@ -212,7 +212,7 @@ public class Time {
         this.MJD_TDB = TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
-    
+
     /**
      * Converts the MJD expressed in UTC to give the days since Jan 01 00:00
      * @return The number of days since the beginning of the current year.
@@ -232,7 +232,7 @@ public class Time {
         return date.sec_of_day();
     }
 
-    
+
     //*** See bottom of this file for original header
     /**
      * Convert from the TT to TDB time system.
@@ -245,7 +245,7 @@ public class Time {
      mjdTT.MJDint = (long)Math.floor(MJD_TT);
      mjdTT.MJDfr = MJD_TT - mjdTT.MJDint;
      //public TimeSys ts ; //* not used in this function
-     
+
      double tdbtdt =0;
      double tdbtdtdot =0;
      long oldmjd = 0 ;
@@ -270,7 +270,7 @@ public class Time {
      double TDB_minus_TT = ( tdbtdt + (mjdTT.MJDfr - 0.5) * tdbtdtdot );
      return MJD_TT+TDB_minus_TT/86400;
    }
-    
+
    //*** See bottom of this file for original header
    /**
     * Computes the cumulative relativistic time correction to
@@ -463,7 +463,9 @@ public class Time {
        if ((mjd >=49534.0)&&(mjd < 50083.0)) return 29;
        if ((mjd >=50083.0)&&(mjd < 50630.0)) return 30;
        if ((mjd >=50630.0)&&(mjd < 51179.0)) return 31;
-       if  (mjd >=51179.0) return 32;
+       if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
+       if  (mjd >= 53736.0) return 33;
+
        System.out.println("Input MJD out of bounds");
        return 0;
    }
@@ -488,7 +490,7 @@ public class Time {
        Time t = new Time();
        return t.new MJDTime();
    }
-   
+
    private static double sin(double x){return Math.sin(x);}
    private static double cos(double x){return Math.cos(x);}
 
@@ -516,7 +518,7 @@ public class Time {
         private static final int ET = 6;
         private static final int UTC = 7;
         private int time;
-        
+
         public TimeSys(int flag){
             time = flag;
         }
@@ -532,7 +534,7 @@ public class Time {
         public long MJDint ;
         public double MJDfr ;
         public MJDTime(){}
-    } 
+    }
 
 }
 //*** Original .h file header
@@ -556,7 +558,7 @@ public class Time {
  *                             should use denum=405.
  *  TIMESYS='TDB' _without_ RADECSYS='ICRS' or     PLEPHEM='JPL-DE405'
  *                             should use denum=200.
- *  
+ *
  *  Time is kept in three possible ways:
  *  The basic convention is:
  *    MJDTime t ;  The MJDTime struct is defined below;
@@ -656,7 +658,7 @@ public class Time {
 *  It uses the coefficients from Fairhead & Bretagnon 1990,
 *  A&A 229, 240, as provided by ctatv.
 *  The accuracy is better than 100 ns.
-*  
+*
 *  The proper way to do all this is to abandon TDB and use TCB.
 *
 *  The way this is done is as follows: TDB-TT and its derivative are

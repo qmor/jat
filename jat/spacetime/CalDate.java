@@ -393,8 +393,11 @@ public class CalDate implements Serializable {
         if ((mjd >=49534.0)&&(mjd < 50083.0)) return 29;
         if ((mjd >=50083.0)&&(mjd < 50630.0)) return 30;
         if ((mjd >=50630.0)&&(mjd < 51179.0)) return 31;
-        if  (mjd >=51179.0) return 32;
-        System.out.println("Input MJD out of bounds");
+        if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
+        if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
+        if  (mjd >= 53736.0) return 33;
+
+       System.out.println("Input MJD out of bounds");
         return 0;
     }
 
@@ -430,13 +433,13 @@ public class CalDate implements Serializable {
 
     /**
      * Send it to string
-     * @return String containing the calendar date 
+     * @return String containing the calendar date
      */
     public String toString(){
         String out = this.Year+","+this.Month+","+this.Day+" "+this.Hour+":"+this.Min+":"+this.Sec;
         return out;
     }
-    
+
     /**
      * Print out the date
      * @param title String containing a title
