@@ -64,7 +64,7 @@ public class UniverseModel {
      *
      */
     public UniverseModel(){
-        time = new Time(Time.MJD_J2000);
+        time = new Time(TimeUtils.MJD_J2000);
         earthRef = new EarthRef(time.mjd_ut1(),time.mjd_tt());
         forces = new ForceModelList();
     }
