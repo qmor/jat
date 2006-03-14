@@ -2,9 +2,9 @@
  *
  * Copyright (c) 2005 Emergent Space Technologies Inc. All rights reserved.
  *
- * This file is part of JAT. JAT is free software; you can 
- * redistribute it and/or modify it under the terms of the 
- * GNU General Public License as published by the Free Software 
+ * This file is part of JAT. JAT is free software; you can
+ * redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  */
 package jat.sim;
 
@@ -44,12 +44,12 @@ import jat.util.*;
  * This is the primary helper class for Simulation.java.  It encapsulates the
  * various spacecraft to be propagated along with the reference frame and time
  * information needed in the simulation.
- * 
+ *
  * @author Richard C. Page III
  *
  */
 public class SimModel implements Derivatives {
-    
+
     /**
      * Eigth Order Runge Kutta integration algorithm
      */
@@ -114,15 +114,15 @@ public class SimModel implements Derivatives {
      * Flag to tell whether to print the progress of the simulation.
      */
     private boolean verbose_timestep=false;
-    
+
     /**
      * Default Constructor initializes the universe model, integrator, and prints
      * to the command line.
      */
     public SimModel(){
-        rk8 = new RungeKutta8();        
+        rk8 = new RungeKutta8();
         lp = new LinePrinter();
-        spacetime = new UniverseModel();           
+        spacetime = new UniverseModel();
     }
     /**
      * Constructor initializes a single spacecraft simulation given relevant parameters
@@ -144,7 +144,7 @@ public class SimModel implements Derivatives {
         lp = new LinePrinter();
         spacetime = new UniverseModel();
     }
-    
+
     /**
      * Constructor initializes a formation of spacecraft given relevant parameters
      * @param r Array of position vectors r[number_of_sc][3] [m]
@@ -154,7 +154,7 @@ public class SimModel implements Derivatives {
      * @param area Array of Cross-sectional area for both Drag and Solar Radiation
      * @param mass Array of spacecraft masses
      */
-    public SimModel(double[][] r, double[][] v, double[] cr, double[] cd, 
+    public SimModel(double[][] r, double[][] v, double[] cr, double[] cd,
             double[] area, double[] mass){
         rk8 = new RungeKutta8();
         VectorN rr,vv;
@@ -171,13 +171,13 @@ public class SimModel implements Derivatives {
         lp = new LinePrinter();
         spacetime = new UniverseModel();
     }
-    
-    
+
+
     /**
      * This is the generic initialization method for the spacecraft and simulation
-     * properties.  It allows the user to create their own input parameters or 
-     * parsers and feed them into this method. 
-     * 
+     * properties.  It allows the user to create their own input parameters or
+     * parsers and feed them into this method.
+     *
      * @param sm An array of spacecraft models.  The first is considered the primary
      * spacecraft of the formation.
      * @param start The start offset for the simulation time [sec]
@@ -188,7 +188,7 @@ public class SimModel implements Derivatives {
      * (thin = 1 means print all timesteps, thin = 2 means print every other timestep)
      * @param output Filename for the tab-delimited output data
      */
-    public void initialize(SpacecraftModel[] sm, double start, double finish, 
+    public void initialize(SpacecraftModel[] sm, double start, double finish,
             double mjd_utc, double step, double thin, String output){
         this.use_formation = true;
         traj_formation = new Trajectory[sm.length];
@@ -208,12 +208,12 @@ public class SimModel implements Derivatives {
         jat = new Trajectory();
         truth = new Trajectory();
     }
-    
+
     /**
      * This is the generic initialization method for the spacecraft and simulation
-     * properties.  It allows the user to create their own input parameters or 
-     * parsers and feed them into this method. 
-     * 
+     * properties.  It allows the user to create their own input parameters or
+     * parsers and feed them into this method.
+     *
      * @param sm An array of spacecraft models.  The first is considered the primary
      * spacecraft of the formation.
      * @param start The start offset for the simulation time [sec]
@@ -224,7 +224,7 @@ public class SimModel implements Derivatives {
      * (thin = 1 means print all timesteps, thin = 2 means print every other timestep)
      * @param output Filename for the tab-delimited output data
      */
-    public void initialize(SpacecraftModel sm, double start, double finish, 
+    public void initialize(SpacecraftModel sm, double start, double finish,
             double mjd_utc, double step, double thin, String output){
         this.use_formation = false;
         sc = sm;
@@ -239,7 +239,32 @@ public class SimModel implements Derivatives {
         jat = new Trajectory();
         truth = new Trajectory();
     }
-    
+
+    /**
+     * This is the initialize method without the print method or line thining.
+     *
+     * @param sm An array of spacecraft models.  The first is considered the primary
+     * spacecraft of the formation.
+     * @param start The start offset for the simulation time [sec]
+     * @param finish The final time of the simulation [sec]
+     * @param mjd_utc Simulation epoch in Modified Julian Date of Universal Coordinated Time
+     * @param step Integrator timestep [sec]
+     * This initialize method does not use print method or line thining.
+     */
+    public void initialize(SpacecraftModel sm, double start, double finish,
+            double mjd_utc, double step){
+        this.use_formation = false;
+        sc = sm;
+        this.t0 = start;
+        this.tf = finish;
+        this.mjd_utc_start = mjd_utc;
+        this.stepsize = step;
+        //* Load Simulation
+        spacetime.set_time(mjd_utc_start);
+        jat = new Trajectory();
+        truth = new Trajectory();
+    }
+
     /**
      * Initialize the Simulation from a Matlab session.  Note this method does not work
      * when calling it from a standalone Java session.
@@ -274,7 +299,7 @@ public class SimModel implements Derivatives {
                 s = new Spacecraft(X);
                 sc_formation.add_spacecraft(s);
             }
-        } else {            
+        } else {
             s = new Spacecraft(get);
             sc = new SpacecraftModel(s);
         }
@@ -288,7 +313,7 @@ public class SimModel implements Derivatives {
         //* Load Simulation
         spacetime.set_time(mjd_utc_start);
     }
-    
+
     /**
      * Initialize the Simulation from a Matlab session.  Note this method does not work
      * when calling it from a standalone Java session.
@@ -314,7 +339,7 @@ public class SimModel implements Derivatives {
         //* Load Simulation
         spacetime.set_time(mjd_utc_start);
     }
-    
+
     /**
      * Initialize the forces present in the universe model during the Simulation.
      * @param force_flag An array of boolean values indicating the forces in order:
@@ -325,12 +350,12 @@ public class SimModel implements Derivatives {
      * @param drag_model "NRL" for NRLMSISE2000 or "HP" for Harris Priester
      */
     public void initializeForces(boolean[] force_flag, boolean use_JGM2, String drag_model){
-        
+
         //ForceModelList forces = new ForceModelList();
         VectorN zero = new VectorN(0,0,0);
 	    if(force_flag[0]){
 	        System.out.println("Earth");
-	        GravitationalBody earth = 
+	        GravitationalBody earth =
 	            new GravitationalBody(398600.4415e+9);
 	        spacetime.addForce(earth);
 	    } else {
@@ -357,7 +382,7 @@ public class SimModel implements Derivatives {
 	    if(force_flag[2]){
 	        System.out.println("Moon");
 	        spacetime.set_compute_moon(true);
-	        Moon moon = 
+	        Moon moon =
 	            new Moon(Constants.GM_Moon,zero,zero);
 	        spacetime.addForce(moon);
 	    }
@@ -369,8 +394,8 @@ public class SimModel implements Derivatives {
 	        if(drag_model.endsWith("NRL") || drag_model.endsWith("A") || drag_model.endsWith("C")){
 	            System.out.println("NRLMSISE");
 	            NRLMSISE_Drag drag = new NRLMSISE_Drag(sc.get_spacecraft());
-	            drag.ap_opt = ap_opt;	
-	            drag.f107_opt = f107_opt; 
+	            drag.ap_opt = ap_opt;
+	            drag.f107_opt = f107_opt;
 	            spacetime.addForce(drag);
 	            spacetime.set_use_iers(true);
 	        }else{
@@ -407,7 +432,7 @@ public class SimModel implements Derivatives {
         else use_JGM2 = true;
         initializeForces(case_flags, use_JGM2, drag);
     }
-    
+
     /**
      * Add a force model to the simulation.
      * @param f Force Model
@@ -415,7 +440,7 @@ public class SimModel implements Derivatives {
     public void add_ForceModel(ForceModel f){
         spacetime.addForce(f);
     }
-    
+
     /**
      * Add a spacecraft model to the simulation.
      * @param sm Spacecraft Model
@@ -423,7 +448,7 @@ public class SimModel implements Derivatives {
     public void add_Spacecraft(SpacecraftModel sm){
         this.sc_formation.add_spacecraft(sm);
     }
-    
+
     /**
      * Add a spacecraft from a state vector.
      * @param X State Vector.
@@ -432,7 +457,7 @@ public class SimModel implements Derivatives {
         if(sc_formation == null) sc_formation = new Formation();
         this.sc_formation.add_spacecraft(new Spacecraft(X));
     }
-    
+
     /**
      * Add a spacecraft to the simulation.
      * @param s Spacecraft.
@@ -448,7 +473,7 @@ public class SimModel implements Derivatives {
     public SpacecraftModel get_SpacecraftModel(int i){
         return sc_formation.get_spacecraftmodel(i);
     }
-    
+
     /**
      * Get the spacecraft with the given index.
      * @param i Index
@@ -473,7 +498,7 @@ public class SimModel implements Derivatives {
     public Spacecraft get_Spacecraft(String id){
         return sc_formation.get_spacecraft(id);
     }
-    
+
     /**
      * Get the number of spacecraft in the current simulation
      * @return The number of spacecraft
@@ -481,7 +506,7 @@ public class SimModel implements Derivatives {
     public int get_number_of_spacecraft(){
     	return sc_formation.get_num_sc();
     }
-    
+
     /**
      * Set the integrator stepsize
      * @param s step size [sec]
@@ -489,7 +514,7 @@ public class SimModel implements Derivatives {
     public void set_stepsize(double s){
         rk8.setStepSize(s);
     }
-    
+
     /**
      * Choose a controller for a particular spacecraft, numbered as they were added
      * to the current simulation
@@ -504,13 +529,13 @@ public class SimModel implements Derivatives {
             s.set_controller(c);
         }
     }
-    
+
     /**
      * If propagating only one spacecraft apply the control law.  If propagating
      * multiple spacecraft, apply the control law to the primary spacecraft or
      * to the first spacecraft added.
      * @param c The control law to be applied.
-     */    
+     */
     public void set_controller(ControlLaw c){
         if(!use_formation){
             sc.set_controller(c);
@@ -519,9 +544,9 @@ public class SimModel implements Derivatives {
             s.set_controller(c);
         }
     }
-    
+
     /**
-     * For use with Matlab - sets a controller from an m-file.  
+     * For use with Matlab - sets a controller from an m-file.
      * @param num Spacecraft number to apply controller
      * @param cmd m-file name
      */
@@ -529,7 +554,7 @@ public class SimModel implements Derivatives {
         MatlabControlLaw mcontroller = new MatlabControlLaw(cmd);
         sc_formation.get_spacecraftmodel(num).set_controller(mcontroller);
     }
-    
+
     /**
      * Choose an estimator for a particular spacecraft, numbered as they were added
      * to the current simulation
@@ -544,7 +569,7 @@ public class SimModel implements Derivatives {
             s.set_estimator(e);
         }
     }
-    
+
     /**
      * If propagating only one spacecraft apply the estimator.  If propagating
      * multiple spacecraft, apply the estimator to the primary spacecraft or
@@ -559,13 +584,13 @@ public class SimModel implements Derivatives {
             s.set_estimator(e);
         }
     }
-    
+
     /**
      * Set the 'truth' trajectory to analyze the simulation output error
      * @param filename Tab delimited file containing [MJD_UTC x y z xdot ydot zdot]
      */
     public void set_truth_traj(String filename){ truth.readFromFile(filename);}
-    
+
     /**
      * Set whether to show the time progression during the simulation loop
      * @param b = true to print the time
@@ -573,24 +598,24 @@ public class SimModel implements Derivatives {
     public void set_showtimestep(boolean b){
     	this.verbose_timestep = b;
     }
-    
+
     /**
      * Get the Trajectory obtained from propagating a single spacecraft
      * @return The trajectory: [MJD_UTC x y z xdot ydot zdot]
      */
     public Trajectory get_traj(){ return jat;}
-    
+
     /**
      * Get the Trajectory of the requestes spacecraft
      * @param sc_num The spacecraft's number in the sequence as added to the simulation
      * @return The trajectory: [MJD_UTC x y z xdot ydot zdot]
      */
     public Trajectory get_traj(int sc_num){ return traj_formation[sc_num];}
-    
+
     /**
      * Get the Relative Trajectory comparison between the 'truth' and the simulation.
      * The 'truth' trajectory must be set.
-     * @see jat.sim.SimModel#set_truth_traj(String) 
+     * @see jat.sim.SimModel#set_truth_traj(String)
      * @param printer Allows writing to a file or the command line
      * @return The relative trajectory comparison
      */
@@ -602,28 +627,28 @@ public class SimModel implements Derivatives {
     }
 
     /**
-     * Get the Relative Trajectory information of the requested spacecraft in the 
+     * Get the Relative Trajectory information of the requested spacecraft in the
      * formation.  This method requires more than one spacecraft.
      * @param l Printer used to write to file or command line
      * @param sc The number of the spacecraft to compare against the primary (spacecraft zero)
      * @return The relative trajectory
      */
-    public RelativeTraj get_rel_traj(LinePrinter l, int sc){        
+    public RelativeTraj get_rel_traj(LinePrinter l, int sc){
         return new RelativeTraj(traj_formation[0],traj_formation[sc],l);
     }
-    
+
     /**
-     * Get the Relative Trajectory information of the requested spacecraft in the 
+     * Get the Relative Trajectory information of the requested spacecraft in the
      * formation.  This method requires more than one spacecraft.
      * @param l Printer used to write to file or command line
      * @param scOne The number of the first spacecraft to compare
      * @param scTwo The number of the second spacecraft to compare
      * @return The relative trajectory
      */
-    public RelativeTraj get_rel_traj(LinePrinter l, int scOne, int scTwo){        
+    public RelativeTraj get_rel_traj(LinePrinter l, int scOne, int scTwo){
         return new RelativeTraj(traj_formation[scOne],traj_formation[scTwo],l);
     }
-    
+
     public void plot_rel_traj(int scOne, int scTwo){
         LinePrinter p = new LinePrinter();
         RelativeTraj rel = new RelativeTraj(traj_formation[scOne],traj_formation[scTwo],p);
@@ -638,11 +663,11 @@ public class SimModel implements Derivatives {
      * @param dt Timestep in seconds
      */
     public void step(double dt){
-        
+
     	if(verbose_timestep){
     		System.out.println("step: "+t+" / "+tf+"    stepsize: "+dt);
     	}
-        
+
         rk8.setStepSize(dt);
         //* update models
         double mjd_utc = spacetime.get_mjd_utc();
@@ -657,18 +682,18 @@ public class SimModel implements Derivatives {
             num_sc = sc_formation.get_num_sc();
             sc_formation.compute_control(t);
             for(int i=0; i<num_sc; i++){
-                current_sc = i;                
+                current_sc = i;
                 //* call integrator
                 SpacecraftModel sm = sc_formation.get_spacecraftmodel(current_sc);
                 Spacecraft s = sm.get_spacecraft();
                 X = s.toStateVector(false);
-                Xnew = rk8.step(t, X, this);                
+                Xnew = rk8.step(t, X, this);
                 //* store new values
                 rnew = new VectorN(Xnew[0],Xnew[1],Xnew[2]);
                 vnew = new VectorN(Xnew[3],Xnew[4],Xnew[5]);
                 s.updateMotion(rnew,vnew);
-                                
-            }            
+
+            }
         } else {
             //* call integrator
             Spacecraft s = sc.get_spacecraft();
@@ -688,7 +713,66 @@ public class SimModel implements Derivatives {
         spacetime.update(t);
         iteration++;
     }
-    
+
+    /**
+     * Primary propagation method.  Increments the simulation by a time 'dt'.
+     * Updates the universe model according to the progression of time.
+     * Updates the spacecraft state.
+     * @param dt Timestep in seconds
+     */
+    public double[] stepMatlabAdaptor(double dt, int neqns){
+
+    	if(verbose_timestep){
+    		System.out.println("step: "+t+" / "+tf+"    stepsize: "+dt);
+    	}
+
+        rk8.setStepSize(dt);
+        //* update models
+        //double mjd_utc = spacetime.get_mjd_utc();
+        double[] X = new double[neqns];
+        double[] Xnew = new double[neqns];
+        //double[] thrust = new double[3];
+        VectorN rnew;
+        VectorN vnew;
+        //double[] tmp = new double[neqns];
+        double num_sc = 1;
+        if(use_formation){
+            num_sc = sc_formation.get_num_sc();
+            sc_formation.compute_control(t);
+            for(int i=0; i<num_sc; i++){
+                current_sc = i;
+                //* call integrator
+                SpacecraftModel sm = sc_formation.get_spacecraftmodel(current_sc);
+                Spacecraft s = sm.get_spacecraft();
+                X = s.toStateVector(false);
+                Xnew = rk8.step(t, X, this);
+                //* store new values
+                rnew = new VectorN(Xnew[0],Xnew[1],Xnew[2]);
+                vnew = new VectorN(Xnew[3],Xnew[4],Xnew[5]);
+                s.updateMotion(rnew,vnew);
+
+            }
+        } else {
+            //* call integrator
+            Spacecraft s = sc.get_spacecraft();
+            X = s.toStateVector(false);
+            Xnew = rk8.step(t, X, this);
+            //* store new values
+            rnew = new VectorN(Xnew[0],Xnew[1],Xnew[2]);
+            vnew = new VectorN(Xnew[3],Xnew[4],Xnew[5]);
+            s.updateMotion(rnew,vnew);
+        }
+        //* update simulation time
+        if(t > (tf-dt) && t != tf){
+            dt = tf-t;
+        }
+        t = t+dt;
+        //* update the universe
+        spacetime.update(t);
+        iteration++;
+        return Xnew;
+    }
+
     /**
      * Used to increment the simulation and output to a file or the command line.
      * @see jat.sim.SimModel#step(double)
@@ -700,7 +784,49 @@ public class SimModel implements Derivatives {
         if(MathUtils.mod(iteration,lp.getThinning())== 0)
             print(lp);
     }
-    
+
+    /**
+     * Method used to propagate the simulation from initial to final states.
+     * Calls SimModel.stepDefault(dt)
+     */
+    public double[][] runloopMatlabAdaptor(double[] x0, double[] time){
+
+        double[][] newX0 = new double[time.length][x0.length];
+        double[] timeArray = new double[time.length];
+        double[][] output = new double[time.length][x0.length+1];
+        int neqns = x0.length;
+        int counter = 1;
+        t = t0;
+        timeArray[0]=time[0];
+        newX0[0]= x0;
+//      * update the universe
+        spacetime.update(t);
+        //* loop over time equal to the sim duration
+
+        while(t < tf){
+            newX0[counter]=stepMatlabAdaptor(stepsize, neqns);
+            timeArray[counter]=t;
+            counter++;
+        }
+
+        for (int i=0; i<time.length; i++)
+        {
+        	for (int j=0; j<x0.length+1; j++)
+        	{
+        		if (j==0)
+   			 {
+   				 output[i][j]= timeArray[i];
+   			 }
+   			 else
+   			 {
+   				 output[i][j] = newX0[i][j-1];
+   			 }
+        	}
+        }
+        //System.out.println("Loop Finished");
+        return output;
+    }
+
     /**
      * Method used to propagate the simulation from initial to final states.
      * Calls SimModel.step(double,lp)
@@ -720,14 +846,14 @@ public class SimModel implements Derivatives {
     }
 
     /**
-     * Print the current state(s) to file or command line.  
+     * Print the current state(s) to file or command line.
      * Store state(s) to trajectory containers.
      * @param lp Printer to file or command line
      */
     protected void print(LinePrinter lp){
         double[] X = new double[6];
         Spacecraft s;
-        double mjd_utc;        
+        double mjd_utc;
         if(this.use_formation){
             int num_sc = sc_formation.get_num_sc();
             for(int i=0;i<num_sc;i++){
@@ -740,7 +866,7 @@ public class SimModel implements Derivatives {
                 X[4] = s.v().get(1)/1000.0;
                 X[5] = s.v().get(2)/1000.0;
                 lp.println(mjd_utc+"\t"+X[0]+"\t"+X[1]+"\t"+X[2]+"\t"
-                        +X[3]+"\t"+X[4]+"\t"+X[5]);      
+                        +X[3]+"\t"+X[4]+"\t"+X[5]);
                 traj_formation[i].add(mjd_utc,X);
             }
         } else {
@@ -762,9 +888,9 @@ public class SimModel implements Derivatives {
      * Implements the Derivatives interface for use with the RungeKutta integrator.
      * Given a time in seconds since epoch and a state vector, return the derivatives
      * of the state vector.
-     * 
+     *
      * @param t Time since epoch [sec]
-     * @param X State vector. [x y z xdot ydot zdot ... other parameters optional] 
+     * @param X State vector. [x y z xdot ydot zdot ... other parameters optional]
      */
     public double[] derivs(double t, double[] x) {
         //* Update spacecraft
@@ -785,11 +911,11 @@ public class SimModel implements Derivatives {
         double[] out = MathUtils.plus(xdot,xdot2);
         return out;
     }
-    
+
     /**
      * Main method to test the class.  For a generic way to run the simulation, see
      * jat.demo.simulation.Simulation.java
-     * 
+     *
      * @see jat.demo.simulation.Simulation
      * @param args
      */
@@ -804,10 +930,10 @@ public class SimModel implements Derivatives {
         //* Name of the various spacecraft
         String[] tests = {"demo"};
         //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
-        boolean[][] force_flag = 
-        	{{false,true,true,false,false}};		
+        boolean[][] force_flag =
+        	{{false,true,true,false,false}};
         //* Optional string which appends test numbers to the spacecraft
-        String[][] test_nums = 	{{""}};  									
+        String[][] test_nums = 	{{""}};
         //* If plot_traj == true , then plot the output to Celestia
         boolean plot_traj = true;
         int i=0,j=0;
@@ -842,7 +968,7 @@ public class SimModel implements Derivatives {
                 //* Here, add any other custom properties, controllers, or other models
                 //* Run the simulation loop
                 sim.runloop();
-            }	        
+            }
         }
         //* Stop the runtime counter
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
@@ -860,11 +986,11 @@ public class SimModel implements Derivatives {
         		System.out.println("Wrote to Celestia");
         	}catch(java.io.IOException ioe){}
         }
-        System.out.println("Finished");    	
- 
-        
+        System.out.println("Finished");
+
+
     }
-    
+
     /**
      * Initialize the DE405 Ephemerides for use with the Moon.
      *
@@ -872,7 +998,7 @@ public class SimModel implements Derivatives {
     public void initializeMoonEphem(){
     	this.spacetime.initializeMoonEphem();
     }
-    
+
     /**
      * Initialize the DE405 Ephemerides for use with the Sun.
      *
