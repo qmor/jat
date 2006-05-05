@@ -41,11 +41,11 @@ public class UniverseModel {
     //** be generalized to represent any central body.  To do this, it should be changed
     //** either to be of type 'jat.spacetime.BodyRef' or include several different
     //** reference frames with a class variable indicating which is the central body. 
-    protected EarthRef earthRef;
+    public EarthRef earthRef;
     /**
      * Time information, including conversions between time systems.
      */
-    protected Time time;
+    public Time time;
     /**
      * Flag indicating whether or not to use the IERS Bulletin A correction data.
      */

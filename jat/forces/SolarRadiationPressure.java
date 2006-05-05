@@ -99,10 +99,15 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
         //double au2 = r_sun_mag*r_sun_mag;
         double P_STK = 4.5344321837439e-06;
         //4.560E-6
-        //double factor = CR * (area/mass) * P_STK * au2 / dcubed;
-        double Ls = 3.823e26; //* STK [W]
-        double factor = CR * (area/mass) * Ls/ (4*Constants.pi*Constants.c*dcubed);   //* STK HPOP method
-        VectorN out = d.times(factor);
+        double factor = CR * (area/mass) * P_STK * au2 / dcubed;
+        //double Ls = 3.823e26; //* STK [W]
+        //double factor = CR * (area/mass) * Ls/ (4*Constants.pi*Constants.c*dcubed);   //* STK HPOP method
+        //double 
+        
+        //THE REAL WAY
+        //VectorN out = d.times(factor);
+        VectorN out = r_Sun.times(factor);
+        
         //VectorN out = d.unitVector().times(P_STK*CR*(area/mass));
 //        out.print("accelSRP");
 
@@ -154,6 +159,10 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
      */
     public void updateArea(double A){
     	area = A;
+    }
+    
+    public void updateCR(double Cr){
+    	CR = Cr;
     }
     
     /** Determines if the satellite is in sunlight or shadow based on simple cylindrical shadow model.

@@ -126,10 +126,10 @@ public class FitIERS {
 			}
 		}
 
-		//int n = lineCollection.size();
+		int n = lineCollection.size() - 1;
 //		int n = 28;
 //		int n = 48;
-		int n = 2191;
+	//	int n = 2191;
 //		double[] mjd = new double[n];
 		mjd = new double[n];
 		double[] y = new double[n];
@@ -274,9 +274,9 @@ public class FitIERS {
 //	    System.out.println("***SEARCH***");
 	    int n = mjd.length;
 	    int out = n-2;
-//	    System.out.println("mjd0: "+mjd[0]+"   mjdarg: "+mjd_arg);
-//	    System.out.println("mjd2: "+mjd[n/2]+"   mjdf: "+mjd[n-1]);
-//	    System.out.println("mjd_arg: "+mjd_arg);
+	    //System.out.println("mjd0: "+mjd[0]+"   mjdarg: "+mjd_arg);
+	    //System.out.println("mjd2: "+mjd[n/2]+"   mjdf: "+mjd[n-1]);
+	    //System.out.println("mjd_arg: "+mjd_arg);
 	    //System.out.println("length: "+mjd.length);
 	    //System.out.println("den:    "+(mjd[mjd.length-1]-mjd[0]));
 	    double ref = (mjd.length/(mjd[mjd.length-1]-mjd[0]));

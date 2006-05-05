@@ -33,12 +33,13 @@ import jat.matvec.data.matrixDecompositions.*;
  */
 public class ReceiverModel {
         
-    private static final double sf = 1.0E-19 * GPS_Utils.c * GPS_Utils.c;
-    
-    private static final double sg = 4.0E-20 * GPS_Utils.c * GPS_Utils.c * MathUtils.PI * MathUtils.PI;
+    //private static final double sf = 1.0E-19 * GPS_Utils.c * GPS_Utils.c;
+    private static final double sf = 0.0036 ;
+    //private static final double sg = 4.0E-20 * GPS_Utils.c * GPS_Utils.c * MathUtils.PI * MathUtils.PI;
+    private static final double sg = 7.106E-05;
     
 	private RandomNumber codeMeasNoise;
-	private static final double codeMeasSigma = 2.0;
+	private static final double codeMeasSigma = 6.0;
 	private RandomNumber cpMeasNoise;
 	private static final double cpMeasSigma = 0.02;
 
@@ -132,7 +133,7 @@ public class ReceiverModel {
 		VectorN clk = new VectorN(in);
 		clk.checkVectorDimensions(2);
 		Matrix phi = new Matrix(2);
-		if (dt != 1.0) System.out.println("ReceiverModel.propagate: dt = "+dt);
+		//if (dt != 1.0) System.out.println("ReceiverModel.propagate: dt = "+dt);
 		phi.set(0, 1, dt);    
     	Matrix q = this.biasQ(dt);
     	CholeskyDecomposition chol = new CholeskyDecomposition(q);

@@ -193,7 +193,6 @@ public class ExtendedKalmanFilter {
 			// resid check at 9 sigma level
 //			if (Math.abs(y) < (9.0*Math.sqrt(r))) {
 			
-			
 				//			System.out.println("predicted range: "+zpred+" residual = "+y);
 	
 				VectorN h = measModel.H(xref.state());
@@ -206,11 +205,12 @@ public class ExtendedKalmanFilter {
 				// compute new best estimate
 				VectorN xhat = k.times(y);
 				//			xhat.print("corrections");
-	
+				
 				// update state and covariance
 				xref.update(xhat); // extended Kalman filter
 				//            xref.print("updated state");
 				//			pnew.print("p before update");
+				//System.out.println(xref.state().toString());
 				pold = this.updateCov(k, h, pnew);
 				//			pold.print("p after update");
 				//			VectorN sigmas = pold.diagonal();
@@ -235,6 +235,7 @@ public class ExtendedKalmanFilter {
 
 //			}
 			// get ready for next data point
+			
 			i = i + 1;
 			xref.resetPhi(); // re-linearize
 			tprev = t;

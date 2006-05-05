@@ -59,4 +59,32 @@ public interface MeasurementModel {
 	 * @param index measurement index.
 	 */
 
+	
+	/**
+	 * Returns the resiudals from the measurement
+	 * @param i Used in the case of a state-type measurement, and
+	 * represents the position of the state currently being updated
+	 * @param state  VectorN with the current state at the measurement time
+	 */
+	public double observedMinusPredicted(int i, VectorN state);
+	
+	
+	/**
+	 * Returns the current measurement noise as read from the
+	 * property file
+	 * @param measNumber which satellite this measurement is for 
+	 * @param whichState which state (in a state type measurement) this 
+	 * noise is for
+	 * @return
+	 */
+	public double R(int measNumber, int whichState);
+	
+	
+	/**
+	 * returns the H vector for the current measurement
+	 * @param whichState  (used in a state vector measurement)
+	 * @param state current state
+	 * @return
+	 */
+	public VectorN H(int whichState, VectorN state);
 }
