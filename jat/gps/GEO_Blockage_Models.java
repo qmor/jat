@@ -35,6 +35,7 @@ import jat.alg.integrators.LinePrinter;
 import jat.cm.FiniteBurn;
 import jat.matvec.data.VectorN;
 import jat.math.*;
+import jat.util.FileUtil;
 //import jat.math.*;
 
 /**
@@ -94,10 +95,17 @@ public class GEO_Blockage_Models implements Visible {
 		//is pointed at the center of the Earth)
 		if(firsttime == false)
 		{
+            String fs, dir_in;
+            fs = FileUtil.file_separator();
+            try{
+                dir_in = FileUtil.getClassFilePath("jat.gps","GEO_Blockage_Models")+"antennas"+fs;
+            }catch(Exception e){
+                dir_in = "C:/Code/Jat/jat/eph/DE405data/";
+            }	
 			//readFromFile("C:\\GOESR\\omni_antenna.txt",receiverAntennaDeg,receiverAntennaGain);
 			//readFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
-			//readFromFile("C:\\GOESR\\patch.txt",receiverAntennaDeg,receiverAntennaGain);
-			readFromFile("C:\\GOESR\\GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
+			readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
+			readFromFile(dir_in+"GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
 			firsttime = true;
 		}
 		Interpolator interpR = new Interpolator(receiverAntennaDeg,receiverAntennaGain);
