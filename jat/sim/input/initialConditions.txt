@@ -1,0 +1,179 @@
+
+# Simulator Input List
+
+# Mode: 0 = Trajectory Generation Only, 1 = Trajectory and Filter
+init.mode    1
+
+#Initial MJD and Seconds past MJD0 for simulation start
+init.MJD0    51545   
+init.T0      0		 
+
+#Initial MJD and Seconds past MJDF for simulation end
+init.MJDF    51545    
+init.TF      7000		 
+
+#The step size in the propagation step.
+#NOTE:  This number should be smaller than the desired measurement period
+init.dt      5       
+				
+
+
+# Space Craft Properties/Initial Conditions (start numbering from 0)
+# Each satellite needs a true state and a reference state
+prop.NumSpacecraft  2  
+
+#ECI position and velocity (m and m/s)  
+TRUE_STATE.0.X 0.0          
+TRUE_STATE.0.Y 42214000     
+TRUE_STATE.0.Z 0.0          
+TRUE_STATE.0.VX 3070        
+TRUE_STATE.0.VY 0000        
+TRUE_STATE.0.VZ 0.0       
+
+REF_STATE.0.X 100.0          
+REF_STATE.0.Y 42214000     
+REF_STATE.0.Z 100          
+REF_STATE.0.VX 3080        
+REF_STATE.0.VY 0.1        
+REF_STATE.0.VZ 0.2 
+  
+TRUE_STATE.1.X 5.0          
+TRUE_STATE.1.Y 42214005     
+TRUE_STATE.1.Z 5.0          
+TRUE_STATE.1.VX 3070        
+TRUE_STATE.1.VY 0000        
+TRUE_STATE.1.VZ 0.0       
+
+REF_STATE.1.X 30.0          
+REF_STATE.1.Y 42214000     
+REF_STATE.1.Z 10          
+REF_STATE.1.VX 3060        
+REF_STATE.1.VY 0.1        
+REF_STATE.1.VZ 0.0 
+
+#Initial Clock Bias Term 
+jat.0.Clock   0.0
+
+#Solar Radiation Pressure Coefficient and Drag Doefficient
+#Area (m^2) and mass (kg)
+jat.0.Cr    1.0          
+jat.0.Cd    2.2		  
+jat.0.area  10	  
+jat.0.mass  1000    
+
+jat.1.Cr    1.0          
+jat.1.Cd    2.2		  
+jat.1.area  10	  
+jat.1.mass  1000       
+
+#Orbital Force Parameters (for each spacecraft)
+
+#Use Gravitational Gradient (not currently implimented)
+jat.0.GravGrad false 
+jat.1.GravGrad false
+
+#Use only 2-body force models
+jat.0.2body false     
+jat.1.2body false
+
+#Include Solar Gravity Acceleration
+jat.0.solar true   
+jat.1.solar true 
+
+#Include Lunar Gravity Acceleration
+jat.0.lunar true
+jat.1.lunar true
+
+#Include Drag Acceleration      
+jat.0.drag false      
+jat.1.drag false   
+
+#Include Solar Radiation Pressure Acceleration
+jat.0.srp true        
+jat.1.srp true  
+
+#Include only jgm2 gravity model (False = JGM3)
+jat.0.jgm2 false      
+jat.1.jgm2 false 
+
+#Estimator Properties
+
+#Set the number of states the filter will have
+FILTER.dt    1	
+FILTER.states 15
+
+#Set the process model used
+FILTER.pm JGM4x4SRPProcess15state
+
+#PROCESS NOISE
+#Set the process noise for each of the states
+Q.0.X   1e-6  
+Q.0.Y   1e-6
+Q.0.Z   1e-6
+Q.0.VX   1e-9   
+Q.0.VY   1e-9
+Q.0.VZ   1e-9
+Q.1.X   1e-6   
+Q.1.Y   1e-6
+Q.1.Z   1e-6
+Q.1.VX   1e-9  
+Q.1.VY  1e-9
+Q.1.VZ  1e-9
+Q.0.Cr  1e-12 
+Q.1.Cr  1e-12
+Q.0.Clock  1e-4  
+
+#Set the Initial Position and Velocity Covariance (m and m/s)
+P0.0.X    10000			 
+P0.0.Y    10000			
+P0.0.Z    10000			
+P0.0.VX   10			
+P0.0.VY   10			
+P0.0.VZ   10
+P0.1.X    1000			 
+P0.1.Y    1000			
+P0.1.Z    1000			
+P0.1.VX   10			
+P0.1.VY   10			
+P0.1.VZ   10
+
+#Set thhe Initial Clock Offset and Drift Covariance (m and m/s)		
+P0.0.clock    10000000		
+P0.0.bdot 100
+
+#Set the Initial Solar Radiation Pressure and Drag Coefficient Covariances	
+P0.0.Cr   100	
+P0.1.Cr   100		
+P0.0.Cd	  100	
+P0.1.Cd   100
+
+
+
+#MEASUREMENTS
+
+#Set the number of types of measurements
+MEAS.types 2
+
+#Measurement type position.  Assumed an ECI absolute position can 
+#be measured or provided by a ground station.  The associated
+#measurement noise is also provided 
+
+MEAS.0.desc position
+MEAS.0.size  12
+MEAS.0.R.0	 5
+MEAS.0.R.1   5
+MEAS.0.R.2   5
+MEAS.0.R.3	1
+MEAS.0.R.4  1
+MEAS.0.R.5  1
+MEAS.0.R.6	 3
+MEAS.0.R.7   3
+MEAS.0.R.8   3
+MEAS.0.R.9	.1
+MEAS.0.R.10 .1
+MEAS.0.R.11 .1
+
+
+MEAS.1.desc range
+MEAS.1.SIZE 1
+MEAS.1.R.0  1
