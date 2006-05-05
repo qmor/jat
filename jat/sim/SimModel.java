@@ -906,9 +906,13 @@ public class SimModel implements Derivatives {
         //* Get non-control derivatives
         double[] xdot = spacetime.derivs(t,sm.get_spacecraft());
         //* Get control derivatives
-        double[] xdot2 = sm.control_thrust_derivs(t,xdot);
+        //double[] xdot2 = sm.control_thrust_derivs(t,xdot);
+       
+        //NOTE:  as of last revision, this was not correct.  
+        //A more thorough was of adding controls may be required
         //* Compile derivatives
-        double[] out = MathUtils.plus(xdot,xdot2);
+        //double[] out = MathUtils.plus(xdot,xdot2);
+        double[] out = xdot;
         return out;
     }
 
