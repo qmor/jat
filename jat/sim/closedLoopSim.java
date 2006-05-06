@@ -316,9 +316,16 @@ public class closedLoopSim {
 			{
 				 newState = filter.estimate(simTime, i,0);
 			}
-		
+
+			
+			
 
 		}
+		
+		//catch the case where there are no measurements
+		if(numMeas == 0)
+			 newState = filter.estimate(simTime, 0,0);
+	
 		
 		//Update the current state with the output of the filter
 		//Write the current state information to files

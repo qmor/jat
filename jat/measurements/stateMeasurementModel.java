@@ -65,7 +65,7 @@ public class stateMeasurementModel implements MeasurementModel{
 		
 	}
 	
-	public double observedMinusPredicted(int i, VectorN state){
+	public double  zPred(int i, double time, VectorN state){
 		VectorN oMinusC;
 		VectorN pred = predictMeasurement(state);
 		VectorN obs  = getMeasurement();
@@ -73,16 +73,19 @@ public class stateMeasurementModel implements MeasurementModel{
 		return oMinusC.get(i);
 	}
 	
-	public double R(int measNumber, int whichState)
+	public double R()
 	{
-		String tmp = "MEAS."+measNumber+".R."+whichState;
+		int whichState = EKF.stateNum;
+		int satNum     = EKF.satNum;
+		String tmp = "MEAS."+satNum+".R."+whichState;
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
 	}
 	
-	public VectorN H(int whichState, VectorN state)
+	public VectorN H(VectorN state)
 	{
 		/*Determine the number of states*/
+		int whichState = EKF.stateNum;
 		int numStates = initializer.parseInt(hm,"FILTER.states");
 	
 		/*for a Range measurement, the current state has H = 1, all other states H = 0 */
@@ -92,18 +95,4 @@ public class stateMeasurementModel implements MeasurementModel{
 		return H;
 	}
 
-	public VectorN H(VectorN xref) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public double R() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public double zPred(int index, double t, VectorN xref) {
-		// TODO Auto-generated method stub
-		return 0;
-	}	
 }

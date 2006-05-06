@@ -37,6 +37,11 @@ public class createMeasurements{
 			{
 				mm[i] = new rangeMeasurementModel();
 			}
+			else if(measurementTypes[i].equals("GPS"))
+			{
+				//mm[i] = new GPSMeasurementModel();
+			}
+			
 			else
 			{
 				System.out.println("Invalid measurement type.");

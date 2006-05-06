@@ -69,7 +69,7 @@ public class rangeMeasurementModel implements MeasurementModel{
 		
 	}
 	
-	public double observedMinusPredicted(int i, VectorN state){
+	public double zPred(int i, double time, VectorN state){
 		double oMinusC;
 		double pred = predictMeasurement(state);
 		double obs  = getMeasurement();
@@ -77,14 +77,15 @@ public class rangeMeasurementModel implements MeasurementModel{
 		return oMinusC;
 	}
 	
-	public double R(int measNumber, int whichState)
+	public double R()
 	{
+		
 		String tmp = "MEAS."+0+".R."+0;
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
 	}
 	
-	public VectorN H(int whichState, VectorN state)
+	public VectorN H(VectorN state)
 	{
 		/*NOTE:  Relative state are computed by differencing
 		 		 the host (states 6 - 11) minus the local 
@@ -119,18 +120,4 @@ public class rangeMeasurementModel implements MeasurementModel{
 		return H;
 	}
 
-	public VectorN H(VectorN xref) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public double R() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public double zPred(int index, double t, VectorN xref) {
-		// TODO Auto-generated method stub
-		return 0;
-	}	
 }

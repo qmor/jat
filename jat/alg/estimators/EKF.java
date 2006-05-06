@@ -70,7 +70,10 @@ public class EKF {
 	 public static Matrix pnew;
 	 
 	 public static LinePrinter residuals; 
-
+	 public HashMap hm;
+	 
+	 public static int satNum, stateNum;
+	 
 	/**
 	 * Constructor.
 	 * @param mm MeasurementModel
@@ -78,7 +81,7 @@ public class EKF {
 	 * @param rp LinePrinter
 	 */
 	public EKF() {
-		HashMap hm = closedLoopSim.hm;
+		hm = closedLoopSim.hm;
 		
         String fs, dir_in;
         fs = FileUtil.file_separator();
@@ -194,6 +197,9 @@ public class EKF {
 	 */
 	public VectorN estimate(double simTime, int measNum, int whichMeas) {
 		
+		satNum = measNum;
+		stateNum = whichMeas;
+		
 		
 		/*If necessary move to  a new time*/
 		double dt = simTime- filterTime;
@@ -249,24 +255,28 @@ public class EKF {
 		 * is in the state.  This is probably not used by truly scalar measurements
 		 * and can be safely set to zero in those cases.
 		 */
-		double y = createMeasurements.mm[measNum].observedMinusPredicted(whichMeas,xref.get(0,n));
-		double r = createMeasurements.mm[measNum].R(measNum,whichMeas);
-		String residualsOut = "Time:  " + simTime + "  Residual:  " + y + " Measurement Type:  " + createMeasurements.measurementTypes[measNum] + " State " + whichMeas;
-		residuals.println(residualsOut);
 		
-		//Use the current reference trajectory to form the H matrix
-		VectorN  H = createMeasurements.mm[measNum].H(whichMeas,xref.get(0,n));
 		
-		// compute the Kalman gain
-		VectorN k = this.kalmanGain(pnew, H, r);
-		
-		// compute new best estimate
-		VectorN xhat = k.times(y);
-
-		// update state and covariance
-		xref.update(xhat); 
-		pold = this.updateCov(k, H, pnew);
-
+		if(initializer.parseInt(hm,"MEAS.types")!=0 )
+		{
+			double y = createMeasurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
+			double r = createMeasurements.mm[measNum].R();
+			String residualsOut = "Time:  " + simTime + "  Residual:  " + y + " Measurement Type:  " + createMeasurements.measurementTypes[measNum] + " State " + whichMeas;
+			residuals.println(residualsOut);
+			
+			//Use the current reference trajectory to form the H matrix
+			VectorN  H = createMeasurements.mm[measNum].H(xref.get(0,n));
+			
+			// compute the Kalman gain
+			VectorN k = this.kalmanGain(pnew, H, r);
+			
+			// compute new best estimate
+			VectorN xhat = k.times(y);
+			
+			// update state and covariance
+			xref.update(xhat); 
+			pold = this.updateCov(k, H, pnew);
+		}
 		// check the update
 		//double zafter = measModel.zPred(i, t, xref.state());
 		//double yafter = z - zafter;

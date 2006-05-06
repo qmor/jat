@@ -87,7 +87,7 @@ public class GEO_Blockage_Models implements Visible {
      * @param rGPS current position vector of GPS Satellite
      * @return boolean true if the GPS satellite is visible
      */
-	public boolean visible(VectorN losu, VectorN r, VectorN rGPS, int prn) {
+	public boolean visible(VectorN losu, VectorN r, VectorN rGPS) {
 
 		//Load the antenna gain maps.  Note:  0 = receiver, 1 = GPS Sv
 		//NOTE: I believe that both GPS satellite and the receiver antenna

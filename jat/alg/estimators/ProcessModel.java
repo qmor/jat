@@ -49,7 +49,7 @@ public interface ProcessModel {
 	 */
 	public Matrix Q (double t, double dt, EstSTM x);
 
-	public Matrix QRIC (VectorN rECI, VectorN vECI, double t);
+
 	/** 
 	 * Returns the initial reference state.
 	 * @return the initial reference state.

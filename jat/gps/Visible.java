@@ -36,5 +36,5 @@ public interface Visible {
 	 * @param rISS ISS position vector
 	 * @return boolean true = visible, false = blocked
 	 */
-	public boolean visible(VectorN losu, VectorN r, VectorN rISS, int prn);
+	public boolean visible(VectorN losu, VectorN r, VectorN rISS);
 }
