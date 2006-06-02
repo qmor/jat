@@ -13,10 +13,13 @@ public class stateMeasurementModel implements MeasurementModel{
 	
 	public static VectorN R;
 	public static int numStates;
-	HashMap hm = closedLoopSim.hm;
+	HashMap hm;// = closedLoopSim.hm;
+	//* *NOTE* Added argument to default constructor instead of call to static var
+	//*        at instantiation
 	Random generator;
 	
-	public stateMeasurementModel() {
+	public stateMeasurementModel(HashMap h) {
+		hm = h;
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
 		 */

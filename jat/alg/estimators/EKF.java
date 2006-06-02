@@ -120,7 +120,50 @@ public class EKF {
 		filterInitialize();
 		
 	}
-
+	/**
+	 * Constructor.
+	 * @param h HashMap from parsing input file
+	 */
+	public EKF(HashMap h) {
+		hm = h;
+		
+        String fs, dir_in;
+        fs = FileUtil.file_separator();
+        try{
+            dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"output"+fs;
+        }catch(Exception e){
+            dir_in = "";
+        }
+        residuals = new LinePrinter(dir_in+"Residuals.txt");
+		this.n = initializer.parseInt(hm,"FILTER.states");
+		String stringPm = initializer.parseString(hm,"FILTER.pm");
+		dtNominal = initializer.parseInt(hm,"FILTER.dt");
+		
+		filterTime = 0;//initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0");
+		System.out.println(stringPm);
+		if(stringPm.equals("JGM4x4SRPProcess15state"))
+		{
+			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
+	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
+			this.process= new JGM4x4SRPProcess15state(lp1, lp2);
+	
+		}
+		else if(stringPm.equals("JGM4x4SRPProcess9state"))
+		{
+			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
+	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
+			this.process= new JGM4x4SRPProcess9state(lp1, lp2);
+	
+		}
+		else
+		{
+			System.out.println("Process model not recognized.  Aborting");
+			System.exit(1);
+		}
+		double[] X = new double[n];
+		filterInitialize();
+		
+	}
 	private Matrix updateCov(VectorN k, VectorN h, Matrix p) {
 		Matrix eye = new Matrix(this.n);
 		Matrix kh = k.outerProduct(h);

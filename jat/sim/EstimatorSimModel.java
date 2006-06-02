@@ -3,6 +3,7 @@ package jat.sim;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 import jat.alg.estimators.EKF;
 import jat.alg.integrators.Derivatives;
@@ -29,6 +30,7 @@ public class EstimatorSimModel extends SimModel {
 	//** Static Variables **//
 	
 	private boolean gravityModel;
+	private HashMap hm;
 	
 	//** Object Variables **//
 	
@@ -63,14 +65,14 @@ public class EstimatorSimModel extends SimModel {
             dir_in = "";
         }
 		
-		closedLoopSim.hm = initializer.parse_file(dir_in+"initialConditions.txt");
-		numSpacecraft = initializer.parseInt(closedLoopSim.hm,"prop.NumSpacecraft");
-		numStates = initializer.parseInt(closedLoopSim.hm,"FILTER.states");
-		dt = initializer.parseInt(closedLoopSim.hm,"init.dt");
+		this.hm = initializer.parse_file(dir_in+"initialConditions.txt");
+		numSpacecraft = initializer.parseInt(hm,"prop.NumSpacecraft");
+		numStates = initializer.parseInt(hm,"FILTER.states");
+		dt = initializer.parseInt(hm,"init.dt");
 		truth = new SpacecraftModel[numSpacecraft]; 
 		ref   = new SpacecraftModel[numSpacecraft];
-		cm = new createMeasurements();
-		filter = new EKF();
+		cm = new createMeasurements(hm);
+		filter = new EKF(hm);
 	}
 	public EstimatorSimModel(double[] r, double[] v, double cr, double cd, double area, double mass){
 		super(r, v, cr, cd, area, mass);
@@ -82,14 +84,14 @@ public class EstimatorSimModel extends SimModel {
             dir_in = "";
         }
 		
-		closedLoopSim.hm = initializer.parse_file(dir_in+"initialConditions.txt");
-		numSpacecraft = initializer.parseInt(closedLoopSim.hm,"prop.NumSpacecraft");
-		numStates = initializer.parseInt(closedLoopSim.hm,"FILTER.states");
-		dt = initializer.parseInt(closedLoopSim.hm,"init.dt");
+        this.hm = initializer.parse_file(dir_in+"initialConditions.txt");
+		numSpacecraft = initializer.parseInt(hm,"prop.NumSpacecraft");
+		numStates = initializer.parseInt(hm,"FILTER.states");
+		dt = initializer.parseInt(hm,"init.dt");
 		truth = new SpacecraftModel[numSpacecraft]; 
 		ref   = new SpacecraftModel[numSpacecraft];
-		cm = new createMeasurements();
-		filter = new EKF();
+		cm = new createMeasurements(hm);
+		filter = new EKF(hm);
 	}
 	public EstimatorSimModel(double[][] r, double[][] v, double[] cr, double[] cd,
 			double[] area, double[] mass){
@@ -102,14 +104,14 @@ public class EstimatorSimModel extends SimModel {
             dir_in = "";
         }
 		
-		closedLoopSim.hm = initializer.parse_file(dir_in+"initialConditions.txt");
-		numSpacecraft = initializer.parseInt(closedLoopSim.hm,"prop.NumSpacecraft");
-		numStates = initializer.parseInt(closedLoopSim.hm,"FILTER.states");
-		dt = initializer.parseInt(closedLoopSim.hm,"init.dt");
+        this.hm = initializer.parse_file(dir_in+"initialConditions.txt");
+		numSpacecraft = initializer.parseInt(hm,"prop.NumSpacecraft");
+		numStates = initializer.parseInt(hm,"FILTER.states");
+		dt = initializer.parseInt(hm,"init.dt");
 		truth = new SpacecraftModel[numSpacecraft]; 
 		ref   = new SpacecraftModel[numSpacecraft];
-		cm = new createMeasurements();
-		filter = new EKF();
+		cm = new createMeasurements(hm);
+		filter = new EKF(hm);
 	}
 	
 	//** Object Methods **//
@@ -122,7 +124,7 @@ public class EstimatorSimModel extends SimModel {
 		double[] tv = new double[3];  //variable for true trajectory
 		double cr,cd,area,mass,dt;
 		
-		double MJD0 =  initializer.parseDouble(closedLoopSim.hm,"init.MJD0");
+		double MJD0 =  initializer.parseDouble(hm,"init.MJD0");
 		
 		//For each spacecraft extract the initial vector and force information
 		//Use this information to create a sim model
@@ -135,51 +137,51 @@ public class EstimatorSimModel extends SimModel {
 			
 			String str  = refs+i+".X";
 			String strt = tru+i+".X";
-			r[0] = initializer.parseDouble(closedLoopSim.hm,str);
-			tr[0] = initializer.parseDouble(closedLoopSim.hm,strt);
+			r[0] = initializer.parseDouble(this.hm,str);
+			tr[0] = initializer.parseDouble(this.hm,strt);
 			
 			str  = refs+i+".Y";
 			strt = tru+i+".Y";
-			r[1] = initializer.parseDouble(closedLoopSim.hm,str);
-			tr[1] = initializer.parseDouble(closedLoopSim.hm,strt);
+			r[1] = initializer.parseDouble(this.hm,str);
+			tr[1] = initializer.parseDouble(this.hm,strt);
 			
 			str  = refs+i+".Z";
 			strt = tru+i+".Z";
-			r[2] = initializer.parseDouble(closedLoopSim.hm,str);
-			tr[2] = initializer.parseDouble(closedLoopSim.hm,strt);
+			r[2] = initializer.parseDouble(this.hm,str);
+			tr[2] = initializer.parseDouble(this.hm,strt);
 			
 			/*Velocity*/
 			str  = refs+i+".VX";
 			strt = tru+i+".VX";
-			v[0] = initializer.parseDouble(closedLoopSim.hm,str);
-			tv[0] = initializer.parseDouble(closedLoopSim.hm,strt);
+			v[0] = initializer.parseDouble(this.hm,str);
+			tv[0] = initializer.parseDouble(this.hm,strt);
 			
 			str  = refs+i+".VY";
 			strt = tru+i+".VY";
-			v[1] = initializer.parseDouble(closedLoopSim.hm,str);
-			tv[1] = initializer.parseDouble(closedLoopSim.hm,strt);
+			v[1] = initializer.parseDouble(this.hm,str);
+			tv[1] = initializer.parseDouble(this.hm,strt);
 			
 			str  = refs+i+".VZ";
 			strt = tru+i+".VZ";
-			v[2] = initializer.parseDouble(closedLoopSim.hm,str);
-			tv[2] = initializer.parseDouble(closedLoopSim.hm,strt);
+			v[2] = initializer.parseDouble(this.hm,str);
+			tv[2] = initializer.parseDouble(this.hm,strt);
 			
 			
 			/*Solar Radiation Pressure Coefficient*/
 			str = "jat."+i+".Cr";
-			cr   = initializer.parseDouble(closedLoopSim.hm,str);
+			cr   = initializer.parseDouble(this.hm,str);
 			
 			/*Drag Coefficient*/
 			str = "jat."+i+".Cd";
-			cd   = initializer.parseDouble(closedLoopSim.hm,str);
+			cd   = initializer.parseDouble(this.hm,str);
 			
 			/*Initial Mass*/
 			str = "jat."+i+".mass";
-			mass = initializer.parseDouble(closedLoopSim.hm,str);
+			mass = initializer.parseDouble(this.hm,str);
 			
 			/*Initial Area*/
 			str = "jat."+i+".area";
-			area = initializer.parseDouble(closedLoopSim.hm,str);
+			area = initializer.parseDouble(this.hm,str);
 			
 			/*Read in the appropriate model flags*/
 			boolean[] force_flag = CreateForceFlag(i); 
@@ -198,7 +200,7 @@ public class EstimatorSimModel extends SimModel {
 			
 			/*Set the step size for the trajectory generation*/
 			/*Set the integrator Step size*/
-			dt = initializer.parseInt(closedLoopSim.hm,"init.dt");
+			dt = initializer.parseInt(this.hm,"init.dt");
 			//ref[i].set_sc_dt(dt);
 			//truth[i].set_sc_dt(dt);
 		}		
@@ -331,37 +333,37 @@ public class EstimatorSimModel extends SimModel {
 		boolean[] force_flag = new boolean[6];
 		
 		/*Determine if only two body EOMS should be used*/
-		if(initializer.parseBool(closedLoopSim.hm,"jat."+i+".2body"))
+		if(initializer.parseBool(this.hm,"jat."+i+".2body"))
 			force_flag[0]=true;
 		else
 			force_flag[0]=false;
 		
 		/*Determine if Solar gravity*/
-		if(initializer.parseBool(closedLoopSim.hm,"jat."+i+".solar"))
+		if(initializer.parseBool(this.hm,"jat."+i+".solar"))
 			force_flag[1]=true;
 		else
 			force_flag[1]=false;
 		
 		/*Determine if Lunar Gravity is to be modeled*/
-		if(initializer.parseBool(closedLoopSim.hm,"jat."+i+".lunar"))
+		if(initializer.parseBool(this.hm,"jat."+i+".lunar"))
 			force_flag[2]=true;
 		else
 			force_flag[2]=false;
 		
 		/*Derermine if Drag is to be modeled*/ 
-		if(initializer.parseBool(closedLoopSim.hm,"jat."+i+".drag"))
+		if(initializer.parseBool(this.hm,"jat."+i+".drag"))
 			force_flag[3]=true;
 		else
 			force_flag[3]=false;
 		
 		/*Determine if solar radiation pressure should be modeled*/
-		if(initializer.parseBool(closedLoopSim.hm,"jat."+i+".srp"))
+		if(initializer.parseBool(this.hm,"jat."+i+".srp"))
 			force_flag[4]=true;
 		else
 			force_flag[4]=false;
 		
 		/*Determine which Gravity model to use*/
-		if(initializer.parseBool(closedLoopSim.hm,"jat."+i+".jgm2"))
+		if(initializer.parseBool(this.hm,"jat."+i+".jgm2"))
 			gravityModel = true;
 		else
 			gravityModel = false;
@@ -384,7 +386,7 @@ public class EstimatorSimModel extends SimModel {
 			//Extract the State Vector
 			//Only need to propagate the reference state if 
 			//We aren't estimating it
-			if(initializer.parseDouble(closedLoopSim.hm,"init.mode") == 0)
+			if(initializer.parseDouble(this.hm,"init.mode") == 0)
 			{
 				double [] true_state = truth[numSats].get_spacecraft().toStateVector();
 				
@@ -464,10 +466,10 @@ public class EstimatorSimModel extends SimModel {
 				else
 				{
 					String tmp = "MEAS."+i+".satellite";
-					int sat = initializer.parseInt(closedLoopSim.hm,tmp);
+					int sat = initializer.parseInt(this.hm,tmp);
 					
 					tmp = "MEAS."+i+".size";
-					for(int j = 0;j<initializer.parseInt(closedLoopSim.hm,tmp);j++)
+					for(int j = 0;j<initializer.parseInt(this.hm,tmp);j++)
 					{	
 						newState = filter.estimate(simTime,i,j+(6*sat),true);
 						processedMeasurements ++;
@@ -569,13 +571,13 @@ public class EstimatorSimModel extends SimModel {
 		
 		
 		/*Cache off the simulation mode */
-		int filterMode = initializer.parseInt(closedLoopSim.hm,"init.mode");
+		int filterMode = initializer.parseInt(this.hm,"init.mode");
 		
 		//Compute the length of the simulation in seconds
-		double MJD0 =  initializer.parseDouble(closedLoopSim.hm,"init.MJD0");
-		double MJDF =  initializer.parseDouble(closedLoopSim.hm,"init.MJDF");
-		double T0   =  initializer.parseDouble(closedLoopSim.hm,"init.T0");
-		double TF   =  initializer.parseDouble(closedLoopSim.hm,"init.TF");
+		double MJD0 =  initializer.parseDouble(this.hm,"init.MJD0");
+		double MJDF =  initializer.parseDouble(this.hm,"init.MJDF");
+		double T0   =  initializer.parseDouble(this.hm,"init.T0");
+		double TF   =  initializer.parseDouble(this.hm,"init.TF");
 		simTime = 0;
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 		

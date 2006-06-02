@@ -13,13 +13,16 @@ public class rangeMeasurementModel implements MeasurementModel{
 	
 	public static VectorN R;
 	public static int numStates;
-	HashMap hm = closedLoopSim.hm;
+	HashMap hm;// = closedLoopSim.hm;
+	//* *NOTE* added argument to default constructor instead of call to static
+	//*        at instantiation
 	Random generator;
 	
 	
 	
-	public rangeMeasurementModel() {
+	public rangeMeasurementModel(HashMap h) {
 		
+		hm = h;
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
 		 */

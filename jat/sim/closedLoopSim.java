@@ -53,7 +53,7 @@ public class closedLoopSim {
 		dt = initializer.parseInt(hm,"init.dt");
 		truth = new SimModel[numSpacecraft]; 
 		ref   = new SimModel[numSpacecraft];
-		cm = new createMeasurements();
+		cm = new createMeasurements(hm);
 		filter = new EKF();
 	}
 	

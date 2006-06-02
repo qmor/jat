@@ -13,13 +13,15 @@ public class GPSStateMeasurementModel implements MeasurementModel{
 	
 	public static VectorN R;
 	public static int numStates;
-	HashMap hm = closedLoopSim.hm;
+	HashMap hm;// = closedLoopSim.hm;  
+	//* *NOTE* Added argument to default constructor instead of call to static var at instantiation
 	Random generator;
 	
-	public GPSStateMeasurementModel() {
+	public GPSStateMeasurementModel(HashMap h) {
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
 		 */
+		hm = h;
 		try {
 			Thread.sleep(20);
 			generator = new Random();

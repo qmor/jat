@@ -95,8 +95,8 @@ public class GPSmeasurementModel implements MeasurementModel{
 	 * @param clp LinePrinter for clock data output
 	 * @param mlp LinePrinter for measurement data output
 	 */
-	public GPSmeasurementModel() {
-		hm = closedLoopSim.hm;
+	public GPSmeasurementModel(HashMap h) {
+		hm = h;  //closedLoopSim.hm; //* *NOTE* added argument rather than static var
 		
 		block = new GEO_Blockage_Models();
 		

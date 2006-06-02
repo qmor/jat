@@ -15,10 +15,12 @@ public class createMeasurements{
 	public static int numMeasurementTypes;
 	public static MeasurementModel [] mm;
 	public static double [] frequency;
-	public createMeasurements()
+	
+	//* *NOTE* added HashMap as an argument rather than calling static closedLoopSim.hm
+	public createMeasurements(HashMap hm)
 	{
 		//Read in all of the required measurements
-		HashMap hm = closedLoopSim.hm;
+		//HashMap hm = closedLoopSim.hm;
 		numMeasurementTypes = initializer.parseInt(hm,"MEAS.types");
 		measurementTypes = new String[numMeasurementTypes];
 		mm = new MeasurementModel [numMeasurementTypes];
@@ -33,24 +35,24 @@ public class createMeasurements{
 			System.out.println(measurementTypes[i]);
 			if(measurementTypes[i].equals("position"))
 			{
-				mm[i] = new stateMeasurementModel();
+				mm[i] = new stateMeasurementModel(hm);
 				//MeasurementModel pp = new stateMeasurementModel();
 			}
 			else if(measurementTypes[i].equals("range"))
 			{
-				mm[i] = new rangeMeasurementModel();
+				mm[i] = new rangeMeasurementModel(hm);
 			}
 			else if(measurementTypes[i].equals("GPS"))
 			{
-				mm[i] = new GPSmeasurementModel();
+				mm[i] = new GPSmeasurementModel(hm);
 			}
 			else if(measurementTypes[i].equals("pseudoGPS"))
 			{
-				mm[i] = new GPSStateMeasurementModel();
+				mm[i] = new GPSStateMeasurementModel(hm);
 			}
 			else if(measurementTypes[i].equals("stateUpdate"))
 			{
-				mm[i] = new stateUpdateMeasurementModel();
+				mm[i] = new stateUpdateMeasurementModel(hm);
 			}
 			else
 			{
