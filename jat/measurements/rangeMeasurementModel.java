@@ -45,12 +45,12 @@ public class rangeMeasurementModel implements MeasurementModel{
 		double range = Math.sqrt(x2 + y2 + z2);
 		
 		//Add in the measurement noise read out of the file
-		tmp = "MEAS."+1+".R."+0;
+		tmp = "MEAS."+EKF.measNum+".R.0";
 		double R = initializer.parseDouble(hm,tmp);
 			
 		/*Scale the error as Gaussian noise times the 
 		 square of the measurement noise*/
-		range += generator.nextGaussian()*R; 
+		range += generator.nextGaussian()*R*R; 
 			
 		
 		return range;
@@ -80,7 +80,7 @@ public class rangeMeasurementModel implements MeasurementModel{
 	public double R()
 	{
 		
-		String tmp = "MEAS."+0+".R."+0;
+		String tmp = "MEAS."+EKF.measNum+".R."+0;
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
 	}

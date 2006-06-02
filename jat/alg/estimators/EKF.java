@@ -71,8 +71,8 @@ public class EKF {
 	 
 	 public static LinePrinter residuals; 
 	 public HashMap hm;
-	 
-	 public static int satNum, stateNum;
+	 public static boolean visible;
+	 public static int measNum, stateNum;
 	 
 	/**
 	 * Constructor.
@@ -94,11 +94,21 @@ public class EKF {
 		this.n = initializer.parseInt(hm,"FILTER.states");
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
 		dtNominal = initializer.parseInt(hm,"FILTER.dt");
+		
+		filterTime = 0;//initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0");
+		System.out.println(stringPm);
 		if(stringPm.equals("JGM4x4SRPProcess15state"))
 		{
 			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
 			this.process= new JGM4x4SRPProcess15state(lp1, lp2);
+	
+		}
+		else if(stringPm.equals("JGM4x4SRPProcess9state"))
+		{
+			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
+	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
+			this.process= new JGM4x4SRPProcess9state(lp1, lp2);
 	
 		}
 		else
@@ -195,9 +205,9 @@ public class EKF {
 
 	/** Process the measurements
 	 */
-	public VectorN estimate(double simTime, int measNum, int whichMeas) {
+	public VectorN estimate(double simTime, int measurementNum, int whichMeas, boolean measFlag) {
 		
-		satNum = measNum;
+		measNum = measurementNum;
 		stateNum = whichMeas;
 		
 		
@@ -232,7 +242,7 @@ public class EKF {
 				
 				//Calculate the process noise matrix
 				Matrix q = process.Q(tnext, this.dtNominal, xref);
-				
+
 				//Propagate the covariance matrix forward
 				pnew = this.propCov(pold, phi, q);
 				
@@ -257,26 +267,37 @@ public class EKF {
 		 */
 		
 		
-		if(initializer.parseInt(hm,"MEAS.types")!=0 )
+		if(initializer.parseInt(hm,"MEAS.types")!=0 && measFlag==true)
 		{
 			double y = createMeasurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
-			double r = createMeasurements.mm[measNum].R();
-			String residualsOut = "Time:  " + simTime + "  Residual:  " + y + " Measurement Type:  " + createMeasurements.measurementTypes[measNum] + " State " + whichMeas;
-			residuals.println(residualsOut);
 			
-			//Use the current reference trajectory to form the H matrix
-			VectorN  H = createMeasurements.mm[measNum].H(xref.get(0,n));
-			
-			// compute the Kalman gain
-			VectorN k = this.kalmanGain(pnew, H, r);
-			
-			// compute new best estimate
-			VectorN xhat = k.times(y);
-			
-			// update state and covariance
-			xref.update(xhat); 
-			pold = this.updateCov(k, H, pnew);
+			/*Catch the case where the measurement doesn't occur*/
+			if( Math.abs(y) > 0)
+			{
+				
+				double r = createMeasurements.mm[measNum].R();
+				String residualsOut = "Time:  " + simTime + "  Residual:  " + y + " Measurement Type:  " + createMeasurements.measurementTypes[measNum] + " State " + whichMeas;
+				residuals.println(residualsOut);
+				
+				//Use the current reference trajectory to form the H matrix
+				VectorN  H = createMeasurements.mm[measNum].H(new VectorN(6));
+
+				// compute the Kalman gain
+				VectorN k = this.kalmanGain(pnew, H, r);
+				
+				// compute new best estimate
+				VectorN xhat = k.times(y);
+				
+
+				// update state and covariance
+				xref.update(xhat); 
+
+				pold = this.updateCov(k, H, pnew);
+			}
+			else
+				visible = false;
 		}
+		
 		// check the update
 		//double zafter = measModel.zPred(i, t, xref.state());
 		//double yafter = z - zafter;

@@ -9,14 +9,14 @@ import jat.matvec.data.*;
 import java.util.Random;
 import jat.alg.estimators.*;
 
-public class stateMeasurementModel implements MeasurementModel{
+public class GPSStateMeasurementModel implements MeasurementModel{
 	
 	public static VectorN R;
 	public static int numStates;
 	HashMap hm = closedLoopSim.hm;
 	Random generator;
 	
-	public stateMeasurementModel() {
+	public GPSStateMeasurementModel() {
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
 		 */
@@ -33,44 +33,54 @@ public class stateMeasurementModel implements MeasurementModel{
 	public VectorN getMeasurement()
 	{
 		String tmp;
-		VectorN range = new VectorN(12);
-		double[] truth0 = closedLoopSim.truth[0].sc.get_spacecraft().toStateVector();
-		double[] truth1 = closedLoopSim.truth[1].sc.get_spacecraft().toStateVector();
-		VectorN sat0 = new VectorN(truth0);
-		VectorN sat1 = new VectorN(truth1);
-		range.set(0,sat0);
-		range.set(6,sat1);
+		VectorN pointSolution = new VectorN(3);
+		
+		tmp = "MEAS."+EKF.measNum+".satellite";
+		int sat = initializer.parseInt(hm,tmp);
+		
+		double[] truth = closedLoopSim.truth[sat].sc.get_spacecraft().toStateVector();
 		
 		//Add in the measurement noise read out of the file
-		for(int j = 0; j < 12; j++)
+		for(int j = 0; j < 3; j++)
 		{
-			tmp = "MEAS."+0+".R."+j;
+			tmp = "MEAS."+EKF.measNum+".R."+j;
 			double R = initializer.parseDouble(hm,tmp);
 			
 			/*Scale the error as Gaussian noise times the 
 			 square of the measurement noise*/
-			range.x[j] += generator.nextGaussian()*R*R; 
+			pointSolution.x[j] =  truth[j] +generator.nextGaussian()*R*R; 
 		}	
-		
-		return range;
+		return pointSolution;
 	}
 	
 	public VectorN predictMeasurement(VectorN state){
 		
-		VectorN range = new VectorN(12);
-		range = state.get(0,12);
 		
+		String tmp = "MEAS."+EKF.measNum+".satellite";
+		int sat = initializer.parseInt(hm,tmp);
+		
+		VectorN range = new VectorN(3);
+		range.set(0,state.get(0+(6*sat)));
+		range.set(1,state.get(1+(6*sat)));
+		range.set(2,state.get(2+(6*sat)));
 		
 		return range;
 		
 	}
 	
 	public double  zPred(int i, double time, VectorN state){
+		String tmp = "MEAS."+EKF.measNum+".satellite";
+		int sat = initializer.parseInt(hm,tmp);
+		
 		VectorN oMinusC;
 		VectorN pred = predictMeasurement(state);
 		VectorN obs  = getMeasurement();
 		oMinusC      = obs.minus(pred);
-		return oMinusC.get(i);
+		
+		//Ensure we are returning the correct state when there is more than
+		//one satellite
+		int j = i - 6*sat; 
+		return oMinusC.get(j);
 	}
 	
 	/** Return the measurement noise value for this measurement
@@ -81,7 +91,16 @@ public class stateMeasurementModel implements MeasurementModel{
 	{
 		int whichState = EKF.stateNum;
 		int measNum    = EKF.measNum;
-		String tmp = "MEAS."+measNum+".R."+whichState;
+		
+		
+		//Ensure we are returning the correct state when there is more than
+		//one satellite
+		String tmp = "MEAS."+EKF.measNum+".satellite";
+		int sat = initializer.parseInt(hm,tmp);
+		int j = whichState - 6*sat; 
+		
+
+		tmp = "MEAS."+measNum+".R."+j;
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
 	}
@@ -91,6 +110,7 @@ public class stateMeasurementModel implements MeasurementModel{
 		/*Determine the number of states*/
 		int whichState = EKF.stateNum;
 		int numStates = initializer.parseInt(hm,"FILTER.states");
+		
 	
 		/*for a Range measurement, the current state has H = 1, all other states H = 0 */
 		VectorN H = new VectorN(numStates);

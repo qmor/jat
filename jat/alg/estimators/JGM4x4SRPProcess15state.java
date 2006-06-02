@@ -117,7 +117,7 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 				
 		sigmas[12] = initializer.parseDouble(hm,"P0.0.Cr");
 		sigmas[13] = initializer.parseDouble(hm,"P0.1.Cr");
-		sigmas[14] = initializer.parseDouble(hm,"P0.0.clock");
+		sigmas[14] = initializer.parseDouble(hm,"P0.0.clockBias");
 
 		
 		// square the sigmas
@@ -152,13 +152,13 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 			Q.set((6*i + 3),(6*i + 3), initializer.parseDouble(hm,tmp));
 			tmp = "Q."+i+".VY";
 			Q.set((6*i + 4),(6*i + 4), initializer.parseDouble(hm,tmp));
-			tmp = "P0."+i+".VZ";
+			tmp = "Q."+i+".VZ";
 			Q.set((6*i + 5),(6*i + 5), initializer.parseDouble(hm,tmp));
 		}
 				
 		Q.set(12,12,initializer.parseDouble(hm,"Q.0.Cr"));
 		Q.set(13,13,initializer.parseDouble(hm,"Q.1.Cr"));
-		Q.set(14,14, initializer.parseDouble(hm,"Q.0.Clock"));
+		Q.set(14,14, initializer.parseDouble(hm,"Q.0.clockBias"));
 		
 		return Q;
 	}
@@ -246,7 +246,7 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 			out.x[12] = initializer.parseDouble(hm, tmp);
 			tmp = ref+"1.Cr";
 			out.x[13] = initializer.parseDouble(hm, tmp);
-			tmp = ref+"0.Clock";
+			tmp = ref+"0.clockBias";
 			out.x[14] = initializer.parseDouble(hm, tmp);
 		}
 		

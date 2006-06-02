@@ -138,6 +138,33 @@ public class RSW_Frame {
 		return out.transpose();
 	}
 	
+	/** Compute the transformation from ECI to the SWR frame.
+	 * For use with a sun tracking nadir pointing trajectory
+	 * and calculating the required jaw
+	 * @param rref target position vector in ECI frame.
+	 * @param vref target velocity vector in ECI frame.
+	 * @return the ECI to SWR transformation matrix
+	 */
+	public static Matrix ECI2SWR(VectorN rref, VectorN vref) {
+		
+		VectorN h = rref.crossProduct(vref);
+		h = h.times(-1.0);
+		VectorN rhat = rref.unitVector();
+		rhat = rhat.times(-1.0);
+		VectorN what = h.unitVector();
+		VectorN s = what.crossProduct(rhat);
+		VectorN shat = s.unitVector();
+		Matrix out = new Matrix(3, 3);
+		out.setColumn(0, rhat);
+		out.setColumn(1, shat);
+		out.setColumn(2, what);
+		
+		
+		
+		return out.transpose();
+	}
+	
+	
 	/** Transform a velocity vector from ECI to the RSW frame, accounting
 	 * for Coriolis.
 	 * @param r_rsw position vector in RSW frame.

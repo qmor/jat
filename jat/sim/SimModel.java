@@ -57,7 +57,7 @@ public class SimModel implements Derivatives {
     /**
      * Spacetime model containing: time, reference frames, and forces
      */
-    protected UniverseModel spacetime;
+    public UniverseModel spacetime;
     /**
      * Spacecraft model used when propagating a single spacecraft
      */
@@ -145,6 +145,30 @@ public class SimModel implements Derivatives {
         spacetime = new UniverseModel();
     }
 
+    
+    /**
+     * Constructor initializes a single spacecraft simulation given relevant parameters
+     * @param r Position vector [m]
+     * @param v Velocity vector [m/s]
+     * @param cr Coefficient of Reflectivity used for Solar Radiation Pressure
+     * @param cd Coefficient of Drag used for Atmospheric Drag calculations
+     * @param area Cross sectional area used both for drag and Solar Radiation Pressure
+     * @param mass Mass of the spacecraft
+     */
+    public SimModel(double[] r, double[] v, double cr, double cd, double area, double mass, double utc){
+        VectorN rr = new VectorN(r);
+        VectorN vv = new VectorN(v);
+        Spacecraft s = new Spacecraft(rr,vv,cr,cd,area,mass);
+        s.set_use_params_in_state(false);
+        sc = new SpacecraftModel(s);
+        rk8 = new RungeKutta8();
+        use_formation = false;
+        lp = new LinePrinter();
+        spacetime = new UniverseModel(utc);
+    }
+
+    
+    
     /**
      * Constructor initializes a formation of spacecraft given relevant parameters
      * @param r Array of position vectors r[number_of_sc][3] [m]

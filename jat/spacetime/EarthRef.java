@@ -757,7 +757,7 @@ public class EarthRef implements BodyRef {
     /** Computes the Sun's geocentric position using a low precision analytical series.
      * @return Solar position vector [m] with respect to the mean equator and equinox of J2000 (EME2000, ICRF)
      */
-    public VectorN sunVector(double MJD_TT) {
+    public static VectorN sunVector(double MJD_TT) {
         double Mjd_TT = MJD_TT;
         // Constants
         

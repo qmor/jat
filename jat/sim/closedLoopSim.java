@@ -4,9 +4,11 @@ import jat.measurements.*;
 import java.io.*;
 import java.util.HashMap;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import jat.matvec.data.*;
+import jat.timeRef.RSW_Frame;
 import jat.util.FileUtil;
 import jat.alg.estimators.*;
 
@@ -22,6 +24,7 @@ public class closedLoopSim {
 	private static FileOutputStream[] truths;
 	private static FileOutputStream[] ECIError;
 	private static FileOutputStream[] covariance;
+	
 	public static createMeasurements cm;
 	private static int simStep;
 	public static EKF filter;
@@ -29,7 +32,8 @@ public class closedLoopSim {
 	private static int dt;
 	private static VectorN newState;
 	private static int numStates;
-	private static double simTime;
+	public static double simTime;
+	public static int numVis;
 	 
 
 	public closedLoopSim()
@@ -81,16 +85,18 @@ public class closedLoopSim {
 		double MJDF =  initializer.parseDouble(hm,"init.MJDF");
 		double T0   =  initializer.parseDouble(hm,"init.T0");
 		double TF   =  initializer.parseDouble(hm,"init.TF");
-			
+		simTime = 0;
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 			
-		for( simStep = 0; simStep < simLength/dt; simStep ++)
+		for( simStep = 1; simStep < simLength/dt; simStep ++)
 		{
-			if(simStep%100 == 0)
-				System.out.println(simStep*5);
+			//if(simStep%100 == 0)
+			//	System.out.println(simStep*5);
 			
-			Propagate(simStep);
-			simTime = (simStep+1)*dt;
+			Propagate(simStep*dt);
+			simTime = simStep*dt;
+
+			System.out.println("SimTime: " + simTime + " SimStep: " + simStep);
 			
 			if(filterMode > 0)
 			{
@@ -219,12 +225,20 @@ public class closedLoopSim {
 			str = "jat."+i+".area";
 			area = initializer.parseDouble(hm,str);
 			
+			/*Initial time*/
+			str = "init.MJD0";
+			double mjday = initializer.parseDouble(hm,str);
+			str = "init.T0";
+			double mjsec = initializer.parseDouble(hm,str);
+			
+			double MJDTime = mjday + mjsec;
+			
 			/*Read in the appropriate model flags*/
 			boolean[] force_flag = CreateForceFlag(i); 
-			ref[i] = new SimModel(r,v,cr,cd,area,mass);
+			ref[i] = new SimModel(r,v,cr,cd,area,mass,MJDTime);
 			ref[i].initializeForces(force_flag, gravityModel, "HP");
 			
-			truth[i] = new SimModel(tr,tv,cr,cd,area,mass);
+			truth[i] = new SimModel(tr,tv,cr,cd,area,mass,MJDTime);
 			truth[i].initializeForces(force_flag, gravityModel, "HP");
 			
 			
@@ -293,44 +307,70 @@ public class closedLoopSim {
 		 * omit measurements of 0
 		 */
 		
-		
+		int processedMeasurements = 0;
 		for(int i = 0;i<numMeas;i++)
 		{
-		
-			//Run the measurements through the EKF
-			if(createMeasurements.measurementTypes[i].equals("position"))
+			
+			if(simTime%createMeasurements.frequency[i] ==0 )
 			{
-				/*this loop handles the case of the position measurement
-				 * which is actually a vector measurement.  To keep the code
-				 * in the form of scalar updates, the vector measurement is 
-				 * broken into the appropriate number of scalar updates
-				 */
-				String tmp = "MEAS."+i+".size";
-				for(int j = 0;j<initializer.parseInt(hm,tmp);j++)
+				//Run the measurements through the EKF
+/*				if(createMeasurements.measurementTypes[i].equals("position"))
 				{
-					 newState = filter.estimate(simTime,i,j);
+					this loop handles the case of the position measurement
+					 * which is actually a vector measurement.  To keep the code
+					 * in the form of scalar updates, the vector measurement is 
+					 * broken into the appropriate number of scalar updates
+					 
+					System.out.println("Processing STATE Updateat time: " + simTime);
+					String tmp = "MEAS."+i+".size";
+					for(int j = 0;j<initializer.parseInt(hm,tmp);j++)
+					{
+						newState = filter.estimate(simTime,i,j);
+						processedMeasurements ++;
+					}
+					
+				}*/
+				if(createMeasurements.measurementTypes[i].equals("GPS"))
+				{
+					/*this loop spins through all the GPS satellites.
+					 *Ranges near zero will be skipped in the filter
+					 */
+					numVis = 0;
+					for(int j = 0; j<26;j++ )
+					{
+						newState = filter.estimate(simTime,i,j,true);
+						processedMeasurements ++;
+					}
 				}
-				
+				else
+				{
+					String tmp = "MEAS."+i+".satellite";
+					int sat = initializer.parseInt(hm,tmp);
+					
+					tmp = "MEAS."+i+".size";
+					for(int j = 0;j<initializer.parseInt(hm,tmp);j++)
+					{	
+						newState = filter.estimate(simTime,i,j+(6*sat),true);
+						processedMeasurements ++;
+						System.out.println("Processing Measurement at time: " + simTime);
+					}
+				}
 			}
-			else
-			{
-				 newState = filter.estimate(simTime, i,0);
-			}
-
 			
 			
 
 		}
 		
-		//catch the case where there are no measurements
-		if(numMeas == 0)
-			 newState = filter.estimate(simTime, 0,0);
+		//catch the case where there are no measurements, set the measurement
+		//flag to false to tell the filter to just propagate
+		if(processedMeasurements  == 0)
+			 newState = filter.estimate(simTime, 0,0,false);
 	
 		
 		//Update the current state with the output of the filter
 		//Write the current state information to files
 		
-		double tmpState[] = new double[6];
+		double tmpState[] = new double[numStates];
 		for(int numSats = 0; numSats < numSpacecraft; numSats ++)
 		{
 			//Extract the state of the current satellite
@@ -338,20 +378,25 @@ public class closedLoopSim {
 			{
 				tmpState[i]=newState.x[numSats*6 + i];
 			}
+		    
 			ref[numSats].sc.get_spacecraft().updateMotion(tmpState);
-		   
+			
+			tmpState[6]=newState.x[6];
+			tmpState[7]=newState.x[7];
+			tmpState[8]=newState.x[8];
+			
 			//Write out the current True States
 			double [] true_state = truth[numSats].sc.get_spacecraft().toStateVector();
 			
 			//Print out simStep + 1 because we didn't output the initial state
-			VectorN vecTime =  new VectorN(1,(simStep+1)*dt);
+			VectorN vecTime =  new VectorN(1,(simStep)*dt);
 			VectorN trueState = new VectorN(true_state);
 			VectorN truthOut = new VectorN(vecTime,trueState);
 			new PrintStream(truths[numSats]).println (truthOut.toString());
 		
 			//Write out the current State estimates
 			double [] ref_state  = ref[numSats].sc.get_spacecraft().toStateVector();
-			VectorN vecState = new VectorN(ref_state);
+			VectorN vecState = new VectorN(tmpState);
 			VectorN stateOut = new VectorN(vecTime,vecState);
 			new PrintStream(trajectories[numSats]).println (stateOut.toString());
 		
@@ -366,16 +411,27 @@ public class closedLoopSim {
 			new PrintStream(ECIError[numSats]).println (stateOut.toString());
 			
 			//Output the current Covariances
-			Matrix Covariance = EKF.pnew;
+			Matrix Covariance = EKF.pold;
+			
+			
 			double[] tmp = new double[6];
 			for(int i = 0;i<6;i++)
 			{
 				//Extract only the covariance for the satellite of interest
 				tmp[i] = Covariance.get(6*numSats + i,6*numSats + i);
+				
 			}
+			
 			VectorN ErrCov = new VectorN(tmp);
 			stateOut = new VectorN(vecTime,ErrCov);
 			new PrintStream(covariance[numSats]).println (stateOut.toString());
+			
+			//Output the Number of Visible Satellites
+			//stateOut =  new VectorN(2);
+			//stateOut.set(0,(simStep+1)*dt);
+			//stateOut.set(1,(double)numVis);
+			//System.out.println("Number of visible Satellites   " + numVis);
+			
 		}
 		
 	}
@@ -388,6 +444,7 @@ public class closedLoopSim {
 		truths       = new FileOutputStream [numSpacecraft]; 
 		ECIError     = new FileOutputStream [numSpacecraft];
 		covariance   = new FileOutputStream [numSpacecraft];
+		
         
 		String fs, dir_in;
         fs = FileUtil.file_separator();
@@ -397,7 +454,13 @@ public class closedLoopSim {
             dir_in = "";
         }
 		
-		
+		String fileName5 = dir_in+"Visible.txt";
+	/*	try {
+			visableSats = new FileOutputStream(fileName5);
+		} catch (FileNotFoundException e1) {
+		// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
 		for(int numSats = 0; numSats < numSpacecraft; numSats++)
 		{
 			try
@@ -445,6 +508,12 @@ public class closedLoopSim {
 				}	
 			}	
 			EKF.residuals.close();
+			/*try {
+				//visableSats.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		}
 	
 	System.out.println("Closing files and exiting . . ");

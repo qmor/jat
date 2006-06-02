@@ -14,7 +14,7 @@ public class createMeasurements{
 	public static VectorN measurementValues;
 	public static int numMeasurementTypes;
 	public static MeasurementModel [] mm;
-	
+	public static double [] frequency;
 	public createMeasurements()
 	{
 		//Read in all of the required measurements
@@ -22,11 +22,14 @@ public class createMeasurements{
 		numMeasurementTypes = initializer.parseInt(hm,"MEAS.types");
 		measurementTypes = new String[numMeasurementTypes];
 		mm = new MeasurementModel [numMeasurementTypes];
+		frequency = new double[numMeasurementTypes];
 		
 		for(int i = 0;i<numMeasurementTypes;i++)
 		{
 			String meas = "MEAS."+i+".desc";
 			measurementTypes[i] = initializer.parseString(hm,meas);
+			String freq = "MEAS."+i+".frequency";
+			frequency[i] = initializer.parseDouble(hm,freq);
 			System.out.println(measurementTypes[i]);
 			if(measurementTypes[i].equals("position"))
 			{
@@ -39,9 +42,16 @@ public class createMeasurements{
 			}
 			else if(measurementTypes[i].equals("GPS"))
 			{
-				//mm[i] = new GPSMeasurementModel();
+				mm[i] = new GPSmeasurementModel();
 			}
-			
+			else if(measurementTypes[i].equals("pseudoGPS"))
+			{
+				mm[i] = new GPSStateMeasurementModel();
+			}
+			else if(measurementTypes[i].equals("stateUpdate"))
+			{
+				mm[i] = new stateUpdateMeasurementModel();
+			}
 			else
 			{
 				System.out.println("Invalid measurement type.");
@@ -53,6 +63,13 @@ public class createMeasurements{
 	
 	public static int getNumberMeasurements()
 	{	
+		/*For most measurement types, there will be only
+		 * one measurement per epoch.  Caution must be
+		 * taken for measurement types with multiple
+		 * measurements (such as GPS)
+		 */
+
+		
 		return numMeasurementTypes;
 	}
 	
