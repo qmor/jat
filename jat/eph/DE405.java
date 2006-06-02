@@ -726,6 +726,4 @@ public class DE405
 			return r_sun_geo;
 	}
 	
-	
-	
 }

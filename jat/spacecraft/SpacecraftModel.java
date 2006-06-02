@@ -182,12 +182,12 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
      */
     public double[] control_thrust_derivs(double t, double[] dX){
         double[] out = new double[dX.length];
-        out[0] = dX[0];
-        out[1] = dX[1];
-        out[2] = dX[2];
-        out[3] = dX[3]+thrust.x[0];
-        out[4] = dX[4]+thrust.x[1];
-        out[5] = dX[5]+thrust.x[2];
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = thrust.x[0];
+        out[4] = thrust.x[1];
+        out[5] = thrust.x[2];
         for(int i=6; i<dX.length; i++){
             out[i] = dX[i];
         }

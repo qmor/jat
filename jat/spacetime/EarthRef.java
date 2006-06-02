@@ -260,6 +260,8 @@ public class EarthRef implements BodyRef {
         //double T = (this.MJD_TDB - MJD_J2000)/36525.0; //* used prior to IERS1996 convention
 //      TODO
         return MathUtils.DEG2RAD *( 23.43929111-(46.8150+(0.00059-0.001813*T)*T)*T/3600.0 );
+        //* Following taken from GTDS documentation
+        //return MathUtils.DEG2RAD *( 23.43929111-0.0130047*T-(0.1639e-6)*T*T+(0.5036e-6)*T*T*T);
         //* Debug - updated the epsilon-0 value according to the Supplemental Astro Almanac (old above)
         //return MathUtils.DEG2RAD *( 23.4392911111-(46.8150+(0.00059-0.001813*T)*T)*T/3600.0 );
         //return Constants.arcsec2rad *( 84381.448-(46.8150+(0.00059-0.001813*T)*T)*T );
@@ -269,6 +271,25 @@ public class EarthRef implements BodyRef {
 //        return MathUtils.DEG2RAD * (23.439291 - 0.0130042*T-1.64e-7*T*T+5.04e-7*T*T*T);
 //        //return Constants.arcsec2rad * (84381.948-(46.8150+(0.00059-0.001813*T)*T)*T );
     }
+    
+//*** <- The following is a backup of MeanObliquity as verified Summer 2005 -> ***
+//    /** Computes the mean obliquity of the ecliptic. Uses Mjd_TT (Terrestrial Time).
+//     *@return  Mean obliquity of the ecliptic
+//     */
+//    public double MeanObliquity(double MJD_TT) {
+//        double T = (MJD_TT - TimeUtils.MJD_J2000)/36525.0;
+//        //double T = (this.MJD_TDB - MJD_J2000)/36525.0; //* used prior to IERS1996 convention
+////      TODO
+//        return MathUtils.DEG2RAD *( 23.43929111-(46.8150+(0.00059-0.001813*T)*T)*T/3600.0 );
+//        //* Debug - updated the epsilon-0 value according to the Supplemental Astro Almanac (old above)
+//        //return MathUtils.DEG2RAD *( 23.4392911111-(46.8150+(0.00059-0.001813*T)*T)*T/3600.0 );
+//        //return Constants.arcsec2rad *( 84381.448-(46.8150+(0.00059-0.001813*T)*T)*T );
+//        //* Debug Vallado p 209
+////        double T = Time.TTtoTDB(MJD_TT);
+////        T = (T-Time.MJD_J2000)/36525.0;
+////        return MathUtils.DEG2RAD * (23.439291 - 0.0130042*T-1.64e-7*T*T+5.04e-7*T*T*T);
+////        //return Constants.arcsec2rad * (84381.948-(46.8150+(0.00059-0.001813*T)*T)*T );
+//    }
     
     /** Transformation of equatorial to ecliptical coordinates. Uses Mjd_TT (Terrestrial Time).
      *   @return  Transformation matrix

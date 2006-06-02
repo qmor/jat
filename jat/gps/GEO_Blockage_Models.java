@@ -30,11 +30,13 @@ import java.io.FileWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.StringTokenizer;
-
+import jat.gps.*;
 import jat.alg.integrators.LinePrinter;
 import jat.cm.FiniteBurn;
+import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 import jat.math.*;
+import jat.timeRef.RSW_Frame;
 import jat.util.FileUtil;
 //import jat.math.*;
 
@@ -48,7 +50,7 @@ import jat.util.FileUtil;
  * @version 1.0
  */
 
-public class GEO_Blockage_Models implements Visible {
+public class GEO_Blockage_Models implements ExpandedVisible {
 	
 	private double elevationMask;
 	private static final double earthRadius = 6478140.0;
@@ -67,16 +69,17 @@ public class GEO_Blockage_Models implements Visible {
 	double pointingBias = 0;
 	//The receiver performance figures
 	double AcquisitionThreshold = 25;// (dB-Hz)
-	double TrackingThreshold    = 21;// (dB-Hz)
+	double TrackingThreshold    = 22;// (dB-Hz)
 	static boolean [] AcquisitionFlag = new boolean[33];
 	
-	static double [] receiverAntennaDeg = new double[40];
-	static double [] receiverAntennaGain = new double[40];
-	static double [] GPSAntennaDeg = new double[70];
-	static double [] GPSAntennaGain = new double[70];
+	static double [] receiverAntennaDeg = new double[14];
+	static double [] receiverAntennaGain = new double[14];
+	static double [] GPSAntennaDeg = new double[66];
+	static double [] GPSAntennaGain = new double[66];
 	public static double Cn0;
+	public static double elevation;
 	public static double trackedCn0;
-	boolean firsttime = false;
+	boolean firsttime = true;
 
 	
     /**
@@ -93,7 +96,7 @@ public class GEO_Blockage_Models implements Visible {
 		//NOTE: I believe that both GPS satellite and the receiver antenna
 		//are currently pointed at the center of the Earth.   (ie, zero degree
 		//is pointed at the center of the Earth)
-		if(firsttime == false)
+		if(firsttime == true)
 		{
             String fs, dir_in;
             fs = FileUtil.file_separator();
@@ -102,11 +105,13 @@ public class GEO_Blockage_Models implements Visible {
             }catch(Exception e){
                 dir_in = "C:/Code/Jat/jat/eph/DE405data/";
             }	
+//          
 			//readFromFile("C:\\GOESR\\omni_antenna.txt",receiverAntennaDeg,receiverAntennaGain);
-			//readFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
-			readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
+			readFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
+			//readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
 			readFromFile(dir_in+"GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
-			firsttime = true;
+			//readFromFile("C:\\GOESR\\LMantenna.txt",receiverAntennaDeg,receiverAntennaGain);
+			firsttime = false;
 		}
 		Interpolator interpR = new Interpolator(receiverAntennaDeg,receiverAntennaGain);
 		Interpolator interpG = new Interpolator(GPSAntennaDeg,GPSAntennaGain);
@@ -150,14 +155,29 @@ public class GEO_Blockage_Models implements Visible {
 			
 			//Determine the angle between the receiver boresight 
 			//and the GPS SV
+//			Generate a RTN rotation matrix and rotate the LOS vector into it
+			//Matrix T = RSW_Frame.ECI2RIC(r,v);
+			//VectorN losRTN = T.times(losu);
+			
+			//azimuth[prn] = ((180)/Math.PI)*Math.acos(dots/mags);
+			//azimuth[prn] = ((180)/Math.PI)*Math.atan2(losRTN.get(0),losRTN.get(1)*-1);
+
+//			Compute the Elevaton to the GPS Satellite
+			//elevation[prn]=(180/Math.PI)*Math.asin(losRTN.get(2)/losRTN.mag());
+			
+			
+			
+			
+			
 			VectorN unitR = r.unitVector();
 			VectorN minusUnitR = unitR.times(-1.0);
 			double thetaR = (180/(Math.PI))*Math.acos(minusUnitR.dotProduct(losu)) + pointingBias;
-			
+			elevation = thetaR;
 			if(thetaR > 40 || thetaR < -40)
 			{
 				visible = false;
 			}
+			
 			
 			//Lookup the approprate gain from the receiving antenna			
 			double Gr = interpR.get_value(thetaR);
@@ -183,35 +203,39 @@ public class GEO_Blockage_Models implements Visible {
 			//						 +  Losses in receiver/LNA (front end?)
 			Cn0 = Rp - 10*Math.log10(Ts) + 228.6 + Nf + L;
 			
+			
+			
 			//If the satellite isn't visible, reset the AcquisitionFlag
 			//to force it to reacquire
-			if(visible == false)
-				AcquisitionFlag[prn] = false;
+			//if(visible == false)
+			//	AcquisitionFlag[prn] = false;
 			
 			
 			//System.out.println("Cn0 for PRN : " + prn + " is: "+Cn0);
 			//If it is visible and strong enough, "Acquire" satellite
-			if(visible && AcquisitionFlag[prn] == false && Cn0 > AcquisitionThreshold)
-				AcquisitionFlag[prn] = true;
+			//if(visible && AcquisitionFlag[prn] == false && Cn0 > AcquisitionThreshold)
+			//	AcquisitionFlag[prn] = true;
 
 			//If we have "acquired" a satellite and if the Cn0 is greater than
 			//the tracking threshold, then it is visible
-			if(AcquisitionFlag[prn])
-			{
-				if(Cn0 > TrackingThreshold)
-				{
-					visible = true;
-					trackedCn0 = Cn0;
-				}
-			}
-			else
-			{
-				visible = false;
-				trackedCn0 = 0;
-			}
-		}
+			//if(AcquisitionFlag[prn])
+		//	{
+			//	if(Cn0 > TrackingThreshold)
+			//	{
+			//		visible = true;
+			//		trackedCn0 = Cn0;
+			//	}
+			//}
+			//else
+			//{
+			//	visible = false;
+			//	trackedCn0 = 0;
+			//}
 		
-
+		
+		}
+		if(visible != true)
+			elevation = 0.0;
 		if(visible == true)
 		{
 			FileWriter out;
@@ -264,4 +288,15 @@ public class GEO_Blockage_Models implements Visible {
 		}
 	}
 
+
+	public boolean visible(VectorN losu, VectorN r, VectorN rGPS, VectorN v, int prn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public boolean visible(VectorN losu, VectorN r, VectorN v, VectorN rGPS, VectorN vGPS, int prn, double mjd) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
+
