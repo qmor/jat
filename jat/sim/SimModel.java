@@ -113,15 +113,15 @@ public class SimModel implements Derivatives {
     /**
      * Flag to tell whether to print the progress of the simulation.
      */
-    private boolean verbose_timestep=false;
+    protected boolean verbose_timestep=false;
     /**
      * Properties member which loads and stores ephemeris data.
      */
-    private SimProperties properties;
+    protected SimProperties properties;
     /**
      * Default ephemeris filename.
      */
-    private String default_file;
+    protected String default_file;
     
     /**
      * Default Constructor initializes the universe model, integrator, and prints

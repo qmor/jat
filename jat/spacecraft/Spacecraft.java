@@ -22,6 +22,7 @@ package jat.spacecraft;
 import java.io.IOException;
 
 import jat.matvec.data.*;
+import jat.spacetime.Time;
 import jat.timeRef.RSW_Frame;
 
 /**
@@ -181,7 +182,7 @@ public class Spacecraft {
 //	    if(hasControlLaw) return control;
 //	    else return new ControlLaw(this);
 //	}
-	
+
 	/**
 	 * Get position.
 	 */
@@ -253,6 +254,7 @@ public class Spacecraft {
 	public void incrementMass(double deltam){
 		mass = mass+deltam;
 	}
+	
 	/**
 	 * Update the spacecraft position and velocity.
 	 * @param rr Position
@@ -290,59 +292,38 @@ public class Spacecraft {
 	 */
 	public double[] toStateVector(){
 	    double[] out = new double[6];
-	    if(use_params_in_state){
-	        out = new double[10];
-	        out[0] = r.get(0);
-	        out[1] = r.get(1);
-	        out[2] = r.get(2);
-	        out[3] = v.get(0);
-	        out[4] = v.get(1);
-	        out[5] = v.get(2);
-	        out[6] = CR;
-	        out[7] = cd;
-	        out[8] = area;
-	        out[9] = mass;
-	    }else{
-	        out = new double[6];
-	        out[0] = r.get(0);
-	        out[1] = r.get(1);
-	        out[2] = r.get(2);
-	        out[3] = v.get(0);
-	        out[4] = v.get(1);
-	        out[5] = v.get(2);
-	    }
-	    return out;
+	    return toStateVector(this.use_params_in_state);
 	}
 
-	/**
-	 * Convert spacecraft into a state vector in the Radial Intrack Crosstrack frame.
-	 * @return The state vector.
-	 */
-	public double[] toStateVectorRIC(){
-	    double[] out = new double[6];
-	    if(use_params_in_state){
-	        out = new double[10];
-	        out[0] = r.get(0);
-	        out[1] = r.get(1);
-	        out[2] = r.get(2);
-	        out[3] = v.get(0);
-	        out[4] = v.get(1);
-	        out[5] = v.get(2);
-	        out[6] = CR;
-	        out[7] = cd;
-	        out[8] = area;
-	        out[9] = mass;
-	    }else{
-	        out = new double[6];
-	        out[0] = r.get(0);
-	        out[1] = r.get(1);
-	        out[2] = r.get(2);
-	        out[3] = v.get(0);
-	        out[4] = v.get(1);
-	        out[5] = v.get(2);
-	    }
-	    return out;
-	}
+//	/**
+//	 * Convert spacecraft into a state vector in the Radial Intrack Crosstrack frame.
+//	 * @return The state vector.
+//	 */
+//	public double[] toStateVectorRIC(){
+//	    double[] out = new double[6];
+//	    if(use_params_in_state){
+//	        out = new double[10];
+//	        out[0] = r.get(0);
+//	        out[1] = r.get(1);
+//	        out[2] = r.get(2);
+//	        out[3] = v.get(0);
+//	        out[4] = v.get(1);
+//	        out[5] = v.get(2);
+//	        out[6] = CR;
+//	        out[7] = cd;
+//	        out[8] = area;
+//	        out[9] = mass;
+//	    }else{
+//	        out = new double[6];
+//	        out[0] = r.get(0);
+//	        out[1] = r.get(1);
+//	        out[2] = r.get(2);
+//	        out[3] = v.get(0);
+//	        out[4] = v.get(1);
+//	        out[5] = v.get(2);
+//	    }
+//	    return out;
+//	}
 
 	
 	/**
@@ -376,5 +357,32 @@ public class Spacecraft {
 	    return out;
 	}
 	
-	
+	public void updateState(double[] Xnew){
+		updateState(Xnew,this.use_params_in_state);
+	}
+	/**
+	 * Update the state given a state vector of the same format as "toStateVector()".
+	 * @param Xnew new state vector
+	 */
+	public void updateState(double[] Xnew, boolean use_params){
+	    if(use_params){
+	        r.set(0,Xnew[0]);
+	        r.set(1,Xnew[1]);
+	        r.set(2,Xnew[2]);
+	        v.set(0,Xnew[3]);
+	        v.set(1,Xnew[4]);
+	        v.set(2,Xnew[5]);
+	        CR = Xnew[6];
+	        cd = Xnew[7];
+	        area = Xnew[8];
+	        mass = Xnew[9];        
+	    }else{
+	    	r.set(0,Xnew[0]);
+	        r.set(1,Xnew[1]);
+	        r.set(2,Xnew[2]);
+	        v.set(0,Xnew[3]);
+	        v.set(1,Xnew[4]);
+	        v.set(2,Xnew[5]);
+	    }	    
+	}
 }

@@ -19,9 +19,11 @@
  */
 package jat.spacecraft;
 
+import jat.alg.integrators.Derivatives;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.Quaternion;
 import jat.matvec.data.VectorN;
+import jat.spacetime.UniverseModel;
 
 /**
  * This class models the entire system of a spacecraft including any software or 
@@ -35,12 +37,16 @@ import jat.matvec.data.VectorN;
  * @author Richard C. Page III
  *
  */
-public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
+public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpacecraft {
 
     /**
      * Physical characteristics, dynamics, and state.
      */
     protected Spacecraft sc;
+    /**
+     * World model installed in spacecraft avionics.
+     */
+    protected UniverseModel spacetime;
     /**
      * Model for all of the control functions, both linear and angular.
      */
@@ -57,6 +63,10 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
      * Control torque.
      */
     protected VectorN torque;
+//    /**
+//     * Onboard computer timestep
+//     */
+//    protected double sc_dt;
     
     /**
      * Constructor.
@@ -87,6 +97,15 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
         torque = new VectorN(0,0,0);
     }
     
+    public SpacecraftModel(Spacecraft s, UniverseModel u){
+    	sc = s;
+        controller = new ControlLaw();
+        estimator = new StateEstimation();
+        thrust = new VectorN(0,0,0);
+        torque = new VectorN(0,0,0);
+    	spacetime = u;
+    }
+    
     /**
      * Constructor - creates a model from other existing elements.
      * @param s Spacecraft object.
@@ -108,8 +127,18 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
      */
     public void update(double t, double[] x){
         //TODO - call estimator
-        sc.updateMotion(x);
+        sc.updateState(x);
+        spacetime.update(t);
     }
+    
+    /**
+     * Update the spacecraft's computer models of forces and time.
+     * @param t seconds since epoch
+     */
+    public void update(double t){
+    	spacetime.update(t);
+    }
+
     /**
      * Update the estimated state based upon the propagated state vector.
      * @param t Time
@@ -284,6 +313,21 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
         return rel;
     }
 
+//    /**
+//     * Sets the onboard computer's timestep for online integration.
+//     * @param dt Integration timestep
+//     */
+//    public void set_sc_dt(double dt){
+//    	this.sc_dt=dt;
+//    }
+//    /**
+//     * Returns the current timestep used by the onboard computer for integration.
+//     * @return Computer timestep
+//     */
+//    public double get_sc_dt(){
+//    	return this.sc_dt;
+//    }
+    
     /**
      * Send a command to the indicated member spacecraft.
      * @see jat.spacecraft.MemberSpacecraft#send_control(double, jat.spacecraft.MemberSpacecraft)
@@ -324,4 +368,28 @@ public class SpacecraftModel implements PrimarySpacecraft, MemberSpacecraft {
     	sc.v = (sc.v).plus(dv);
     }
 
+    public double[] derivs(double t, double[] x) {
+//		* Update spacecraft
+        this.update(t,x);
+        spacetime.update(t);
+        //* Get non-control derivatives
+        double[] xdot = spacetime.derivs(t,this.get_spacecraft());
+        //* Get control derivatives
+        //double[] xdot2 = this.control_thrust_derivs(t,xdot);
+       
+        //NOTE:  as of last revision, this was not correct.  
+        //A more thorough was of adding controls may be required
+        //* Compile derivatives
+        //double[] out = MathUtils.plus(xdot,xdot2);
+        double[] out = xdot;
+        return out;
+	}
+
+    /**
+     * Returns the (estimated) number of seconds since epoch time.
+     * @return seconds since epoch
+     */
+	public double get_sc_t() {
+		return spacetime.time.get_sim_time();
+	}
 }
