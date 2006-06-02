@@ -36,6 +36,10 @@ public class EarthMoonSim {
 	
     public EarthMoonSim(){ }
     
+    /**
+     * Simulation of an Earth-Moon Free return maneuver from LEO
+     *
+     */
     public static void runSimulation(){
     	SimModel sim = new SimModel();
     	sim.set_showtimestep(true);
@@ -104,11 +108,15 @@ public class EarthMoonSim {
                 sim.t0=t1;
                 sim.tf=t2;
                 double dvmag = 3100;
-                VectorN dv = new VectorN(sim.sc.get_abs_vel().times(0.42));
+                //VectorN dv = new VectorN(sim.sc.get_abs_vel().times(0.419));
+                VectorN dv = new VectorN(sim.sc.get_abs_vel().times(0.41905));
                 //dv.x[2] = dv.x[2]-0;
                 //dv = (dv.unitVector().times(dvmag));
                 sm.applyDeltaV(dv);
                 sim.runloop();
+                System.out.println("r0_mag: "+r.mag()+" m");
+                System.out.println("v0_mag: "+v.mag()+" m/s");
+                System.out.println("dv_mag: "+dv.mag()+" m/s/s");
                 
         //* Stop the runtime counter
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;

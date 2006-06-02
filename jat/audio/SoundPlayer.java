@@ -28,6 +28,8 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.File;
 import java.net.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * <P>
@@ -43,23 +45,34 @@ public class SoundPlayer {
 	 */	
 	public static void play(String filename){
 
+//		try {
+//			File file = new File(filename);
+//			URI uri = file.toURI();
+//			System.out.println(uri);
+//			URL url = uri.toURL();
+//			System.out.println(url);
+//			String url_string = url.toString();
+////			url_string = url_string.replaceAll("%20", " ");
+//			url_string = url_string.replaceAll("file:/C", "file:///C");
+//			System.out.println("url_string = "+url_string);
+//			URL url_final = new URL(url_string);
+//			AudioClip clip = Applet.newAudioClip(url_final);
+//			
+//			clip.play();
+//		} catch (Exception e){
+//			e.printStackTrace();
+//			System.exit(1);
+//		}
+		Runplay play = new Runplay(filename);
+		play.run();
+		
 		try {
-			File file = new File(filename);
-			URI uri = file.toURI();
-			System.out.println(uri);
-			URL url = uri.toURL();
-			System.out.println(url);
-			String url_string = url.toString();
-//			url_string = url_string.replaceAll("%20", " ");
-			url_string = url_string.replaceAll("file:/C", "file:///C");
-			System.out.println("url_string = "+url_string);
-			URL url_final = new URL(url_string);
-			AudioClip clip = Applet.newAudioClip(url_final);
-			clip.play();
-		} catch (Exception e){
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.exit(1);
 		}
+		System.out.println("done");
 	}
 	
 	public static void main(String[] args){
@@ -71,5 +84,35 @@ public class SoundPlayer {
 		SoundPlayer.play(file);
 		
 	}
+
+	private static class Runplay implements Runnable {
+		String file;
+
+		public Runplay(String f){
+			file = f; 
+		}
+
+		public void run() {
+			try {
+				File file = new File(this.file);
+				URI uri = file.toURI();
+				System.out.println(uri);
+				URL url = uri.toURL();
+				System.out.println(url);
+				String url_string = url.toString();
+//				url_string = url_string.replaceAll("%20", " ");
+				url_string = url_string.replaceAll("file:/C", "file:///C");
+				System.out.println("url_string = "+url_string);
+				URL url_final = new URL(url_string);
+				AudioClip clip = Applet.newAudioClip(url_final);
+				
+				clip.play();
+			} catch (Exception e){
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
+    }
+
 
 }

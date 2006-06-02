@@ -71,6 +71,14 @@ public class Celestia {
     private double[] time;
     
     /**
+     * Default Constructor.  Automatically searches for the Celestia home directory.
+     * Currently, only windows is supported (sincere apologies).
+     */
+    public Celestia(){
+    	searchWindows();
+    }
+    
+    /**
      * Constructor
      * @param dir The install directory of Celestia (e.g. "C:/Celestia/")
      */
@@ -133,6 +141,43 @@ public class Celestia {
 			fout.newLine();
 			fout.write("#");fout.newLine();
 			fout.write("\""+name+"\" \"Sol/Earth\"");
+			fout.newLine();
+			fout.write("{");fout.newLine();
+			fout.write("Class \"spacecraft\"");
+			fout.newLine();
+			fout.write("Mesh \"cassini.3ds\"");
+			fout.newLine();
+			fout.write("Radius 0.01");
+			fout.newLine();
+			fout.newLine();
+			fout.write("     Beginning "+(time[0]));//jd_begin);
+			fout.newLine();
+			fout.write("     Ending "+(time[time.length-1]));//(jd_begin+1000));
+			fout.newLine();
+			fout.newLine();
+			fout.write("     SampledOrbit   \""+filename+".xyz\"");
+			fout.newLine();
+			fout.write("}");
+			fout.newLine();
+		fout.close();
+	}
+    
+    /**
+     * Write the Spacecraft information file in Celestia's "extras" directory.
+     * Formats the file for a heliocentric trajectory.
+     * 
+     * @param name The name of the spacecraft to appear in Celestia (e.g. "STS-115")
+     * @param filename The name of the file (e.g. "STS-115")
+     * @param jd_begin The start date (julian date) of the spacecraft ephemerides
+     * @throws IOException
+     */
+    public void write_ssc_heliocentric(String name, String filename, double jd_begin) throws IOException {
+		File file = new File(celestia_home+"extras/"+filename+".ssc");
+		BufferedWriter fout = new BufferedWriter(new FileWriter(file));
+			fout.write("# "+name);
+			fout.newLine();
+			fout.write("#");fout.newLine();
+			fout.write("\""+name+"\" \"Sol\"");
 			fout.newLine();
 			fout.write("{");fout.newLine();
 			fout.write("Class \"spacecraft\"");
@@ -250,13 +295,89 @@ public class Celestia {
     public void write_trajectory(String filename, String pretty_name, double jd_begin)
     	throws IOException
     {
-        this.write_ssc(filename,pretty_name,jd_begin);
+        this.write_ssc(pretty_name,filename,jd_begin);
         this.write_xyz(filename);
     }
     
+    /**
+     * Writes the appropriate files to Celestia for a heliocentric trajectory.  
+     * The member data for 'r' and 'time' must be set.
+     * 
+     * @param filename Filename for the two files without extension (filename.xyz and filename.ssc)
+     * @param pretty_name This string will appear in Celestia identifying the spacecraft
+     * @param jd_begin The start date for the spacecraft.
+     * @throws IOException
+     */
+    public void write_heliocentric(String filename, String pretty_name, double jd_begin)
+    	throws IOException
+    {
+        this.write_ssc_heliocentric(pretty_name,filename,jd_begin);
+        this.write_xyz(filename);
+    }
+    
+    public void searchWindows(){
+    	System.out.println("...searching for the Celestia home directory...");
+    	File d = new File("C:/Program Files/Celestia/");
+//    	File s = new File(FileUtil.getClassFilePath("jat.util","Celestia"));
+//    	System.out.println("s: "+s.toString());
+//    	s = new File(s.getParent());
+//    	System.out.println("s: "+s.toString());
+//    	s = new File(s.getParent());
+//    	System.out.println("s: "+s.toString());
+//    	s = new File(s.getParent());
+//    	System.out.println("s: "+s.toString());
+    	File s = new File("C:/");
+    	if(d.exists()){
+    		Celestia.celestia_home = d.getPath();
+    		System.out.println("Celestia home: "+d.getPath());
+    	} else {
+    		s = search(s);
+    		if(s!=null){//  && s.getName().equalsIgnoreCase("Celestia")){
+    			Celestia.celestia_home = s.getPath();
+    			System.out.println("Celestia home: "+s.getPath());
+    			return;
+    		}
+    	}
+    	System.out.println("Couldn't find Celestia home directory.  Make sure it is installed.");
+    	System.out.println("Celestia can be downloaded from http://celestia.sourceforge.net");
+    	System.err.println("Fatal - Assumption that Celestia was installed failed.");
+    	System.exit(0);
+    }
+    
+    public File search(File s){
+    	String[] names = s.list();
+    	File tmp;
+    	String out = s.toString();
+    	if(names == null) return null;
+    	for(int i=0; i<names.length; i++){
+//    		if(names[i].equalsIgnoreCase("games") || s.getPath().contains("games")){
+//    			int j =0;
+//    		}
+			if(names[i].equalsIgnoreCase("celestia.exe")){
+				Celestia.celestia_home = s.getPath();
+				//System.out.println("home: "+s.getPath());
+				return new File(Celestia.celestia_home);
+			} else {
+				tmp = new File(s.getPath(),names[i]);
+				//System.out.println("? search ? - "+s.getPath()+" : "+tmp.toString());
+				if(tmp.isDirectory()){
+					tmp = search(tmp);
+					if(tmp!=null){
+						//System.out.println("? result ? - "+tmp.getName());
+						if(tmp.getName().equalsIgnoreCase("celestia")){
+							return tmp;
+						}
+						
+					}
+				}
+			}
+		}
+    	return null;
+    }
+    
 	public static void main(String[] args) throws java.io.IOException {
-	    Celestia.run();
-	    //Celestia celestia = new Celestia("C:/Celestia_dev/");
+	    //Celestia.run();
+	    Celestia celestia = new Celestia();
 	    //celestia.get_trajectory("C:/Code/Jat/jat/test/propagator/output/ISS_variable.txt");
 	}
 	

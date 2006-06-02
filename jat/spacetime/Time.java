@@ -125,6 +125,13 @@ public class Time {
         return this.MJD_UT1;
     }
     /**
+     * Returns Barycentric Dynamical Time (TDB) in julian date
+     * @return MJD_TDB
+     */
+    public double mjd_tdb(){
+    	return Time.TTtoTDB(mjd_tt());
+    }
+    /**
      * Returns Universal Coordinated Time in julian date
      * @return JD_UTC
      */
@@ -137,6 +144,13 @@ public class Time {
      */
     public double jd_tt(){
         return this.MJD_TT+2400000.5;
+    }
+    /**
+     * Returns Barycentric Dynamical Time (TDB) in julian date
+     * @return JD_TDB
+     */
+    public double jd_tdb(){
+    	return Time.TTtoTDB(jd_tt());
     }
     /**
      * Returns Universal Time in julian date
@@ -173,6 +187,17 @@ public class Time {
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
 
+    /**
+     * Advance the clock by a number of seconds
+     * @param dt [sec]
+     */
+    public void step_seconds(double dt){
+        this.MJD_UTC = this.MJD_UTC+dt*TimeUtils.sec2days;
+        this.MJD_TT = UTC2TT(this.MJD_UTC);
+        this.MJD_TDB = TTtoTDB(this.MJD_TT);
+        this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
+    }
+    
     /**
      * Converts the MJD expressed in UTC to give the days since Jan 01 00:00
      * @return The number of days since the beginning of the current year.

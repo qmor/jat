@@ -53,18 +53,28 @@ public class Simulation {
         String fs = FileUtil.file_separator();
         String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
         
-        String[] tests = {"demo"};
+        String[] tests = {"jat_demo"};
         //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
         boolean[][] force_flag = 
-        {{false,true,true,false,false}};					//JGM3		0
+        {{false,true,true,true,true}};					//JGM3		0
         String[][] test_nums = 
         		{{""}};  							//JGM3		
         
         boolean plot_traj = true;
         int i=0,j=0;
+        //*ISS
         VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
-        r = r.times(1000);
         VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
+        //*Molniya VectorN r = new VectorN(-1529.894287,-2672.877357,-6150.115340);
+        //*Molniya VectorN v = new VectorN(8.717518,-4.989709,0);
+        //*GEO VectorN r = new VectorN(-1529.894287,-2672.877357,-6150.115340);
+        //*GEO VectorN v = new VectorN(8.717518,-4.989709,0);
+        //*GPS VectorN r = new VectorN(5525.33668,-15871.18494,-20998.992446);
+        //*GPS VectorN v = new VectorN(2.750341,2.434198,-1.068884);
+        //*SunSync VectorN r = new VectorN(-2290.301063,-6379.471940,0);
+        //*SunSync VectorN v = new VectorN(-0.883923,0.317338,7.610832);
+        
+        r = r.times(1000);
         //v = v.times(1755);
         v = v.times(1000);
         double t0 = 0, tf = 86400;
@@ -76,6 +86,7 @@ public class Simulation {
         for(j=0; j<1; j++){
             for(i=0; i<1; i++){
                 sim.initialize(sm,t0,tf,mjd_utc, stepsize, 1, out);
+                sim.set_showtimestep(true);
                 boolean use_JGM2 = false;
                 String test = tests[i]+test_nums[j][i];
                 sim.initializeForces(force_flag[j], use_JGM2, test);
@@ -90,7 +101,7 @@ public class Simulation {
             	            i--;
             	            j--;
             	            celestia.set_trajectory(sim.get_traj());
-            	            String name = tests[i]+test_nums[j][i]+"_jat";
+            	            String name = tests[i]+test_nums[j][i];
             	            celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
             	            System.out.println("Wrote to Celestia");
             	        }catch(java.io.IOException ioe){}
