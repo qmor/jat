@@ -48,6 +48,11 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
      */
     protected UniverseModel spacetime;
     /**
+     * Flag indicating whether or not to use an onboard computer to
+     * track force models and time.
+     */
+    protected boolean use_spacetime_model = false;
+    /**
      * Model for all of the control functions, both linear and angular.
      */
     protected ControlLaw controller;
@@ -104,6 +109,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
         thrust = new VectorN(0,0,0);
         torque = new VectorN(0,0,0);
     	spacetime = u;
+    	use_spacetime_model = true;
     }
     
     /**
@@ -128,7 +134,8 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
     public void update(double t, double[] x){
         //TODO - call estimator
         sc.updateState(x);
-        spacetime.update(t);
+        if(use_spacetime_model)
+        	spacetime.update(t);
     }
     
     /**
@@ -136,7 +143,11 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
      * @param t seconds since epoch
      */
     public void update(double t){
-    	spacetime.update(t);
+    	if(use_spacetime_model){
+    		spacetime.update(t);
+    	}else{
+    		System.out.println("Warning! Improper use of update method in SpacecraftModel.")
+    	}
     }
 
     /**
@@ -391,5 +402,12 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
      */
 	public double get_sc_t() {
 		return spacetime.time.get_sim_time();
+	}
+	/**
+	 * Returns the modified julian date of the spacecraft computer
+	 * @return modified julian date
+	 */
+	public double get_sc_mjd_utc() {
+		return spacetime.time.mjd_utc();
 	}
 }

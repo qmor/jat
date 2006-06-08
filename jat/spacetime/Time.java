@@ -168,6 +168,13 @@ public class Time {
     }
 
     /**
+     * Returns the initial epoch in modified julian date universal coordinated time
+     * @return date [modified julian days]
+     */
+    public double get_epoch_mjd_utc(){
+    	return this.MJD_UTC_START;
+    }
+    /**
      * Set the difference in seconds between Universal and Universal Coordinated Time
      * @param d [sec]
      */
