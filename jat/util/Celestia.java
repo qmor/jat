@@ -277,12 +277,30 @@ public class Celestia {
      * 
      * @param traj Trajectory
      */
-    public void set_trajectory(Trajectory traj){
-        time = traj.timeArray();
+    public void set_trajectory(Trajectory traj_km){
+        time = traj_km.timeArray();
         for(int i=0; i<time.length; i++){
             time[i] = time[i] + 2400000.5;
         }
-        r = traj.positionArray();
+        r = traj_km.positionArray();
+    }
+    /**
+     * Obtain time and position data from a Trajectory object and store into the
+     * class to then format for Celestia.  (Converts from meters to kilometers)
+     * 
+     * Trajectory format should be as follows:
+     * time(MJD_UTC)	position_x(km)	position_y(km)	position_z(km)		...other_stuff
+     * 
+     * @param traj Trajectory
+     */    
+    public void set_trajectory_meters(Trajectory traj_m){
+    	time = traj_m.timeArray();
+    	r = traj_m.positionArray();
+    	for(int i=0; i<time.length; i++){
+    		time[i] = time[i] + 2400000.5;
+    		for(int j=0; j<r[0].length; j++)
+    			r[i][j] = r[i][j]/1000.0;
+    	}
     }
     /**
      * Writes the appropriate files to Celestia.  The member data for 'r' and 'time' must be set.

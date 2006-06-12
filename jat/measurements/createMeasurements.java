@@ -10,11 +10,16 @@ import jat.alg.estimators.*;
 
 public class createMeasurements{
 
-	public static String []measurementTypes;
-	public static VectorN measurementValues;
-	public static int numMeasurementTypes;
-	public static MeasurementModel [] mm;
-	public static double [] frequency;
+//	public static String []measurementTypes;
+//	public static VectorN measurementValues;
+//	public static int numMeasurementTypes;
+//	public static MeasurementModel [] mm;
+//	public static double [] frequency;
+	public String []measurementTypes;
+	public VectorN measurementValues;
+	public int numMeasurementTypes;
+	public MeasurementModel [] mm;
+	public double [] frequency;
 	
 	//* *NOTE* added HashMap as an argument rather than calling static closedLoopSim.hm
 	public createMeasurements(HashMap hm)
@@ -63,7 +68,7 @@ public class createMeasurements{
 		}
 	}
 	
-	public static int getNumberMeasurements()
+	public int getNumberMeasurements()
 	{	
 		/*For most measurement types, there will be only
 		 * one measurement per epoch.  Caution must be
@@ -74,9 +79,6 @@ public class createMeasurements{
 		
 		return numMeasurementTypes;
 	}
-	
-
-	
 
 }
 

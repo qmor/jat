@@ -107,8 +107,8 @@ public class GEO_Blockage_Models implements ExpandedVisible {
             }	
 //          
 			//readFromFile("C:\\GOESR\\omni_antenna.txt",receiverAntennaDeg,receiverAntennaGain);
-			readFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
-			//readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
+			//readFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
+			readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
 			readFromFile(dir_in+"GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
 			//readFromFile("C:\\GOESR\\LMantenna.txt",receiverAntennaDeg,receiverAntennaGain);
 			firsttime = false;
@@ -236,20 +236,20 @@ public class GEO_Blockage_Models implements ExpandedVisible {
 		}
 		if(visible != true)
 			elevation = 0.0;
-		if(visible == true)
-		{
-			FileWriter out;
-			try {
-				out = new FileWriter("C:\\GOESR\\tmp.txt",true);
-				BufferedWriter writer = new BufferedWriter(out);
-				String pp = " " + Cn0 + "\n";
-				writer.write(pp);
-				writer.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		if(visible == true)
+//		{
+//			FileWriter out;
+//			try {
+//				out = new FileWriter("C:\\GOESR\\tmp.txt",true);
+//				BufferedWriter writer = new BufferedWriter(out);
+//				String pp = " " + Cn0 + "\n";
+//				writer.write(pp);
+//				writer.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		return visible;
 		
 	}

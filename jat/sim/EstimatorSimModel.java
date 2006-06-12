@@ -1,3 +1,25 @@
+/* JAT: Java Astrodynamics Toolkit
+ *
+ * Copyright (c) 2003 The JAT Project. All rights reserved.
+ *
+ * This file is part of JAT. JAT is free software; you can 
+ * redistribute it and/or modify it under the terms of the 
+ * GNU General Public License as published by the Free Software 
+ * Foundation; either version 2 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * 
+ * Emergent Space Technologies
+ * Created by Richard C. Page III
+ * */
 package jat.sim;
 
 import java.io.FileOutputStream;
@@ -7,6 +29,7 @@ import java.util.HashMap;
 
 import jat.alg.estimators.EKF;
 import jat.alg.integrators.Derivatives;
+import jat.alg.integrators.LinePrinter;
 import jat.cm.Constants;
 import jat.forces.GravitationalBody;
 import jat.forces.GravityModel;
@@ -18,23 +41,36 @@ import jat.forces.SolarRadiationPressure;
 import jat.forces.Sun;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
+import jat.measurements.ObservationMeasurement;
+import jat.measurements.ObservationMeasurementList;
 import jat.measurements.createMeasurements;
 import jat.spacecraft.Spacecraft;
 import jat.spacecraft.SpacecraftModel;
+import jat.spacetime.Time;
+import jat.spacetime.TimeUtils;
 import jat.spacetime.UniverseModel;
+import jat.traj.RelativeTraj;
 import jat.traj.Trajectory;
+import jat.util.Celestia;
 import jat.util.FileUtil;
 
 public class EstimatorSimModel extends SimModel {
 	
 	//** Static Variables **//
 	
-	private boolean gravityModel;
-	private HashMap hm;
+	//* TODO Cheating
+	//** Externally referenced Static Variables **//
+	public static SpacecraftModel truth[];
 	
 	//** Object Variables **//
 	
-	private SpacecraftModel truth[],ref[];
+	private boolean gravityModel;
+	private HashMap input;
+	private createMeasurements created_meas;
+	private ObservationMeasurementList obs_list;
+	
+	//private SpacecraftModel truth[];
+	private SpacecraftModel ref[];
 	private Trajectory truth_traj[], ref_traj[];
 	private static int numSpacecraft;
 	//public SimModel[] truth = null;
@@ -44,78 +80,91 @@ public class EstimatorSimModel extends SimModel {
 	private FileOutputStream[] ECIError;
 	private FileOutputStream[] covariance;
 	
-	public createMeasurements cm;
 	private int simStep;
 	public EKF filter;
 	private double dt;
 	private VectorN newState;
 	private int numStates;
-	public double simTime;
+	//public double simTime;
+	private Time simTime;
 	public int numVis;
+
+	private boolean verbose_estimation=false;
 	
 	//** Constructors **//
 	
 	public EstimatorSimModel(){
 		super();
-		String fs, dir_in;
-        fs = FileUtil.file_separator();
-        try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"input"+fs;
-        }catch(Exception e){
-            dir_in = "";
-        }
-		
-		this.hm = initializer.parse_file(dir_in+"initialConditions.txt");
-		numSpacecraft = initializer.parseInt(hm,"prop.NumSpacecraft");
-		numStates = initializer.parseInt(hm,"FILTER.states");
-		dt = initializer.parseInt(hm,"init.dt");
-		truth = new SpacecraftModel[numSpacecraft]; 
-		ref   = new SpacecraftModel[numSpacecraft];
-		cm = new createMeasurements(hm);
-		filter = new EKF(hm);
+		initializeConst(true);
 	}
 	public EstimatorSimModel(double[] r, double[] v, double cr, double cd, double area, double mass){
 		super(r, v, cr, cd, area, mass);
-		String fs, dir_in;
-        fs = FileUtil.file_separator();
-        try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"input"+fs;
-        }catch(Exception e){
-            dir_in = "";
-        }
-		
-        this.hm = initializer.parse_file(dir_in+"initialConditions.txt");
-		numSpacecraft = initializer.parseInt(hm,"prop.NumSpacecraft");
-		numStates = initializer.parseInt(hm,"FILTER.states");
-		dt = initializer.parseInt(hm,"init.dt");
-		truth = new SpacecraftModel[numSpacecraft]; 
-		ref   = new SpacecraftModel[numSpacecraft];
-		cm = new createMeasurements(hm);
-		filter = new EKF(hm);
+		initializeConst(false);
 	}
 	public EstimatorSimModel(double[][] r, double[][] v, double[] cr, double[] cd,
 			double[] area, double[] mass){
 		super(r, v, cr,cd,area, mass);
-		String fs, dir_in;
-        fs = FileUtil.file_separator();
-        try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"input"+fs;
-        }catch(Exception e){
-            dir_in = "";
-        }
-		
-        this.hm = initializer.parse_file(dir_in+"initialConditions.txt");
-		numSpacecraft = initializer.parseInt(hm,"prop.NumSpacecraft");
-		numStates = initializer.parseInt(hm,"FILTER.states");
-		dt = initializer.parseInt(hm,"init.dt");
-		truth = new SpacecraftModel[numSpacecraft]; 
-		ref   = new SpacecraftModel[numSpacecraft];
-		cm = new createMeasurements(hm);
-		filter = new EKF(hm);
+		initializeConst(false);
 	}
 	
 	//** Object Methods **//
-	
+	private void initializeConst(boolean obsFromFile){
+		if(obsFromFile){
+			String fs, dir_in;
+			fs = FileUtil.file_separator();
+			try{
+				dir_in = FileUtil.getClassFilePath("jat.sim","EstimatorSimModel")+"input"+fs;
+			}catch(Exception e){
+				dir_in = "";
+			}
+			this.input = initializer.parse_file(dir_in+"initialConditions.txt");
+			obs_list = new ObservationMeasurementList(this.input);
+			String path = FileUtil.getClassFilePath("jat.measurements","ObservationMeasurementList");
+			try {
+				//obs_list.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
+				obs_list.processRINEX(path+fs+"Case-820.rnx");
+				obs_list.processStateUpdateFile(path+fs+"test1_8.rnx");
+			} catch (IOException e) {
+				System.out.println("Error finding Observation RINEX file: "+path+fs+"ExampleRINEXGEONS.rnx");
+				e.printStackTrace();
+			}
+			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
+			numStates = initializer.parseInt(input,"FILTER.states");
+			dt = initializer.parseInt(input,"init.dt");
+			truth = new SpacecraftModel[numSpacecraft]; 
+			ref   = new SpacecraftModel[numSpacecraft];
+			truth_traj = new Trajectory[numSpacecraft];
+			ref_traj = new Trajectory[numSpacecraft];
+			for(int i=0; i<numSpacecraft; i++){
+				truth_traj[i] = new Trajectory();
+				ref_traj[i] = new Trajectory();
+			}
+			filter = new EKF(obs_list,input);
+		}else{
+			String fs, dir_in;
+			fs = FileUtil.file_separator();
+			try{
+				dir_in = FileUtil.getClassFilePath("jat.sim","EstimatorSimModel")+"input"+fs;
+			}catch(Exception e){
+				dir_in = "";
+			}
+			
+			this.input = initializer.parse_file(dir_in+"initialConditions.txt");
+			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
+			numStates = initializer.parseInt(input,"FILTER.states");
+			dt = initializer.parseInt(input,"init.dt");
+			truth = new SpacecraftModel[numSpacecraft]; 
+			ref   = new SpacecraftModel[numSpacecraft];
+			truth_traj = new Trajectory[numSpacecraft];
+			ref_traj = new Trajectory[numSpacecraft];
+			for(int i=0; i<numSpacecraft; i++){
+				truth_traj[i] = new Trajectory();
+				ref_traj[i] = new Trajectory();
+			}
+			//created_meas = new createMeasurements(input);
+			filter = new EKF(input);
+		}
+	}
 	private void initialize()
 	{
 		double[] r = new double[3];
@@ -124,7 +173,7 @@ public class EstimatorSimModel extends SimModel {
 		double[] tv = new double[3];  //variable for true trajectory
 		double cr,cd,area,mass,dt;
 		
-		double MJD0 =  initializer.parseDouble(hm,"init.MJD0");
+		double MJD0 =  initializer.parseDouble(input,"init.MJD0");
 		
 		//For each spacecraft extract the initial vector and force information
 		//Use this information to create a sim model
@@ -137,54 +186,54 @@ public class EstimatorSimModel extends SimModel {
 			
 			String str  = refs+i+".X";
 			String strt = tru+i+".X";
-			r[0] = initializer.parseDouble(this.hm,str);
-			tr[0] = initializer.parseDouble(this.hm,strt);
+			r[0] = initializer.parseDouble(this.input,str);
+			tr[0] = initializer.parseDouble(this.input,strt);
 			
 			str  = refs+i+".Y";
 			strt = tru+i+".Y";
-			r[1] = initializer.parseDouble(this.hm,str);
-			tr[1] = initializer.parseDouble(this.hm,strt);
+			r[1] = initializer.parseDouble(this.input,str);
+			tr[1] = initializer.parseDouble(this.input,strt);
 			
 			str  = refs+i+".Z";
 			strt = tru+i+".Z";
-			r[2] = initializer.parseDouble(this.hm,str);
-			tr[2] = initializer.parseDouble(this.hm,strt);
+			r[2] = initializer.parseDouble(this.input,str);
+			tr[2] = initializer.parseDouble(this.input,strt);
 			
 			/*Velocity*/
 			str  = refs+i+".VX";
 			strt = tru+i+".VX";
-			v[0] = initializer.parseDouble(this.hm,str);
-			tv[0] = initializer.parseDouble(this.hm,strt);
+			v[0] = initializer.parseDouble(this.input,str);
+			tv[0] = initializer.parseDouble(this.input,strt);
 			
 			str  = refs+i+".VY";
 			strt = tru+i+".VY";
-			v[1] = initializer.parseDouble(this.hm,str);
-			tv[1] = initializer.parseDouble(this.hm,strt);
+			v[1] = initializer.parseDouble(this.input,str);
+			tv[1] = initializer.parseDouble(this.input,strt);
 			
 			str  = refs+i+".VZ";
 			strt = tru+i+".VZ";
-			v[2] = initializer.parseDouble(this.hm,str);
-			tv[2] = initializer.parseDouble(this.hm,strt);
+			v[2] = initializer.parseDouble(this.input,str);
+			tv[2] = initializer.parseDouble(this.input,strt);
 			
 			
 			/*Solar Radiation Pressure Coefficient*/
 			str = "jat."+i+".Cr";
-			cr   = initializer.parseDouble(this.hm,str);
+			cr   = initializer.parseDouble(this.input,str);
 			
 			/*Drag Coefficient*/
 			str = "jat."+i+".Cd";
-			cd   = initializer.parseDouble(this.hm,str);
+			cd   = initializer.parseDouble(this.input,str);
 			
 			/*Initial Mass*/
 			str = "jat."+i+".mass";
-			mass = initializer.parseDouble(this.hm,str);
+			mass = initializer.parseDouble(this.input,str);
 			
 			/*Initial Area*/
 			str = "jat."+i+".area";
-			area = initializer.parseDouble(this.hm,str);
-			
+			area = initializer.parseDouble(this.input,str);
+						
 			/*Read in the appropriate model flags*/
-			boolean[] force_flag = CreateForceFlag(i); 
+			boolean[] force_flag = createForceFlag(i); 
 			VectorN rr = new VectorN(r);
 			VectorN vv = new VectorN(v);
 			Spacecraft s = new Spacecraft(rr,vv,cr,cd,area,mass);
@@ -200,9 +249,32 @@ public class EstimatorSimModel extends SimModel {
 			
 			/*Set the step size for the trajectory generation*/
 			/*Set the integrator Step size*/
-			dt = initializer.parseInt(this.hm,"init.dt");
+			dt = initializer.parseInt(this.input,"init.dt");
 			//ref[i].set_sc_dt(dt);
 			//truth[i].set_sc_dt(dt);
+			
+			/* Read in the value for the spacecraft receiver noise */
+			double range_noise=0;
+			double state_noise[] = new double[3];
+			str = "MEAS.types";
+			String str2;
+			int numMeas = initializer.parseInt(this.input,str);
+			for(int m=0; m<numMeas; m++){
+				str = "MEAS."+m+".desc";
+				str2 = initializer.parseString(this.input,str);
+				if(str2.equalsIgnoreCase("GPS")){
+					str = "MEAS."+m+".R.0";
+					range_noise = initializer.parseDouble(input,str);					
+				}else if(str2.equalsIgnoreCase("pseudoGPS")){
+					int end = initializer.parseInt(input,"MEAS."+m+".size");
+					state_noise = new double[end];
+					for(int snum=0; snum<end; snum++){
+						str = "MEAS."+m+".R."+snum;
+						state_noise[snum]=initializer.parseDouble(input,str);
+					}						
+				}
+			}
+			ref[i].set_GPS_noise(state_noise,range_noise);
 		}		
 	}
 	
@@ -285,7 +357,56 @@ public class EstimatorSimModel extends SimModel {
 	 * model held in the spacecraft flight computer by a time 'dt'.
 	 * Updates the computer's models according to the progression of time.
 	 * Updates the spacecraft state.
-	 * @param dt Timestep in seconds
+	 * 
+	 */
+	public void step(SpacecraftModel sm, Trajectory traj){
+		double t = sm.get_sc_t();
+		if(verbose_timestep){
+			System.out.println("step: "+t+" / "+tf+"    stepsize: "+dt);
+		}
+		
+		//rk8.setStepSize(sm.get_sc_dt());
+		rk8.setStepSize(dt);
+		//* update models
+		//double mjd_utc = spacetime.get_mjd_utc();
+		double[] X = new double[6];
+		double[] Xnew = new double[6];
+		double[] thrust = new double[3];
+		VectorN rnew;
+		VectorN vnew;
+		double[] tmp = new double[6];
+		double num_sc = 1;
+		for(int i=0; i<num_sc; i++){
+			
+			Spacecraft s = sm.get_spacecraft();
+			X = s.toStateVector(false);
+			Xnew = rk8.step(t, X, sm);
+			//* store new values
+			//rnew = new VectorN(Xnew[0],Xnew[1],Xnew[2]);
+			//vnew = new VectorN(Xnew[3],Xnew[4],Xnew[5]);
+			s.updateState(Xnew,false);
+		}
+		//* update simulation time
+//		if(t > (tf-sm.get_sc_dt()) && t != tf){
+//		sm.set_sc_dt(tf-t);
+//		}
+//		t=t+sm.get_sc_dt();
+		if(t > (tf-dt) && t != tf){
+			dt=(tf-t);
+		}
+		t=t+dt;
+		//* add to trajectory
+		traj.add(sm.get_sc_mjd_utc(),sm.get_spacecraft().toStateVector());
+		//* update the universe
+		sm.update(t);
+		iteration++;
+	}
+	/**
+	 * Propagation method for an individual spacecraft.  Increments the 
+	 * model held in the spacecraft flight computer by a time 'dt'.
+	 * Updates the computer's models according to the progression of time.
+	 * Updates the spacecraft state.
+	 * 
 	 */
 	public void step(SpacecraftModel sm){
 		double t = sm.get_sc_t();
@@ -316,54 +437,54 @@ public class EstimatorSimModel extends SimModel {
 		}
 		//* update simulation time
 //		if(t > (tf-sm.get_sc_dt()) && t != tf){
-//			sm.set_sc_dt(tf-t);
+//		sm.set_sc_dt(tf-t);
 //		}
 //		t=t+sm.get_sc_dt();
 		if(t > (tf-dt) && t != tf){
 			dt=(tf-t);
 		}
 		t=t+dt;
-		
+		//* add to trajectory
+		//traj.add(sm.get_sc_mjd_utc(),sm.get_spacecraft().toStateVector());
 		//* update the universe
 		sm.update(t);
 		iteration++;
 	}
-	
-	public boolean[]  CreateForceFlag(int i){
+	public boolean[]  createForceFlag(int i){
 		boolean[] force_flag = new boolean[6];
 		
 		/*Determine if only two body EOMS should be used*/
-		if(initializer.parseBool(this.hm,"jat."+i+".2body"))
+		if(initializer.parseBool(this.input,"jat."+i+".2body"))
 			force_flag[0]=true;
 		else
 			force_flag[0]=false;
 		
 		/*Determine if Solar gravity*/
-		if(initializer.parseBool(this.hm,"jat."+i+".solar"))
+		if(initializer.parseBool(this.input,"jat."+i+".solar"))
 			force_flag[1]=true;
 		else
 			force_flag[1]=false;
 		
 		/*Determine if Lunar Gravity is to be modeled*/
-		if(initializer.parseBool(this.hm,"jat."+i+".lunar"))
+		if(initializer.parseBool(this.input,"jat."+i+".lunar"))
 			force_flag[2]=true;
 		else
 			force_flag[2]=false;
 		
 		/*Derermine if Drag is to be modeled*/ 
-		if(initializer.parseBool(this.hm,"jat."+i+".drag"))
+		if(initializer.parseBool(this.input,"jat."+i+".drag"))
 			force_flag[3]=true;
 		else
 			force_flag[3]=false;
 		
 		/*Determine if solar radiation pressure should be modeled*/
-		if(initializer.parseBool(this.hm,"jat."+i+".srp"))
+		if(initializer.parseBool(this.input,"jat."+i+".srp"))
 			force_flag[4]=true;
 		else
 			force_flag[4]=false;
 		
 		/*Determine which Gravity model to use*/
-		if(initializer.parseBool(this.hm,"jat."+i+".jgm2"))
+		if(initializer.parseBool(this.input,"jat."+i+".jgm2"))
 			gravityModel = true;
 		else
 			gravityModel = false;
@@ -381,12 +502,14 @@ public class EstimatorSimModel extends SimModel {
 		{
 			//Step the trajectory forward the indicated amount
 			
+			//step(truth[numSats],truth_traj[numSats]);
 			step(truth[numSats]);
 			
 			//Extract the State Vector
 			//Only need to propagate the reference state if 
 			//We aren't estimating it
-			if(initializer.parseDouble(this.hm,"init.mode") == 0)
+			//* NOTE * originally == 0  ???
+			if(initializer.parseDouble(this.input,"init.mode") == 0)
 			{
 				double [] true_state = truth[numSats].get_spacecraft().toStateVector();
 				
@@ -397,6 +520,7 @@ public class EstimatorSimModel extends SimModel {
 				new PrintStream(truths[numSats]).println (truthOut.toString());
 				
 				
+				//step(ref[numSats],ref_traj[numSats]);
 				step(ref[numSats]);
 				double [] ref_state  = ref[numSats].get_spacecraft().toStateVector();
 				VectorN vecState = new VectorN(ref_state);
@@ -409,7 +533,100 @@ public class EstimatorSimModel extends SimModel {
 		
 	}
 	
+	private void filter_fromfile(){
+		/*Provide the algorithm to run the Kalman filter one step at
+		 a time.  This may need to be placed into another file later on*/
+		
+		
+		/*Determine the num ber of measurements that we will be processing.
+		 * Since this is a scalar update, we can simply loop over the 
+		 * measurement update step that many times
+		 */
+		//int numMeas = created_meas.getNumberMeasurements();
+		
+		
+		/*Loop over the number of measurements being carefull to 
+		 * omit measurements of 0
+		 */
+		
+		int processedMeasurements = 0;
+		
+		//Update the current state with the output of the filter
+		//Write the current state information to files
+		
+		double tmpState[] = new double[6];
+		for(int numSats = 0; numSats < numSpacecraft; numSats ++)
+		{
+
+			newState = filter.estimate(simTime,ref[numSats],obs_list,true);
+			processedMeasurements++;
+
+//			if(Double.isNaN(newState.x[0])){
+//				int donothing = 0;
+//			}
+			
+			//Extract the state of the current satellite
+			for(int i = 0;i < 6; i++)
+			{
+				tmpState[i]=newState.x[numSats*6 + i];
+			}
+			ref[numSats].get_spacecraft().updateMotion(tmpState);
+			ref[numSats].update(simTime.get_sim_time());
+			
+			//Write out the current True States
+			double [] true_state = truth[numSats].get_spacecraft().toStateVector();
+			
+			//Print out simStep + 1 because we didn't output the initial state
+			VectorN vecTime =  new VectorN(1,(simStep+1)*dt);
+			VectorN trueState = new VectorN(true_state);
+			VectorN truthOut = new VectorN(vecTime,trueState);
+			new PrintStream(truths[numSats]).println (truthOut.toString());
+			
+			//Write out the current State estimates
+			double [] ref_state  = ref[numSats].get_spacecraft().toStateVector();
+			VectorN vecState = new VectorN(ref_state);
+			VectorN stateOut = new VectorN(vecTime,vecState);
+			new PrintStream(trajectories[numSats]).println (stateOut.toString());
+			
+			//Output the current ECI error
+			VectorN error_out = new VectorN(6);
+			for(int i = 0; i < 6; i++)
+			{
+				error_out.x[i] = true_state[i] - ref_state[i];
+			}
+			VectorN ErrState = new VectorN(error_out);
+			stateOut = new VectorN(vecTime,ErrState);
+			new PrintStream(ECIError[numSats]).println(stateOut.toString());
+			
+//			Output the current Covariances
+			//Matrix Covariance = EKF.pold;
+			Matrix Covariance = filter.get_pold();
+			double[] tmp = new double[numStates*numStates];
+			int k = 0;
+			for(int i = 0; i < numStates; i++)
+			{
+				for(int j = 0; j < numStates; j++)
+				{
+					tmp[k] = Covariance.get(i,j);
+					k++;
+				}
+			}
+			VectorN ErrCov = new VectorN(tmp);
+			stateOut = new VectorN(vecTime,ErrCov);
+			new PrintStream(covariance[numSats]).println (stateOut.toString());
+			
+			//Output the Number of Visible Satellites
+			//stateOut =  new VectorN(2);
+			//stateOut.set(0,(simStep+1)*dt);
+			//stateOut.set(1,(double)numVis);
+			//System.out.println("Number of visible Satellites   " + numVis);
+			
+		}		
+	}
 	
+	/**
+	 * @deprecated
+	 */
 	private void filter()
 	{
 		
@@ -421,8 +638,7 @@ public class EstimatorSimModel extends SimModel {
 		 * Since this is a scalar update, we can simply loop over the 
 		 * measurement update step that many times
 		 */
-		int numMeas = createMeasurements.getNumberMeasurements();
-		
+		int numMeas = created_meas.getNumberMeasurements(); 
 		
 		/*Loop over the number of measurements being carefull to 
 		 * omit measurements of 0
@@ -432,7 +648,7 @@ public class EstimatorSimModel extends SimModel {
 		for(int i = 0;i<numMeas;i++)
 		{
 			
-			if(simTime%createMeasurements.frequency[i] ==0 )
+			if(simTime.get_sim_time()%(created_meas.frequency[i]) ==0 )
 			{
 				//Run the measurements through the EKF
 				/*				if(createMeasurements.measurementTypes[i].equals("position"))
@@ -442,16 +658,16 @@ public class EstimatorSimModel extends SimModel {
 				 * in the form of scalar updates, the vector measurement is 
 				 * broken into the appropriate number of scalar updates
 				 
-				 System.out.println("Processing STATE Updateat time: " + simTime);
+				 System.out.println("Processing STATE Updateat time: " + simTime.get_sim_time());
 				 String tmp = "MEAS."+i+".size";
-				 for(int j = 0;j<initializer.parseInt(hm,tmp);j++)
+				 for(int j = 0;j<initializer.parseInt(input,tmp);j++)
 				 {
-				 newState = filter.estimate(simTime,i,j);
+				 newState = filter.estimate(simTime.get_sim_time(),i,j);
 				 processedMeasurements ++;
 				 }
 				 
 				 }*/
-				if(createMeasurements.measurementTypes[i].equals("GPS"))
+				if(created_meas.measurementTypes[i].equals("GPS"))
 				{
 					/*this loop spins through all the GPS satellites.
 					 *Ranges near zero will be skipped in the filter
@@ -459,21 +675,21 @@ public class EstimatorSimModel extends SimModel {
 					numVis = 0;
 					for(int j = 0; j<26;j++ )
 					{
-						newState = filter.estimate(simTime,i,j,true);
+						newState = filter.estimate(simTime.get_sim_time(),i,j,true);
 						processedMeasurements ++;
 					}
 				}
 				else
 				{
 					String tmp = "MEAS."+i+".satellite";
-					int sat = initializer.parseInt(this.hm,tmp);
+					int sat = initializer.parseInt(this.input,tmp);
 					
 					tmp = "MEAS."+i+".size";
-					for(int j = 0;j<initializer.parseInt(this.hm,tmp);j++)
+					for(int j = 0;j<initializer.parseInt(this.input,tmp);j++)
 					{	
-						newState = filter.estimate(simTime,i,j+(6*sat),true);
+						newState = filter.estimate(simTime.get_sim_time(),i,j+(6*sat),true);
 						processedMeasurements ++;
-						System.out.println("Processing Measurement at time: " + simTime);
+						System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
 					}
 				}
 			}
@@ -485,7 +701,7 @@ public class EstimatorSimModel extends SimModel {
 		//catch the case where there are no measurements, set the measurement
 		//flag to false to tell the filter to just propagate
 		if(processedMeasurements  == 0)
-			newState = filter.estimate(simTime, 0,0,false);
+			newState = filter.estimate(simTime.get_sim_time(), 0,0,false);
 		
 		
 		//Update the current state with the output of the filter
@@ -527,7 +743,8 @@ public class EstimatorSimModel extends SimModel {
 			new PrintStream(ECIError[numSats]).println (stateOut.toString());
 			
 //			Output the current Covariances
-			Matrix Covariance = EKF.pold;
+//			Matrix Covariance = EKF.pold;
+			Matrix Covariance = filter.get_pold();
 			double[] tmp = new double[numStates*numStates];
 			int k = 0;
 			for(int i = 0; i < numStates; i++)
@@ -571,38 +788,62 @@ public class EstimatorSimModel extends SimModel {
 		
 		
 		/*Cache off the simulation mode */
-		int filterMode = initializer.parseInt(this.hm,"init.mode");
+		int filterMode = initializer.parseInt(this.input,"init.mode");
 		
 		//Compute the length of the simulation in seconds
-		double MJD0 =  initializer.parseDouble(this.hm,"init.MJD0");
-		double MJDF =  initializer.parseDouble(this.hm,"init.MJDF");
-		double T0   =  initializer.parseDouble(this.hm,"init.T0");
-		double TF   =  initializer.parseDouble(this.hm,"init.TF");
-		simTime = 0;
+		double MJD0 =  initializer.parseDouble(this.input,"init.MJD0");
+		double MJDF =  initializer.parseDouble(this.input,"init.MJDF");
+		double T0   =  initializer.parseDouble(this.input,"init.T0");
+		double TF   =  initializer.parseDouble(this.input,"init.TF");
+		//simTime = 0; //* this is done in call to "initialize()"
+		simTime = new Time(MJD0);
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
+		this.tf = simLength;
+		set_verbose(true);
+		//double simLength = Math.round(TF - T0);
+		//ObservationMeasurement obs = obs_list.getFirst();
 		
 		for( simStep = 1; simStep < simLength/dt; simStep ++)
 		{
+//			if(this.verbose_estimation) 
+//				System.out.println("running..."+(dt*simStep)+" / "+simLength);
 			//if(simStep%100 == 0)
 			//	System.out.println(simStep*5);
-			
 			propagate(simStep*dt);
-			simTime = simStep*dt;
-			
-			System.out.println("SimTime: " + simTime + " SimStep: " + simStep);
-			
-			if(filterMode > 0)
-			{
-				filter();
+			//simTime = simStep*dt;
+			simTime.update(simStep*dt);
 				
-				//Guidance();
-				
-				//Control();
+			filter_fromfile();
+			
+			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
+			
+			for(int i=0; i<numSpacecraft; i++){
+				truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
+				ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
 			}
+			
 		}
 		
 		/*Close all output files*/
 		closeFiles();
+		
+		/* Post Processing */
+		LinePrinter lp = new LinePrinter();
+		RelativeTraj[] reltraj = new RelativeTraj[numSpacecraft];
+		Celestia cel = new Celestia("C:/Code/Celestia/");
+		for(int i=0; i<numSpacecraft; i++){
+			reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp);
+			reltraj[i].process();			
+			try {
+				cel.set_trajectory_meters(ref_traj[i]);
+				cel.write_trajectory("jat_ref_"+i,"jat_ref_"+i,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				cel.set_trajectory_meters(truth_traj[i]);
+				cel.write_trajectory("jat_truth_"+i,"jat_truth_"+i,TimeUtils.MJDtoJD(this.mjd_utc_start));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void openFiles()
@@ -618,7 +859,7 @@ public class EstimatorSimModel extends SimModel {
 		String fs, dir_in;
 		fs = FileUtil.file_separator();
 		try{
-			dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"output"+fs;
+			dir_in = FileUtil.getClassFilePath("jat.sim","EstimatorSimModel")+"output"+fs;
 		}catch(Exception e){
 			dir_in = "";
 		}
@@ -685,10 +926,21 @@ public class EstimatorSimModel extends SimModel {
 		System.out.println("Closing files and exiting . . ");
 	}
 	
+	public void set_verbose(boolean b){
+		this.verbose_estimation = b;
+		if(filter != null)
+			filter.set_verbose(b,this.tf);
+	}
+	
 //	** Main **//
 	
 	public static void main(String[] args) {
-		EstimatorSimModel Sim = new EstimatorSimModel ();
+		double start = System.currentTimeMillis();
+		EstimatorSimModel Sim = new EstimatorSimModel();
+		//Sim.set_verbose(true);
 		Sim.runloop();
+		double elapsed = (System.currentTimeMillis()-start)*0.001/60;
+        System.out.println("Elapsed time [min]: "+elapsed);
+        System.out.println("Finished.");
 	}
 }

@@ -23,6 +23,7 @@
 package jat.measurements;
 
 import jat.alg.estimators.EKF;
+import jat.alg.estimators.MeasurementFileModel;
 import jat.alg.estimators.MeasurementModel;
 import jat.alg.integrators.*;
 import jat.matvec.data.*;
@@ -52,9 +53,11 @@ import javax.swing.JFrame;
 * position and velocity in states 0-5.  The clock bias and
 * drift states are defined in the input file
 */
-public class GPSmeasurementModel implements MeasurementModel{
+public class GPSmeasurementModel implements MeasurementFileModel,MeasurementModel{
 
 
+	private boolean obsfromfile = false;
+	
 	private ReceiverModel rcvr;
 	public GPS_Constellation constell;
 	private IonoModel iono = new IonoModel();
@@ -83,8 +86,7 @@ public class GPSmeasurementModel implements MeasurementModel{
 	public static double oldtime, newitme;
 	public static VectorN Cn0_out;
 	private static FileOutputStream visableSats;
-
-
+	
 	/**
 	 * Constructor
 	 * @param t Spacecraft Trajectory
@@ -96,6 +98,7 @@ public class GPSmeasurementModel implements MeasurementModel{
 	 * @param mlp LinePrinter for measurement data output
 	 */
 	public GPSmeasurementModel(HashMap h) {
+		obsfromfile = false;
 		hm = h;  //closedLoopSim.hm; //* *NOTE* added argument rather than static var
 		
 		block = new GEO_Blockage_Models();
@@ -155,6 +158,14 @@ public class GPSmeasurementModel implements MeasurementModel{
 
 	
 
+	public double R(ObservationMeasurement om)
+	{
+		int measNum    = 0;//EKF.measNum;
+		String tmp = "MEAS."+measNum+".R";
+		double sigma = initializer.parseDouble(hm,tmp);
+		double R = sigma*sigma;
+		return R;
+	}
 	public double R()
 	{
 		int measNum    = EKF.measNum;
@@ -163,18 +174,44 @@ public class GPSmeasurementModel implements MeasurementModel{
 		double R = sigma*sigma;
 		return R;
 	}
-	
-	public VectorN H(VectorN state)
+	//* Cheating *
+	//* NOTE * H is actually computed in the call to "predictedMeasurement"
+	public VectorN H(ObservationMeasurement om,VectorN state)
 	{
-		int numStates = initializer.parseInt(hm,"FILTER.states");
+		//int numStates = initializer.parseInt(hm,"FILTER.states");
 		//VectorN H = new VectorN(numStates);
 		return H;
 	}
+	//* Cheating *
+	//* NOTE * H is actually computed in the call to "predictedMeasurement"
+	public VectorN H(VectorN state)
+	{
+		//int numStates = initializer.parseInt(hm,"FILTER.states");
+		//VectorN H = new VectorN(numStates);
+		return H;
+	}
+
 	
 	public double zPred(int isv, double t_mjd, VectorN state){
+		double out,obs;
+		obs = observedMeasurement(isv,t_mjd,state);
+		double pred = predictedMeasurement(isv, t_mjd, state); 
 		
-		double out;
-		double obs  = observedMeasurement(isv, t_mjd, state);
+		if(obs == 0)
+		    out = 0.0;
+		else
+			out = obs-pred;	
+		return out;
+	}
+	
+	public double zPred(ObservationMeasurement om, int isv, double t_mjd, VectorN state){
+		
+		double out,obs;
+		if(obsfromfile){
+			obs = om.get_range();
+		}else{
+			obs  = observedMeasurement(isv, t_mjd, state);
+		}
 		double pred = predictedMeasurement(isv, t_mjd, state); 
 	
 		if(obs == 0)
@@ -182,7 +219,7 @@ public class GPSmeasurementModel implements MeasurementModel{
 		else
 			out = obs-pred;
 		
-	return out;
+		return out;
 	}
 	
 	public double observedMeasurement(int isv, double t, VectorN state)
@@ -211,7 +248,9 @@ public class GPSmeasurementModel implements MeasurementModel{
 			oldclock = tmpClock;
 			lastTime = currentTime;
 		}
-		state= new VectorN (closedLoopSim.truth[0].sc.get_spacecraft().toStateVector());
+		//state= new VectorN (closedLoopSim.truth[0].sc.get_spacecraft().toStateVector());
+//* TODO Cheating - static reference to EstimatorSimModel		
+		state= new VectorN (EstimatorSimModel.truth[0].get_spacecraft().toStateVector());
 
 		// get the SVID and MJD time of measurement
 		GPS_SV sv = constell.getSV(isv);
@@ -334,8 +373,9 @@ public class GPSmeasurementModel implements MeasurementModel{
 	//private double rangePred(double t_mjd, VectorN xref, int prn, int type ){
 		
 		// get the SVID of measurement
-		GPS_SV sv = constell.getSV(isv);
-		int prn = sv.prn();
+		GPS_SV sv;
+		sv = constell.getSV(isv);
+		//int prn = sv.prn();
 		
 		int clockIndex = clockState;
 

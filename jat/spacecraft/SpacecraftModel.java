@@ -19,6 +19,7 @@
  */
 package jat.spacecraft;
 
+import jat.alg.estimators.EKF;
 import jat.alg.integrators.Derivatives;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.Quaternion;
@@ -57,9 +58,27 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
      */
     protected ControlLaw controller;
     /**
+     * @deprecated
      * Model for the state estimation algorithms and filters.
      */
     protected StateEstimation estimator;
+    /**
+     * Filter for use with state estimation.
+     */
+    protected EKF filter;
+    /**
+     * GPS receiver noise on each element in the state.
+     */
+    protected double[] GPS_state_noise;
+    /**
+     * GPS receiver noise on pseudorange measurements.
+     */
+    protected double GPS_range_noise;
+    /**
+     * Flag indicating whether the GPS receiver has been initialized.
+     */
+	protected boolean noiseIsSet = false;
+
     /**
      * Control thrust.
      */
@@ -127,6 +146,12 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
     }
     
     /**
+     * Convert to String.
+     */
+    public String toString(){
+    	return "MJD_UTC: "+this.spacetime.get_mjd_utc()+" r: ["+sc.r.x[0]+" "+sc.r.x[1]+" "+sc.r.x[2]+"] v: ["+sc.v.x[0]+" "+sc.v.x[1]+" "+sc.v.x[2]+"]";
+    }
+    /**
      * Updates the spacecraft state based on a time and state vector.
      * @param t Time
      * @param x State
@@ -146,7 +171,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
     	if(use_spacetime_model){
     		spacetime.update(t);
     	}else{
-    		System.out.println("Warning! Improper use of update method in SpacecraftModel.")
+    		System.out.println("Warning! Improper use of update method in SpacecraftModel.");
     	}
     }
 
@@ -371,6 +396,24 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
         return state.x;
     }
 
+    public double get_GPS_noise(int whichState, boolean isRange){
+    	if(noiseIsSet){
+    		if(isRange){
+    			return this.GPS_range_noise;
+    		}else{
+    			return this.GPS_state_noise[whichState];
+    		}
+    	}else{
+    		System.err.println("Warning! GPS receiver noise has not been initialized.");
+    		return 0;
+    	}
+    }
+    
+    public void set_GPS_noise(double[] noise, double range){
+    	this.GPS_state_noise = noise;
+    	this.GPS_range_noise = range;
+    	this.noiseIsSet = true;
+    }
     /**
      * Apply an (instantaneous) delta-v to the spacecraft motion.
      * @param dv Delta-v 3-vector [m/s]

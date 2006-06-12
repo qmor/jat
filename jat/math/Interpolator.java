@@ -23,7 +23,6 @@ package jat.math;
 
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
-import jat.sim.closedLoopSim;
 
 import java.io.*;
 
