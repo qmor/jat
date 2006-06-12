@@ -1,4 +1,4 @@
-package jat.timeRef;
+package jat.spacetime;
 
 /* JAT: Java Astrodynamics Toolkit
  *
