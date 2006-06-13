@@ -23,8 +23,13 @@
 package jat.measurements;
 
 import jat.gps.GPS_Measurement;
+import jat.matvec.data.Matrix;
+import jat.matvec.data.RotationMatrix;
+import jat.matvec.data.VectorN;
 import jat.spacetime.CalDate;
+import jat.spacetime.EarthRef;
 import jat.spacetime.GPSTimeFormat;
+import jat.spacetime.Time;
 import jat.util.FileUtil;
 
 import java.io.BufferedReader;
@@ -43,7 +48,7 @@ public class ObservationMeasurementList
 	int count=0;
 	int numOfSatellites=0;
 	int timeStep = 0;
-	int currentIndex = -1;
+	int currentIndex = 0;
 	int observationNumber=0;
 	int dataCount=0;
 	
@@ -94,6 +99,10 @@ public class ObservationMeasurementList
 	public void processStateUpdateFile(String fileName) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
 		boolean loop = true;
+		Time time;
+		EarthRef earth;
+		RotationMatrix rot;
+		VectorN r = new VectorN(3);
 		int year, day,i;
 		double sec, mjd;
 		GPSTimeFormat date;
@@ -115,13 +124,18 @@ public class ObservationMeasurementList
 				sec = Double.parseDouble(tok.nextToken());
 				date = new GPSTimeFormat(year,day,0,0,sec);
 				mjd = date.mjd();
-				//x = Double.parseDouble(tok.nextToken());
-				//y = Double.parseDouble(tok.nextToken());
-				//z = Double.parseDouble(tok.nextToken());
+				time = new Time(mjd);
+				earth = new EarthRef(time);
+				x = Double.parseDouble(tok.nextToken());
+				y = Double.parseDouble(tok.nextToken());
+				z = Double.parseDouble(tok.nextToken());
+				r = new VectorN(x,y,z);
+				rot = new RotationMatrix((earth.eci2ecef(time)).transpose());
+				r = rot.transform(r);
 				v_data = new Vector();
-				v_data.add(tok.nextToken());
-				v_data.add(tok.nextToken());
-				v_data.add(tok.nextToken());
+				v_data.add(""+r.x[0]);
+				v_data.add(""+r.x[1]);
+				v_data.add(""+r.x[2]);
 				if(processedOther){
 					i = searchListMJD(mjd);
 					for(int snum=0; snum<3; snum++){
@@ -130,6 +144,14 @@ public class ObservationMeasurementList
 						om.set_whichState(snum);
 						System.out.println(om.toString());
 						list.add(i,om);
+					}
+				}else{
+					for(int snum=0; snum<3; snum++){
+						om = new ObservationMeasurement(mjd,v_type,v_data,"0",this.input,
+								this.model_gpsstate,ObservationMeasurement.TYPE_GPSSTATE);
+						om.set_whichState(snum);
+						System.out.println(om.toString());
+						list.add(om);
 					}
 				}
 				line = in.readLine();

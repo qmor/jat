@@ -9,7 +9,7 @@ import jat.matvec.data.*;
 import java.util.Random;
 import jat.alg.estimators.*;
 
-public class stateUpdateMeasurementModel implements MeasurementModel{
+public class stateUpdateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	
 	public static VectorN R;
 	public static int numStates;
@@ -41,7 +41,8 @@ public class stateUpdateMeasurementModel implements MeasurementModel{
 		tmp = "MEAS."+EKF.measNum+".satellite";
 		int sat = initializer.parseInt(hm,tmp);
 		
-		double[] truth = closedLoopSim.truth[sat].sc.get_spacecraft().toStateVector();
+		//double[] truth = closedLoopSim.truth[sat].sc.get_spacecraft().toStateVector();
+		double[] truth = EstimatorSimModel.truth[sat].get_spacecraft().toStateVector();
 		
 		//Add in the measurement noise read out of the file
 		for(int j = 0; j < 6; j++)
@@ -80,7 +81,23 @@ public class stateUpdateMeasurementModel implements MeasurementModel{
 		
 		VectorN oMinusC;
 		VectorN pred = predictMeasurement(state);
-		VectorN obs  = getMeasurement();
+		VectorN obs = getMeasurement();
+		oMinusC      = obs.minus(pred);
+		
+		//Ensure we are returning the correct state when there is more than
+		//one satellite
+		int j = i - 6*sat; 
+		return oMinusC.get(j);
+	}
+	public double  zPred(ObservationMeasurement om, int i, double time, VectorN state){
+		String tmp = "MEAS."+EKF.measNum+".satellite";
+		int sat = initializer.parseInt(hm,tmp);
+		
+		VectorN oMinusC;
+		VectorN pred = predictMeasurement(state);
+		//VectorN obs = om.get_obs_data(ObservationMeasurement.DATA_);
+		//*TODO
+		VectorN obs = om.get_state(3);
 		oMinusC      = obs.minus(pred);
 		
 		//Ensure we are returning the correct state when there is more than
@@ -110,6 +127,9 @@ public class stateUpdateMeasurementModel implements MeasurementModel{
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
 	}
+	public double R(ObservationMeasurement om){
+		return R();
+	}
 	
 	public VectorN H(VectorN state)
 	{
@@ -124,5 +144,7 @@ public class stateUpdateMeasurementModel implements MeasurementModel{
 		H.set(whichState,1.0);
 		return H;
 	}
-
+	public VectorN H(ObservationMeasurement om, VectorN state){
+		return H(state);
+	}
 }

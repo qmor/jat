@@ -107,7 +107,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		String fs, dir_in;
         fs = FileUtil.file_separator();
         try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"input"+fs;
+            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
         }catch(Exception e){
             dir_in = "";
         }

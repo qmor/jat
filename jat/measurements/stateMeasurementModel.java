@@ -9,7 +9,8 @@ import jat.matvec.data.*;
 import java.util.Random;
 import jat.alg.estimators.*;
 
-public class stateMeasurementModel implements MeasurementModel{
+public class stateMeasurementModel implements MeasurementFileModel,MeasurementModel{
+
 	
 	public static VectorN R;
 	public static int numStates;
@@ -37,8 +38,10 @@ public class stateMeasurementModel implements MeasurementModel{
 	{
 		String tmp;
 		VectorN range = new VectorN(12);
-		double[] truth0 = closedLoopSim.truth[0].sc.get_spacecraft().toStateVector();
-		double[] truth1 = closedLoopSim.truth[1].sc.get_spacecraft().toStateVector();
+//		double[] truth0 = closedLoopSim.truth[0].sc.get_spacecraft().toStateVector();
+//		double[] truth1 = closedLoopSim.truth[1].sc.get_spacecraft().toStateVector();
+		double[] truth0 = EstimatorSimModel.truth[0].get_spacecraft().toStateVector();
+		double[] truth1 = EstimatorSimModel.truth[1].get_spacecraft().toStateVector();
 		VectorN sat0 = new VectorN(truth0);
 		VectorN sat1 = new VectorN(truth1);
 		range.set(0,sat0);
@@ -75,6 +78,15 @@ public class stateMeasurementModel implements MeasurementModel{
 		oMinusC      = obs.minus(pred);
 		return oMinusC.get(i);
 	}
+	public double  zPred(ObservationMeasurement om, int i, double time, VectorN state){
+		VectorN oMinusC;
+		VectorN pred = predictMeasurement(state);
+		//VectorN obs = om.get_obs_data(ObservationMeasurement.DATA_UNKNOWN);
+		//*TODO
+		VectorN obs = om.get_state(3);
+		oMinusC   	= obs.minus(pred);
+		return oMinusC.get(i);
+	}
 	
 	/** Return the measurement noise value for this measurement
 	 * 
@@ -88,6 +100,9 @@ public class stateMeasurementModel implements MeasurementModel{
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
 	}
+	public double R(ObservationMeasurement om){
+		return R();
+	}
 	
 	public VectorN H(VectorN state)
 	{
@@ -100,6 +115,9 @@ public class stateMeasurementModel implements MeasurementModel{
 		H.set(0.0);
 		H.set(whichState,1.0);
 		return H;
+	}
+	public VectorN H(ObservationMeasurement om, VectorN state){
+		return H(state);
 	}
 
 }

@@ -390,56 +390,59 @@ public class EKF {
 		double simTime = sim_Time.get_sim_time();
 		//* catch the end of the set of measurements and return null
 		//if(obs==null) measFlag=false;
-		ObservationMeasurement obs = obslist.getCurrent();
 		double dt = simTime-filterTime;
-		double measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
-		//while(obs.time_mjd()<simTime.mjd_utc()) obs = obslist.getNext();
-		while(measTime<filterTime) obs = obslist.getNext();
 		
-		while(measTime<simTime){
+		if(measFlag){
+			ObservationMeasurement obs = obslist.getCurrent();
+			double measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
+			//while(obs.time_mjd()<simTime.mjd_utc()) obs = obslist.getNext();
+			while(measTime<filterTime) obs = obslist.getNext();
 			
-			/*If necessary move to  a new time*/
-			//measTime = TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc());
-			double dt_obs = measTime-filterTime;
-			//double dt_sim = simTime.get_sim_time()- filterTime;
-			// detect backwards time jump
-			if (dt_obs < 0.0) {
-				System.out.println("backwards time jump");
-				System.exit(1);
+			while(measTime<simTime){
+				
+				/*If necessary move to  a new time*/
+				//measTime = TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc());
+				double dt_obs = measTime-filterTime;
+				//double dt_sim = simTime.get_sim_time()- filterTime;
+				// detect backwards time jump
+				if (dt_obs < 0.0) {
+					System.out.println("backwards time jump");
+					System.exit(1);
+				}
+				
+				
+				// propagate state and covariance to new time
+				if (dt_obs > 0.0) {
+					//while (filterTime < simTime.get_sim_time()) {
+					propagate(measTime);				
+				} 
+				else {			
+					//The time is the same so don't move the covariance
+					pnew = pold.copy(); // dt = 0, no change to covariance
+				}
+				
+				/* perform the measurement update  Currently we feed in the position that the measurement
+				 * is in the state.  This is probably not used by truly scalar measurements
+				 * and can be safely set to zero in those cases.
+				 */	
+				
+				if(initializer.parseInt(hm,"MEAS.types")!=0 && measFlag==true){
+					process(sc,obs);
+				}
+				
+				// check the update
+//				double zafter = obs.get_residual(xref.get(0,n));
+//				//double zafter = measModel.zPred(i, t, xref.state());
+//				double yafter = z - zafter;
+//				process.printResiduals(simTime, y, yafter);
+				
+				xref.resetPhi(); // re-linearize
+				//filterTime = measTime; //simTime;
+				xprev = xref.longarray();
+				
+				obs = obslist.getNext();
+				measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
 			}
-			
-			
-			// propagate state and covariance to new time
-			if (dt_obs > 0.0) {
-				//while (filterTime < simTime.get_sim_time()) {
-				propagate(measTime);				
-			} 
-			else {			
-				//The time is the same so don't move the covariance
-				pnew = pold.copy(); // dt = 0, no change to covariance
-			}
-			
-			/* perform the measurement update  Currently we feed in the position that the measurement
-			 * is in the state.  This is probably not used by truly scalar measurements
-			 * and can be safely set to zero in those cases.
-			 */	
-			
-			if(initializer.parseInt(hm,"MEAS.types")!=0 && measFlag==true){
-				process(sc,obs);
-			}
-			
-			// check the update
-//			double zafter = obs.get_residual(xref.get(0,n));
-//			//double zafter = measModel.zPred(i, t, xref.state());
-//			double yafter = z - zafter;
-//			process.printResiduals(simTime, y, yafter);
-			
-			xref.resetPhi(); // re-linearize
-			//filterTime = measTime; //simTime;
-			xprev = xref.longarray();
-			
-			obs = obslist.getNext();
-			measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
 		}
 		
 		//* Propagate to simTime
@@ -449,9 +452,9 @@ public class EKF {
 		
 		VectorN out = new VectorN(xref.get(0,n));
 		
-		if(Double.isNaN(out.x[0])){
-			int donothing = 0;
-		}
+//		if(Double.isNaN(out.x[0])){
+			//int donothing = 0;
+		//}
 		return out;
 		
 	}	
@@ -488,6 +491,7 @@ public class EKF {
 				
 				//Propagate the state forward using the process model
 				double[] xnew = process.propagate(filterTime, xprev, tnext);
+				if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime);
 				
 				//Get the state transition matrix for the current state
 				xref = new EstSTM(xnew, this.n);

@@ -3,13 +3,17 @@ package jat.measurements;
 
 import java.util.HashMap;
 
-import jat.sim.closedLoopSim;
+//import jat.sim.closedLoopSim;
 import jat.matvec.data.*;
 import java.util.Random;
 import jat.alg.estimators.*;
 import jat.sim.*;
 
-public class rangeMeasurementModel implements MeasurementModel{
+public class rangeMeasurementModel implements MeasurementFileModel,MeasurementModel{
+	
+	private boolean obsfromfile = false;
+	private double pseudorange;
+	private int prn;
 	
 	public static VectorN R;
 	public static int numStates;
@@ -18,10 +22,26 @@ public class rangeMeasurementModel implements MeasurementModel{
 	//*        at instantiation
 	Random generator;
 	
-	
+	public rangeMeasurementModel(ObservationMeasurement om, HashMap h){
+		hm = h;
+		obsfromfile = true;
+		pseudorange = om.get_obs_data(ObservationMeasurement.DATA_PSEUDORANGE);
+		prn = om.get_PRN();
+		
+		/*Add a sleep in here to insure that the Random Number
+		 * Seeds don't allign with any other random number generator
+		 */
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		generator = new Random();
+	}
 	
 	public rangeMeasurementModel(HashMap h) {
-		
+		obsfromfile = false;
 		hm = h;
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
@@ -38,8 +58,10 @@ public class rangeMeasurementModel implements MeasurementModel{
 	public double getMeasurement()
 	{
 		String tmp;
-		double[] truth0 = closedLoopSim.truth[0].sc.get_spacecraft().toStateVector();
-		double[] truth1 = closedLoopSim.truth[1].sc.get_spacecraft().toStateVector();
+//		double[] truth0 = closedLoopSim.truth[0].sc.get_spacecraft().toStateVector();
+//		double[] truth1 = closedLoopSim.truth[1].sc.get_spacecraft().toStateVector();
+		double[] truth0 = EstimatorSimModel.truth[0].get_spacecraft().toStateVector();
+		double[] truth1 = EstimatorSimModel.truth[1].get_spacecraft().toStateVector();
 
 		double x2 = (truth0[0] - truth1[0])*(truth0[0] - truth1[0]);
 		double y2 = (truth0[1] - truth1[1])*(truth0[1] - truth1[1]);
@@ -67,7 +89,6 @@ public class rangeMeasurementModel implements MeasurementModel{
 		
 		double range = Math.sqrt(x2 + y2 + z2);
 		
-		
 		return range;
 		
 	}
@@ -75,17 +96,27 @@ public class rangeMeasurementModel implements MeasurementModel{
 	public double zPred(int i, double time, VectorN state){
 		double oMinusC;
 		double pred = predictMeasurement(state);
-		double obs  = getMeasurement();
+		double obs= getMeasurement();
+		oMinusC      = obs-pred;
+		return oMinusC;
+	}
+	public double zPred(ObservationMeasurement om, int i, double time, VectorN state){
+		double oMinusC;
+		double pred = predictMeasurement(state);
+		double obs = om.get_range();
 		oMinusC      = obs-pred;
 		return oMinusC;
 	}
 	
 	public double R()
-	{
-		
+	{	
 		String tmp = "MEAS."+EKF.measNum+".R."+0;
 		double R = initializer.parseDouble(hm,tmp);
 		return R;
+	}
+	public double R(ObservationMeasurement om)
+	{
+		return R();
 	}
 	
 	public VectorN H(VectorN state)
@@ -122,5 +153,7 @@ public class rangeMeasurementModel implements MeasurementModel{
 		H.set(14,0.0);
 		return H;
 	}
-
+	public VectorN H(ObservationMeasurement om, VectorN state){
+		return H(state);
+	}
 }

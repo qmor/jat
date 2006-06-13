@@ -5,13 +5,11 @@
 init.mode    1
 
 #Initial MJD and Seconds past MJD0 for simulation start
-init.MJD0 50985.5   
-#init.MJD0 51013.0
+init.MJD0 50985.0   
 init.T0 0.0		 
 
-#Initial MJD and Seconds past MJDF for simulation end
-init.MJDF    50985.55 
-#init.MJDF    51014.0
+#Final MJD and Seconds past MJDF for simulation end
+init.MJDF    50988.0  
 init.TF      0.0		 
 
 #The step size in the propagation step.
@@ -25,36 +23,19 @@ init.dt      5
 prop.NumSpacecraft  1
 
 #ECI position and velocity (m and m/s)        
-#TRUE_STATE.0.X   -1.86631097007950e+006
-#TRUE_STATE.0.Y   4.21156718073160e+007
-#TRUE_STATE.0.Z   -8.23653287299700e+003
-#TRUE_STATE.0.VX  -3.07220561350360e+003
-#TRUE_STATE.0.VY  -1.35729105684550e+002
-#TRUE_STATE.0.VZ   1.35175510071330e+001
+TRUE_STATE.0.X   -1.86631097007950e+006
+TRUE_STATE.0.Y   4.21156718073160e+007
+TRUE_STATE.0.Z   -8.23653287299700e+003
+TRUE_STATE.0.VX  -3.07220561350360e+003
+TRUE_STATE.0.VY  -1.35729105684550e+002
+TRUE_STATE.0.VZ   1.35175510071330e+001
 
-#REF_STATE.0.X   -1.86631097007950e+006
-#REF_STATE.0.Y   4.21156718073160e+007
-#REF_STATE.0.Z   -8.23653287299700e+003
-#REF_STATE.0.VX  -3.07220561350360e+003
-#REF_STATE.0.VY  -1.35729105684550e+002
-#REF_STATE.0.VZ   1.35175510071330e+001
-
-#r = -4.209246169061243E7 -2594167.5071834107 -9714.154556396712
-#v = -3071.086684365334 -135.66017025290054 13.517801042913323
-
-TRUE_STATE.0.X   -4.209246169061243E7
-TRUE_STATE.0.Y   -2594167.5071834107
-TRUE_STATE.0.Z   -9714.154556396712
-TRUE_STATE.0.VX  -3071.086684365334
-TRUE_STATE.0.VY  -135.66017025290054
-TRUE_STATE.0.VZ   13.517801042913323
-
-REF_STATE.0.X   -4.209246169061243E7
-REF_STATE.0.Y   -2594167.5071834107
-REF_STATE.0.Z   -9714.154556396712
-REF_STATE.0.VX  -3071.086684365334
-REF_STATE.0.VY  -135.66017025290054
-REF_STATE.0.VZ   13.517801042913323
+REF_STATE.0.X   -1.86631097007950e+006
+REF_STATE.0.Y   4.21156718073160e+007
+REF_STATE.0.Z   -8.23653287299700e+003
+REF_STATE.0.VX  -3.07220561350360e+003
+REF_STATE.0.VY  -1.35729105684550e+002
+REF_STATE.0.VZ   1.35175510071330e+001
   
 TRUE_STATE.1.X 5.0          
 TRUE_STATE.1.Y 42214005     
@@ -76,7 +57,7 @@ jat.0.clockDrift -5.0
 
 #Solar Radiation Pressure Coefficient and Drag Doefficient
 #Area (m^2) and mass (kg)
-jat.0.Cr    0.0         
+jat.0.Cr    1.2         
 jat.0.Cd    0.0
 jat.0.area  10.0  
 jat.0.mass  1000    
@@ -121,25 +102,21 @@ jat.1.jgm2 false
 #Set the number of states the filter will have
 #X Y Z Vx Vy Vz B Bdot Srp
 FILTER.dt    1	
-#FILTER.states 15
-#FILTER.clock 14
-#FILTER.bias 7
 FILTER.states 9
-FILTER.clock 14
+FILTER.clock 6
 FILTER.bias 7
 
 #Set the process model used
-#FILTER.pm JGM4x4SRPProcess15state
 FILTER.pm JGM4x4SRPProcess9state
 
 #PROCESS NOISE
 #Set the process noise for each of the states
-Q.0.X   1e-11 
-Q.0.Y   10e-11
-Q.0.Z   1e-11
-Q.0.VX   1e-9   
-Q.0.VY   1e-9
-Q.0.VZ   1e-9
+Q.0.X   1e-13 
+Q.0.Y   1e-13
+Q.0.Z   1e-13
+Q.0.VX   1e-15   
+Q.0.VY   1e-15
+Q.0.VZ   1e-15
 Q.1.X   1e-6   
 Q.1.Y   1e-6
 Q.1.Z   1e-6
@@ -148,13 +125,13 @@ Q.1.VY  1e-9
 Q.1.VZ  1e-9
 Q.0.Cr  1e-12 
 Q.1.Cr  1e-12
-Q.0.clockBias  1e-0
-Q.0.clockDrift 1e-0  
+Q.0.clockBias  .12
+Q.0.clockDrift 1e-4  
 
 #Set the Initial Position and Velocity Covariance (m and m/s)
-P0.0.X    1000		 
-P0.0.Y    1000			
-P0.0.Z    1000		
+P0.0.X    4000		 
+P0.0.Y    4000				
+P0.0.Z    4000			
 P0.0.VX   10		
 P0.0.VY   10			
 P0.0.VZ   10
@@ -166,7 +143,7 @@ P0.1.VY   .1
 P0.1.VZ   .1
 
 #Set thhe Initial Clock Offset and Drift Covariance (m and m/s)		
-P0.0.clockBias 1000000	
+P0.0.clockBias 10000	
 P0.0.clockDrift 10
 
 #Set the Initial Solar Radiation Pressure and Drag Coefficient Covariances	
@@ -180,7 +157,7 @@ P0.1.Cd   1
 #MEASUREMENTS
 
 #Set the number of types of measurements
-MEAS.types 2
+MEAS.types 0
 
 #Measurement type position.  Assumed an ECI absolute position can 
 #be measured or provided by a ground station.  The associated
@@ -190,7 +167,7 @@ MEAS.0.desc GPS
 MEAS.0.satellite 0
 MEAS.0.frequency 1
 MEAS.0.size 1
-MEAS.0.R.0 2
+MEAS.0.R 7
 GPS.const week963.rnx
 
 
@@ -198,21 +175,21 @@ GPS.const week963.rnx
 #MEAS.0.desc range
 #MEAS.0.satellite 1
 #MEAS.0.size 1
-#MEAS.0.frequency 1e1
+#MEAS.0.frequency 86
 
 #MEAS.0.R.0  1
 
-MEAS.1.desc pseudoGPS
-MEAS.1.size 3
-MEAS.1.frequency 1
-MEAS.1.satellite 1
-MEAS.1.R.0 1
-MEAS.1.R.1 3
-MEAS.1.R.2 1
+#MEAS.2.desc pseudoGPS
+#MEAS.2.size 3
+#MEAS.2.frequency 1
+#MEAS.2.satellite 1
+#MEAS.2.R.0 1
+#MEAS.2.R.1 3
+#MEAS.2.R.2 1
 
 #MEAS.0.desc stateUpdate
 #MEAS.0.size 6
-#MEAS.0.frequency 100
+#MEAS.0.frequency 86400
 #MEAS.0.satellite 0
 #MEAS.0.R.0 10
 #MEAS.0.R.1 30
@@ -222,13 +199,13 @@ MEAS.1.R.2 1
 #MEAS.0.R.5 1
 
 
-#MEAS.1.desc stateUpdate
-#MEAS.1.size 6
-#MEAS.1.frequency 200
-#MEAS.1.satellite 1
-#MEAS.1.R.0 10
-#MEAS.1.R.1 30
-#MEAS.1.R.2 10
-#MEAS.1.R.3 1
-#MEAS.1.R.4 1
-#MEAS.1.R.5 1
+#MEAS.0.desc stateUpdate
+#MEAS.0.size 6
+#MEAS.0.frequency 200
+#MEAS.0.satellite 1
+#MEAS.0.R.0 10
+#MEAS.0.R.1 30
+#MEAS.0.R.2 10
+#MEAS.0.R.3 1
+#MEAS.0.R.4 1
+#MEAS.0.R.5 1

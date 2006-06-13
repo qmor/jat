@@ -90,12 +90,20 @@ public class EstimatorSimModel extends SimModel {
 	public int numVis;
 
 	private boolean verbose_estimation=false;
+	private boolean useFilter=true;
+	private boolean obsFromFile=false;
 	
 	//** Constructors **//
 	
 	public EstimatorSimModel(){
 		super();
 		initializeConst(true);
+	}
+	public EstimatorSimModel(boolean runFromFile,boolean filter_is_on){
+		super();
+		useFilter = filter_is_on;
+		obsFromFile = runFromFile;
+		initializeConst(runFromFile);
 	}
 	public EstimatorSimModel(double[] r, double[] v, double cr, double cd, double area, double mass){
 		super(r, v, cr, cd, area, mass);
@@ -120,13 +128,15 @@ public class EstimatorSimModel extends SimModel {
 			this.input = initializer.parse_file(dir_in+"initialConditions.txt");
 			obs_list = new ObservationMeasurementList(this.input);
 			String path = FileUtil.getClassFilePath("jat.measurements","ObservationMeasurementList");
-			try {
-				//obs_list.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
-				obs_list.processRINEX(path+fs+"Case-820.rnx");
-				obs_list.processStateUpdateFile(path+fs+"test1_8.rnx");
-			} catch (IOException e) {
-				System.out.println("Error finding Observation RINEX file: "+path+fs+"ExampleRINEXGEONS.rnx");
-				e.printStackTrace();
+			if(useFilter){
+				try {
+					//obs_list.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
+					//obs_list.processRINEX(path+fs+"Case-820.rnx");
+					obs_list.processStateUpdateFile(path+fs+"test1_8.rnx");
+				} catch (IOException e) {
+					System.out.println("Error finding Observation RINEX file: "+path+fs+"ExampleRINEXGEONS.rnx");
+					e.printStackTrace();
+				}
 			}
 			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
 			numStates = initializer.parseInt(input,"FILTER.states");
@@ -161,7 +171,7 @@ public class EstimatorSimModel extends SimModel {
 				truth_traj[i] = new Trajectory();
 				ref_traj[i] = new Trajectory();
 			}
-			//created_meas = new createMeasurements(input);
+			created_meas = new createMeasurements(input);
 			filter = new EKF(input);
 		}
 	}
@@ -263,7 +273,7 @@ public class EstimatorSimModel extends SimModel {
 				str = "MEAS."+m+".desc";
 				str2 = initializer.parseString(this.input,str);
 				if(str2.equalsIgnoreCase("GPS")){
-					str = "MEAS."+m+".R.0";
+					str = "MEAS."+m+".R";
 					range_noise = initializer.parseDouble(input,str);					
 				}else if(str2.equalsIgnoreCase("pseudoGPS")){
 					int end = initializer.parseInt(input,"MEAS."+m+".size");
@@ -558,7 +568,7 @@ public class EstimatorSimModel extends SimModel {
 		for(int numSats = 0; numSats < numSpacecraft; numSats ++)
 		{
 
-			newState = filter.estimate(simTime,ref[numSats],obs_list,true);
+			newState = filter.estimate(simTime,ref[numSats],obs_list,this.useFilter);
 			processedMeasurements++;
 
 //			if(Double.isNaN(newState.x[0])){
@@ -577,7 +587,7 @@ public class EstimatorSimModel extends SimModel {
 			double [] true_state = truth[numSats].get_spacecraft().toStateVector();
 			
 			//Print out simStep + 1 because we didn't output the initial state
-			VectorN vecTime =  new VectorN(1,(simStep+1)*dt);
+			VectorN vecTime =  new VectorN(1,(simStep)*dt);
 			VectorN trueState = new VectorN(true_state);
 			VectorN truthOut = new VectorN(vecTime,trueState);
 			new PrintStream(truths[numSats]).println (truthOut.toString());
@@ -625,7 +635,7 @@ public class EstimatorSimModel extends SimModel {
 	}
 	
 	/**
-	 * @deprecated
+	 * 
 	 */
 	private void filter()
 	{
@@ -687,14 +697,12 @@ public class EstimatorSimModel extends SimModel {
 					tmp = "MEAS."+i+".size";
 					for(int j = 0;j<initializer.parseInt(this.input,tmp);j++)
 					{	
-						newState = filter.estimate(simTime.get_sim_time(),i,j+(6*sat),true);
+						newState = filter.estimate(simTime.get_sim_time(),i,j+(6*sat),this.obsFromFile);
 						processedMeasurements ++;
-						System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
+						//System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
 					}
 				}
-			}
-			
-			
+			}	
 			
 		}
 		
@@ -721,7 +729,7 @@ public class EstimatorSimModel extends SimModel {
 			double [] true_state = truth[numSats].get_spacecraft().toStateVector();
 			
 			//Print out simStep + 1 because we didn't output the initial state
-			VectorN vecTime =  new VectorN(1,(simStep+1)*dt);
+			VectorN vecTime =  new VectorN(1,(simStep)*dt);
 			VectorN trueState = new VectorN(true_state);
 			VectorN truthOut = new VectorN(vecTime,trueState);
 			new PrintStream(truths[numSats]).println (truthOut.toString());
@@ -773,7 +781,7 @@ public class EstimatorSimModel extends SimModel {
 		//Main loop for Filtering Routine.  This includes a Kalman filter 
 		//and, trajectory generation, measurement generation as well as
 		//guidance and control hooks.
-		
+		double start = System.currentTimeMillis();
 		
 		//Open files for saving off the generated data.  
 		openFiles();
@@ -805,15 +813,18 @@ public class EstimatorSimModel extends SimModel {
 		
 		for( simStep = 1; simStep < simLength/dt; simStep ++)
 		{
-//			if(this.verbose_estimation) 
-//				System.out.println("running..."+(dt*simStep)+" / "+simLength);
+			//if(this.verbose_estimation) 
+				//System.out.println("running..."+(dt*simStep)+" / "+simLength);
 			//if(simStep%100 == 0)
 			//	System.out.println(simStep*5);
 			propagate(simStep*dt);
 			//simTime = simStep*dt;
 			simTime.update(simStep*dt);
 				
-			filter_fromfile();
+			if(this.obsFromFile)
+				filter_fromfile();
+			else
+				filter();
 			
 			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
 			
@@ -826,6 +837,9 @@ public class EstimatorSimModel extends SimModel {
 		
 		/*Close all output files*/
 		closeFiles();
+		
+		double elapsed = (System.currentTimeMillis()-start)*0.001/60;
+		System.out.println("Elapsed time [min]: "+elapsed);
 		
 		/* Post Processing */
 		LinePrinter lp = new LinePrinter();
@@ -876,10 +890,14 @@ public class EstimatorSimModel extends SimModel {
 			try
 			{
 				// Open an output stream
-				String fileName = dir_in+"Sat"+numSats+"ECI.txt";
-				String fileName2 = dir_in+"TRUE"+numSats+"ECI.txt";
-				String fileName3 = dir_in+"Error"+numSats+"ECI.txt";
-				String fileName4 = dir_in+"Covariance"+numSats+"ECI.txt";
+//				String fileName = dir_in+"Sat"+numSats+"ECI.txt";
+//				String fileName2 = dir_in+"TRUE"+numSats+"ECI.txt";
+//				String fileName3 = dir_in+"Error"+numSats+"ECI.txt";
+//				String fileName4 = dir_in+"Covariance"+numSats+"ECI.txt";
+				String fileName = dir_in+"JAT_"+2+".eci";
+				String fileName2 = dir_in+"JAT_true_"+2+".eci";
+				String fileName3 = dir_in+"Error_"+2+".txt";
+				String fileName4 = dir_in+"JAT_"+2+".txt";
 				trajectories[numSats] = new FileOutputStream (fileName);
 				truths[numSats]       = new FileOutputStream (fileName2);
 				ECIError[numSats]     = new FileOutputStream(fileName3);
@@ -935,12 +953,13 @@ public class EstimatorSimModel extends SimModel {
 //	** Main **//
 	
 	public static void main(String[] args) {
-		double start = System.currentTimeMillis();
-		EstimatorSimModel Sim = new EstimatorSimModel();
-		//Sim.set_verbose(true);
+		
+		boolean runFromFile = true;
+		boolean useFilter = true;
+		EstimatorSimModel Sim = new EstimatorSimModel(runFromFile,useFilter);
+		Sim.set_verbose(true);
 		Sim.runloop();
-		double elapsed = (System.currentTimeMillis()-start)*0.001/60;
-        System.out.println("Elapsed time [min]: "+elapsed);
+        
         System.out.println("Finished.");
 	}
 }
