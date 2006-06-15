@@ -60,6 +60,9 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 	public Trajectory traj = new Trajectory();
 	HashMap hm;
 	public int n;
+	private int num_sc;
+	private Matrix Q;
+	private Matrix QXYZ;
 	
 	/*This file is not generic and has to be modified for any
 	 * change in the state.
@@ -85,6 +88,9 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
         }
 		hm = initializer.parse_file(dir_in+"initialConditions.txt");
 	    n = initializer.parseInt(hm,"FILTER.states");
+	    num_sc = initializer.parseInt(hm,"prop.NumSpacecraft");
+	    Q = parse_Q();
+	    QXYZ = parse_QRIC();
 		xref = new VectorN(n);
 		phi = new Matrix(n);
 	    
@@ -137,7 +143,7 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 	 * @param dt dt = current time - previous time.
 	 * @return the process noise matrix.
 	 */
-	public Matrix Q(double t, double dt, EstSTM x) {
+	private Matrix parse_Q() {
 		Matrix Q = new Matrix(n,n);
 
 		for(int i = 0; i < initializer.parseInt(hm,"prop.NumSpacecraft"); i++)
@@ -162,15 +168,16 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 		
 		return Q;
 	}
-
 	/**
 	 * Returns the process noise matrix.
 	 * @param t time
 	 * @param dt dt = current time - previous time.
 	 * @return the process noise matrix.
 	 */
-	public Matrix QRIC(VectorN rECI, VectorN vECI, double t) {
-		Matrix QRIC = new Matrix(n,n);
+	public Matrix Q(double t, double dt, EstSTM x) {
+		return Q;
+	}
+	private Matrix parse_QRIC(){
 		Matrix QXYZ = new Matrix(n,n);
 
 		QXYZ.set(0,0,10e-11);
@@ -183,6 +190,28 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 		QXYZ.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		QXYZ.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
 		QXYZ.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
+		return QXYZ;
+	}
+	/**
+	 * Returns the process noise matrix.
+	 * @param t time
+	 * @param dt dt = current time - previous time.
+	 * @return the process noise matrix.
+	 */
+	public Matrix QRIC(VectorN rECI, VectorN vECI, double t) {
+		Matrix QRIC = new Matrix(n,n);
+//		Matrix QXYZ = new Matrix(n,n);
+//
+//		QXYZ.set(0,0,10e-11);
+//		QXYZ.set(1,1,10e-11);
+//		QXYZ.set(2,2, 10e-11);
+//		QXYZ.set(3,3,1e-13);
+//		QXYZ.set(4,4,1e-13);
+//		QXYZ.set(5,5,1e-13);
+//				
+//		QXYZ.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
+//		QXYZ.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
+//		QXYZ.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
 		
 		
 		
@@ -273,6 +302,7 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 	 * @param tf next time
 	 */
 	public double[] propagate(double t0, double[] x, double tf) {
+		rk8.setStepSize(tf-t0);
 		double[] out = rk8.step(t0, x, eom);
 		return out;
 	}

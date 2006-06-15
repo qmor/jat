@@ -17,12 +17,14 @@ public class GPSStateMeasurementModel implements MeasurementFileModel,Measuremen
 	HashMap hm;// = closedLoopSim.hm;  
 	//* *NOTE* Added argument to default constructor instead of call to static var at instantiation
 	Random generator;
+	private int FILTER_states;
 	
 	public GPSStateMeasurementModel(HashMap h) {
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
 		 */
 		hm = h;
+		this.FILTER_states = initializer.parseInt(hm,"FILTER.states");
 		try {
 			Thread.sleep(20);
 			generator = new Random();
@@ -180,7 +182,7 @@ public class GPSStateMeasurementModel implements MeasurementFileModel,Measuremen
 	{
 		/*Determine the number of states*/
 		int whichState = om.get_whichState();//EKF.stateNum;
-		int numStates = initializer.parseInt(hm,"FILTER.states");
+		int numStates = this.FILTER_states;//initializer.parseInt(hm,"FILTER.states");
 		
 		
 		/*for a Range measurement, the current state has H = 1, all other states H = 0 */

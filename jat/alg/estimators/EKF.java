@@ -81,7 +81,7 @@ public class EKF {
 	 public Matrix pold;
 	 public Matrix pnew;
 	 
-	 public static LinePrinter residuals; 
+	 public LinePrinter residuals; 
 	 public HashMap hm;
 
 	private boolean verbose=false;
@@ -306,6 +306,9 @@ public class EKF {
 				
 	}
 
+	public void closeFiles(){
+		this.residuals.close();
+	}
 	public double get_filterTime(){
 		return this.filterTime;
 	}
@@ -396,9 +399,9 @@ public class EKF {
 			ObservationMeasurement obs = obslist.getCurrent();
 			double measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
 			//while(obs.time_mjd()<simTime.mjd_utc()) obs = obslist.getNext();
-			while(measTime<filterTime) obs = obslist.getNext();
+			while(measTime<filterTime && measTime>0) obs = obslist.getNext();
 			
-			while(measTime<simTime){
+			while(measTime<simTime && measTime>0){
 				
 				/*If necessary move to  a new time*/
 				//measTime = TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc());
@@ -426,7 +429,8 @@ public class EKF {
 				 * and can be safely set to zero in those cases.
 				 */	
 				
-				if(initializer.parseInt(hm,"MEAS.types")!=0 && measFlag==true){
+				//if(initializer.parseInt(hm,"MEAS.types")!=0 && measFlag==true){
+				if(measFlag==true){
 					process(sc,obs);
 				}
 				
@@ -491,7 +495,8 @@ public class EKF {
 				
 				//Propagate the state forward using the process model
 				double[] xnew = process.propagate(filterTime, xprev, tnext);
-				if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime);
+				//if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime);
+				if(this.verbose) System.out.println("Running... "+(int)(100*filterTime/finalTime)+" %");
 				
 				//Get the state transition matrix for the current state
 				xref = new EstSTM(xnew, this.n);

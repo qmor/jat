@@ -87,6 +87,8 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 	public static VectorN Cn0_out;
 	private static FileOutputStream visableSats;
 	
+	private int FILTER_states;
+	
 	/**
 	 * Constructor
 	 * @param t Spacecraft Trajectory
@@ -100,7 +102,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 	public GPSmeasurementModel(HashMap h) {
 		obsfromfile = false;
 		hm = h;  //closedLoopSim.hm; //* *NOTE* added argument rather than static var
-		
+		this.FILTER_states = initializer.parseInt(hm,"FILTER.states");
 		block = new GEO_Blockage_Models();
 		
 		//Set up the GPS constellation
@@ -423,7 +425,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		//range = range + dure;
 		
 		//Create and zero out the H vector
-		int numStates = initializer.parseInt(hm,"FILTER.states");
+		int numStates = this.FILTER_states;//initializer.parseInt(hm,"FILTER.states");
 		H = new VectorN(numStates);
 		H.set(0.0);
 		
@@ -469,11 +471,5 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		VectorN out = los.times(factor);
 		return out;
 	}
-	
-	
-	private void checkMeasurementTime()
-	{
-		
-		
-	}
+
 }

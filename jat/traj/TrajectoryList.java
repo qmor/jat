@@ -86,6 +86,10 @@ public class TrajectoryList implements Serializable {
 	public int size(){
 		return list.size();
 	}
+
+	public void reset() {
+		this.index = 0;
+	}
 	
 
 }

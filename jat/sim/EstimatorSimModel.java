@@ -22,10 +22,14 @@
  * */
 package jat.sim;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import jat.alg.estimators.EKF;
 import jat.alg.integrators.Derivatives;
@@ -92,6 +96,7 @@ public class EstimatorSimModel extends SimModel {
 	private boolean verbose_estimation=false;
 	private boolean useFilter=true;
 	private boolean obsFromFile=false;
+	public static int JAT_case = 0;
 	
 	//** Constructors **//
 	
@@ -519,12 +524,13 @@ public class EstimatorSimModel extends SimModel {
 			//Only need to propagate the reference state if 
 			//We aren't estimating it
 			//* NOTE * originally == 0  ???
+			//* TODO Add flag to avoid running the 'truth' trajectory
 			if(initializer.parseDouble(this.input,"init.mode") == 0)
 			{
 				double [] true_state = truth[numSats].get_spacecraft().toStateVector();
 				
 				//Print out simStep + 1 because we didn't output the initial state
-				VectorN vecTime =  new VectorN(1,(simStep+1)*dt);
+				VectorN vecTime =  new VectorN(1,(simStep)*dt);
 				VectorN trueState = new VectorN(true_state);
 				VectorN truthOut = new VectorN(vecTime,trueState);
 				new PrintStream(truths[numSats]).println (truthOut.toString());
@@ -537,7 +543,6 @@ public class EstimatorSimModel extends SimModel {
 				VectorN stateOut = new VectorN(vecTime,vecState);
 				new PrintStream(trajectories[numSats]).println (stateOut.toString());
 			}
-			
 			
 		}
 		
@@ -794,6 +799,10 @@ public class EstimatorSimModel extends SimModel {
 		
 		initialize();
 		
+		for(int i=0; i<numSpacecraft; i++){
+			truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
+			ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
+		}
 		
 		/*Cache off the simulation mode */
 		int filterMode = initializer.parseInt(this.input,"init.mode");
@@ -842,19 +851,24 @@ public class EstimatorSimModel extends SimModel {
 		System.out.println("Elapsed time [min]: "+elapsed);
 		
 		/* Post Processing */
+		Trajectory geons = parseGEONS(simTime.mjd_utc());
 		LinePrinter lp = new LinePrinter();
 		RelativeTraj[] reltraj = new RelativeTraj[numSpacecraft];
 		Celestia cel = new Celestia("C:/Code/Celestia/");
 		for(int i=0; i<numSpacecraft; i++){
-			reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp);
-			reltraj[i].process();			
+			reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp,"Jat v Jat");
+			reltraj[i].setVerbose(false);
+			reltraj[i].process();
+			reltraj[i] = new RelativeTraj(ref_traj[i],geons,lp,"Jat v Geons");
+			//reltraj[i] = new RelativeTraj(truth_traj[i],geons,lp,"Jat v Geons");
+			reltraj[i].setVerbose(false);
+			reltraj[i].process();
 			try {
 				cel.set_trajectory_meters(ref_traj[i]);
-				cel.write_trajectory("jat_ref_"+i,"jat_ref_"+i,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				cel.write_trajectory("jat_ref_"+JAT_case,"jat_ref_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
 				cel.set_trajectory_meters(truth_traj[i]);
-				cel.write_trajectory("jat_truth_"+i,"jat_truth_"+i,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				cel.write_trajectory("jat_truth_"+JAT_case,"jat_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -882,7 +896,6 @@ public class EstimatorSimModel extends SimModel {
 		/*	try {
 		 visableSats = new FileOutputStream(fileName5);
 		 } catch (FileNotFoundException e1) {
-		 // TODO Auto-generated catch block
 		  e1.printStackTrace();
 		  }*/
 		for(int numSats = 0; numSats < numSpacecraft; numSats++)
@@ -894,10 +907,10 @@ public class EstimatorSimModel extends SimModel {
 //				String fileName2 = dir_in+"TRUE"+numSats+"ECI.txt";
 //				String fileName3 = dir_in+"Error"+numSats+"ECI.txt";
 //				String fileName4 = dir_in+"Covariance"+numSats+"ECI.txt";
-				String fileName = dir_in+"JAT_"+2+".eci";
-				String fileName2 = dir_in+"JAT_true_"+2+".eci";
-				String fileName3 = dir_in+"Error_"+2+".txt";
-				String fileName4 = dir_in+"JAT_"+2+".txt";
+				String fileName = dir_in+"JAT_"+JAT_case+".eci";
+				String fileName2 = dir_in+"JAT_true_"+JAT_case+".txt";
+				String fileName3 = dir_in+"JAT_error_"+JAT_case+".txt";
+				String fileName4 = dir_in+"JAT_"+JAT_case+".cov";
 				trajectories[numSats] = new FileOutputStream (fileName);
 				truths[numSats]       = new FileOutputStream (fileName2);
 				ECIError[numSats]     = new FileOutputStream(fileName3);
@@ -928,15 +941,14 @@ public class EstimatorSimModel extends SimModel {
 				} 
 				catch (IOException e) 
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	
 			}	
-			EKF.residuals.close();
+			//EKF.residuals.close();
+			filter.closeFiles();
 			/*try {
 			 //visableSats.close();
 			  } catch (IOException e) {
-			  // TODO Auto-generated catch block
 			   e.printStackTrace();
 			   }*/
 		}
@@ -950,12 +962,42 @@ public class EstimatorSimModel extends SimModel {
 			filter.set_verbose(b,this.tf);
 	}
 	
+	public Trajectory parseGEONS(double end_mjd){
+		String filename = "C:/Code/Misc/GEONS/CASE"+JAT_case+"/GEONS_"+JAT_case+".eci";
+		Trajectory traj = new Trajectory();
+		try{
+		File inputFile = new File(filename);
+		FileReader fr = new FileReader(inputFile);
+		BufferedReader in = new BufferedReader(fr);
+		String line="start";
+		StringTokenizer tok;
+		double year = 0;
+		double sec = 0;
+		double mjd = 0.0;
+		double x[] = new double[6];
+		for(int i=0; i<5; i++) line=in.readLine();
+		while(!line.equalsIgnoreCase(" ")){
+			tok = new StringTokenizer(line, " ");
+			year = Double.parseDouble(tok.nextToken());
+			sec = Double.parseDouble(tok.nextToken());
+			mjd = year+sec/86400.0;
+			if(mjd>end_mjd) break;
+			for(int j=0; j<6; j++)
+				x[j] = Double.parseDouble(tok.nextToken());
+			traj.add(mjd,x);
+			line=in.readLine();
+		}
+		}catch(IOException ioe){		}
+		return traj;
+	}
+	
 //	** Main **//
 	
 	public static void main(String[] args) {
 		
 		boolean runFromFile = true;
 		boolean useFilter = true;
+		EstimatorSimModel.JAT_case = 2;
 		EstimatorSimModel Sim = new EstimatorSimModel(runFromFile,useFilter);
 		Sim.set_verbose(true);
 		Sim.runloop();

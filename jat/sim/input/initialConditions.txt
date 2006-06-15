@@ -9,7 +9,7 @@ init.MJD0 50985.0
 init.T0 0.0		 
 
 #Final MJD and Seconds past MJDF for simulation end
-init.MJDF    50988.0  
+init.MJDF    50986.5  
 init.TF      0.0		 
 
 #The step size in the propagation step.
@@ -23,13 +23,29 @@ init.dt      5
 prop.NumSpacecraft  1
 
 #ECI position and velocity (m and m/s)        
-TRUE_STATE.0.X   -1.86631097007950e+006
-TRUE_STATE.0.Y   4.21156718073160e+007
-TRUE_STATE.0.Z   -8.23653287299700e+003
-TRUE_STATE.0.VX  -3.07220561350360e+003
-TRUE_STATE.0.VY  -1.35729105684550e+002
-TRUE_STATE.0.VZ   1.35175510071330e+001
+#GEONS TRUE
+TRUE_STATE.0.X   -1.86631428726119e+06
+TRUE_STATE.0.Y   4.21156716602933e+07
+TRUE_STATE.0.Z   -8.23659306996206e+03
+TRUE_STATE.0.VX  -3.07220560283457e+03
+TRUE_STATE.0.VY  -1.35729347644219e+02
+TRUE_STATE.0.VZ   1.35175509960231e+01
 
+#TRUE_STATE.0.X   -1.86631097007950e+006
+#TRUE_STATE.0.Y   4.21156718073160e+007
+#TRUE_STATE.0.Z   -8.23653287299700e+003
+#TRUE_STATE.0.VX  -3.07220561350360e+003
+#TRUE_STATE.0.VY  -1.35729105684550e+002
+#TRUE_STATE.0.VZ   1.35175510071330e+001
+
+#REF_STATE.0.X   -1.86631428726119e+06
+#REF_STATE.0.Y   4.21156716602933e+07
+#REF_STATE.0.Z   -8.23659306996206e+03
+#REF_STATE.0.VX  -3.07220560283457e+03
+#REF_STATE.0.VY  -1.35729347644219e+02
+#REF_STATE.0.VZ   1.35175509960231e+01
+
+#GEONS REFERENCE
 REF_STATE.0.X   -1.86631097007950e+006
 REF_STATE.0.Y   4.21156718073160e+007
 REF_STATE.0.Z   -8.23653287299700e+003
@@ -101,7 +117,7 @@ jat.1.jgm2 false
 
 #Set the number of states the filter will have
 #X Y Z Vx Vy Vz B Bdot Srp
-FILTER.dt    1	
+FILTER.dt    5	
 FILTER.states 9
 FILTER.clock 6
 FILTER.bias 7
@@ -157,7 +173,7 @@ P0.1.Cd   1
 #MEASUREMENTS
 
 #Set the number of types of measurements
-MEAS.types 0
+MEAS.types 2
 
 #Measurement type position.  Assumed an ECI absolute position can 
 #be measured or provided by a ground station.  The associated
@@ -172,20 +188,20 @@ GPS.const week963.rnx
 
 
 
-#MEAS.0.desc range
-#MEAS.0.satellite 1
-#MEAS.0.size 1
-#MEAS.0.frequency 86
+#MEAS.3.desc range
+#MEAS.3.satellite 1
+#MEAS.3.size 1
+#MEAS.3.frequency 86
 
-#MEAS.0.R.0  1
+#MEAS.3.R.0  1
 
-#MEAS.2.desc pseudoGPS
-#MEAS.2.size 3
-#MEAS.2.frequency 1
-#MEAS.2.satellite 1
-#MEAS.2.R.0 1
-#MEAS.2.R.1 3
-#MEAS.2.R.2 1
+MEAS.1.desc pseudoGPS
+MEAS.1.size 3
+MEAS.1.frequency 1
+MEAS.1.satellite 1
+MEAS.1.R.0 9
+MEAS.1.R.1 9
+MEAS.1.R.2 9
 
 #MEAS.0.desc stateUpdate
 #MEAS.0.size 6

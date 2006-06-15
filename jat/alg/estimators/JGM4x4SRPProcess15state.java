@@ -60,6 +60,7 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 	public Trajectory traj = new Trajectory();
 	HashMap hm;
 	public int n;
+	private Matrix Q;
 	
 	/*This file is not generic and has to be modified for any
 	 * change in the state.
@@ -85,6 +86,7 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
         }
 		hm = initializer.parse_file(dir_in+"initialConditions.txt");
 	    n = initializer.parseInt(hm,"FILTER.states");
+	    Q = parse_Q();
 		xref = new VectorN(n);
 		phi = new Matrix(n);
 	    
@@ -130,14 +132,14 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 		Matrix p = new Matrix(sig);
 		return p;
 	}
-
 	/**
 	 * Returns the process noise matrix.
 	 * @param t time
 	 * @param dt dt = current time - previous time.
 	 * @return the process noise matrix.
 	 */
-	public Matrix Q(double t, double dt, EstSTM x) {
+	private Matrix parse_Q() {
+		
 		Matrix Q = new Matrix(n,n);
 
 		for(int i = 0; i < initializer.parseInt(hm,"prop.NumSpacecraft"); i++)
@@ -159,8 +161,17 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 		Q.set(12,12,initializer.parseDouble(hm,"Q.0.Cr"));
 		Q.set(13,13,initializer.parseDouble(hm,"Q.1.Cr"));
 		Q.set(14,14, initializer.parseDouble(hm,"Q.0.clockBias"));
-		
 		return Q;
+	}
+	/**
+	 * Returns the process noise matrix.
+	 * @param t time
+	 * @param dt dt = current time - previous time.
+	 * @return the process noise matrix.
+	 */
+	public Matrix Q(double t, double dt, EstSTM x) {
+		
+		return this.Q;
 	}
 
 	/**
@@ -268,6 +279,7 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 	 * @param tf next time
 	 */
 	public double[] propagate(double t0, double[] x, double tf) {
+		rk8.setStepSize(tf-t0);
 		double[] out = rk8.step(t0, x, eom);
 		return out;
 	}

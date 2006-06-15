@@ -134,6 +134,8 @@ public class RelativeTraj {
 	/** Compute the relative trajectory
 	 */
 	public void process() {
+		this.chaser.reset();
+		this.target.reset();
 		int nchaser = this.chaser.npts();
 		int ntgt = this.target.npts();
 		int n = 0;

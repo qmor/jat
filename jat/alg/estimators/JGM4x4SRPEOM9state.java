@@ -234,6 +234,8 @@ public class JGM4x4SRPEOM9state implements Derivatives {
         sum0 = temp0.plus(temp2);
 
         VectorN solarAcceleration0 = sum0.times(Constants.GM_Sun);
+        //* TODO watch
+        //solarAcceleration0.set(0);
         
         //Determine if the sun is visible
         double visible0 = srp0.partial_illumination(r0,r_sun);

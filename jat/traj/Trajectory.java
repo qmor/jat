@@ -410,7 +410,11 @@ public class Trajectory implements Serializable, Printable {
 	}
 
 	//*************METHODS TO SET TRAJECTORY ATTRIBUTES
-
+	/** Resets the index of the trajectory list.
+	 */
+	public void reset(){
+		this.traj.reset();
+	}
 	/** Set the trajectory title
 	 * @param t String containing the title
 	 */
