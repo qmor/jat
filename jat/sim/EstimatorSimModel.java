@@ -65,6 +65,16 @@ public class EstimatorSimModel extends SimModel {
 	//* TODO Cheating
 	//** Externally referenced Static Variables **//
 	public static SpacecraftModel truth[];
+	public static int JAT_case = 0;
+	public static String MEAS_GPSSTATE,MEAS_GPS;
+	public static String GEONS_Truth,GEONS_Ref;
+	public static boolean PlotJAT = false;
+	public static boolean PlotGEONSTruth = false;
+	public static boolean PlotGEONSRef = false;
+	public static boolean PlotMeasurements = false;
+	public static boolean Flag_GPS = false;
+	public static boolean Flag_GPSState = false;
+	public static boolean Flag_Cross = false;
 	
 	//** Object Variables **//
 	
@@ -96,48 +106,57 @@ public class EstimatorSimModel extends SimModel {
 	private boolean verbose_estimation=false;
 	private boolean useFilter=true;
 	private boolean obsFromFile=false;
-	public static int JAT_case = 0;
 	
 	//** Constructors **//
 	
 	public EstimatorSimModel(){
 		super();
-		initializeConst(true);
+		initializeConst();
+		obsFromFile = false;
 	}
-	public EstimatorSimModel(boolean runFromFile,boolean filter_is_on){
+	public EstimatorSimModel(boolean filter_is_on){
 		super();
+		initializeConst();
 		useFilter = filter_is_on;
-		obsFromFile = runFromFile;
-		initializeConst(runFromFile);
+		
 	}
 	public EstimatorSimModel(double[] r, double[] v, double cr, double cd, double area, double mass){
 		super(r, v, cr, cd, area, mass);
-		initializeConst(false);
+		initializeConst();
+		obsFromFile = false;
 	}
 	public EstimatorSimModel(double[][] r, double[][] v, double[] cr, double[] cd,
 			double[] area, double[] mass){
 		super(r, v, cr,cd,area, mass);
-		initializeConst(false);
+		initializeConst();
+		obsFromFile = false;
 	}
 	
 	//** Object Methods **//
-	private void initializeConst(boolean obsFromFile){
+	private void initializeConst(){
+		String fs, dir_in;
+		fs = FileUtil.file_separator();
+		try{
+			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+		}catch(Exception e){
+			dir_in = "";
+		}
+		this.input = initializer.parse_file(dir_in+"initialConditions.txt");
+		this.obsFromFile = initializer.parseBool(this.input,"init.fromfile");
 		if(obsFromFile){
-			String fs, dir_in;
-			fs = FileUtil.file_separator();
-			try{
-				dir_in = FileUtil.getClassFilePath("jat.sim","EstimatorSimModel")+"input"+fs;
-			}catch(Exception e){
-				dir_in = "";
-			}
-			this.input = initializer.parse_file(dir_in+"initialConditions.txt");
 			obs_list = new ObservationMeasurementList(this.input);
 			String path = FileUtil.getClassFilePath("jat.measurements","ObservationMeasurementList");
 			if(useFilter){
 				try {
 					//obs_list.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
-					//obs_list.processRINEX(path+fs+"Case-820.rnx");
-					obs_list.processStateUpdateFile(path+fs+"test1_8.rnx");
+//					if(Flag_GPS || Flag_Cross) 
+//						obs_list.processRINEX(path+fs+"Case-820.rnx");
+//					if(Flag_GPSState) 
+//						obs_list.processStateUpdateFile(path+fs+"test1_8.rnx");
+					if(Flag_GPS || Flag_Cross) 
+						obs_list.processRINEX(MEAS_GPS);
+					if(Flag_GPSState) 
+						obs_list.processStateUpdateFile(MEAS_GPSSTATE);
 				} catch (IOException e) {
 					System.out.println("Error finding Observation RINEX file: "+path+fs+"ExampleRINEXGEONS.rnx");
 					e.printStackTrace();
@@ -156,15 +175,7 @@ public class EstimatorSimModel extends SimModel {
 			}
 			filter = new EKF(obs_list,input);
 		}else{
-			String fs, dir_in;
-			fs = FileUtil.file_separator();
-			try{
-				dir_in = FileUtil.getClassFilePath("jat.sim","EstimatorSimModel")+"input"+fs;
-			}catch(Exception e){
-				dir_in = "";
-			}
 			
-			this.input = initializer.parse_file(dir_in+"initialConditions.txt");
 			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
 			numStates = initializer.parseInt(input,"FILTER.states");
 			dt = initializer.parseInt(input,"init.dt");
@@ -816,10 +827,15 @@ public class EstimatorSimModel extends SimModel {
 		simTime = new Time(MJD0);
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 		this.tf = simLength;
-		set_verbose(true);
+		set_verbose(this.verbose_estimation);
+		if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useFilter = false;
 		//double simLength = Math.round(TF - T0);
 		//ObservationMeasurement obs = obs_list.getFirst();
 		
+		for(int i=0; i<numSpacecraft; i++){
+			new PrintStream(truths[i]).println (truth[i].get_spacecraft().toStateVector().toString());
+			new PrintStream(trajectories[i]).println (ref[i].get_spacecraft().toStateVector().toString());
+		}
 		for( simStep = 1; simStep < simLength/dt; simStep ++)
 		{
 			//if(this.verbose_estimation) 
@@ -835,6 +851,10 @@ public class EstimatorSimModel extends SimModel {
 			else
 				filter();
 			
+			if(Double.isNaN(ref[0].get_spacecraft().toStateVector()[0])){// || simTime.get_sim_time()>4620){
+				int donothing = 0;
+				donothing++;
+			}
 			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
 			
 			for(int i=0; i<numSpacecraft; i++){
@@ -846,28 +866,75 @@ public class EstimatorSimModel extends SimModel {
 		
 		/*Close all output files*/
 		closeFiles();
+		System.gc();
 		
 		double elapsed = (System.currentTimeMillis()-start)*0.001/60;
 		System.out.println("Elapsed time [min]: "+elapsed);
 		
 		/* Post Processing */
-		Trajectory geons = parseGEONS(simTime.mjd_utc());
+		
+		Trajectory geons_truth = new Trajectory(); 
+		if(PlotGEONSTruth || PlotMeasurements) geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),simTime.mjd_utc());
+		Trajectory geons_ref = new Trajectory();
+		if(PlotGEONSRef || PlotMeasurements) geons_ref = parseGEONSRef(simTime.get_epoch_mjd_utc(),simTime.mjd_utc());
+		Trajectory measurements = new Trajectory();
+		measurements = this.obs_list.get_meas_traj();
 		LinePrinter lp = new LinePrinter();
 		RelativeTraj[] reltraj = new RelativeTraj[numSpacecraft];
+		double mismatch_tol = 0.00001;
 		Celestia cel = new Celestia("C:/Code/Celestia/");
+		//* TODO Plot marker
 		for(int i=0; i<numSpacecraft; i++){
-			reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp,"Jat v Jat");
-			reltraj[i].setVerbose(false);
-			reltraj[i].process();
-			reltraj[i] = new RelativeTraj(ref_traj[i],geons,lp,"Jat v Geons");
-			//reltraj[i] = new RelativeTraj(truth_traj[i],geons,lp,"Jat v Geons");
-			reltraj[i].setVerbose(false);
-			reltraj[i].process();
+			if(PlotJAT){
+				reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp,"Jat(Ref) v Jat(Truth)");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+			}
+			if(PlotGEONSRef){
+				reltraj[i] = new RelativeTraj(ref_traj[i],geons_ref,lp,"Jat(Ref) v Geons(Ref)");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+				//reltraj[i] = new RelativeTraj(truth_traj[i],geons_ref,lp,"Jat(Truth) v Geons(Ref)");
+				//reltraj[i].setVerbose(false);
+				//reltraj[i].process(mismatch_tol);
+			}
+			if(PlotGEONSTruth){
+				reltraj[i] = new RelativeTraj(truth_traj[i],geons_truth,lp,"Jat(Truth) v Geons(Truth)");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+				reltraj[i] = new RelativeTraj(ref_traj[i],geons_truth,lp,"Jat(Ref) v Geons(Truth)");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+			}
+			if(PlotGEONSTruth && PlotGEONSRef){
+				reltraj[i] = new RelativeTraj(geons_ref,geons_truth,lp,"Geons(Ref) v Geons(Truth)");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+			}
+			if(PlotMeasurements){
+				reltraj[i] = new RelativeTraj(measurements,geons_truth,lp,"GEONS(Truth) v Measurements");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+				reltraj[i] = new RelativeTraj(measurements,geons_ref,lp,"GEONS(Ref) v Measurements");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+				reltraj[i] = new RelativeTraj(measurements,ref_traj[i],lp,"JAT(Ref) v Measurements");
+				reltraj[i].setVerbose(false);
+				reltraj[i].process(mismatch_tol);
+			}
 			try {
 				cel.set_trajectory_meters(ref_traj[i]);
 				cel.write_trajectory("jat_ref_"+JAT_case,"jat_ref_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
 				cel.set_trajectory_meters(truth_traj[i]);
 				cel.write_trajectory("jat_truth_"+JAT_case,"jat_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				if(PlotGEONSRef){
+					cel.set_trajectory_meters(geons_ref);
+					cel.write_trajectory("jat_geons_ref_"+JAT_case,"jat_geons_ref_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				}
+				if(PlotGEONSTruth){
+					cel.set_trajectory_meters(geons_truth);
+					cel.write_trajectory("jat_geons_truth_"+JAT_case,"jat_geons_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -962,8 +1029,41 @@ public class EstimatorSimModel extends SimModel {
 			filter.set_verbose(b,this.tf);
 	}
 	
-	public Trajectory parseGEONS(double end_mjd){
-		String filename = "C:/Code/Misc/GEONS/CASE"+JAT_case+"/GEONS_"+JAT_case+".eci";
+	public Trajectory parseGEONSTruth(double start_mjd,double end_mjd){
+		//String filename = "C:/Code/Misc/GEONS/CASE"+JAT_case+"/GEONS_"+JAT_case+".eci";
+		String filename = GEONS_Truth;
+		Trajectory traj = new Trajectory();
+		try{
+		File inputFile = new File(filename);
+		FileReader fr = new FileReader(inputFile);
+		BufferedReader in = new BufferedReader(fr);
+		String line="start";
+		StringTokenizer tok;
+		double year = 0;
+		double sec = 0;
+		double mjd = 0.0;
+		double x[] = new double[6];
+		for(int i=0; i<6; i++) line=in.readLine();
+		while(!line.equalsIgnoreCase(" ")){
+			tok = new StringTokenizer(line, " ");
+			year = Double.parseDouble(tok.nextToken());
+			sec = Double.parseDouble(tok.nextToken());
+			mjd = year+sec/86400.0;
+			if(mjd>end_mjd) break;
+			if(mjd>=start_mjd){
+				for(int j=0; j<6; j++)
+					x[j] = Double.parseDouble(tok.nextToken());
+				traj.add(mjd,x);
+			}
+			line=in.readLine();
+		}
+		in.close();
+		}catch(IOException ioe){		}
+		return traj;
+	}
+	public Trajectory parseGEONSRef(double start_mjd,double end_mjd){
+		//String filename = "C:/Code/Misc/GEONS/CASE"+JAT_case+"/GEONS_"+JAT_case+".eci";
+		String filename = GEONS_Ref;
 		Trajectory traj = new Trajectory();
 		try{
 		File inputFile = new File(filename);
@@ -982,23 +1082,55 @@ public class EstimatorSimModel extends SimModel {
 			sec = Double.parseDouble(tok.nextToken());
 			mjd = year+sec/86400.0;
 			if(mjd>end_mjd) break;
-			for(int j=0; j<6; j++)
-				x[j] = Double.parseDouble(tok.nextToken());
-			traj.add(mjd,x);
+			if(mjd>=start_mjd){
+				for(int j=0; j<6; j++)
+					x[j] = Double.parseDouble(tok.nextToken());
+				traj.add(mjd,x);
+			}
 			line=in.readLine();
 		}
+		in.close();
 		}catch(IOException ioe){		}
 		return traj;
 	}
+	
 	
 //	** Main **//
 	
 	public static void main(String[] args) {
 		
-		boolean runFromFile = true;
 		boolean useFilter = true;
-		EstimatorSimModel.JAT_case = 2;
-		EstimatorSimModel Sim = new EstimatorSimModel(runFromFile,useFilter);
+		int jat_case = 2;
+		EstimatorSimModel.JAT_case = jat_case;
+		
+		if(jat_case==1){
+			EstimatorSimModel.MEAS_GPSSTATE = "C:/Code/Jat/jat/measurements/test1_8.rnx";
+			EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_8/test1_8.rel26a.sta";
+			EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_8/test1_8.j2k.ascii";
+					
+		}else if(jat_case==2){
+			EstimatorSimModel.MEAS_GPS = "C:/Code/Jat/jat/measurements/test1_1.rnx";			
+			//EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_1/test1_1.rel26a.sta";
+			//EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_1/test1_1.j2k.ascii";
+			EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_1/GEONS_2a.j2k.ascii";
+			EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_1/GEONS_2a.eci";
+				
+		}else if(jat_case==3){
+			EstimatorSimModel.MEAS_GPS = "C:/Code/Jat/jat/measurements/test1_6.rnx";
+			EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_6/test1_6.rel26a.sta";
+			EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_6/test1_6.j2k.ascii";
+		}
+		//EstimatorSimModel.MEAS_GPS = "C:/Code/Jat/jat/measurements/Case-820.rnx";
+		
+		EstimatorSimModel.PlotJAT = true;
+		EstimatorSimModel.PlotGEONSRef = true;
+		EstimatorSimModel.PlotGEONSTruth = true;
+		EstimatorSimModel.PlotMeasurements = false;
+		EstimatorSimModel.Flag_GPSState = false;
+		EstimatorSimModel.Flag_GPS = false;
+		EstimatorSimModel.Flag_Cross = false;
+		
+		EstimatorSimModel Sim = new EstimatorSimModel(useFilter);
 		Sim.set_verbose(true);
 		Sim.runloop();
         

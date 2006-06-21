@@ -80,7 +80,7 @@ public class JGM4x4SRPProcess15state implements ProcessModel {
 		String fs, dir_in;
         fs = FileUtil.file_separator();
         try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"input"+fs;
+            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
         }catch(Exception e){
             dir_in = "";
         }

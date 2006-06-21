@@ -127,6 +127,9 @@ public class ObservationMeasurement implements Serializable{
 	public int get_stateNum(){
 		return this.stateNum;
 	}
+	public double get_mjd(){
+		return this.time_mjd;
+	}
 	
 	private void initializeMeasType(){
 		try{

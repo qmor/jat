@@ -1,5 +1,5 @@
 #default simulation file
-#Mon Feb 20 14:55:54 CST 2006
+#Fri Jun 16 10:54:37 EDT 2006
 venus=false
 moon=false
 spacecraft_reflectivity_coefficient=1.2

@@ -330,6 +330,14 @@ public class Trajectory implements Serializable, Printable {
 
 	//*************METHODS TO GET TRAJECTORY ATTRIBUTES
 
+	/** Return the time at the given index
+	 * @return The time (first element of the row at index i)
+	 */
+	public double getTimeAt(int i){
+		double[] tmp = traj.get(i);
+		return tmp[0];
+	}
+	
 	/** Return the title of the trajectory
 	 * @return String containing the title of the trajectory
 	 */
@@ -476,5 +484,11 @@ public class Trajectory implements Serializable, Printable {
 	public void setTimeUnits(TimeUnits t) {
 		this.tu = t;
 	}
-
+	
+	/** Return the size (number of elements) of the trajectory.
+	 * @return size of the TrajectoryList
+	 */
+	public int size(){
+		return this.traj.size();
+	}
 }

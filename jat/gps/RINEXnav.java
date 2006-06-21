@@ -44,7 +44,7 @@ public class RINEXnav {
     
     private double parse(String str){
 //        System.out.println("Parsing: "+str);
-        StringTokenizer tok = new StringTokenizer(str, "D");
+        StringTokenizer tok = new StringTokenizer(str, "E");
         double mantissa = Double.parseDouble(tok.nextToken());
         double exponent = Double.parseDouble(tok.nextToken());
         double multiplier = Math.pow(10.0, exponent);
@@ -134,6 +134,7 @@ public class RINEXnav {
             s = in.readLine();
             
             // read fourth line
+            try{
             s = in.readLine();
             t1 = new StringTokenizer(s, " ");
             for (int i = 0; i < 4; i++) {
@@ -146,7 +147,6 @@ public class RINEXnav {
             for (int i = 0; i < 4; i++) {
             	this.beta[i] = this.parse(t1.nextToken());
             }
-            
             
             // find the end of header
             String end = "END";
@@ -163,6 +163,24 @@ public class RINEXnav {
                     if ((temp.equals(end))||(temp.equals(header))) check++;
                     if (check > 1) eoh = true;
                 }
+            }
+            }catch(NumberFormatException e){
+            	e.printStackTrace();
+            	 String end = "END";
+                 String header = "HEADER";
+                 int check = 0;
+                 
+                 boolean eoh = false;
+                 while (!eoh) {
+                     //s = in.readLine();
+//                     System.out.println(s);
+                     StringTokenizer t2 = new StringTokenizer(s, " ");
+                     while (t2.hasMoreTokens()) {
+                         String temp = t2.nextToken();
+                         if ((temp.equals(end))||(temp.equals(header))) check++;
+                         if (check > 1) eoh = true;
+                     }
+                 }
             }
             
 //            System.out.println("got to end of header");

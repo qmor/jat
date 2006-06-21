@@ -30,6 +30,7 @@ import jat.spacetime.CalDate;
 import jat.spacetime.EarthRef;
 import jat.spacetime.GPSTimeFormat;
 import jat.spacetime.Time;
+import jat.traj.Trajectory;
 import jat.util.FileUtil;
 
 import java.io.BufferedReader;
@@ -92,7 +93,7 @@ public class ObservationMeasurementList
 		String path = FileUtil.getClassFilePath("jat.measurements","ObservationMeasurementList");
 		String fs = FileUtil.file_separator();
 		//x.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
-		x.processRINEX(path+fs+"Case-820.rnx");
+		//x.processRINEX(path+fs+"Case-820.rnx");
 		x.processStateUpdateFile(path+fs+"test1_8.rnx");
 	}
 	
@@ -203,6 +204,9 @@ public class ObservationMeasurementList
 				//ObservationMeasurementList date = new ObservationMeasurementList();
 				GPSTimeFormat newDate =  ObservationMeasurementList.setDateStuff(lineNew);
 				timeMjd =newDate.mjd();
+				if(timeMjd > 52189.06403935186){
+					int stop_to_debug = 0;
+				}
 				if(currentIndex <0){
 					current_mjd = timeMjd;
 					currentIndex = 0;
@@ -330,6 +334,24 @@ public class ObservationMeasurementList
 	}
 	public int getIndex(){
 		return currentIndex;
+	}
+	public Trajectory get_meas_traj(){
+		Trajectory traj = new Trajectory();
+		double t;
+		double[] data = new double[6];
+		ObservationMeasurement tmp;
+		for(int i=0; i<this.list.size(); i++){
+			tmp = (ObservationMeasurement)list.get(i);
+			if(tmp.get_type()==ObservationMeasurement.TYPE_GPSSTATE){
+				t = tmp.get_mjd();
+				for(int j=0; j<3; j++)
+					data[j] = tmp.get_state(3).x[j];
+				for(int j=3; j<6; j++)
+					data[j] = 0.0;
+				traj.add(t,data);
+			}
+		}
+		return traj;
 	}
 	
 	/**

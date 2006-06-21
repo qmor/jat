@@ -100,7 +100,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 	 * @param mlp LinePrinter for measurement data output
 	 */
 	public GPSmeasurementModel(HashMap h) {
-		obsfromfile = false;
+		obsfromfile = initializer.parseBool(h,"init.fromfile");
 		hm = h;  //closedLoopSim.hm; //* *NOTE* added argument rather than static var
 		this.FILTER_states = initializer.parseInt(hm,"FILTER.states");
 		block = new GEO_Blockage_Models();
@@ -128,7 +128,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		
 		MJD0 = initializer.parseDouble(hm,"init.MJD0") + initializer.parseDouble(hm,"init.T0");
 		Cn0_out = new VectorN(33);
-		dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"output"+fs;
+		dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"output"+fs;
 		String fileName5 = dir_in+"Visible.txt";
 		try {
 			visableSats = new FileOutputStream(fileName5);
@@ -214,6 +214,8 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		}else{
 			obs  = observedMeasurement(isv, t_mjd, state);
 		}
+		//*TODO watch - the following line is a random attempt at hard-tweaking data
+		//t_mjd = t_mjd+0.0022583014979;
 		double pred = predictedMeasurement(isv, t_mjd, state); 
 	
 		if(obs == 0)
@@ -376,7 +378,8 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		
 		// get the SVID of measurement
 		GPS_SV sv;
-		sv = constell.getSV(isv);
+		int index = constell.getIndex(isv);
+		sv = constell.getSV(index);
 		//int prn = sv.prn();
 		
 		int clockIndex = clockState;
@@ -385,7 +388,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		VectorN r = new VectorN(state.get(0,3));
 		VectorN v = new VectorN(state.get(3,3));
 			
-		double t_mjd = t/(double)86400 + MJD0; 
+		double t_mjd = t;//t/(double)86400 + MJD0; 
 		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
 		
 		// compute the GPS SV position vector at transmission time

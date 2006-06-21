@@ -80,7 +80,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		String fs, dir_in;
 		fs = FileUtil.file_separator();
 		try{
-			dir_in = FileUtil.getClassFilePath("jat.sim","closedLoopSim")+"input"+fs;
+			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
 		}catch(Exception e){
 			dir_in = "";
 		}
@@ -215,6 +215,8 @@ public class JGM4x4SRPEOM9state implements Derivatives {
         VectorN sum0 = temp0.plus(temp2);
   
         VectorN lunarAcceleration0 = sum0.times(Constants.GM_Moon);
+        //* TODO Watch this
+        //lunarAcceleration0.set(0);
     
         //Compute the acceleration due to the solar gravity
         VectorN r_sun = universe.earthRef.sunVector(newttt);
@@ -238,6 +240,9 @@ public class JGM4x4SRPEOM9state implements Derivatives {
         //solarAcceleration0.set(0);
         
         //Determine if the sun is visible
+        if(r0.x[0]==650869.3445073176){
+        	int donothing = 0;
+        }
         double visible0 = srp0.partial_illumination(r0,r_sun);
 		
 		double pressureConstant = 4.5344321837439e-06;

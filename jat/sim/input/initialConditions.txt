@@ -4,13 +4,16 @@
 # Mode: 0 = Trajectory Generation Only, 1 = Trajectory and Filter
 init.mode    1
 
+# Flag indicating whether to read observations from a file or generate them
+init.fromfile true
+
 #Initial MJD and Seconds past MJD0 for simulation start
-init.MJD0 50985.0   
+init.MJD0 52187.0   
 init.T0 0.0		 
 
 #Final MJD and Seconds past MJDF for simulation end
-init.MJDF    50986.5  
-init.TF      0.0		 
+init.MJDF    52187.0
+init.TF      86400.0		 
 
 #The step size in the propagation step.
 #NOTE:  This number should be smaller than the desired measurement period
@@ -24,34 +27,27 @@ prop.NumSpacecraft  1
 
 #ECI position and velocity (m and m/s)        
 #GEONS TRUE
-TRUE_STATE.0.X   -1.86631428726119e+06
-TRUE_STATE.0.Y   4.21156716602933e+07
-TRUE_STATE.0.Z   -8.23659306996206e+03
-TRUE_STATE.0.VX  -3.07220560283457e+03
-TRUE_STATE.0.VY  -1.35729347644219e+02
-TRUE_STATE.0.VZ   1.35175509960231e+01
-
-#TRUE_STATE.0.X   -1.86631097007950e+006
-#TRUE_STATE.0.Y   4.21156718073160e+007
-#TRUE_STATE.0.Z   -8.23653287299700e+003
-#TRUE_STATE.0.VX  -3.07220561350360e+003
-#TRUE_STATE.0.VY  -1.35729105684550e+002
-#TRUE_STATE.0.VZ   1.35175510071330e+001
-
-#REF_STATE.0.X   -1.86631428726119e+06
-#REF_STATE.0.Y   4.21156716602933e+07
-#REF_STATE.0.Z   -8.23659306996206e+03
-#REF_STATE.0.VX  -3.07220560283457e+03
-#REF_STATE.0.VY  -1.35729347644219e+02
-#REF_STATE.0.VZ   1.35175509960231e+01
+TRUE_STATE.0.X   -4.02622553013133e+007 
+TRUE_STATE.0.Y   -1.24965505638999e+007
+TRUE_STATE.0.Z   -4.27951891301160e+003 
+TRUE_STATE.0.VX  9.11185854997334e+002
+TRUE_STATE.0.VY  -2.93710765139044e+003
+TRUE_STATE.0.VZ   1.39092766633154e+001
 
 #GEONS REFERENCE
-REF_STATE.0.X   -1.86631097007950e+006
-REF_STATE.0.Y   4.21156718073160e+007
-REF_STATE.0.Z   -8.23653287299700e+003
-REF_STATE.0.VX  -3.07220561350360e+003
-REF_STATE.0.VY  -1.35729105684550e+002
-REF_STATE.0.VZ   1.35175510071330e+001
+REF_STATE.0.X   -4.0261255301E+07
+REF_STATE.0.Y   -1.2497550564E+07
+REF_STATE.0.Z   -3.2795189130E+03
+REF_STATE.0.VX  9.1108585500E+02
+REF_STATE.0.VY  -2.9370076514E+03
+REF_STATE.0.VZ   1.3809276663E+01
+
+#REF_STATE.0.X   -4.02622553013133e+007 
+#REF_STATE.0.Y   -1.24965505638999e+007
+#REF_STATE.0.Z   -4.27951891301160e+003 
+#REF_STATE.0.VX  9.11185854997334e+002
+#REF_STATE.0.VY  -2.93710765139044e+003
+#REF_STATE.0.VZ   1.39092766633154e+001
   
 TRUE_STATE.1.X 5.0          
 TRUE_STATE.1.Y 42214005     
@@ -69,7 +65,7 @@ REF_STATE.1.VZ 0.0
 
 #Initial Clock Bias Term 
 jat.0.clockBias  0.0
-jat.0.clockDrift -5.0
+jat.0.clockDrift 0.0
 
 #Solar Radiation Pressure Coefficient and Drag Doefficient
 #Area (m^2) and mass (kg)
@@ -94,7 +90,7 @@ jat.0.2body false
 jat.1.2body false
 
 #Include Solar Gravity Acceleration
-jat.0.solar true 
+jat.0.solar true
 jat.1.solar false 
 
 #Include Lunar Gravity Acceleration
@@ -102,7 +98,7 @@ jat.0.lunar true
 jat.1.lunar false
 
 #Include Drag Acceleration      
-jat.0.drag true      
+jat.0.drag false      
 jat.1.drag false   
 
 #Include Solar Radiation Pressure Acceleration
@@ -157,10 +153,25 @@ P0.1.Z    1
 P0.1.VX   .1
 P0.1.VY   .1
 P0.1.VZ   .1
+#P0.0.X    400		 
+#P0.0.Y    400			
+#P0.0.Z    400			
+#P0.0.VX   1		
+#P0.0.VY   1			
+#P0.0.VZ   1
+#P0.1.X    1		 
+#P0.1.Y    1
+#P0.1.Z    1	
+#P0.1.VX   .1
+#P0.1.VY   .1
+#P0.1.VZ   .1
 
 #Set thhe Initial Clock Offset and Drift Covariance (m and m/s)		
+#P0.0.clockBias 10000	
+#P0.0.clockDrift 10
 P0.0.clockBias 10000	
 P0.0.clockDrift 10
+
 
 #Set the Initial Solar Radiation Pressure and Drag Coefficient Covariances	
 P0.0.Cr   .12	
@@ -183,8 +194,8 @@ MEAS.0.desc GPS
 MEAS.0.satellite 0
 MEAS.0.frequency 1
 MEAS.0.size 1
-MEAS.0.R 7
-GPS.const week963.rnx
+MEAS.0.R 2
+GPS.const test1_1.brdc.nav
 
 
 
@@ -198,10 +209,13 @@ GPS.const week963.rnx
 MEAS.1.desc pseudoGPS
 MEAS.1.size 3
 MEAS.1.frequency 1
-MEAS.1.satellite 1
-MEAS.1.R.0 9
-MEAS.1.R.1 9
-MEAS.1.R.2 9
+MEAS.1.satellite 0
+#MEAS.1.R.0 9
+#MEAS.1.R.1 9
+#MEAS.1.R.2 9
+MEAS.1.R.0 3
+MEAS.1.R.1 3
+MEAS.1.R.2 3
 
 #MEAS.0.desc stateUpdate
 #MEAS.0.size 6

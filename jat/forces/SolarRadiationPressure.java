@@ -196,6 +196,12 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
         double dmag = d.mag();
         double sd = -1.0 * r.dotProduct(d);
         double a = Math.asin(R_sun/dmag);
+        if(R_earth>r_mag){
+        	System.err.println("Error! Collision detected with Earth.");
+        	System.err.println("Error! See jat.forces.SolarRadiationPressure");
+        	return 0.0;
+        	//System.exit(0);
+        }
         double b = Math.asin(R_earth/r_mag);
         double c = Math.acos(sd/(r_mag*dmag));
         if((a+b)<=c) 

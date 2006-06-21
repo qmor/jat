@@ -326,7 +326,7 @@ public class GPS_SV {
      * which is most likely not the real ECI frame since all we are doing is
      * treating the longitude of ascending node as if it were RAAN.
      * @param mjd Modified Julian Date.
-     * @return ECEF position vector of the GPS SV in meters.
+     * @return ECI position vector of the GPS SV in meters.
      */    
     public VectorN rvECI(double mjd){
         

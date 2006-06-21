@@ -177,6 +177,59 @@ public class RelativeTraj {
 		this.lp.close();
 	}
 
+	/** Compute the relative trajectory
+	 * @param tol Tolerance for time mismatch
+	 */
+	public void process(double tol) {
+		this.chaser.reset();
+		this.target.reset();
+		int nchaser = this.chaser.npts();
+		int ntgt = this.target.npts();
+		int n = 0;
+		if (ntgt > nchaser) {
+			n = nchaser;
+		} else {
+			n = ntgt;
+		}
+		if(verbose)
+		    System.out.println("number of points = "+n+" "+nchaser+" "+ntgt);
+		int i=0, j=0;
+		while( i<nchaser && j<ntgt ){
+			double[] chase = chaser.get(i);//chaser.next();
+			double[] tgt = target.get(j);//target.next();
+			double t = tgt[0];
+			double dt = chase[0] - t;
+			if(Math.abs(dt) < tol){
+				
+				VectorN r = new VectorN(chase[1], chase[2], chase[3]);
+				VectorN v = new VectorN(chase[4], chase[5], chase[6]);
+				
+				VectorN rtgt = new VectorN(tgt[1], tgt[2], tgt[3]);
+				VectorN vtgt = new VectorN(tgt[4], tgt[5], tgt[6]);
+				
+				RSW_Frame rsw = new RSW_Frame(rtgt, vtgt);
+				
+				VectorN dr_eci = r.minus(rtgt);
+				VectorN dv_eci = v.minus(vtgt);
+				
+				VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
+				
+				this.print(t, x_rsw);
+				i++;
+				j++;
+			} else if(dt<0){
+				i++;
+			} else {
+				j++;
+			}
+		}
+		System.out.println("done processing");
+		traj_plot.setVisible(true);
+		vel_plot.setVisible(true);
+		xyz_plot.setVisible(true);
+		this.lp.close();
+	}
+	
 	/** Run it
 	 */
 	public static void main(String[] args) {
@@ -231,6 +284,19 @@ public class RelativeTraj {
 		System.out.println("done processing relative trajectory");
 		
 		return max;
+	}
+	
+	private void get_next_time(int[] i){
+		i[0]++; i[1]++;
+		double one_time = chaser.getTimeAt(i[0]),two_time = target.getTimeAt(i[1]);
+		while(i[0]<chaser.size() && i[1]<target.size() && one_time!=two_time){
+			if(one_time < two_time)
+				i[0]++;
+			else
+				i[1]++;
+			one_time = chaser.getTimeAt(i[0]);
+			two_time = target.getTimeAt(i[1]);
+		}
 	}
 	
 	public void setVerbose(boolean b){
