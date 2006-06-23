@@ -59,6 +59,9 @@ public class createMeasurements{
 			{
 				mm[i] = new stateUpdateMeasurementModel(hm);
 			}
+			else if(measurementTypes[i].equals("OPT")){
+				mm[i] = new OpticalMeasurementModel(hm,i);
+			}
 			else
 			{
 				System.out.println("Invalid measurement type.");

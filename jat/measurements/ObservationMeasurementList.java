@@ -204,9 +204,9 @@ public class ObservationMeasurementList
 				//ObservationMeasurementList date = new ObservationMeasurementList();
 				GPSTimeFormat newDate =  ObservationMeasurementList.setDateStuff(lineNew);
 				timeMjd =newDate.mjd();
-				if(timeMjd > 52189.06403935186){
-					int stop_to_debug = 0;
-				}
+				//if(timeMjd > 52189.06403935186){
+					//int stop_to_debug = 0;
+				//}
 				if(currentIndex <0){
 					current_mjd = timeMjd;
 					currentIndex = 0;
@@ -260,6 +260,9 @@ public class ObservationMeasurementList
 					case ObservationMeasurement.TYPE_GPS:
 						info = new ObservationMeasurement(timeMjd,observationType, data, prns.get(j),
 								input,model_gps,ObservationMeasurement.TYPE_GPS);
+						EarthRef earth = new EarthRef(new Time(timeMjd));
+						RotationMatrix R = new RotationMatrix(earth.ECI2ECEF());
+						info.set_ECF2ECI(R);
 						break;
 					case ObservationMeasurement.TYPE_STATEUPDATE:
 						info = new ObservationMeasurement(timeMjd,observationType, data,prns.get(j),
@@ -285,7 +288,146 @@ public class ObservationMeasurementList
 			}
 		}
 	}
-	
+	public void processRINEX(String fileName,boolean useGPS, boolean useCross)	//Needs the fileName 
+	throws IOException{
+		File inputFile = new File(fileName);
+		FileReader fr = new FileReader(inputFile);
+		BufferedReader in = new BufferedReader(fr);
+		
+		while (notDone) //Reading the Header information in this While loop
+		{
+			count++;
+			line = in.readLine();
+			StringTokenizer tok = new StringTokenizer(line, " ");
+			if (count == 1)
+			{
+				version = Double.parseDouble(tok.nextToken());
+			}
+			else if (count == 2)
+			{
+				observationNumber = Integer.parseInt(tok.nextToken());
+				for (int k =0; k < observationNumber; k++)
+				{
+					observationType.add(tok.nextToken());
+				}
+			}
+			else 
+			{
+				ObservationMeasurementList headerFinished = new ObservationMeasurementList();
+				notDone = headerFinished.setHeaderReader(tok, count); //Returns false if header has been read
+			}
+		}
+		while (in.ready()) //Reading the file blocks with the measurement data
+		{
+			/**dataCount is invented for first line of data. The timeStamp 
+			 is true if the data from the previous time has already been read.
+			 Initially timeStamp is set to false and dataCount is set to zero*/
+			
+			dataCount++;
+			if ((dataCount==1) || (timeStamp == true)) 
+			{
+				lineNew = in.readLine();
+				//ObservationMeasurementList date = new ObservationMeasurementList();
+				GPSTimeFormat newDate =  ObservationMeasurementList.setDateStuff(lineNew);
+				timeMjd =newDate.mjd();
+				//if(timeMjd > 52189.06403935186){
+					//int stop_to_debug = 0;
+				//}
+				if(currentIndex <0){
+					current_mjd = timeMjd;
+					currentIndex = 0;
+				}
+				//ObservationMeasurementList num = new ObservationMeasurementList();
+				numOfSatellites = ObservationMeasurementList.setNumberOfSatellites(lineNew);
+				//data.add(new Integer(numOfSatellites));
+				int newNumOfSatellites = numOfSatellites;
+				int start = 32;
+				if (numOfSatellites >12)
+				{
+					newNumOfSatellites =12;
+				}
+				//prns.clear();
+				prns = new Vector();
+				for (int t=0; t<newNumOfSatellites; t++)
+				{
+					String prnIds = new String(lineNew.substring(start, start+3));
+					prns.add(prnIds);
+					start = start + 3;
+				}
+				if (numOfSatellites > 12){
+					String secondLine = in.readLine();
+					
+					int secondLineSatellites = numOfSatellites-12;
+					int secondStart = 33;
+					for (int n=0; n<secondLineSatellites; n++)
+					{
+						String prnIds = new String (secondLine.substring(secondStart, secondStart+2));
+						prns.add(prnIds); 
+						secondStart = secondStart +3;
+					}
+				}
+				timeStamp = false; //Resets timeStamp to read the data for the time stamp
+			}
+			else 
+			{
+				for (int j=0; j<numOfSatellites; j++ )
+				{
+					String lineNew = in.readLine();
+					StringTokenizer tokNew = new StringTokenizer(lineNew, " ");
+					//data.clear();
+					data = new Vector();
+					for (int t=0; t<observationNumber; t++)
+					{
+						String dataNew = tokNew.nextToken();
+						data.add(dataNew);					
+					}
+					ObservationMeasurement info;
+					String meas;
+					switch(ObservationMeasurement.chooseType((String)prns.get(j))){
+					case ObservationMeasurement.TYPE_GPS:
+						if(useGPS){
+							info = new ObservationMeasurement(timeMjd,observationType, data, prns.get(j),
+								input,model_gps,ObservationMeasurement.TYPE_GPS);
+							EarthRef earth = new EarthRef(new Time(timeMjd));
+							RotationMatrix R = new RotationMatrix(earth.ECI2ECEF());
+							info.set_ECF2ECI(R);
+							this.add(info);
+							meas = info.toString();
+							System.out.println(meas);
+						}
+						break;
+					case ObservationMeasurement.TYPE_STATEUPDATE:
+						info = new ObservationMeasurement(timeMjd,observationType, data,prns.get(j),
+								input,model_stateupdate,ObservationMeasurement.TYPE_STATEUPDATE);
+						this.add(info);
+						meas = info.toString();
+						System.out.println(meas);
+						break;
+					case ObservationMeasurement.TYPE_RANGE:
+						if(useCross){
+							info = new ObservationMeasurement(timeMjd,observationType, data, prns.get(j),
+									input,model_range, ObservationMeasurement.TYPE_RANGE);
+							this.add(info);
+							meas = info.toString();
+							System.out.println(meas);
+						}
+						break;
+//* TODO Include the rest of the model types	
+					default:
+						info = new ObservationMeasurement(
+								timeMjd,observationType, data, prns.get(j),input,model_gps,
+								ObservationMeasurement.TYPE_GPS);
+						this.add(info);
+						meas = info.toString();
+						System.out.println(meas);
+					}
+					
+				}
+				timeStamp = true; //Resets timeStamp to read the next time stamp line
+				timeStep++; //keeps track of the number of time steps, initially zero
+			}
+		}
+	}
 	public void assignModels(){
 		for(int i=0; i<this.list.size(); i++){
 			ObservationMeasurement o = get(i);

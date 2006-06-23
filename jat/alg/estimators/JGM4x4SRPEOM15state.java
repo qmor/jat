@@ -75,8 +75,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 	public double hc;
 	
 	
-	public JGM4x4SRPEOM15state(){
-		
+	public JGM4x4SRPEOM15state(HashMap hm){
+		this.hm = hm;
 		String fs, dir_in;
 		fs = FileUtil.file_separator();
 		try{
@@ -84,7 +84,7 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		}catch(Exception e){
 			dir_in = "";
 		}
-		hm = initializer.parse_file(dir_in+"initialConditions.txt");
+		//hm = initializer.parse_file(dir_in+"initialConditions.txt");
 		mass0 = initializer.parseDouble(hm,"jat.0.mass");
 		area0 = initializer.parseDouble(hm,"jat.0.area");
 		Cr0 = initializer.parseDouble(hm,"jat.0.Cr");

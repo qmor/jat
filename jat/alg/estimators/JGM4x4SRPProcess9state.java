@@ -54,7 +54,7 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 	private VectorN xref;
 	private Matrix phi;
 	private RungeKutta8 rk8 = new RungeKutta8(1.0);
-	private JGM4x4SRPEOM9state eom = new JGM4x4SRPEOM9state();
+	private JGM4x4SRPEOM9state eom;// = new JGM4x4SRPEOM9state();
 	private LinePrinter lp1;
 	private LinePrinter lp2;
 	public Trajectory traj = new Trajectory();
@@ -67,7 +67,9 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
 	/*This file is not generic and has to be modified for any
 	 * change in the state.
 	 */
-	public JGM4x4SRPProcess9state(LinePrinter lp, LinePrinter lp_2){
+	public JGM4x4SRPProcess9state(LinePrinter lp, LinePrinter lp_2, HashMap hm){
+		this.hm = hm;
+		this.eom = new JGM4x4SRPEOM9state(hm);
 		this.lp1 = lp;
 		this.lp2 = lp_2;
 	    traj.setTitle("Test Trajectory 1");
@@ -86,7 +88,7 @@ public class JGM4x4SRPProcess9state implements ProcessModel {
         }catch(Exception e){
             dir_in = "";
         }
-		hm = initializer.parse_file(dir_in+"initialConditions.txt");
+		//hm = initializer.parse_file(dir_in+"initialConditions.txt");
 	    n = initializer.parseInt(hm,"FILTER.states");
 	    num_sc = initializer.parseInt(hm,"prop.NumSpacecraft");
 	    Q = parse_Q();

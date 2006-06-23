@@ -131,22 +131,22 @@ public class RINEXnav {
             
             // read second and third lines
             s = in.readLine();
-            s = in.readLine();
+            //s = in.readLine();
             
             // read fourth line
             try{
-            s = in.readLine();
-            t1 = new StringTokenizer(s, " ");
-            for (int i = 0; i < 4; i++) {
-            	this.alpha[i] = this.parse(t1.nextToken());
-            }
+            //s = in.readLine();
+            //t1 = new StringTokenizer(s, " ");
+            //for (int i = 0; i < 4; i++) {
+            	//this.alpha[i] = this.parse(t1.nextToken());
+            //}
             
             // read fifth line
-            s = in.readLine();
-            t1 = new StringTokenizer(s, " ");
-            for (int i = 0; i < 4; i++) {
-            	this.beta[i] = this.parse(t1.nextToken());
-            }
+            //s = in.readLine();
+            //t1 = new StringTokenizer(s, " ");
+            //for (int i = 0; i < 4; i++) {
+            	//this.beta[i] = this.parse(t1.nextToken());
+            //}
             
             // find the end of header
             String end = "END";
@@ -164,15 +164,14 @@ public class RINEXnav {
                     if (check > 1) eoh = true;
                 }
             }
-            }catch(NumberFormatException e){
+            }catch(Exception e){
             	e.printStackTrace();
             	 String end = "END";
                  String header = "HEADER";
                  int check = 0;
                  
                  boolean eoh = false;
-                 while (!eoh) {
-                     //s = in.readLine();
+                 while (!eoh) {                 
 //                     System.out.println(s);
                      StringTokenizer t2 = new StringTokenizer(s, " ");
                      while (t2.hasMoreTokens()) {
@@ -180,6 +179,7 @@ public class RINEXnav {
                          if ((temp.equals(end))||(temp.equals(header))) check++;
                          if (check > 1) eoh = true;
                      }
+                     s = in.readLine();
                  }
             }
             

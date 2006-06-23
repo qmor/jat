@@ -24,6 +24,7 @@ package jat.measurements;
 
 import jat.alg.estimators.MeasurementFileModel;
 import jat.alg.estimators.MeasurementModel;
+import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.SpacecraftModel;
 
@@ -70,7 +71,7 @@ public class ObservationMeasurement implements Serializable{
 	/** Satellite PRN number */
 	public Object prn;
 	
-	private int spacecraft_id=0;
+	private RotationMatrix ECF2ECI;
 	
 	private int stateNum = 0;  //????? from EKF.stateNum
 	
@@ -117,12 +118,20 @@ public class ObservationMeasurement implements Serializable{
 		return out;
 	}
 	
+	protected void set_ECF2ECI(RotationMatrix m){
+		this.ECF2ECI = m;
+	}
+	public RotationMatrix get_ECF2ECI(){
+		return this.ECF2ECI;
+	}
+	
 	/**
 	 * The ID of the spacecraft in the simulation to estimate.
 	 * @return int ID number
 	 */
 	public int get_sc_id(){
-		return this.spacecraft_id;
+		return get_PRN();
+		//return this.spacecraft_id;
 	}
 	public int get_stateNum(){
 		return this.stateNum;
@@ -316,7 +325,7 @@ public class ObservationMeasurement implements Serializable{
 		}catch(NumberFormatException e){
 			char[] array = id.toCharArray();
 			int i=0;
-			while(array[i]==' ') i++; 
+			while(array[i]==' ' || array[i]=='c') i++; 
 			id = new String(array,i,array.length-i);
 			out= Integer.parseInt(id);
 		}

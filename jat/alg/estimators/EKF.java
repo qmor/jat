@@ -114,18 +114,20 @@ public class EKF {
 		{
 			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
-			this.process= new JGM4x4SRPProcess15state(lp1, lp2);
+			this.process= new JGM4x4SRPProcess15state(lp1, lp2,hm);
 	
 		}
 		else if(stringPm.equals("JGM4x4SRPProcess9state"))
 		{
 			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
-			this.process= new JGM4x4SRPProcess9state(lp1, lp2);
+			this.process= new JGM4x4SRPProcess9state(lp1, lp2,hm);
 	
 		}
-		else
+		else if(stringPm.equals("Simple"))
 		{
+			this.process = new SimpleProcessModel(hm);
+		}else{
 			System.out.println("Process model not recognized.  Aborting");
 			System.exit(1);
 		}
@@ -161,14 +163,14 @@ public class EKF {
 		{
 			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
-			this.process= new JGM4x4SRPProcess15state(lp1, lp2);
+			this.process= new JGM4x4SRPProcess15state(lp1, lp2,hm);
 	
 		}
 		else if(stringPm.equals("JGM4x4SRPProcess9state"))
 		{
 			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
-			this.process= new JGM4x4SRPProcess9state(lp1, lp2);
+			this.process= new JGM4x4SRPProcess9state(lp1, lp2,hm);
 	
 		}
 		else
@@ -179,6 +181,10 @@ public class EKF {
 		double[] X = new double[n];
 		filterInitialize();
 		
+	}
+	
+	public int get_numStates(){
+		return this.xref.numberOfStates();
 	}
 	private Matrix updateCov(VectorN k, VectorN h, Matrix p) {
 		Matrix eye = new Matrix(this.n);
@@ -311,7 +317,8 @@ public class EKF {
 		//double y = createMeasurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
 		
 		/*Catch the case where the measurement doesn't occur*/
-		if( Math.abs(y) > 0)
+		//*TODO Watch this
+		if( true ) //Math.abs(y) > 0)
 		{
 			double r = obs.get_noise(sc);
 			//double r = createMeasurements.mm[measNum].R();
@@ -337,7 +344,9 @@ public class EKF {
 			xref.update(xhat); 
 
 			pold = this.updateCov(k, H, pnew);
-		}//else visible = false;
+		}else{
+			System.err.println("Error: negative residual!"); //else visible = false;
+		}
 	}
 	
 	/** Process the measurements (using measurements from a file)
@@ -450,8 +459,8 @@ public class EKF {
 				
 				//Propagate the state forward using the process model
 				double[] xnew = process.propagate(filterTime, xprev, tnext);
-				//if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime);
-				if(this.verbose) System.out.println("Running... "+(int)(100*filterTime/finalTime)+" %");
+				if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime);
+				//if(this.verbose) System.out.println("Running... "+(int)(100*filterTime/finalTime)+" %");
 				
 				//Get the state transition matrix for the current state
 				xref = new EstSTM(xnew, this.n);

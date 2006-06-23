@@ -21,6 +21,8 @@ package jat.traj;
  */
 import java.io.*;
 import java.util.*;
+
+import jat.matvec.data.VectorN;
 import jat.timeRef.*;
 import jat.alg.integrators.*;
 /**
@@ -490,5 +492,18 @@ public class Trajectory implements Serializable, Printable {
 	 */
 	public int size(){
 		return this.traj.size();
+	}
+
+	public VectorN getPositionAt(double mjd) {
+		int i=0;
+		while(i<this.size() && this.getTimeAt(i)<=mjd){
+			if(Math.abs(this.getTimeAt(i)-mjd)<1e5){
+				double[] data = this.traj.get(i);
+				return new VectorN(data[1],data[2],data[3]);
+			}
+			i++;
+		}
+		System.err.println("unable to find position data at: "+mjd+"  nearest: "+this.getTimeAt(i));
+		return new VectorN(3);
 	}
 }

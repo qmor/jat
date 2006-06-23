@@ -102,6 +102,23 @@ public class Time {
         this.MJD_TT = UTC2TT(this.MJD_UTC);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
+    
+    /**
+     * Constructor.  Creates a CalDate from the given parameters and then does Time(CalDate date)
+     * @param Yr
+     * @param Mon
+     * @param D
+     * @param Hr
+     * @param Mn
+     * @param S
+     */
+    public Time( int Yr, int Mon, int D, int Hr, int Mn, double S){
+    	CalDate date = new CalDate(Yr,Mon,D,Hr,Mn,S);
+    	this.MJD_UTC = date.mjd();
+        this.MJD_UTC_START = this.MJD_UTC;
+        this.MJD_TT = UTC2TT(this.MJD_UTC);
+        this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
+    }
 
     /**
      * Returns Universal Coordinated Time in modified julian date

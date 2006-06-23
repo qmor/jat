@@ -162,10 +162,17 @@ public class UniverseModel {
      * @param t [sec]
      */
     public void update(double t){
-        if(use_iers){// && MathUtils.mod(t,60)==0){            
+        if(use_iers){// && MathUtils.mod(t,60)==0){           
+        	try{
 		    double[] param = iers.search(time.mjd_tt());
 		    earthRef.setIERS(param[0],param[1]);
 		    time.set_UT1_UTC(param[2]);
+        	}catch(Exception e){
+        		//e.printStackTrace();
+        		System.err.println("Error: Unable to interpret IERS Polar Motion data.");
+        		System.err.println("       Polar motion data will be set to zero.");
+        		use_iers = false;
+        	}
 		}
         time.update(t);
         //if(MathUtils.mod(t,60)==0)

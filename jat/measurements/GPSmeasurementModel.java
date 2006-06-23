@@ -215,14 +215,17 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			obs  = observedMeasurement(isv, t_mjd, state);
 		}
 		//*TODO watch - the following line is a random attempt at hard-tweaking data
-		//t_mjd = t_mjd+0.0022583014979;
-		double pred = predictedMeasurement(isv, t_mjd, state); 
+		t_mjd = t_mjd+30*60/86400;
+		//double pred = predictedMeasurement(isv, t_mjd, state, om.get_ECF2ECI());
+		double pred = predictedMeasurement(isv, t_mjd, state);
 	
 		if(obs == 0)
 		    out = 0.0;
 		else
 			out = obs-pred;
 		
+		//*TODO watch should this be absolute value?
+		//return Math.abs(out);
 		return out;
 	}
 	
@@ -453,6 +456,97 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 				
 		return range;
 	}
+
+	public double predictedMeasurement(int isv, double t, VectorN state, RotationMatrix ECF2ECI) 
+	{
+	//private double rangePred(double t_mjd, VectorN xref, int prn, int type ){
+		
+		// get the SVID of measurement
+		GPS_SV sv;
+		int index = constell.getIndex(isv);
+		sv = constell.getSV(index);
+		//int prn = sv.prn();
+		
+		int clockIndex = clockState;
+
+		// extract the current spacecraft position vector		
+		VectorN r = new VectorN(state.get(0,3));
+		VectorN v = new VectorN(state.get(3,3));
+			
+		double t_mjd = t;//t/(double)86400 + MJD0;
+		//* TODO watch this 
+		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r,ECF2ECI);
+		//double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
+		
+		// compute the GPS SV position vector at transmission time
+		VectorN rvGPS = sv.rvECI(ts_mjd);
+		
+		VectorN rGPS = new VectorN(rvGPS.x[0], rvGPS.x[1], rvGPS.x[2]);
+		VectorN vGPS = new VectorN(rvGPS.x[3], rvGPS.x[4], rvGPS.x[5]);
+//		* TODO watch this for accuracy
+		//* sv.rvECI really seems to output as rvWGS84 (EarthFixed)
+		//* the velocity should be inertial but still unsure
+		rGPS = ECF2ECI.transform(rGPS);
+		vGPS = ECF2ECI.transform(vGPS);
+		
+		// compute the LOS vector
+		VectorN los = rGPS.minus(r);
+		VectorN losu = los.unitVector();
+		
+		// compute the expected range
+		double range = los.mag();
+				
+		// compute the range rate
+//		VectorN vrel = vGPS.minus(v);
+		double range_rate = GPS_Utils.rangeRate(los, v, vGPS);
+		
+		// add clock bias contribution to range
+		double bc = state.x[clockIndex];
+		double omrroc = 1.0 - (range_rate/GPS_Utils.c);
+		double bcpart = omrroc*bc;
+		range = range + bcpart;
+		
+		// add iono contribution to range
+		//int iono_index = 9;
+		//double diono = xref.x[iono_index];
+		//double iv = (1.0 + diono)*iono.Ivbar;
+		//double elev = GPS_Utils.elevation(r, rGPS);
+		//double ionopart = IonoModel.del_iono(iv, elev);
+		//Assume there is no Ionosphere Delay
+		//range = range + ionopart;
+		
+		// add ure contribution to range
+		//int ure_index = 9 + svindex;
+		//double dure = xref.x[ure_index];
+		//range = range + dure;
+		
+		//Create and zero out the H vector
+		int numStates = this.FILTER_states;//initializer.parseInt(hm,"FILTER.states");
+		H = new VectorN(numStates);
+		H.set(0.0);
+		
+		// compute the H vector
+		VectorN drrdr = drrdr(los, vGPS, range_rate);
+		double term1 = -1.0 * bc / GPS_Utils.c;
+		drrdr = drrdr.times(term1);
+		VectorN drrdv = this.drrdv(los, vGPS);
+		VectorN drhodv = drrdv.times(term1);
+		VectorN drhodr = drrdr.minus(losu);
+		H.set(0, drhodr);
+		H.set((3), drhodv);
+		double drdbc = 1.0 - range_rate/GPS_Utils.c;
+		
+		H.set(clockIndex, drdbc); 
+		
+		
+		
+		//double drdiono = IonoModel.del_iono(iono.Ivbar, elev);
+		//htilde.set(iono_index, drdiono);
+		//htilde.set(ure_index, 1.0);
+				
+		return range;
+	}
+
 	private VectorN drrdr (VectorN los, VectorN vGPS, double rr){
 		VectorN vc = vGPS.divide(GPS_Utils.c);
 		double range = los.mag();

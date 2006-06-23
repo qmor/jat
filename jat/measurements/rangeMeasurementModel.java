@@ -1,19 +1,32 @@
 package jat.measurements;
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 //import jat.sim.closedLoopSim;
 import jat.matvec.data.*;
+
 import java.util.Random;
 import jat.alg.estimators.*;
 import jat.sim.*;
+import jat.spacetime.EarthRef;
+import jat.spacetime.Time;
+import jat.spacetime.TimeUtils;
+import jat.traj.Trajectory;
+import jat.util.FileUtil;
 
 public class rangeMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	
 	private boolean obsfromfile = false;
 	private double pseudorange;
 	private int prn;
+	private PreciseEphemeris[] ephem;
 	
 	public static VectorN R;
 	public static int numStates;
@@ -34,22 +47,29 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 		try {
 			Thread.sleep(20);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		generator = new Random();
 	}
 	
 	public rangeMeasurementModel(HashMap h) {
-		obsfromfile = false;
+		obsfromfile = initializer.parseBool(h,"init.fromfile");
 		hm = h;
+		
+		if(obsfromfile){
+			int n = initializer.parseInt(hm,"RANGE.numsc");
+			String[] fileName = new String[n];
+			ephem = new PreciseEphemeris[n];
+			for(int i=0; i<n; i++){
+				ephem[i] = new PreciseEphemeris(initializer.parseString(hm,"RANGE.file."+i));
+			}
+		}
 		/*Add a sleep in here to insure that the Random Number
 		 * Seeds don't allign with any other random number generator
 		 */
 		try {
 			Thread.sleep(20);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		generator = new Random();
@@ -92,6 +112,18 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 		return range;
 		
 	}
+	/**
+	 * For use with crosslink precise ephemeris file data
+	 * @return predicted range [meters]
+	 */
+	public double predictMeasurement(VectorN state, ObservationMeasurement om){
+		int id = om.get_PRN();
+		VectorN obs_r = get_obs_pos(id,om.get_mjd());
+		VectorN rel = state.get(0,3).minus(obs_r);
+		double range = rel.mag();
+		//* TODO check that the range is being calculated correctly
+		return range;
+	}
 	
 	public double zPred(int i, double time, VectorN state){
 		double oMinusC;
@@ -102,7 +134,7 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 	}
 	public double zPred(ObservationMeasurement om, int i, double time, VectorN state){
 		double oMinusC;
-		double pred = predictMeasurement(state);
+		double pred = predictMeasurement(state,om);
 		double obs = om.get_range();
 		oMinusC      = obs-pred;
 		return oMinusC;
@@ -154,6 +186,127 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 		return H;
 	}
 	public VectorN H(ObservationMeasurement om, VectorN state){
-		return H(state);
+		/*NOTE:  Relative state are computed by differencing
+		 the host (states 6 - 11) minus the local 
+		 (states 0-5)  */
+		int id = om.get_PRN();
+		VectorN obs_r = get_obs_pos(id,om.get_mjd());
+		VectorN rel = state.get(0,3).minus(obs_r);
+		
+		/*Determine the number of states*/
+		int numStates = initializer.parseInt(hm,"FILTER.states");
+		VectorN H = new VectorN(numStates);
+		
+		//double x2 = (state.get(0) - state.get(6))*(state.get(0) - state.get(6));
+		//double y2 = (state.get(1) - state.get(7))*(state.get(1) - state.get(7));
+		//double z2 = (state.get(2) - state.get(8))*(state.get(2) - state.get(8));
+		
+		double range = rel.mag();//Math.sqrt(x2 + y2 + z2);
+		
+		H.set(0,(state.get(0)-obs_r.get(0))/range);
+		H.set(1,(state.get(1)-obs_r.get(1))/range);
+		H.set(2,(state.get(2)-obs_r.get(2))/range);
+		H.set(3,0.0);
+		H.set(4,0.0);
+		H.set(5,0.0);
+		//* TODO Should these be set to zero?
+		H.set(6,0.0);
+		H.set(7,0.0);
+		H.set(8,0.0);
+		
+		//H.set(6,(obs_r.get(0)-state.get(0))/range);
+		//H.set(7,(obs_r.get(1)-state.get(1))/range);
+		//H.set(8,(obs_r.get(2)-state.get(2))/range);
+		//H.set(9,0.0);
+		//H.set(10,0.0);
+		//H.set(11,0.0);
+		//H.set(12,0.0);
+		//H.set(13,0.0);
+		//H.set(14,0.0);
+		return H;
+	}
+	
+	private VectorN get_obs_pos(int id,double mjd){
+		for(int i=0; i<ephem.length; i++){
+			if(ephem[i].id == id){
+				return ephem[i].traj.getPositionAt(mjd);
+			}
+		}
+		//* TODO watch for errors
+		return new VectorN(3);
+	}
+	
+	private static class PreciseEphemeris {
+		
+		public int id;
+		public Trajectory traj;
+		
+		public PreciseEphemeris(String fileName){
+			traj = new Trajectory();
+			try {
+				String path = FileUtil.getClassFilePath("jat.measurements","rangeMeasurementModel");
+				String fs = FileUtil.file_separator();
+				BufferedReader in = new BufferedReader(new FileReader(new File(path+fs+fileName)));
+				String line = "start";
+				for(int i=0; i<23; i++){
+					line = in.readLine();
+				}
+				EarthRef earth;
+				RotationMatrix rot;
+				while(!line.equalsIgnoreCase("EOF")){
+					StringTokenizer tok = new StringTokenizer(line, " ");
+					int year,month,day,hour,min;
+					double sec,mjd;
+					double[] x = new double[6];
+					tok.nextToken();
+					year = Integer.parseInt(tok.nextToken());
+					month = Integer.parseInt(tok.nextToken());
+					day = Integer.parseInt(tok.nextToken());
+					hour = Integer.parseInt(tok.nextToken());
+					min = Integer.parseInt(tok.nextToken());
+					sec = Double.parseDouble(tok.nextToken());
+					Time time = new Time(year,month,day,hour,min,sec);
+					mjd = time.mjd_utc();
+					line = in.readLine();
+					tok = new StringTokenizer(line, " ");
+					tok.nextToken();
+					id = Integer.parseInt(tok.nextToken());
+					x[0] = Double.parseDouble(tok.nextToken());
+					x[1] = Double.parseDouble(tok.nextToken());
+					x[2] = Double.parseDouble(tok.nextToken());
+					line = in.readLine();
+					tok = new StringTokenizer(line, " ");
+					tok.nextToken();
+					tok.nextToken();
+					VectorN r = new VectorN(x,3);
+					earth = new EarthRef(time);
+					rot = new RotationMatrix((earth.eci2ecef(time)).transpose());
+					r = rot.transform(r);
+					x[0] = Double.parseDouble(tok.nextToken());
+					x[1] = Double.parseDouble(tok.nextToken());
+					x[2] = Double.parseDouble(tok.nextToken());
+					traj.add(mjd,r.x,x);
+					line = in.readLine();					
+				}
+				
+				
+				
+			} catch (FileNotFoundException e) {
+				System.err.println("Precise Ephemeris file: "+fileName+" not found.");
+				e.printStackTrace();
+				System.exit(0);
+			} catch (IOException ioe){
+				System.err.println("Error reading from Precise Ephem File: "+fileName);
+				ioe.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}
+	
+	public static void main(String[] args0){
+		String file = "C:/Code/Misc/PreciseEphem/test3a.auro2.prec";
+		rangeMeasurementModel.PreciseEphemeris ephem = new rangeMeasurementModel.PreciseEphemeris(file);
+		int end = 0;
+		end++;
 	}
 }

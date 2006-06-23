@@ -268,6 +268,7 @@ public class GPS_SV {
      * treating the longitude of ascending node as if it were RAAN.
      * @param mjd Modified Julian Date.
      * @return ECEF position vector of the GPS SV in meters.
+     * @deprecated Ambiguous as to whether this is truly ECI.  See rWGS84()
      */    
     public VectorN rECI(double mjd){
         
@@ -320,7 +321,61 @@ public class GPS_SV {
         VectorN out = R.times(rvec);
         return out;
     }    
-
+    /** Compute the WGS84 position vector of a GPS SV at a particular MJD.
+     * @param mjd Modified Julian Date.
+     * @return ECEF position vector of the GPS SV in meters.
+     */    
+    public VectorN rWGS84(double mjd){
+        
+        // compute time since Ephemeris Epoch
+        double ephemTime = this.toe.mjd();
+        double dt = (mjd - ephemTime)*86400.0;
+        double t0 = (double) this.toe.gps_week();
+        double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
+        
+        // compute mean anomaly at current time
+        double sma = this.sqrtA * this.sqrtA;
+        double n0 = Math.sqrt(Constants.GM_WGS84/(sma*sma*sma));  // mean motion
+        double n = n0 + this.deltaN;              // apply mean motion correction
+        double mt = this.ma + n*dt;
+        
+        
+        // solve Kepler's equation
+        double E = TwoBody.solveKepler(mt, this.ecc);
+        
+        // compute true anomaly
+        double sinE = Math.sin(E);
+        double cosE = Math.cos(E);
+        double den = 1.0 - this.ecc*cosE;
+        double sqrome2 = Math.sqrt(1.0 - this.ecc*this.ecc);
+        double sinv = (sqrome2*sinE)/den;
+        double cosv = (cosE - this.ecc)/den;
+        
+        double f = Math.atan2(sinv, cosv);
+             
+        // compute argument of latitude
+        double phi = f + this.argp;
+        double sin2u = Math.sin(2.0*phi);
+        double cos2u = Math.cos(2.0*phi);
+        
+        // compute periodic corrections
+        double dr = this.Crs*sin2u + this.Crc*cos2u;
+        double du = this.Cus*sin2u + this.Cuc*cos2u;
+        double di = this.Cis*sin2u + this.Cic*cos2u;
+        
+        // apply corrections
+        double r = sma*(1.0 - this.ecc*cosE) + dr;
+        double u = phi + du;
+        double i = this.inc + this.idot*dt + di;
+        double L = this.omega + this.omegadot*dt;
+        
+        VectorN rvec = new VectorN(r*Math.cos(u), r*Math.sin(u), 0.0);
+        
+        RotationMatrix R = new RotationMatrix(1,-i, 3,-L);
+        
+        VectorN out = R.times(rvec);
+        return out;
+    }
     /** Compute the ECI position vector of a GPS SV at a particular MJD.
      * Note: this really gives the position vector in an inertial frame,
      * which is most likely not the real ECI frame since all we are doing is
