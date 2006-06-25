@@ -128,15 +128,16 @@ public class RungeKuttaFehlberg78 implements Printable{
 
     /** Integrate the equations of motion.
      * @param start Initial time.
-     * @param y Initial state values.
+     * @param x0 Initial state values.
      * @param end Final time.
      * @param dv Equations of Motion.
      * @param pr Printable.
      * @param print_switch Print flag. True = call the print method.
      * @return the final state.
      */
-    public double[] integrate(double start, double[] y, double end,
+    public double[] integrate(double start, double[] x0, double end,
     Derivatives dv, Printable pr, boolean print_switch) {
+    	double[] y=x0.clone();
         double h = stepSize_;
         double hmin = minStepSize_;
         nok[0] = nbad[0] = 0;
@@ -153,14 +154,15 @@ public class RungeKuttaFehlberg78 implements Printable{
 
     /** Integrate the equations of motion.
      * @param start Initial time.
-     * @param y Initial state values.
+     * @param x0 Initial state values.
      * @param end Final time.
      * @param dv object implementing the EquationsOfMotion interface.
      * @param print_switch Print flag. True = call the print method.
      * @return the final state.
      */
-    public double[] integrate(double start, double[] y, double end,
+    public double[] integrate(double start, double[] x0, double end,
     EquationsOfMotion eom, boolean print_switch) {
+    	double[] y=x0.clone();
         double h = stepSize_;
         double hmin = minStepSize_;
         nok[0] = nbad[0] = 0;
@@ -177,15 +179,16 @@ public class RungeKuttaFehlberg78 implements Printable{
 
     /** Integrate the equations of motion. No printing/plotting interface provided.
      * @param start Initial time.
-     * @param y Initial state values.
+     * @param x0 Initial state values.
      * @param end Final time.
      * @param dv Equations of Motion.
      * @param pr Printable.
      * @param print_switch Print flag. True = call the print method.
      * @return the final state.
      */
-    public double[] integrate(double start, double[] y, double end, Derivatives dv) {
-        boolean print_switch = false;
+    public double[] integrate(double start, double[] x0, double end, Derivatives dv) {
+    	double[] y=x0.clone();
+    	boolean print_switch = false;
         double h = stepSize_;
         double hmin = minStepSize_;
         nok[0] = nbad[0] = 0;
