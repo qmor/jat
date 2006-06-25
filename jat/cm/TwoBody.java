@@ -203,6 +203,27 @@ public class TwoBody implements Derivatives
 		rv2Elements(r, v);
 	}
 
+	
+	// Setters and Getters
+	/**
+	 * @param ta true anomaly in degrees
+	 */
+	public void setTa(double ta)
+	{
+		this.ta = ta* Constants.deg2rad;
+		rv = new VectorN(randv());	//update cartesian elements
+	}
+	
+	public void setSteps(double steps)
+	{
+		this.steps = steps;
+	}
+	
+	
+	
+	
+	
+	
 	/** Copy a TwoBody orbit into a new TwoBody orbit.
 	 * @param p PrintWriter.
 	 * @return Newly created copy of the TwoBody orbit.
@@ -904,14 +925,7 @@ public class TwoBody implements Derivatives
 	{
 	}
 
-	/**
-	 * @param ta true anomaly in degrees
-	 */
-	public void setTa(double ta)
-	{
-		this.ta = ta* Constants.deg2rad;
-		rv = new VectorN(randv());	//update cartesian elements
-	}
+
 }
 
 

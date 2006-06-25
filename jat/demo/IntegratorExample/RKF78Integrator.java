@@ -86,9 +86,12 @@ public class RKF78Integrator implements Derivatives, Printable {
 
         // create an RungeKuttaFehlberg78 integrator
         RungeKuttaFehlberg78 rk78 = new RungeKuttaFehlberg78();
+        rk78.setNonAdaptive();
+        rk78.setStepSize(0.01);
 
         // create an instance
         RKF78Integrator si = new RKF78Integrator();
+        
 
         // initialize the variables
         double [] x0 = new double[2];
