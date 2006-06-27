@@ -21,7 +21,7 @@
 package jat.gps;
 import java.io.*;
 import java.util.*;
-import jat.timeRef.*;
+import jat.spacetime.*;
 
 /**
  * <P>
@@ -44,7 +44,7 @@ public class RINEXnav {
     
     private double parse(String str){
 //        System.out.println("Parsing: "+str);
-        StringTokenizer tok = new StringTokenizer(str, "E");
+        StringTokenizer tok = new StringTokenizer(str, "D");
         double mantissa = Double.parseDouble(tok.nextToken());
         double exponent = Double.parseDouble(tok.nextToken());
         double multiplier = Math.pow(10.0, exponent);

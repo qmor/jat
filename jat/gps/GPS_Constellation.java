@@ -23,7 +23,8 @@ package jat.gps;
 //import java.io.*;
 import java.util.*;
 import jat.matvec.data.*;
-import jat.timeRef.*;
+import jat.spacetime.*;
+import jat.util.*;
 /**
  * <P>
  * The GPS_Constellation Class provides a model of the GPS constellation
@@ -175,7 +176,9 @@ public class GPS_Constellation {
     }
     
     public static void main(java.lang.String args[]) {
-        String directory = "C:\\Jat\\jat\\input\\";
+    	String fs = FileUtil.file_separator();
+    	String dir = FileUtil.getClassFilePath("jat.gps","GPS_Constellation");
+        String directory = dir+fs+"navfiles"+fs;
         String filename = "rinex.n";
 //        String filename = "predata_2.n";        
         String file = directory + filename;

@@ -217,7 +217,8 @@ public class GPS_SV {
         double ephemTime = this.toe.mjd();
         double dt = (mjd - ephemTime)*86400.0;
         double t0 = (double) this.toe.gps_week();
-        double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
+//        double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
+        double toe_sow = this.toe.gps_sow();
 
         // compute mean anomaly at current time
         double sma = this.sqrtA * this.sqrtA;
@@ -254,7 +255,7 @@ public class GPS_SV {
         double i = this.inc + this.idot*dt + di;
 //        double L = this.omega + this.omegadot*dt - Constants.WE_WGS84*dt0;
         // corrected, I hope on 6/26/06 by DEG
-        double L = this.omega + (this.omegadot - Constants.WE_WGS84)*dt - Constants.WE_WGS84*dt0;
+        double L = this.omega + (this.omegadot - Constants.WE_WGS84)*dt - Constants.WE_WGS84*toe_sow;
 
         VectorN rvec = new VectorN(r*Math.cos(u), r*Math.sin(u), 0.0);
 
@@ -536,6 +537,7 @@ public class GPS_SV {
         double dt = (mjd - ephemTime)*86400.0;
         double t0 = (double) this.toe.gps_week();
         double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
+        double toe_sow = this.toe.gps_sow();
 
         // compute mean anomaly at current time
         double sma = this.sqrtA * this.sqrtA;
@@ -570,7 +572,7 @@ public class GPS_SV {
         double u = phi + du;
         double i = this.inc + this.idot*dt + di;
 //        double L = this.omega + this.omegadot*dt - Constants.WE_WGS84*dt0;
-        double L = this.omega + (this.omegadot - Constants.WE_WGS84)*dt - Constants.WE_WGS84*dt0;
+        double L = this.omega + (this.omegadot - Constants.WE_WGS84)*dt - Constants.WE_WGS84*toe_sow;
 
         double cosu = Math.cos(u);
         double sinu = Math.sin(u);
