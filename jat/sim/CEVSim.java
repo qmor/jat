@@ -60,6 +60,7 @@ public class CEVSim extends EstimatorSimModel {
 
 //** Static Variables **//
 	
+	public static String JAT_name;
 	//** Object Variables **//
 	
 	public CEVSim(){
@@ -429,8 +430,8 @@ public class CEVSim extends EstimatorSimModel {
 		initialize();
 		
 		for(int i=0; i<numSpacecraft; i++){
-			truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
-			ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
+			truth_traj[i].add(truth[i].get_sc_t(),truth[i].get_spacecraft().toStateVector());
+			ref_traj[i].add(ref[i].get_sc_t(),ref[i].get_spacecraft().toStateVector());
 		}
 		
 		/*Cache off the simulation mode */
@@ -438,6 +439,7 @@ public class CEVSim extends EstimatorSimModel {
 		
 		//Compute the length of the simulation in seconds
 		double MJD0 =  initializer.parseDouble(this.input,"init.MJD0");
+		this.mjd_utc_start = MJD0;
 		double MJDF =  initializer.parseDouble(this.input,"init.MJDF");
 		double T0   =  initializer.parseDouble(this.input,"init.T0");
 		double TF   =  initializer.parseDouble(this.input,"init.TF");
@@ -446,7 +448,7 @@ public class CEVSim extends EstimatorSimModel {
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 		this.tf = simLength;
 		set_verbose(this.verbose_estimation);
-		if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useFilter = false;
+		if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useMeas = false;
 		//double simLength = Math.round(TF - T0);
 		//ObservationMeasurement obs = obs_list.getFirst();
 		
@@ -456,10 +458,11 @@ public class CEVSim extends EstimatorSimModel {
 				//System.out.println("running..."+(dt*simStep)+" / "+simLength);
 			//if(simStep%100 == 0)
 			//	System.out.println(simStep*5);
+			
+			//simTime = simStep*dt;			
 			propagate(simStep*dt);
-			//simTime = simStep*dt;
 			simTime.update(simStep*dt);
-				
+			
 			filter();
 			
 			if(Double.isNaN(ref[0].get_spacecraft().toStateVector()[0])){// || simTime.get_sim_time()>4620){
@@ -469,8 +472,8 @@ public class CEVSim extends EstimatorSimModel {
 			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
 			
 			for(int i=0; i<numSpacecraft; i++){
-				truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
-				ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
+				truth_traj[i].add(truth[i].get_sc_t(),truth[i].get_spacecraft().toStateVector());
+				ref_traj[i].add(ref[i].get_sc_t(),ref[i].get_spacecraft().toStateVector());
 			}
 			
 		}
@@ -493,14 +496,15 @@ public class CEVSim extends EstimatorSimModel {
 				reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp,"Jat(Ref) v Jat(Truth)");
 				reltraj[i].setVerbose(false);
 				reltraj[i].process(mismatch_tol);
+				//reltraj[i].process_ECI(mismatch_tol);
 			}
 
 			try {
 				Celestia cel = new Celestia("C:/Code/Celestia/");
-				cel.set_trajectory_meters(ref_traj[i]);
-				cel.write_trajectory("jat_ref_"+JAT_case,"jat_ref_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
-				cel.set_trajectory_meters(truth_traj[i]);
-				cel.write_trajectory("jat_truth_"+JAT_case,"jat_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				cel.set_trajectory_meters(ref_traj[i],MJD0);
+				cel.write_trajectory("jat_ref_"+JAT_name+JAT_case,"jat_ref_"+JAT_name+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				cel.set_trajectory_meters(truth_traj[i],MJD0);
+				cel.write_trajectory("jat_truth_"+JAT_name+JAT_case,"jat_truth_"+JAT_name+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
 			} catch (IOException e) {
 				//e.printStackTrace();
 				System.err.println("Couldn't write to Celestia.");
@@ -521,13 +525,21 @@ public class CEVSim extends EstimatorSimModel {
 		boolean useFilter = true;
 		
 		//* TODO Flag marker
-		CEVSim.InputFile = "initialConditions_cev.txt";
+		EstimatorSimModel.JAT_case = 42;
+		
+		//CEVSim.JAT_name = "moon2earth_";
+		//CEVSim.InputFile = "initialConditions_cev_sun.txt";
+		
+		CEVSim.JAT_name = "earth2moon";
+		CEVSim.InputFile = "initialConditions_cev_brent.txt";
+		
 		CEVSim.PlotJAT = true;
 		
 		CEVSim Sim = new CEVSim(useFilter);
 		Sim.set_verbose(true);
 		Sim.runloop();
-        
+        OpticalMeasurementModel.fobs.close();
+        OpticalMeasurementModel.fpred.close();
         System.out.println("Finished.");
 	}
 }

@@ -29,6 +29,8 @@ import jat.alg.integrators.*;
 import jat.matvec.data.*;
 import jat.math.*;
 import jat.sim.*;
+import jat.spacetime.EarthRef;
+import jat.spacetime.Time;
 import jat.traj.*;
 import jat.util.FileUtil;
 import java.util.HashMap;
@@ -272,7 +274,13 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		
 		
 //		compute the GPS position vector
-		VectorN rvGPS = sv.rvECI(ts_mjd);
+		Time time = new Time(t_mjd);
+		EarthRef earth = new EarthRef(time);
+		
+		Matrix pole = earth.PoleMatrix();
+		Matrix gha = earth.GHAMatrix(time.mjd_ut1(),time.mjd_tt());
+		Matrix tod = earth.TOD();
+		VectorN rvGPS = sv.rvECI(ts_mjd,pole,gha,tod);
 		VectorN rGPS = new VectorN(rvGPS.x[0], rvGPS.x[1], rvGPS.x[2]);
 		VectorN vGPS = new VectorN(rvGPS.x[3], rvGPS.x[4], rvGPS.x[5]);
 		
@@ -394,8 +402,16 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		double t_mjd = t;//t/(double)86400 + MJD0; 
 		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
 		
+		//* TODO watch this
 		// compute the GPS SV position vector at transmission time
-		VectorN rvGPS = sv.rvECI(ts_mjd);
+		Time time = new Time(t_mjd);
+		EarthRef earth = new EarthRef(time);
+		
+		Matrix pole = earth.PoleMatrix();
+		Matrix gha = earth.GHAMatrix(time.mjd_ut1(),time.mjd_tt());
+		Matrix tod = earth.TOD();
+		VectorN rvGPS = sv.rvECI(ts_mjd,pole,gha,tod);
+//		VectorN rvGPS = sv.rvECI(ts_mjd);
 		VectorN rGPS = new VectorN(rvGPS.x[0], rvGPS.x[1], rvGPS.x[2]);
 		VectorN vGPS = new VectorN(rvGPS.x[3], rvGPS.x[4], rvGPS.x[5]);
 		
@@ -475,7 +491,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			
 		double t_mjd = t;//t/(double)86400 + MJD0;
 		//* TODO watch this 
-		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r,ECF2ECI);
+		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
 		//double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
 		
 		// compute the GPS SV position vector at transmission time

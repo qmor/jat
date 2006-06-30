@@ -50,6 +50,10 @@ import jat.util.*;
  */
 public class SimModel implements Derivatives {
 
+	/**
+	 * Flag indicating whether to print to file
+	 */
+	protected boolean doPrint = true;
     /**
      * Eigth Order Runge Kutta integration algorithm
      */
@@ -631,6 +635,14 @@ public class SimModel implements Derivatives {
     public void set_showtimestep(boolean b){
     	this.verbose_timestep = b;
     }
+    
+    /**
+     * Sets whether to print to file or not.
+     * @param b = true to print to file
+     */
+    public void set_doPrint(boolean b){
+    	this.doPrint = b;
+    }
 
     /**
      * Get the Trajectory obtained from propagating a single spacecraft
@@ -866,7 +878,7 @@ public class SimModel implements Derivatives {
      */
     public void runloop(){
         //* print initial state
-        print(lp);
+    	print(lp);
         t = t0;
 //      * update the universe
         spacetime.update(t);
@@ -898,8 +910,10 @@ public class SimModel implements Derivatives {
                 X[3] = s.v().get(0)/1000.0;
                 X[4] = s.v().get(1)/1000.0;
                 X[5] = s.v().get(2)/1000.0;
-                lp.println(mjd_utc+"\t"+X[0]+"\t"+X[1]+"\t"+X[2]+"\t"
-                        +X[3]+"\t"+X[4]+"\t"+X[5]);
+                if(this.doPrint){
+                	lp.println(mjd_utc+"\t"+X[0]+"\t"+X[1]+"\t"+X[2]+"\t"
+                			+X[3]+"\t"+X[4]+"\t"+X[5]);
+                }
                 traj_formation[i].add(mjd_utc,X);
             }
         } else {
@@ -911,8 +925,10 @@ public class SimModel implements Derivatives {
             X[3] = s.v().get(0)/1000.0;
             X[4] = s.v().get(1)/1000.0;
             X[5] = s.v().get(2)/1000.0;
-            lp.println(mjd_utc+"\t"+X[0]+"\t"+X[1]+"\t"+X[2]+"\t"
-                    +X[3]+"\t"+X[4]+"\t"+X[5]);
+            if(this.doPrint){
+            	lp.println(mjd_utc+"\t"+X[0]+"\t"+X[1]+"\t"+X[2]+"\t"
+            			+X[3]+"\t"+X[4]+"\t"+X[5]);
+            }
             jat.add(mjd_utc,X);
         }
     }

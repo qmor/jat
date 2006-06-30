@@ -137,7 +137,7 @@ public class RungeKuttaFehlberg78 implements Printable{
      */
     public double[] integrate(double start, double[] x0, double end,
     Derivatives dv, Printable pr, boolean print_switch) {
-    	double[] y=x0.clone();
+    	double[] y=(double[]) x0.clone();
         double h = stepSize_;
         double hmin = minStepSize_;
         nok[0] = nbad[0] = 0;
@@ -162,7 +162,7 @@ public class RungeKuttaFehlberg78 implements Printable{
      */
     public double[] integrate(double start, double[] x0, double end,
     EquationsOfMotion eom, boolean print_switch) {
-    	double[] y=x0.clone();
+    	double[] y=(double[]) x0.clone();
         double h = stepSize_;
         double hmin = minStepSize_;
         nok[0] = nbad[0] = 0;
@@ -187,7 +187,7 @@ public class RungeKuttaFehlberg78 implements Printable{
      * @return the final state.
      */
     public double[] integrate(double start, double[] x0, double end, Derivatives dv) {
-    	double[] y=x0.clone();
+    	double[] y=(double[]) x0.clone();
     	boolean print_switch = false;
         double h = stepSize_;
         double hmin = minStepSize_;

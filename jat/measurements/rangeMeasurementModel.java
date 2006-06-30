@@ -14,6 +14,7 @@ import jat.matvec.data.*;
 
 import java.util.Random;
 import jat.alg.estimators.*;
+import jat.cm.Constants;
 import jat.sim.*;
 import jat.spacetime.EarthRef;
 import jat.spacetime.Time;
@@ -240,6 +241,7 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 		
 		public int id;
 		public Trajectory traj;
+		private EarthRef earth;
 		
 		public PreciseEphemeris(String fileName){
 			traj = new Trajectory();
@@ -251,13 +253,14 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 				for(int i=0; i<23; i++){
 					line = in.readLine();
 				}
-				EarthRef earth;
 				RotationMatrix rot;
+				earth = new EarthRef(new Time(53000));
+				boolean first = true;
 				while(!line.equalsIgnoreCase("EOF")){
 					StringTokenizer tok = new StringTokenizer(line, " ");
 					int year,month,day,hour,min;
 					double sec,mjd;
-					double[] x = new double[6];
+					double[] x = new double[3];
 					tok.nextToken();
 					year = Integer.parseInt(tok.nextToken());
 					month = Integer.parseInt(tok.nextToken());
@@ -265,6 +268,8 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 					hour = Integer.parseInt(tok.nextToken());
 					min = Integer.parseInt(tok.nextToken());
 					sec = Double.parseDouble(tok.nextToken());
+					//* TODO watch this!!!
+					sec = 0;
 					Time time = new Time(year,month,day,hour,min,sec);
 					mjd = time.mjd_utc();
 					line = in.readLine();
@@ -278,14 +283,16 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 					tok = new StringTokenizer(line, " ");
 					tok.nextToken();
 					tok.nextToken();
-					VectorN r = new VectorN(x,3);
-					earth = new EarthRef(time);
-					rot = new RotationMatrix((earth.eci2ecef(time)).transpose());
-					r = rot.transform(r);
+					VectorN r = new VectorN(x);
+					earth.update(time);
+					//rot = new RotationMatrix((earth.eci2ecef(time)).transpose());
+					//r = rot.transform(r);
 					x[0] = Double.parseDouble(tok.nextToken());
 					x[1] = Double.parseDouble(tok.nextToken());
 					x[2] = Double.parseDouble(tok.nextToken());
-					traj.add(mjd,r.x,x);
+					VectorN v = new VectorN(x);
+					VectorN data = ecf2eci(r,v,time);
+					traj.add(mjd,data.x);
 					line = in.readLine();					
 				}
 				
@@ -301,6 +308,51 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 				System.exit(0);
 			}
 		}
+		
+		private Matrix computePole(Time t){
+			double a1 = -0.097873978689492;
+			double a2 = -0.024595601235973;
+			double a3 = -0.65797118746339;
+			double a4 =  0.095555969865679;
+			double a5 =  0.94278239745940;
+			double a6 =  0.13268750786818;
+			double a7 = -0.29741426364758;
+			double a8 = -0.38409384587563;
+			double a9 =  0.62823543875476;
+			double a10 = 0.53300376467789;
+			double Tp = 51013.0;
+			double A = 2*Constants.pi/365.25*(t.mjd_utc()-Tp);
+			double xp = a1 + a2 cos A + a3 sin A + a4 cos C + a5 sin C;
+			double yp = a6 + a7 cos A + a8 sin A + a9 cos C + a10 sin C;
+			
+		}
+		private VectorN ecf2eci(VectorN recf, VectorN vecf, Time t){
+//	  	Compute derivative of GHA Matrix (S) and its transpose
+	    	double omega = Constants.WE_WGS84;
+	    	Matrix todMatrix = earth.trueOfDate(t.mjd_tt());
+	        Matrix ghaMatrix = earth.GHAMatrix(t.mjd_ut1(), t.mjd_tt());
+	        
+	        Matrix poleMatrix = computePole(t);
+	        
+	        Matrix A = poleMatrix.times(ghaMatrix);
+	        Matrix E = A.times(todMatrix);
+	    	VectorN omegaE = new VectorN(0,0,omega);
+	    	
+//	    	% ---- perform transformations
+//	        thetasa= 7.29211514670698e-05 * (1.0  - lod/86400.0 );
+//	        omegaearth = [0; 0; thetasa;];
+
+//	        rpef = pm'*recef;
+//	        reci = prec'*nut'*st'*rpef;
+	    	VectorN rpef = poleMatrix.transpose().times(recf);
+	    	VectorN reci = E.transpose().times(recf);
+//	        vpef = pm'*vecef;
+//	        veci = prec'*nut'*st'*(vpef + cross(omegaearth,rpef));
+	    	VectorN vpef = poleMatrix.transpose().times(vecf);
+	    	VectorN veci = todMatrix.transpose().times(ghaMatrix.transpose()).times(vpef.plus(omegaE.crossProduct(rpef)));
+	    	VectorN out = new VectorN(reci,veci);
+	    	return out;
+	    }
 	}
 	
 	public static void main(String[] args0){

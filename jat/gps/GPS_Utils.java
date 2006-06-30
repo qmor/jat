@@ -85,38 +85,7 @@ public class GPS_Utils {
 			}
 		}
 		return ts_new;		
-	}
-	
-	/** Iterative solution for time of transmission
-	 * @param t_mjd time of reception in MJD
-	 * @param sv GPS_SV object
-	 * @return time of transmission in MJD
-	 */	
-	public static double transmitTime(double t_mjd, GPS_SV sv, VectorN r, RotationMatrix ECF2ECI){
-		int maxit = 500;
-		int i = 0;
-		double ts_new = 0.0;
-		double ts_old = t_mjd;
-		double eps = 1.0E-16;
-		double diff = Math.abs(ts_new - ts_old);
-		while ((diff > eps)&&(i < maxit)) {
-			VectorN rGPS = sv.rWGS84(ts_old);
-			rGPS = ECF2ECI.transform(rGPS);
-			VectorN los = GPS_Utils.lineOfSight(r, rGPS);
-			double rho = los.mag();
-			ts_new = t_mjd - rho/(86400.0*c);
-			diff = Math.abs(ts_new - ts_old);
-			ts_old = ts_new;
-			i = i + 1;
-			if (i >= maxit){
-				System.out.println("transmitTime too many iterations, diff = "+ diff);
-				if (diff > 1.0E-10) {
-					throw new RuntimeException("GPS_Utils.transmitTime too many iterations at t_mjd = "+t_mjd+", diff = "+ diff);
-				}
-			}
-		}
-		return ts_new;		
-	}
+	}	
 	
 	/** compute the range rate
 	 * @param rho the range vector

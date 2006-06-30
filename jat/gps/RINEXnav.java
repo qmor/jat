@@ -44,6 +44,7 @@ public class RINEXnav {
     
     private double parse(String str){
 //        System.out.println("Parsing: "+str);
+    	try{
         StringTokenizer tok = new StringTokenizer(str, "D");
         double mantissa = Double.parseDouble(tok.nextToken());
         double exponent = Double.parseDouble(tok.nextToken());
@@ -51,6 +52,15 @@ public class RINEXnav {
         double out = mantissa * multiplier;
 //        System.out.println("Returning: "+out);
         return out;
+    	}catch(Exception e){
+    		StringTokenizer tok = new StringTokenizer(str, "E");
+            double mantissa = Double.parseDouble(tok.nextToken());
+            double exponent = Double.parseDouble(tok.nextToken());
+            double multiplier = Math.pow(10.0, exponent);
+            double out = mantissa * multiplier;
+//            System.out.println("Returning: "+out);
+            return out;
+    	}
     }
     
     private double[] parseLine(String str){

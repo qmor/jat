@@ -271,7 +271,6 @@ public class GPS_SV {
      * treating the longitude of ascending node as if it were RAAN.
      * @param mjd Modified Julian Date.
      * @return ECEF position vector of the GPS SV in meters.
-     * @deprecated Ambiguous as to whether this is truly ECI.  See rWGS84()
      */
     public VectorN rECI(double mjd){
 
@@ -640,7 +639,7 @@ public class GPS_SV {
         Matrix St = ghaMatrix.transpose();
 
         // Compute derivative of GHA Matrix (S) and its transpose
-        Matrix omegaE = new Matrix(0,0);
+        Matrix omegaE = new Matrix(3,3);
         omegaE.set(0, 1, Constants.WE_WGS84);
         omegaE.set(1, 0, -Constants.WE_WGS84);
         Matrix Sdot = omegaE.times(ghaMatrix);
