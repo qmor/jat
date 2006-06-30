@@ -62,6 +62,7 @@ public class CEVSim extends EstimatorSimModel {
 	
 	public static String JAT_name;
 	//** Object Variables **//
+	private int numStates;
 	
 	public CEVSim(){
 		super();
@@ -69,6 +70,44 @@ public class CEVSim extends EstimatorSimModel {
 	
 	public CEVSim(boolean useFilter) {
 		super(useFilter);
+	}
+	
+//	** Object Methods **//
+	protected void initializeConst(){		
+		String fs, dir_in;
+		fs = FileUtil.file_separator();
+		try{
+			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+		}catch(Exception e){
+			dir_in = "";
+		}
+		this.input = initializer.parse_file(dir_in+InputFile);
+		
+		double MJD0 =  initializer.parseDouble(input,"init.MJD0");
+		double T0 = initializer.parseDouble(input, "init.T0");
+		double MJDF =  initializer.parseDouble(input, "init.MJDF");
+		double TF = initializer.parseDouble(input, "init.TF");
+		this.mjd_utc_start = MJD0+T0/86400;
+		simTime = new Time(MJD0+T0/86400);
+		
+		//geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),MJDF+TF/86400);
+			
+		numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
+		numStates = initializer.parseInt(input,"FILTER.states");
+		dt = initializer.parseInt(input,"init.dt");
+		if(JAT_runtruth){
+			truth = new SpacecraftModel[numSpacecraft];
+			truth_traj = new Trajectory[numSpacecraft];
+		}
+		ref   = new SpacecraftModel[numSpacecraft];
+		ref_traj = new Trajectory[numSpacecraft];
+		for(int i=0; i<numSpacecraft; i++){
+			if(JAT_runtruth) truth_traj[i] = new Trajectory();
+			ref_traj[i] = new Trajectory();
+		}
+		created_meas = new createMeasurements(input);
+		filter = new EKF(input);
+		
 	}
 
 	protected void initialize()

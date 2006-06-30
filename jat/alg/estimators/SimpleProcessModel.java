@@ -59,7 +59,7 @@ public class SimpleProcessModel implements ProcessModel {
 	
 	public SimpleProcessModel(HashMap hm){
 		this.hm = hm;
-		String eomdata = initializer.parseString(hm,"Filter.pm");
+		String eomdata = initializer.parseString(hm,"FILTER.pm");
 		if(eomdata.equalsIgnoreCase("JGM4x4SRPProcess9state")){
 			eom = new JGM4x4SRPEOM9state(hm);
 		}else if(eomdata.equalsIgnoreCase("JGM4x4SRPProcess15state")){
