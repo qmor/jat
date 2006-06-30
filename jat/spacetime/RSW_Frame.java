@@ -31,7 +31,6 @@ import jat.matvec.data.*;
  * the angular momentum vector and the second is along track.
  * Reference: Vallado.
  * 
- * @deprecated
  * @see jat.spacetime.RSW_Frame
  * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
  * @version 1.0

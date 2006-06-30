@@ -144,6 +144,12 @@ public class RelativeTraj {
 		} else {
 			n = ntgt;
 		}
+		double units = 1;
+		double mjd0 = 0;
+		if(this.target.getTimeAt(0)!=0){
+			units = 3600.0; //hours
+			mjd0 = this.target.getTimeAt(0);
+		}
 		if(verbose)
 		    System.out.println("number of points = "+n+" "+nchaser+" "+ntgt);
 		
@@ -168,6 +174,7 @@ public class RelativeTraj {
 			
 			VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
 
+			t = (t - mjd0)/units;
 			this.print(t, x_rsw);
 		}
 		System.out.println("done processing");
@@ -181,6 +188,65 @@ public class RelativeTraj {
 	 * @param tol Tolerance for time mismatch
 	 */
 	public void process(double tol) {
+		this.chaser.reset();
+		this.target.reset();
+		int nchaser = this.chaser.npts();
+		int ntgt = this.target.npts();
+		int n = 0;
+		if (ntgt > nchaser) {
+			n = nchaser;
+		} else {
+			n = ntgt;
+		}
+		double units = 1;
+		double mjd0 = 0;
+		if(this.target.getTimeAt(0)!=0){
+			units = 24.0; //hours
+			mjd0 = this.target.getTimeAt(0);
+		}
+		if(verbose)
+		    System.out.println("number of points = "+n+" "+nchaser+" "+ntgt);
+		int i=0, j=0;
+		while( i<nchaser && j<ntgt ){
+			double[] chase = chaser.get(i);//chaser.next();
+			double[] tgt = target.get(j);//target.next();
+			double t = tgt[0];
+			double dt = chase[0] - t;
+			if(Math.abs(dt) < tol){
+				
+				VectorN r = new VectorN(chase[1], chase[2], chase[3]);
+				VectorN v = new VectorN(chase[4], chase[5], chase[6]);
+				
+				VectorN rtgt = new VectorN(tgt[1], tgt[2], tgt[3]);
+				VectorN vtgt = new VectorN(tgt[4], tgt[5], tgt[6]);
+				
+				RSW_Frame rsw = new RSW_Frame(rtgt, vtgt);
+				
+				VectorN dr_eci = r.minus(rtgt);
+				VectorN dv_eci = v.minus(vtgt);
+				
+				VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
+				
+				t = (t - mjd0)*units;
+				this.print(t, x_rsw);
+				i++;
+				j++;
+			} else if(dt<0){
+				i++;
+			} else {
+				j++;
+			}
+		}
+		System.out.println("done processing");
+		traj_plot.setVisible(true);
+		vel_plot.setVisible(true);
+		xyz_plot.setVisible(true);
+		this.lp.close();
+	}
+	/** Compute the relative trajectory in ECI (X Y Z)
+	 * @param tol Tolerance for time mismatch
+	 */
+	public void process_ECI(double tol) {
 		this.chaser.reset();
 		this.target.reset();
 		int nchaser = this.chaser.npts();
@@ -207,14 +273,14 @@ public class RelativeTraj {
 				VectorN rtgt = new VectorN(tgt[1], tgt[2], tgt[3]);
 				VectorN vtgt = new VectorN(tgt[4], tgt[5], tgt[6]);
 				
-				RSW_Frame rsw = new RSW_Frame(rtgt, vtgt);
+				//RSW_Frame rsw = new RSW_Frame(rtgt, vtgt);
 				
 				VectorN dr_eci = r.minus(rtgt);
 				VectorN dv_eci = v.minus(vtgt);
 				
-				VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
+				//VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
 				
-				this.print(t, x_rsw);
+				this.print(t, new VectorN(dr_eci,dv_eci));
 				i++;
 				j++;
 			} else if(dt<0){
@@ -223,13 +289,24 @@ public class RelativeTraj {
 				j++;
 			}
 		}
+		traj_plot.plot.setXLabel("along track");
+        traj_plot.plot.setYLabel("radial");
+        
+        xyz_plot.bottomPlot.setXLabel("t");
+        xyz_plot.topPlot.setYLabel("X");
+        xyz_plot.middlePlot.setYLabel("Y");
+        xyz_plot.bottomPlot.setYLabel("Z");
+
+        vel_plot.bottomPlot.setXLabel("t");
+        vel_plot.topPlot.setYLabel("X");
+        vel_plot.middlePlot.setYLabel("Y");
+        vel_plot.bottomPlot.setYLabel("Z");
 		System.out.println("done processing");
-		traj_plot.setVisible(true);
+		//traj_plot.setVisible(true);
 		vel_plot.setVisible(true);
 		xyz_plot.setVisible(true);
 		this.lp.close();
 	}
-	
 	/** Run it
 	 */
 	public static void main(String[] args) {

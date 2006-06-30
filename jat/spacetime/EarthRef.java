@@ -39,7 +39,7 @@ public class EarthRef implements BodyRef {
     
     public boolean use_moon = false;
     public boolean use_sun = false;
-    //public boolean use_iers = true;
+    public boolean use_iers = true;
         
     /** Earth's rotation rate in rad/s.
      */
@@ -761,7 +761,35 @@ public class EarthRef implements BodyRef {
         Matrix E = A.times(T);
         return E;
     }
-        
+    
+    public VectorN ecf2eci(VectorN recf, VectorN vecf, Time t){
+//  	Compute derivative of GHA Matrix (S) and its transpose
+    	double omega = Constants.WE_WGS84;
+    	Matrix todMatrix = trueOfDate(t.mjd_tt());
+        Matrix ghaMatrix = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
+        Matrix poleMatrix = PoleMatrix();
+        //Matrix Pole = new Matrix(3);
+        Matrix A = poleMatrix.times(ghaMatrix);
+        Matrix E = A.times(todMatrix);
+    	VectorN omegaE = new VectorN(0,0,omega);
+    	
+//    	% ---- perform transformations
+//        thetasa= 7.29211514670698e-05 * (1.0  - lod/86400.0 );
+//        omegaearth = [0; 0; thetasa;];
+
+//        rpef = pm'*recef;
+//        reci = prec'*nut'*st'*rpef;
+    	VectorN rpef = poleMatrix.transpose().times(recf);
+    	VectorN reci = E.transpose().times(recf);
+//        vpef = pm'*vecef;
+//        veci = prec'*nut'*st'*(vpef + cross(omegaearth,rpef));
+    	VectorN vpef = poleMatrix.transpose().times(vecf);
+    	VectorN veci = todMatrix.transpose().times(ghaMatrix.transpose()).times(vpef.plus(omegaE.crossProduct(rpef)));
+    	VectorN out = new VectorN(reci,veci);
+    	return out;
+    }
+    
+    
     /** Updates the Earth model.
      * 
      * @param MJD_UT1.  Universal Time in modified julian date
@@ -773,6 +801,14 @@ public class EarthRef implements BodyRef {
         if(this.use_sun) compute_JPL_Sun_Vector(MJD_TT);
         if(this.use_moon) compute_JPL_Moon_Vector(MJD_TT);
         //this.omega_e_dynamic = get_omega_e(MJD_UT1);
+    }
+    
+    /**
+     * @see update(double MJD_UT1, double MJD_TT)
+     * @param time
+     */
+    public void update(Time time){
+    	update(time.mjd_ut1(),time.mjd_tt());
     }
     
     /** Computes the Sun's geocentric position using a low precision analytical series.

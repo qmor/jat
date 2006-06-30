@@ -209,7 +209,54 @@ public class Trajectory implements Serializable, Printable {
 			return;
 		}
 	}
-	
+	/** Read the trajectory data from a tab-delimited ASCII text file.
+	 * The first line read in sets the number of columns.
+	 * @param file filename and directory
+	 * @param delim the delimiter character
+	 */
+	public void readFromFile(String file, String delim, String units) {
+		try {
+			FileReader fr = new FileReader(file);
+			BufferedReader in = new BufferedReader(fr);
+			String line;
+
+			// loop through the file, one line at a time
+			while ((line = in.readLine()) != null) {
+				StringTokenizer tok = new StringTokenizer(line, delim);
+				int total = tok.countTokens();
+
+				// check for consistent number of columns
+				if (this.firstData) {
+					this.ncol = total;
+					this.firstData = false;
+				} else {
+					if (total != this.ncol) {
+						System.out.println(
+							"Trajectory.readFromFile: Number of columns do not match");
+						System.exit(-99);
+					}
+				}
+
+				double[] temp = new double[total];
+				int i = 0;
+				while (tok.hasMoreTokens()) {
+					String token = tok.nextToken();
+					//					System.out.println("token= "+token);
+					temp[i] = Double.parseDouble(token);
+					if(units.equalsIgnoreCase("km")){
+						temp[i] = temp[i]*1000;
+					}
+					i = i + 1;
+				}
+				traj.add(temp);
+			}
+			in.close();
+			fr.close();
+		} catch (IOException e) {
+			System.err.println("Error opening:" + file);
+			return;
+		}
+	}
 
 	//*************METHODS TO WRITE OUT OR STORE TRAJECTORY DATA
 
@@ -280,6 +327,20 @@ public class Trajectory implements Serializable, Printable {
 	 */
 	public double[] get(int i){
 	    return this.traj.get(i);
+	}
+	/**
+	 * Returns the state vector at the given index.
+	 * Identical to get(int i) but excluding the first collumn
+	 * @param i index
+	 * @return double array containing the row of data skipping the first entry
+	 */
+	public double[] getState(int i){
+		double[] out = new double[ncol-1];
+		double[] data = this.traj.get(i);
+		for(int j=1; j<ncol; j++){
+			out[j-1] = data[j];
+		}
+		return out;
 	}
 	
 	/** Determines if there is any more trajectory data left
@@ -494,10 +555,15 @@ public class Trajectory implements Serializable, Printable {
 		return this.traj.size();
 	}
 
+	/**
+	 * Returns the position at the given modified julian date
+	 * @param mjd 
+	 * @return VectorN position 
+	 */
 	public VectorN getPositionAt(double mjd) {
 		int i=0;
-		while(i<this.size() && this.getTimeAt(i)<=mjd){
-			if(Math.abs(this.getTimeAt(i)-mjd)<1e5){
+		while(i<this.size() && this.getTimeAt(i)<=(mjd+1e-5)){
+			if(Math.abs(this.getTimeAt(i)-mjd)<1e-5){
 				double[] data = this.traj.get(i);
 				return new VectorN(data[1],data[2],data[3]);
 			}
@@ -505,5 +571,24 @@ public class Trajectory implements Serializable, Printable {
 		}
 		System.err.println("unable to find position data at: "+mjd+"  nearest: "+this.getTimeAt(i));
 		return new VectorN(3);
+	}
+	/**
+	 * Returns the full state at the given modified julian date
+	 * @param mjd
+	 * @return VectorN state
+	 */
+	public VectorN getStateAt(double mjd){
+		int i=0;
+		while(i<this.size() && this.getTimeAt(i)<=mjd){
+			if(Math.abs(this.getTimeAt(i)-mjd)<1e-5){
+				double[] data = this.traj.get(i);
+				double[] out = new double[ncol-1];
+				for(int j=1; j<this.ncol; j++) out[j-1] = data[j];
+				return new VectorN(out);
+			}
+			i++;
+		}
+		//System.err.println("unable to find position data at: "+mjd+"  nearest: "+this.getTimeAt(i));
+		return new VectorN(this.ncol-1);
 	}
 }

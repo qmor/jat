@@ -293,11 +293,17 @@ public class Celestia {
      * 
      * @param traj Trajectory
      */    
-    public void set_trajectory_meters(Trajectory traj_m){
+    public void set_trajectory_meters(Trajectory traj_m, double mjd0){
     	time = traj_m.timeArray();
     	r = traj_m.positionArray();
+    	double units = 1;
+    	double mjd = 0;
+    	if(time[0]==0){
+    		units = 86400;
+    		mjd = mjd0;
+    	}
     	for(int i=0; i<time.length; i++){
-    		time[i] = time[i] + 2400000.5;
+    		time[i] = time[i]/units + 2400000.5 + mjd;
     		for(int j=0; j<r[0].length; j++)
     			r[i][j] = r[i][j]/1000.0;
     	}
@@ -422,5 +428,6 @@ public class Celestia {
 	    
 	    System.out.println("Finished");
 	}
+
 
 }

@@ -37,7 +37,7 @@ import jat.util.FileUtil;
 //import jat.audio.*;
 
 /**
- * The ExtendedKalmanFilter Class processes measurements using an EKF algorith,
+ * The ExtendedKalmanFilter Class processes measurements using an EKF algorithm,
  * given the measurements, measurement model and dynamics (or process) model.
 * Assumes a scalar measurement update.
 *
@@ -172,6 +172,9 @@ public class EKF {
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
 			this.process= new JGM4x4SRPProcess9state(lp1, lp2,hm);
 	
+		}
+		else if(stringPm.equals("JGM4x4DragProcess9state")){
+			this.process= new JGM4x4DragProcess9state(hm);
 		}
 		else
 		{
@@ -342,7 +345,9 @@ public class EKF {
 
 			// update state and covariance
 			xref.update(xhat); 
-
+			if(Double.isNaN(xref.state().x[0])){
+				int donothing = 0;
+			}
 			pold = this.updateCov(k, H, pnew);
 		}else{
 			System.err.println("Error: negative residual!"); //else visible = false;
@@ -420,9 +425,9 @@ public class EKF {
 		
 		VectorN out = new VectorN(xref.get(0,n));
 		
-//		if(Double.isNaN(out.x[0])){
-			//int donothing = 0;
-		//}
+		if(Double.isNaN(out.x[0])){
+			int donothing = 0;
+		}
 		return out;
 		
 	}	
@@ -498,14 +503,26 @@ public class EKF {
 			double y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
 			
 			/*Catch the case where the measurement doesn't occur*/
-			if( Math.abs(y) > 0)
-			{
+			//if( Math.abs(y) > 0)
+			//{
 				
 				double r = measurements.mm[measNum].R();
-				String residualsOut = "Time:  " + simTime + 
+//				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
+//					String residualsOut = "Time:  " + simTime + 
+//					"  Residual:  " + jat.math.MathUtils.RAD2DEG + "  deg  Measurement Type:  " + 
+//					measurements.measurementTypes[measNum] + " State " + whichMeas;
+//					residuals.println(residualsOut);
+//				}else if(measurements.measurementTypes[measNum].equalsIgnoreCase("range")){
+//					String residualsOut = "Time:  " + simTime + 
+//					"  Residual:  " + jat.math.MathUtils.RAD2DEG + "  deg  Measurement Type:  " + 
+//					measurements.measurementTypes[measNum] + " State " + whichMeas;
+//					residuals.println(residualsOut);
+//				}else{
+					String residualsOut = "Time:  " + simTime + 
 					"  Residual:  " + y + " Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
+				//}
 				
 				//Use the current reference trajectory to form the H matrix
 				VectorN  H = measurements.mm[measNum].H(new VectorN(6));
@@ -519,9 +536,10 @@ public class EKF {
 
 				// update state and covariance
 				xref.update(xhat); 
+				y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
 
 				pold = this.updateCov(k, H, pnew);
-			} //else visible = false;
+			//} //else visible = false;
 		}
 		
 		// check the update

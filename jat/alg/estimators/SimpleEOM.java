@@ -244,7 +244,7 @@ public class SimpleEOM implements Derivatives {
 
 		srpacc0 = srpacc0.times(visible0);
 		//* TODO watch this
-		//srpacc0.set(0);
+		srpacc0.set(0);
 		
 		// compute state derivatives
 

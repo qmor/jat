@@ -329,7 +329,9 @@ public class ObservationMeasurementList
 				lineNew = in.readLine();
 				//ObservationMeasurementList date = new ObservationMeasurementList();
 				GPSTimeFormat newDate =  ObservationMeasurementList.setDateStuff(lineNew);
-				timeMjd =newDate.mjd();
+				//timeMjd =newDate.mjd();
+				//* TODO Watch this
+				timeMjd =newDate.mjd()-12.0/86400.0;
 				//if(timeMjd > 52189.06403935186){
 					//int stop_to_debug = 0;
 				//}

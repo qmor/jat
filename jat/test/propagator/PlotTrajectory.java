@@ -36,17 +36,30 @@ public class PlotTrajectory {
 
     }
     
-	public static void main(String[] args) throws java.io.IOException {
-	    Trajectory jat = new Trajectory();
+    public static void plot(String sjat, String sstk){
+    	Trajectory jat = new Trajectory();
 	    Trajectory stk = new Trajectory();
-	    String test = "GEO30.txt";
-	    String file = "C:/Code/Jat/jat/test/propagator/output/"+test;
-	    jat.readFromFile(file);
-	    String stkfile = "C:/STK_Test_Files/GEO30.txt";
-	    stk.readFromFile(stkfile);
+	    //String test = "GEO35_HP_jat.txt";
+	    String file = "C:/Code/Jat/jat/test/propagator/output/"+sjat;
+	    jat.readFromFile(file,"\t","km");
+	    String stkfile = "C:/Code/Jat/jat/test/propagator/output/"+sstk;
+	    stk.readFromFile(stkfile," ","km");
 	    LinePrinter lp = new LinePrinter();
 	    RelativeTraj comp = new RelativeTraj(jat,stk,lp);
-	    comp.process();
-	    
+	    comp.process(1e-5);
+    }
+    
+	public static void main(String[] args) throws java.io.IOException {
+		//String sjat = "GEO35_HP_jat.txt";
+		//String sstk = "GEO35_HP_stk.txt";
+		//String sjat = "GEO34_jat.txt";
+		//String sstk = "GEO34_stk.txt";
+		String sjat = "GEO33_jat.txt";
+		String sstk = "GEO33_stk.txt";
+		//String sjat = "ISS7_HP_jat.txt";
+		//String sstk = "ISS7_HP_stk.txt";
+		//String sjat = "ISS4_HP_jat.txt";
+		//String sstk = "ISS4_HP_stk.txt";
+		PlotTrajectory.plot(sjat,sstk);
 	}
 }

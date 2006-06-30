@@ -67,11 +67,13 @@ public class EstimatorSimModel extends SimModel {
 	public static SpacecraftModel truth[];
 	public static String InputFile;
 	public static int JAT_case = 0;
+	public static boolean JAT_runtruth = true;
 	public static String MEAS_GPSSTATE,MEAS_GPS;
 	public static String GEONS_Truth,GEONS_Ref;
 	public static boolean PlotJAT = false;
 	public static boolean PlotGEONSTruth = false;
 	public static boolean PlotGEONSRef = false;
+	public static boolean PlotGEONSBoth = false;
 	public static boolean PlotMeasurements = false;
 	public static boolean Flag_GPS = false;
 	public static boolean Flag_GPSState = false;
@@ -89,6 +91,7 @@ public class EstimatorSimModel extends SimModel {
 	protected SpacecraftModel ref[];
 	protected Trajectory truth_traj[];
 	protected Trajectory ref_traj[];
+	protected Trajectory geons_truth;
 	protected static int numSpacecraft;
 	//public SimModel[] truth = null;
 	//public SimModel[] ref   = null;
@@ -107,7 +110,7 @@ public class EstimatorSimModel extends SimModel {
 	public int numVis;
 
 	protected boolean verbose_estimation=false;
-	protected boolean useFilter=true;
+	protected boolean useMeas=true;
 	private boolean obsFromFile=false;
 	
 	//** Constructors **//
@@ -120,7 +123,7 @@ public class EstimatorSimModel extends SimModel {
 	public EstimatorSimModel(boolean filter_is_on){
 		super();
 		initializeConst();
-		useFilter = filter_is_on;
+		useMeas = filter_is_on;
 		
 	}
 	public EstimatorSimModel(double[] r, double[] v, double cr, double cd, double area, double mass){
@@ -136,7 +139,7 @@ public class EstimatorSimModel extends SimModel {
 	}
 	
 	//** Object Methods **//
-	protected void initializeConst(){
+	protected void initializeConst(){		
 		String fs, dir_in;
 		fs = FileUtil.file_separator();
 		try{
@@ -145,11 +148,21 @@ public class EstimatorSimModel extends SimModel {
 			dir_in = "";
 		}
 		this.input = initializer.parse_file(dir_in+InputFile);
+		
+		double MJD0 =  initializer.parseDouble(input,"init.MJD0");
+		double T0 = initializer.parseDouble(input, "init.T0");
+		double MJDF =  initializer.parseDouble(input, "init.MJDF");
+		double TF = initializer.parseDouble(input, "init.TF");
+		this.mjd_utc_start = MJD0+T0/86400;
+		simTime = new Time(MJD0+T0/86400);
+		
+		geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),MJDF+TF/86400);
+		
 		this.obsFromFile = initializer.parseBool(this.input,"init.fromfile");
 		if(obsFromFile){
 			obs_list = new ObservationMeasurementList(this.input);
 			String path = FileUtil.getClassFilePath("jat.measurements","ObservationMeasurementList");
-			if(useFilter){
+			if(useMeas){
 				try {
 					//obs_list.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
 //					if(Flag_GPS || Flag_Cross) 
@@ -168,12 +181,15 @@ public class EstimatorSimModel extends SimModel {
 			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
 			numStates = initializer.parseInt(input,"FILTER.states");
 			dt = initializer.parseInt(input,"init.dt");
-			truth = new SpacecraftModel[numSpacecraft]; 
+			if(JAT_runtruth){
+				truth = new SpacecraftModel[numSpacecraft];
+				truth_traj = new Trajectory[numSpacecraft];
+			}
 			ref   = new SpacecraftModel[numSpacecraft];
-			truth_traj = new Trajectory[numSpacecraft];
 			ref_traj = new Trajectory[numSpacecraft];
 			for(int i=0; i<numSpacecraft; i++){
-				truth_traj[i] = new Trajectory();
+				if(JAT_runtruth)
+					truth_traj[i] = new Trajectory();
 				ref_traj[i] = new Trajectory();
 			}
 			filter = new EKF(obs_list,input);
@@ -182,12 +198,14 @@ public class EstimatorSimModel extends SimModel {
 			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
 			numStates = initializer.parseInt(input,"FILTER.states");
 			dt = initializer.parseInt(input,"init.dt");
-			truth = new SpacecraftModel[numSpacecraft]; 
+			if(JAT_runtruth){
+				truth = new SpacecraftModel[numSpacecraft];
+				truth_traj = new Trajectory[numSpacecraft];
+			}
 			ref   = new SpacecraftModel[numSpacecraft];
-			truth_traj = new Trajectory[numSpacecraft];
 			ref_traj = new Trajectory[numSpacecraft];
 			for(int i=0; i<numSpacecraft; i++){
-				truth_traj[i] = new Trajectory();
+				if(JAT_runtruth) truth_traj[i] = new Trajectory();
 				ref_traj[i] = new Trajectory();
 			}
 			created_meas = new createMeasurements(input);
@@ -202,7 +220,6 @@ public class EstimatorSimModel extends SimModel {
 		double[] tv = new double[3];  //variable for true trajectory
 		double cr,cd,area,mass,dt;
 		
-		double MJD0 =  initializer.parseDouble(input,"init.MJD0");
 		
 		//For each spacecraft extract the initial vector and force information
 		//Use this information to create a sim model
@@ -267,15 +284,17 @@ public class EstimatorSimModel extends SimModel {
 			VectorN vv = new VectorN(v);
 			Spacecraft s = new Spacecraft(rr,vv,cr,cd,area,mass);
 			s.set_use_params_in_state(false);
-			UniverseModel spacetime = createUniverseModel(MJD0,s,force_flag, gravityModel, "HP");
+			UniverseModel spacetime = createUniverseModel(simTime.get_epoch_mjd_utc(),s,force_flag, gravityModel, "HP");
 			spacetime.set_use_iers(false);
 			ref[i] = new SpacecraftModel(s,spacetime);
 			
-			rr = new VectorN(tr);
-			vv = new VectorN(tv);
-			s = new Spacecraft(rr,vv,cr,cd,area,mass);
-			s.set_use_params_in_state(false);
-			truth[i] = new SpacecraftModel(s,spacetime);;
+			if(JAT_runtruth){
+				rr = new VectorN(tr);
+				vv = new VectorN(tv);
+				s = new Spacecraft(rr,vv,cr,cd,area,mass);
+				s.set_use_params_in_state(false);
+				truth[i] = new SpacecraftModel(s,spacetime);;
+			}
 			
 			
 			/*Set the step size for the trajectory generation*/
@@ -589,7 +608,7 @@ public class EstimatorSimModel extends SimModel {
 		for(int numSats = 0; numSats < numSpacecraft; numSats ++)
 		{
 
-			newState = filter.estimate(simTime,ref[numSats],obs_list,this.useFilter);
+			newState = filter.estimate(simTime,ref[numSats],obs_list,this.useMeas);
 			processedMeasurements++;
 
 //			if(Double.isNaN(newState.x[0])){
@@ -605,30 +624,37 @@ public class EstimatorSimModel extends SimModel {
 			ref[numSats].update(simTime.get_sim_time());
 			
 			//Write out the current True States
-			double [] true_state = truth[numSats].get_spacecraft().toStateVector();
+			VectorN vecTime =  new VectorN(1,simTime.get_sim_time());
+			//new VectorN(1,(simStep)*dt);
 			
-			//Print out simStep + 1 because we didn't output the initial state
-			VectorN vecTime =  new VectorN(1,(simStep)*dt);
-			VectorN trueState = new VectorN(true_state);
-			VectorN truthOut = new VectorN(vecTime,trueState);
-			new PrintStream(truths[numSats]).println (truthOut.toString());
-			
-			//Write out the current State estimates
+//			Write out the current State estimates
 			double [] ref_state  = ref[numSats].get_spacecraft().toStateVector();
 			VectorN vecState = new VectorN(ref_state);
 			VectorN stateOut = new VectorN(vecTime,vecState);
 			new PrintStream(trajectories[numSats]).println (stateOut.toString());
+			VectorN true_state = new VectorN(6);
+			if(JAT_runtruth){
+				true_state = new VectorN(truth[numSats].get_spacecraft().toStateVector());
 			
-			//Output the current ECI error
-			VectorN error_out = new VectorN(6);
-			for(int i = 0; i < 6; i++)
-			{
-				error_out.x[i] = true_state[i] - ref_state[i];
+			//	Print out simStep + 1 because we didn't output the initial state
+				VectorN trueState = new VectorN(true_state);
+				VectorN truthOut = new VectorN(vecTime,trueState);
+				new PrintStream(truths[numSats]).println (truthOut.toString());
+			
 			}
-			VectorN ErrState = new VectorN(error_out);
-			stateOut = new VectorN(vecTime,ErrState);
-			new PrintStream(ECIError[numSats]).println(stateOut.toString());
-			
+
+			//* Output the current ECI error
+			VectorN error_out = new VectorN(6);
+			if(!JAT_runtruth) true_state = geons_truth.getStateAt(simTime.mjd_utc());
+			if(true_state.mag()>0){
+				for(int i = 0; i < 6; i++)
+				{
+					error_out.x[i] = true_state.x[i] - ref_state[i];
+				}
+				VectorN ErrState = new VectorN(error_out);
+				stateOut = new VectorN(vecTime,ErrState);
+				new PrintStream(ECIError[numSats]).println(stateOut.toString());
+			}
 //			Output the current Covariances
 			//Matrix Covariance = EKF.pold;
 			Matrix Covariance = filter.get_pold();
@@ -832,7 +858,10 @@ public class EstimatorSimModel extends SimModel {
 		initialize();
 		
 		for(int i=0; i<numSpacecraft; i++){
-			truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
+			//truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
+			//ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
+			if(JAT_runtruth)
+				truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
 			ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
 		}
 		
@@ -840,21 +869,22 @@ public class EstimatorSimModel extends SimModel {
 		int filterMode = initializer.parseInt(this.input,"init.mode");
 		
 		//Compute the length of the simulation in seconds
-		double MJD0 =  initializer.parseDouble(this.input,"init.MJD0");
+		
 		double MJDF =  initializer.parseDouble(this.input,"init.MJDF");
 		double T0   =  initializer.parseDouble(this.input,"init.T0");
 		double TF   =  initializer.parseDouble(this.input,"init.TF");
 		//simTime = 0; //* this is done in call to "initialize()"
-		simTime = new Time(MJD0);
+		double MJD0 = simTime.get_epoch_mjd_utc();
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 		this.tf = simLength;
 		set_verbose(this.verbose_estimation);
-		if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useFilter = false;
+		if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useMeas = false;
 		//double simLength = Math.round(TF - T0);
 		//ObservationMeasurement obs = obs_list.getFirst();
 		
 		for(int i=0; i<numSpacecraft; i++){
-			new PrintStream(truths[i]).println (truth[i].get_spacecraft().toStateVector().toString());
+			if(JAT_runtruth)
+				new PrintStream(truths[i]).println (truth[i].get_spacecraft().toStateVector().toString());
 			new PrintStream(trajectories[i]).println (ref[i].get_spacecraft().toStateVector().toString());
 		}
 		for( simStep = 1; simStep < simLength/dt; simStep ++)
@@ -863,7 +893,8 @@ public class EstimatorSimModel extends SimModel {
 				//System.out.println("running..."+(dt*simStep)+" / "+simLength);
 			//if(simStep%100 == 0)
 			//	System.out.println(simStep*5);
-			propagate(simStep*dt);
+			if(JAT_runtruth)
+				propagate(simStep*dt);
 			//simTime = simStep*dt;
 			simTime.update(simStep*dt);
 				
@@ -879,7 +910,8 @@ public class EstimatorSimModel extends SimModel {
 			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
 			
 			for(int i=0; i<numSpacecraft; i++){
-				truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
+				if(JAT_runtruth)
+					truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
 				ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
 			}
 			
@@ -894,8 +926,8 @@ public class EstimatorSimModel extends SimModel {
 		
 		/* Post Processing */
 		
-		Trajectory geons_truth = new Trajectory(); 
-		if(PlotGEONSTruth || PlotMeasurements) geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),simTime.mjd_utc());
+//		Trajectory geons_truth = new Trajectory(); 
+//		if(PlotGEONSTruth || PlotMeasurements) geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),simTime.mjd_utc());
 		Trajectory geons_ref = new Trajectory();
 		if(PlotGEONSRef || PlotMeasurements) geons_ref = parseGEONSRef(simTime.get_epoch_mjd_utc(),simTime.mjd_utc());
 		Trajectory measurements = new Trajectory();
@@ -906,7 +938,7 @@ public class EstimatorSimModel extends SimModel {
 		Celestia cel = new Celestia("C:/Code/Celestia/");
 		//* TODO Plot marker
 		for(int i=0; i<numSpacecraft; i++){
-			if(PlotJAT){
+			if(PlotJAT && JAT_runtruth){
 				reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp,"Jat(Ref) v Jat(Truth)");
 				reltraj[i].setVerbose(false);
 				reltraj[i].process(mismatch_tol);
@@ -920,14 +952,16 @@ public class EstimatorSimModel extends SimModel {
 				//reltraj[i].process(mismatch_tol);
 			}
 			if(PlotGEONSTruth){
-				reltraj[i] = new RelativeTraj(truth_traj[i],geons_truth,lp,"Jat(Truth) v Geons(Truth)");
-				reltraj[i].setVerbose(false);
-				reltraj[i].process(mismatch_tol);
+				if(JAT_runtruth){
+					reltraj[i] = new RelativeTraj(truth_traj[i],geons_truth,lp,"Jat(Truth) v Geons(Truth)");
+					reltraj[i].setVerbose(false);
+					reltraj[i].process(mismatch_tol);
+				}
 				reltraj[i] = new RelativeTraj(ref_traj[i],geons_truth,lp,"Jat(Ref) v Geons(Truth)");
 				reltraj[i].setVerbose(false);
 				reltraj[i].process(mismatch_tol);
 			}
-			if(PlotGEONSTruth && PlotGEONSRef){
+			if(PlotGEONSTruth && PlotGEONSRef && PlotGEONSBoth){
 				reltraj[i] = new RelativeTraj(geons_ref,geons_truth,lp,"Geons(Ref) v Geons(Truth)");
 				reltraj[i].setVerbose(false);
 				reltraj[i].process(mismatch_tol);
@@ -944,16 +978,18 @@ public class EstimatorSimModel extends SimModel {
 				reltraj[i].process(mismatch_tol);
 			}
 			try {
-				cel.set_trajectory_meters(ref_traj[i]);
+				cel.set_trajectory_meters(ref_traj[i],MJD0);
 				cel.write_trajectory("jat_ref_"+JAT_case,"jat_ref_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
-				cel.set_trajectory_meters(truth_traj[i]);
-				cel.write_trajectory("jat_truth_"+JAT_case,"jat_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				if(JAT_runtruth){
+					cel.set_trajectory_meters(truth_traj[i],MJD0);
+					cel.write_trajectory("jat_truth_"+JAT_case,"jat_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
+				}
 				if(PlotGEONSRef){
-					cel.set_trajectory_meters(geons_ref);
+					cel.set_trajectory_meters(geons_ref,MJD0);
 					cel.write_trajectory("jat_geons_ref_"+JAT_case,"jat_geons_ref_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
 				}
 				if(PlotGEONSTruth){
-					cel.set_trajectory_meters(geons_truth);
+					cel.set_trajectory_meters(geons_truth,MJD0);
 					cel.write_trajectory("jat_geons_truth_"+JAT_case,"jat_geons_truth_"+JAT_case,TimeUtils.MJDtoJD(this.mjd_utc_start));
 				}
 			} catch (IOException e) {
@@ -967,7 +1003,9 @@ public class EstimatorSimModel extends SimModel {
 		/*The number and types of files that are created are based
 		 * upon the number of spacecraft and the simulation mode*/
 		trajectories = new FileOutputStream [numSpacecraft];
-		truths       = new FileOutputStream [numSpacecraft]; 
+		if(JAT_runtruth){
+			truths       = new FileOutputStream [numSpacecraft]; 
+		}
 		ECIError     = new FileOutputStream [numSpacecraft];
 		covariance   = new FileOutputStream [numSpacecraft];
 		
@@ -996,11 +1034,13 @@ public class EstimatorSimModel extends SimModel {
 //				String fileName3 = dir_in+"Error"+numSats+"ECI.txt";
 //				String fileName4 = dir_in+"Covariance"+numSats+"ECI.txt";
 				String fileName = dir_in+"JAT_"+JAT_case+".eci";
-				String fileName2 = dir_in+"JAT_true_"+JAT_case+".txt";
 				String fileName3 = dir_in+"JAT_error_"+JAT_case+".txt";
 				String fileName4 = dir_in+"JAT_"+JAT_case+".cov";
 				trajectories[numSats] = new FileOutputStream (fileName);
-				truths[numSats]       = new FileOutputStream (fileName2);
+				if(JAT_runtruth){
+					String fileName2 = dir_in+"JAT_true_"+JAT_case+".txt";
+					truths[numSats]       = new FileOutputStream (fileName2);
+				}
 				ECIError[numSats]     = new FileOutputStream(fileName3);
 				covariance[numSats]   = new FileOutputStream(fileName4);
 			}
@@ -1023,7 +1063,9 @@ public class EstimatorSimModel extends SimModel {
 				try 
 				{
 					trajectories[numFiles].close();
-					truths[numFiles].close();
+					if(JAT_runtruth){
+						truths[numFiles].close();
+					}
 					ECIError[numFiles].close();
 					covariance[numFiles].close();
 				} 
@@ -1120,29 +1162,34 @@ public class EstimatorSimModel extends SimModel {
 	
 	public static void main(String[] args) {
 		
-		boolean useFilter = true;
-		int jat_case = 2;
+		boolean useMeas = true;
+		int jat_case = 3;
 		EstimatorSimModel.JAT_case = jat_case;
-		EstimatorSimModel.InputFile = "initialConditions.txt";
+		EstimatorSimModel.JAT_runtruth = true;
 		
 		//* TODO Flag marker
 		EstimatorSimModel.PlotJAT = true;
-		EstimatorSimModel.PlotGEONSRef = true;
+		EstimatorSimModel.PlotGEONSRef = false;
 		EstimatorSimModel.PlotGEONSTruth = true;
+		EstimatorSimModel.PlotGEONSBoth = false;
 		EstimatorSimModel.PlotMeasurements = false;
-		EstimatorSimModel.Flag_GPSState = false;
-		EstimatorSimModel.Flag_GPS = true;
-		EstimatorSimModel.Flag_Cross = false;
 		
 		EstimatorSimModel.COV_printoffdiag = false;
 		
 		if(jat_case==1){
+			EstimatorSimModel.InputFile = "initialConditions_1_8.txt";
 			EstimatorSimModel.MEAS_GPSSTATE = "C:/Code/Jat/jat/measurements/test1_8.rnx";
 			EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_8/test1_8.rel26a.sta";
 			EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_8/test1_8.j2k.ascii";
-					
+			EstimatorSimModel.Flag_GPSState = true;
+			EstimatorSimModel.Flag_GPS = false;
+			EstimatorSimModel.Flag_Cross = false;
 		}else if(jat_case==2){
+			EstimatorSimModel.InputFile = "initialConditions_1_1.txt";
 			EstimatorSimModel.MEAS_GPS = "C:/Code/Jat/jat/measurements/test1_1.rnx";
+			EstimatorSimModel.Flag_GPSState = false;
+			EstimatorSimModel.Flag_GPS = true;
+			EstimatorSimModel.Flag_Cross = false;
 			if(Flag_GPS){
 				EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_1/test1_1.rel26a.sta";
 				EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_1/test1_1.j2k.ascii";
@@ -1152,14 +1199,18 @@ public class EstimatorSimModel extends SimModel {
 			}
 				
 		}else if(jat_case==3){
+			EstimatorSimModel.InputFile = "initialConditions_1_6.txt";
 			EstimatorSimModel.MEAS_GPS = "C:/Code/Jat/jat/measurements/test1_6.rnx";
 			EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_6/test1_6.rel26a.sta";
 			EstimatorSimModel.GEONS_Truth = "C:/Code/Misc/GEONS/Case1_6/test1_6.j2k.ascii";
+			EstimatorSimModel.Flag_GPSState = false;
+			EstimatorSimModel.Flag_GPS = true;
+			EstimatorSimModel.Flag_Cross = true;
 		}
 		//EstimatorSimModel.MEAS_GPS = "C:/Code/Jat/jat/measurements/Case-820.rnx";
 		
 		
-		EstimatorSimModel Sim = new EstimatorSimModel(useFilter);
+		EstimatorSimModel Sim = new EstimatorSimModel(useMeas);
 		Sim.set_verbose(true);
 		Sim.runloop();
         

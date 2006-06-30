@@ -22,10 +22,14 @@
  **/
 package jat.measurements;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import jat.alg.estimators.MeasurementFileModel;
 import jat.alg.estimators.MeasurementModel;
+import jat.alg.integrators.LinePrinter;
 import jat.eph.DE405;
 import jat.math.Interpolator;
 import jat.math.MathUtils;
@@ -56,6 +60,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private double t0,tf;
 	private VectorN ustar;
 	private int cbody;
+	private int vbody;
 	private Quaternion q;
 	private double R;
 	
@@ -69,10 +74,15 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	
 	private DE405 ephem;
 	
+	public static LinePrinter fobs,fpred;
+	
+	private RandomNumber rnd;
+	
 	public OpticalMeasurementModel(double mjd_epoch,DE405 jpl){
 		mjd0=mjd_epoch;
 		jd0 = mjd0+2400000.5;
 		ephem = jpl;
+		rnd = new RandomNumber();
 	}
 	
 	public OpticalMeasurementModel(HashMap hm, int measNum) {
@@ -80,6 +90,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		jd0 = mjd0+2400000.5;
 		ephem = new DE405();
 		initialize(hm,measNum);
+		fobs = new LinePrinter("C:/Code/Jat/jat/sim/output/obs.txt");
+		fpred = new LinePrinter("C:/Code/Jat/jat/sim/output/pred.txt");
+		rnd = new RandomNumber();
 	}
 	
 	private void initialize(HashMap hm, int measNum){
@@ -118,6 +131,13 @@ public class OpticalMeasurementModel implements MeasurementModel{
 				cbody = BODY_MOON;
 			else
 				cbody = 0;
+			tmp = initializer.parseString(hm,pref+"vbody");
+			if(tmp.equalsIgnoreCase("earth"))
+				vbody = BODY_EARTH;
+			else if(tmp.equalsIgnoreCase("moon"))
+				vbody = BODY_MOON;
+			else
+				vbody = 0;
 			R = initializer.parseDouble(hm,pref+"R");
 			break;
 		case TYPE_RANGE:
@@ -131,6 +151,12 @@ public class OpticalMeasurementModel implements MeasurementModel{
 				cbody = BODY_MOON;
 			else
 				cbody = 0;
+			if(tmp.equalsIgnoreCase("earth"))
+				vbody = BODY_EARTH;
+			else if(tmp.equalsIgnoreCase("moon"))
+				vbody = BODY_MOON;
+			else
+				vbody = 0;
 			R = initializer.parseDouble(hm,pref+"R");
 			break;
 		case TYPE_LANDMARK:
@@ -245,7 +271,6 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private double randn(){
 		//* http://www.mathworks.com/access/helpdesk/help/techdoc/matlab.html
 		//RandomNumber rnd = new RandomNumber(System.currentTimeMillis());
-		RandomNumber rnd = new RandomNumber();
 		return rnd.normal();
 		//return 0;
 	}
@@ -269,12 +294,14 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	 % Written by S. Hur-Diaz   6/20/2006
 	 */
 	private double[] camerr(double r, int ibody){
-		//% Range from Earth in km
-		double[] erange= {1069177.85, 213835.57, 71278.52, 21383.56, 13364.72};
+		//% Range from Earth in m
+		//double[] erange= {1069177850, 213835570, 71278520, 21383560, 13364720};
+		double[] erange= {13364720,21383560,71278520,213835570,1069177850};
 		//VectorN erange = new VectorN(erange_tmp);
 		
-		//% Range from Moon in km
-		double[] mrange = {291342.82, 58268.56, 19422.85, 5826.86, 3641.79};
+		//% Range from Moon in m
+		//double[] mrange = {291342820, 58268560, 19422850, 5826860, 3641790};
+		double[] mrange = {3641790,5826860,19422850,58268560,291342820};
 		//VectorN mrange = new VectorN(mrange_tmp);
 		
 		double[] rv = new double[5];
@@ -286,8 +313,10 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			System.err.println("Invalid body flag");
 		
 		
-		double[] angerr_rnd_deg= {0.0022, 0.011, 0.032, 0.105, 0.169};
-		double[] angerr_bias_deg= {biasflag*0.0046, biasflag*0.023, biasflag*0.070, biasflag*0.235, biasflag*0.375};
+		//double[] angerr_rnd_deg= {0.0022, 0.011, 0.032, 0.105, 0.169};
+		double[] angerr_rnd_deg= {0.169,0.105,0.032,0.011,0.0022};
+		//double[] angerr_bias_deg= {biasflag*0.0046, biasflag*0.023, biasflag*0.070, biasflag*0.235, biasflag*0.375};
+		double[] angerr_bias_deg= {biasflag*0.375,biasflag*0.235,biasflag*0.070,biasflag*0.023,biasflag*0.0046};
 		
 		//% Apollo numbers corresponding to 3km horizon sensing error
 		//%angerr_rnd_deg=  [ 0.0002    0.0008    0.0024    0.0080    0.0129]';
@@ -297,6 +326,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		double arnd=MathUtils.DEG2RAD*(interp1.get_value(r));//interp1(rv,angerr_rnd_deg,r,'linear','extrap')*pi/180;
 		interp1 = new Interpolator(rv,angerr_bias_deg);
 		double abias=MathUtils.DEG2RAD*(interp1.get_value(r));//interp1(rv,angerr_bias_deg,r,'linear','extrap')*pi/180;
+		//*TODO watch this
+		//arnd = 0;
+		//abias = 0;
 		double[] out = {arnd, abias};
 		return out;
 	}
@@ -442,6 +474,54 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		
 	}
 	
+	private Matrix nadir_dcm(double jd, VectorN xsc, int cbody, int vbody){
+
+		//xsc=xsc(:);
+		//% Need to get x relative to vbody
+		//% First get cbody relative to earth
+		//xce=feval(cbody.fn,jd);
+		VectorN xce = new VectorN(3);
+		VectorN xve = new VectorN(3);
+		if(cbody==BODY_EARTH){
+			xce = new VectorN(3);
+		}else if(cbody == BODY_MOON){
+			xce = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+		}
+		//% Second get vbody relative to earth
+		//xve=feval(vbody.fn,jd);
+		if(vbody==BODY_EARTH){
+			xve = new VectorN(3);
+		}else if(vbody == BODY_MOON){
+			xve = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+		}
+		
+		//% Finally spacecraft relative to vbody
+		VectorN xsv= xsc.get(0,3).plus(xce.minus(xve));
+
+		//% Get unit vector from vbody to spacecraft
+		//xsvnorm=norm(xsv(1:3));
+		VectorN xsvhat=xsv.unitVector();
+
+
+		VectorN zm=xsvhat.times(-1.0);
+		VectorN z = new VectorN(0.0,0.0,1.0);
+		VectorN xm=z.crossProduct(zm);
+		xm= xm.unitVector();
+		VectorN ym=zm.crossProduct(xm);
+		Matrix A_sensor_2_inertial= new Matrix(3);
+		A_sensor_2_inertial.A[0][0] = xm.x[0];
+		A_sensor_2_inertial.A[1][0] = xm.x[1];
+		A_sensor_2_inertial.A[2][0] = xm.x[2];
+		A_sensor_2_inertial.A[0][1] = ym.x[0];
+		A_sensor_2_inertial.A[1][1] = ym.x[1];
+		A_sensor_2_inertial.A[2][1] = ym.x[2];
+		A_sensor_2_inertial.A[0][2] = zm.x[0];
+		A_sensor_2_inertial.A[1][2] = zm.x[1];
+		A_sensor_2_inertial.A[2][2] = zm.x[2];
+		
+		return A_sensor_2_inertial.transpose();
+	}
+	
 	private double[] feval(String fn, double jd){
 		double[] out;
 		if(fn.equalsIgnoreCase("getearth")){
@@ -469,24 +549,26 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		return new Matrix(3);
 	}
 	
-	public double observedMeasurement(int whichMeas, double mjd, VectorN x){
+	public double observedMeasurement(int whichMeas, double t, VectorN x){
 		double[] out = new double[1];
-		double t = (mjd-mjd0)*86400;
+		//double t = (mjd-mjd0)*86400;
+		double mjd = mjd0+t/86400;
 		switch(type){
 		case TYPE_YANGLE_STAR:
-			out = y_angle(x,t,cbody,ustar,0);
+			out = y_angle(x,t,vbody,ustar,1);
 			break;
 		case TYPE_YANGLE_LOS:
-			Matrix A = q.quat2DCM();
+			//Matrix A = q.quat2DCM();
+			Matrix A = nadir_dcm(mjd+2400000.5,x,cbody,vbody);
 			VectorN s;
 			if(whichMeas==0)
 				s = new VectorN(A.getRowVector(0));
 			else
 				s = new VectorN(A.getRowVector(1));
-			out = y_angle(x,t,cbody,s,0);
+			out = y_angle(x,t,vbody,s,1);
 			break;
 		case TYPE_RANGE:
-			out = y_disk2(x,t,cbody,EarthRef.R_Earth,0);
+			out = y_disk2(x,t,vbody,EarthRef.R_Earth,1);
 			break;
 		default:
 			return 0;
@@ -496,24 +578,26 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		return out[0];
 	}
 	
-	public double predictedMeasurement(int whichMeas, double mjd, VectorN xtrue){
+	public double predictedMeasurement(int whichMeas, double t, VectorN x){
 		double[] out = new double[1];
-		double t = (mjd-mjd0)*86400;
+		//double t = (mjd-mjd0)*86400;
+		double mjd = mjd0+t/86400;
 		switch(type){
 		case TYPE_YANGLE_STAR:
-			out = y_angle(xtrue,t,cbody,ustar,1);
+			out = y_angle(x,t,vbody,ustar,0);
 			break;
 		case TYPE_YANGLE_LOS:
-			Matrix A = q.quat2DCM();
+			VectorN truestate = new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector());
+			Matrix A = nadir_dcm(mjd+2400000.5,truestate,cbody,vbody);//q.quat2DCM();
 			VectorN s;
 			if(whichMeas==0)
 				s = new VectorN(A.getRowVector(0));
 			else
 				s = new VectorN(A.getRowVector(1));
-			out = y_angle(xtrue,t,cbody,s,1);
+			out = y_angle(x,t,vbody,s,0);
 			break;
 		case TYPE_RANGE:
-			out = y_disk2(xtrue,t,cbody,EarthRef.R_Earth,1);
+			out = y_disk2(x,t,vbody,EarthRef.R_Earth,0);
 			break;
 		default:
 			return 0;
@@ -537,15 +621,31 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		return R;
 	}
 	
-	public double zPred(int whichMeas, double t_mjd, VectorN state) {
+	public double zPred(int whichMeas, double t_sim, VectorN state) {
 		double out,obs;
-		obs = observedMeasurement(whichMeas,t_mjd,new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector()));
-		double pred = predictedMeasurement(whichMeas, t_mjd, state); 
+		obs = observedMeasurement(whichMeas,t_sim,new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector()));
+		double pred = predictedMeasurement(whichMeas, t_sim, state); 
 		
 		if(obs == 0)
 		    out = 0.0;
 		else
-			out = obs-pred;	
+			out = obs-pred;
+		
+		String typestring = "blank";
+		if(type==TYPE_YANGLE_STAR){
+			typestring = "yangle_star";
+			OpticalMeasurementModel.fobs.println("obs: "+Math.acos(obs)*MathUtils.RAD2DEG+"   "+typestring);
+			OpticalMeasurementModel.fpred.println("obs: "+Math.acos(pred)*MathUtils.RAD2DEG+"   "+typestring);
+		}else if(type==TYPE_YANGLE_LOS){
+			typestring = "yangle_los";
+			OpticalMeasurementModel.fobs.println("obs: "+Math.acos(obs)*MathUtils.RAD2DEG+"   "+typestring);
+			OpticalMeasurementModel.fpred.println("obs: "+Math.acos(pred)*MathUtils.RAD2DEG+"   "+typestring);
+		}else if(type== TYPE_RANGE){
+			typestring = "range";
+			OpticalMeasurementModel.fobs.println("obs: "+Math.asin(obs)*MathUtils.RAD2DEG+"   "+typestring);
+			OpticalMeasurementModel.fpred.println("obs: "+Math.asin(pred)*MathUtils.RAD2DEG+"   "+typestring);
+		}
+		
 		return out;
 	}
 	

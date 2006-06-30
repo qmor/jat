@@ -68,6 +68,9 @@ public class createMeasurements{
 				System.exit(1);
 				
 			}
+			if(measurementTypes[i].equalsIgnoreCase("OPT")){
+				measurementTypes[i] = initializer.parseString(hm,"MEAS."+i+".type");
+			}
 		}
 	}
 	

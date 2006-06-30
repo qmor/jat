@@ -23,12 +23,13 @@ package jat.alg.estimators;
 
 import java.util.HashMap;
 
+import jat.alg.integrators.Derivatives;
 import jat.alg.integrators.LinePrinter;
 import jat.alg.integrators.RungeKutta8;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 import jat.sim.initializer;
-import jat.timeRef.RSW_Frame;
+import jat.spacetime.RSW_Frame;
 import jat.traj.CentralBody;
 import jat.traj.CoordinateSystem;
 import jat.traj.DistanceUnits;
@@ -38,23 +39,36 @@ import jat.util.FileUtil;
 
 public class SimpleProcessModel implements ProcessModel {
 
+	//public static final int EOM_JGM4x4SRP9 = 19;
+	//public static final int EOM_JGM4x4SRP15 = 115;
+	//public static final int EOM_JGM4x4Drag = 20;
+	//public static final int EOM_Simple = 1;
+	
 //	Construct the required classes
 	private VectorN xref;
 	private Matrix phi;
 	private RungeKutta8 rk8 = new RungeKutta8(1.0);
-	private SimpleEOM eom;
+	private Derivatives eom;
 	private LinePrinter lp1;
 	private LinePrinter lp2;
 	public Trajectory traj = new Trajectory();
 	HashMap hm;
 	public int n;
-	private int num_sc;
 	private Matrix Q;
 	private Matrix QXYZ;
 	
 	public SimpleProcessModel(HashMap hm){
 		this.hm = hm;
-		eom = new SimpleEOM(hm);
+		String eomdata = initializer.parseString(hm,"Filter.pm");
+		if(eomdata.equalsIgnoreCase("JGM4x4SRPProcess9state")){
+			eom = new JGM4x4SRPEOM9state(hm);
+		}else if(eomdata.equalsIgnoreCase("JGM4x4SRPProcess15state")){
+			eom = new JGM4x4SRPEOM15state(hm);
+		}else if(eomdata.equalsIgnoreCase("JGM4x4DragProcess9state")){
+			eom = new JGM4x4DragEOM9state(hm);
+		}else{
+			eom = new SimpleEOM(hm);
+		}
 		traj.setTitle("Test Trajectory 1");
 	    traj.setCentralBody(CentralBody.EARTH);
 	    traj.setCoordinateSystem(CoordinateSystem.INERTIAL);
@@ -64,16 +78,16 @@ public class SimpleProcessModel implements ProcessModel {
 	    String[] labels = {"t","x","y","z","xdot","ydot","zdot"};
 	    traj.setLabels(labels);
 	    
-		String fs, dir_in;
-        fs = FileUtil.file_separator();
-        try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
-        }catch(Exception e){
-            dir_in = "";
-        }
+//		String fs, dir_in;
+//        fs = FileUtil.file_separator();
+//        try{
+//            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+//        }catch(Exception e){
+//            dir_in = "";
+//        }
 		//hm = initializer.parse_file(dir_in+"initialConditions.txt");
 	    n = initializer.parseInt(hm,"FILTER.states");
-	    num_sc = initializer.parseInt(hm,"prop.NumSpacecraft");
+	    //num_sc = initializer.parseInt(hm,"prop.NumSpacecraft");
 	    Q = parse_Q();
 	    QXYZ = parse_QRIC();
 		xref = new VectorN(n);
@@ -199,8 +213,8 @@ public class SimpleProcessModel implements ProcessModel {
 		
 		
 		
-			RSW_Frame rsw = new RSW_Frame(rECI, vECI);
-			Matrix M = rsw.ECI2RIC(rECI, vECI);
+			//RSW_Frame rsw = new RSW_Frame(rECI, vECI);
+			Matrix M = RSW_Frame.ECI2RIC(rECI, vECI);
 			Matrix MT = M.transpose();
 			
 			Matrix Qtmp = new Matrix(3,3);
