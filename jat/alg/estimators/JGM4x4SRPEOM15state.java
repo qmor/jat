@@ -28,13 +28,9 @@ import java.util.HashMap;
 import jat.eph.DE405;
 import jat.forces.*;
 import jat.gps.GPS_Utils;
-import jat.spacecraft.Spacecraft;
-
 import jat.alg.integrators.Derivatives;
-import jat.math.MathUtils;
 import jat.matvec.data.*;
 import jat.spacetime.*;
-import jat.timeRef.RSW_Frame;
 import jat.util.FileUtil;
 
 
@@ -52,10 +48,10 @@ import jat.util.FileUtil;
 public class JGM4x4SRPEOM15state implements Derivatives {
 
 	private static double re = 6378136.3; // radius of earth in meters
-	private static double h_0 = 920000.0; // atmosphere model parameter
-	private static double rho_0 = 4.36E-14; // atmosphere model parameter
-	private static double gamma_0 = 5.381E-06; // atmosphere model parameter
-	private static double omega_e = 7.2921157746E-05; // earth rotation rate
+	//private static double h_0 = 920000.0; // atmosphere model parameter
+	//private static double rho_0 = 4.36E-14; // atmosphere model parameter
+	//private static double gamma_0 = 5.381E-06; // atmosphere model parameter
+	//private static double omega_e = 7.2921157746E-05; // earth rotation rate
 	public static int n;
 	public static HashMap hm;
 	public static double mass0,mass1,area0,area1;
@@ -77,13 +73,13 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 	
 	public JGM4x4SRPEOM15state(HashMap hm){
 		this.hm = hm;
-		String fs, dir_in;
-		fs = FileUtil.file_separator();
-		try{
-			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
-		}catch(Exception e){
-			dir_in = "";
-		}
+		//String fs, dir_in;
+		//fs = FileUtil.file_separator();
+//		try{
+//			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+//		}catch(Exception e){
+//			dir_in = "";
+//		}
 		//hm = initializer.parse_file(dir_in+"initialConditions.txt");
 		mass0 = initializer.parseDouble(hm,"jat.0.mass");
 		area0 = initializer.parseDouble(hm,"jat.0.area");
@@ -101,13 +97,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		srp0 = new SolarRadiationPressure(mass0, area0, Cr0);
 		srp1 = new SolarRadiationPressure(mass1, area1, Cr1);
 		
-		//Set the Gravitational parameter path
-		try{
-			dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+"DE405data"+fs;
-		}catch(Exception e){
-			dir_in = "";
-		}
-		jpl_ephem = new DE405("dir_in");
+		//Set the Gravitational parameter path		
+		jpl_ephem = new DE405();
 		
 
 		universe = new UniverseModel(mjd0);
@@ -130,9 +121,9 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double out[] = new double[n*n + n];
 		
 		//Obtain thet the correct time
-		int ctr = 0;
+		//int ctr = 0;
 		Time tt = new Time(t/86400 + mjd0);
-		double newttt = tt.UTC2TT(t/86400 + mjd0);
+		double newttt = Time.UTC2TT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
@@ -220,7 +211,7 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double AU_sqrd = Constants.AU*Constants.AU;
 				
 		//compute acceleration due to lunar gravity
-		double ttt = tt.TTtoTDB(newttt) + 2400000.5;
+		double ttt = Time.TTtoTDB(newttt) + 2400000.5;
         VectorN r_moon = universe.earthRef.moonVector(newttt);
         
         VectorN d0 = r0.minus(r_moon);
@@ -246,7 +237,7 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 
 
         //Compute the acceleration due to the solar gravity
-        VectorN r_sun = universe.earthRef.sunVector(newttt);
+        VectorN r_sun = EarthRef.sunVector(newttt);
         d0 = r0.minus(r_sun);
         d1 = r1.minus(r_sun);
         
@@ -337,8 +328,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double mur50 = mu / r50;
 		double mur51 = mu / r51;
 		
-		double mur30 = mu / rcubed0;
-		double mur31 = mu / rcubed1;
+		//double mur30 = mu / rcubed0;
+		//double mur31 = mu / rcubed1;
 		
 		
 		double sz2r20 = 7.0 * zz0 * zz0 / rsq0;
@@ -362,8 +353,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double bracket50 = 3.0 - 7.5 * re_r0 * j2 * (sz2r20 - 5.0);
 		double bracket51 = 3.0 - 7.5 * re_r1 * j2 * (sz2r21 - 5.0);
 		
-		double bracket20 = 1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 1.0);
-		double bracket21 = 1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 1.0);
+		//double bracket20 = 1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 1.0);
+		//double bracket21 = 1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 1.0);
 		
 		//Note:  use this formulation for ll to avoid a singularity
 		ll0 = -1.0 * (mu  / rcubed0) * (1.0 - 1.5 * re_r0 * j2 * zsq_rsq0);
@@ -378,8 +369,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double dldz0 = muxzr50 * bracket30;
 		double dldz1 = muxzr51 * bracket31;
 		
-		double dldj20 = mur30 * xx0 * bracket20;
-		double dldj21 = mur31 * xx1 * bracket21;
+		//double dldj20 = mur30 * xx0 * bracket20;
+		//double dldj21 = mur31 * xx1 * bracket21;
 		
 		double dmdx0 = dldy0;
 		double dmdx1 = dldy1;
@@ -396,8 +387,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double dmdz0 = muyzr50 * bracket30;
 		double dmdz1 = muyzr51 * bracket31;
 		
-		double dmdj20 = mur30 * yy0 * bracket20;
-		double dmdj21 = mur31 * yy1 * bracket21;
+		//double dmdj20 = mur30 * yy0 * bracket20;
+		//double dmdj21 = mur31 * yy1 * bracket21;
 		
 		double dndx0 = muxzr50 * bracket30;
 		double dndx1 = muxzr51 * bracket31;
@@ -414,8 +405,8 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double dndz1 = nn1 + mur51 * zz1 * zz1 * bracket51;
 		
 		
-		double dndj20 = mur30 * zz0 * (1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 3.0));
-		double dndj21 = mur31 * zz1 * (1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 3.0));
+		//double dndj20 = mur30 * zz0 * (1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 3.0));
+		//double dndj21 = mur31 * zz1 * (1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 3.0));
 
 		a.A[0][3] = 1.0;
 		a.A[1][4] = 1.0;

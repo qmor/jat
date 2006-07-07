@@ -52,10 +52,10 @@ import jat.util.FileUtil;
 public class JGM4x4SRPEOM15state23 implements Derivatives {
 
 	private static double re = 6378136.3; // radius of earth in meters
-	private static double h_0 = 920000.0; // atmosphere model parameter
-	private static double rho_0 = 4.36E-14; // atmosphere model parameter
-	private static double gamma_0 = 5.381E-06; // atmosphere model parameter
-	private static double omega_e = 7.2921157746E-05; // earth rotation rate
+	//private static double h_0 = 920000.0; // atmosphere model parameter
+	//private static double rho_0 = 4.36E-14; // atmosphere model parameter
+	//private static double gamma_0 = 5.381E-06; // atmosphere model parameter
+	//private static double omega_e = 7.2921157746E-05; // earth rotation rate
 	public static int n;
 	public static HashMap hm;
 	public static double mass0,mass1,area0,area1;
@@ -77,13 +77,13 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 	
 	public JGM4x4SRPEOM15state23(HashMap hm){
 		this.hm = hm;
-		String fs, dir_in;
-		fs = FileUtil.file_separator();
-		try{
-			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
-		}catch(Exception e){
-			dir_in = "";
-		}
+//		String fs, dir_in;
+//		fs = FileUtil.file_separator();
+//		try{
+//			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+//		}catch(Exception e){
+//			dir_in = "";
+//		}
 		//hm = initializer.parse_file(dir_in+"initialConditions.txt");
 		mass0 = initializer.parseDouble(hm,"jat.0.mass");
 		area0 = initializer.parseDouble(hm,"jat.0.area");
@@ -102,12 +102,7 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		srp1 = new SolarRadiationPressure(mass1, area1, Cr1);
 		
 		//Set the Gravitational parameter path
-		try{
-			dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+"DE405data"+fs;
-		}catch(Exception e){
-			dir_in = "";
-		}
-		jpl_ephem = new DE405("dir_in");
+		jpl_ephem = new DE405();
 		
 
 		universe = new UniverseModel(mjd0);
@@ -130,9 +125,9 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		double out[] = new double[n*n + n];
 		
 		//Obtain thet the correct time
-		int ctr = 0;
+		//int ctr = 0;
 		Time tt = new Time(t/86400 + mjd0);
-		double newttt = tt.UTC2TT(t/86400 + mjd0);
+		double newttt = Time.UTC2TT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
@@ -149,23 +144,23 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		
 		// Generate some vectors for use later on
 		VectorN r0 = new VectorN(y[0], y[1], y[2]);
-		VectorN v0 = new VectorN(y[3], y[4], y[5]);
+		//VectorN v0 = new VectorN(y[3], y[4], y[5]);
 		VectorN r1 = new VectorN(y[6], y[7], y[8]);
-		VectorN v1 = new VectorN(y[9], y[10], y[11]);
+		//VectorN v1 = new VectorN(y[9], y[10], y[11]);
 		
 		// store elements of incoming state in more familiar looking variables
 		double xx0 = y[0];
 		double yy0 = y[1];
 		double zz0 = y[2];
-		double vx0 = y[3];
-		double vy0 = y[4];
-		double vz0 = y[5];
+//		double vx0 = y[3];
+//		double vy0 = y[4];
+//		double vz0 = y[5];
 		double xx1 = y[6];
 		double yy1 = y[7];
 		double zz1 = y[8];
-		double vx1 = y[9];
-		double vy1 = y[10];
-		double vz1 = y[11];
+//		double vx1 = y[9];
+//		double vy1 = y[10];
+//		double vz1 = y[11];
 		
 		
 		// compute derived variables
@@ -222,7 +217,7 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		double AU_sqrd = 0;
 				
 		//compute acceleration due to lunar gravity
-		double ttt = tt.TTtoTDB(newttt) + 2400000.5;
+		//double ttt = tt.TTtoTDB(newttt) + 2400000.5;
         VectorN r_moon = universe.earthRef.moonVector(newttt);
         
         VectorN d0 = r0.minus(r_moon);
@@ -248,7 +243,7 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 
 
         //Compute the acceleration due to the solar gravity
-        VectorN r_sun = universe.earthRef.sunVector(newttt);
+        VectorN r_sun = EarthRef.sunVector(newttt);
         d0 = r0.minus(r_sun);
         d1 = r1.minus(r_sun);
         
@@ -344,8 +339,8 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		double mur50 = mu / r50;
 		double mur51 = mu / r51;
 		
-		double mur30 = mu / rcubed0;
-		double mur31 = mu / rcubed1;
+		//double mur30 = mu / rcubed0;
+		//double mur31 = mu / rcubed1;
 		
 		
 		double sz2r20 = 7.0 * zz0 * zz0 / rsq0;
@@ -369,8 +364,8 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		double bracket50 = 3.0 - 7.5 * re_r0 * j2 * (sz2r20 - 5.0);
 		double bracket51 = 3.0 - 7.5 * re_r1 * j2 * (sz2r21 - 5.0);
 		
-		double bracket20 = 1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 1.0);
-		double bracket21 = 1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 1.0);
+		//double bracket20 = 1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 1.0);
+		//double bracket21 = 1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 1.0);
 		
 		//Note:  use this formulation for ll to avoid a singularity
 		ll0 = -1.0 * (mu  / rcubed0) * (1.0 - 1.5 * re_r0 * j2 * zsq_rsq0);
@@ -386,8 +381,8 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		double dldz0 = muxzr50 * bracket30;
 		double dldz1 = muxzr51 * bracket31;
 		
-		double dldj20 = mur30 * xx0 * bracket20;
-		double dldj21 = mur31 * xx1 * bracket21;
+		//double dldj20 = mur30 * xx0 * bracket20;
+		//double dldj21 = mur31 * xx1 * bracket21;
 		
 		double dmdx0 = dldy0;
 		double dmdx1 = dldy1;
@@ -400,33 +395,33 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		
 		double dmdy0 = mm0  + mur50 * yy0 * yy0 * bracket10;
 		double dmdy1 = mm1  + mur51 * yy1 * yy1 * bracket11;
-		double qqy = mur50 * yy0 * yy0 * bracket10;
+		//double qqy = mur50 * yy0 * yy0 * bracket10;
 		
 		
 		double dmdz0 = muyzr50 * bracket30;
 		double dmdz1 = muyzr51 * bracket31;
 		
-		double dmdj20 = mur30 * yy0 * bracket20;
-		double dmdj21 = mur31 * yy1 * bracket21;
+		//double dmdj20 = mur30 * yy0 * bracket20;
+		//double dmdj21 = mur31 * yy1 * bracket21;
 		
 		double dndx0 = muxzr50 * bracket30;
 		double dndx1 = muxzr51 * bracket31;
 		
 		double dndy0 = dmdz0;
 		double dndy1 = dmdz1;
-		double dndz01 = nn0 + mur50 * zz0 * zz0 * bracket50;
+		//double dndz01 = nn0 + mur50 * zz0 * zz0 * bracket50;
 		//Note:  Use this definition of nn0.  It is uglier, but it removes a potential singularity
 		nn0 = -1.0 * (mu / rcubed0) * (1.0 - 1.5 * re_r0 * j2 * (zsq_rsq0 - 2.0));
 		nn1 = -1.0 * (mu / rcubed1) * (1.0 - 1.5 * re_r1 * j2 * (zsq_rsq1 - 2.0));
 		
 		//double dndz0 = nn0 / zz0 + mur50 * zz0 * zz0 * bracket50;
 		double dndz0 = nn0 + mur50 * zz0 * zz0 * bracket50;
-		double qqz = mur50 * zz0 * zz0 * bracket50;
+		//double qqz = mur50 * zz0 * zz0 * bracket50;
 		double dndz1 = nn1 + mur51 * zz1 * zz1 * bracket51;
 		
 		
-		double dndj20 = mur30 * zz0 * (1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 3.0));
-		double dndj21 = mur31 * zz1 * (1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 3.0));
+		//double dndj20 = mur30 * zz0 * (1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 3.0));
+		//double dndj21 = mur31 * zz1 * (1.5 * re_r1 * (5.0 * zz1 * zz1 / rsq1 - 3.0));
 
 		a.A[0][3] = 1.0;
 		a.A[1][4] = 1.0;

@@ -32,6 +32,7 @@ import java.lang.Math;
  */
 public class Time {
 
+	private boolean debugGEONS = false;
     //*** See bottom of this file for the original c code headers for TT2TDB
 
     /**
@@ -88,7 +89,7 @@ public class Time {
         this.MJD_UTC = mjd_UTC;
         this.MJD_UTC_START = mjd_UTC;
         this.MJD_TT = UTC2TT(mjd_UTC);
-        this.MJD_TDB = TTtoTDB(this.MJD_TT);
+        this.MJD_TDB = TTtoTDB(this.MJD_TT);        
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     }
 
@@ -139,6 +140,16 @@ public class Time {
      * @return MJD_UT1
      */
     public double mjd_ut1(){
+    	if(this.MJD_UT1==this.MJD_UTC)
+    		this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
+//    	if(debugGEONS){
+//    		double UTC_UT1_Constant_Bias = -0.094168580338191;
+//    		double UTC_UT1_Linear_Coefficient = -0.00071620920607623;
+//    		double UTC_UT1_Quadratic_Coefficient = 0.83318836914884E-05;
+//    		this.MJD_UT1 = MJD_UTC + UTC_UT1_Constant_Bias;// + UTC_UT1_Linear_Coefficient*sim_time/86400.0 + UTC_UT1_Quadratic_Coefficient*sim_time*sim_time/(86400*86400);
+//    		//this.MJD_UT1 = this.MJD_UTC;
+//    		
+//    	}
         return this.MJD_UT1;
     }
     /**

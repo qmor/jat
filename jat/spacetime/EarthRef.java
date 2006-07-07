@@ -39,12 +39,18 @@ public class EarthRef implements BodyRef {
     
     public boolean use_moon = false;
     public boolean use_sun = false;
-    public boolean use_iers = true;
+    //* TODO Watch this
+    private boolean debug_polar = false;
+    private boolean debug_geons = false;
+    
+    //private double GMST_REF, MJD_UT1_0;
+    //private boolean gmst_initialized = false;
         
     /** Earth's rotation rate in rad/s.
      */
     //public final static double omega_e = 7.2921157746E-05;  // earth rotation rate
     public final static double omega_e = 7.292115E-05;  // IERS 1996 conventions
+    //public final static double omega_e = 7.2921151467E-05;  // WGS-84
     
     //public double omega_e_dynamic = omega_e;
     
@@ -638,6 +644,7 @@ public class EarthRef implements BodyRef {
 //        return  dpsi * Math.cos( MeanObliquity() ) 
 //        			+ (0.002649*Math.sin(Om)-0.000013*Math.cos(Om))*arcs;
         //* Astro Almenac 96 modified
+        //* JAT Validated vs STK
         return  dpsi * Math.cos( MeanObliquity(MJD_TT) )
         			+ (0.002649*Math.sin(Om)+0.000063*Math.sin(2*Om))*arcs;
         //* Astro Almenac 96
@@ -663,6 +670,18 @@ public class EarthRef implements BodyRef {
         T_0   = (Mjd_0  - TimeUtils.MJD_J2000)/36525.0;
         T     = (Mjd_UT1- TimeUtils.MJD_J2000)/36525.0;
         
+        //* GEONS      
+//        gmst  = (24110.54841 + 8640184.812866*T + 0.093104*T*T -6.2e-6*T*T*T); // [s]
+//        //GMST_REF = gmst;
+//        //MJD_UT1_0 = MJD_UT1;
+//        //gmst_initialized = true;
+//    	//- 0.3; // [s]
+//        double tmp = pi2*(gmst/Secs)+omega_e*UT1;       // [rad], 0..2pi
+//        tmp = MathUtils.Modulo(tmp,pi2);
+//        if(tmp < 0) tmp = tmp + pi2;
+//        return tmp;
+    
+        //* JAT Validated vs STK
         gmst  = 24110.54841 + 8640184.812866*T_0 + 1.002737909350795*UT1
         	+ (0.093104-6.2e-6*T)*T*T;  // [s]
         	//- 0.3; // [s]
@@ -681,13 +700,13 @@ public class EarthRef implements BodyRef {
 //        return tmp;
         
         //* Vallado p 191
-//        //gmst  = 24110.54841 + 8640184.812866*T_0 + (0.093104-6.2e-6*T_0)*T_0*T_0; // [s]
+        //gmst  = 24110.54841 + 8640184.812866*T_0 + (0.093104-6.2e-6*T_0)*T_0*T_0; // [s]
 //        gmst  = 100.4606184+36000.77005361*T_0+0.00038793*T_0*T_0-2.6e-8*T_0*T_0*T_0; // [deg]
 //        //gmst  = 67310.54841+(52596000.0+8640184.812866)*T_0+0.093104*T_0*T_0 - 6.2e-6*T_0*T_0*T_0; // [s]
 ////        double tmp = pi2*MathUtils.Frac(gmst/Secs);       // [rad], 0..2pi
 ////        tmp = MathUtils.Modulo(tmp,pi2);
 //        double tmp = MathUtils.Modulo(gmst*MathUtils.DEG2RAD,pi2);
-//        tmp = tmp + this.omega_e_dynamic*UT1;//EarthRef.omega_e*UT1;
+//        tmp = tmp + this.omega_e*UT1;//EarthRef.omega_e*UT1;
 //        //if(tmp < 0) tmp = tmp + pi2;
 //        return tmp;
         
@@ -697,7 +716,13 @@ public class EarthRef implements BodyRef {
      *   @return  GAST in [rad]
      */
     public double GAST(double MJD_UT1, double MJD_TT) {
-        double out = MathUtils.Modulo( GMST(MJD_UT1) + EqnEquinox(MJD_TT), pi2 );
+        double out;
+        //if(!gmst_initialized) 
+        	//GMST(MJD_UT1);
+        //if(this.debug_geons)
+        	//out = MathUtils.Modulo( GMST_REF + omega_e*(MJD_UT1-MJD_UT1_0)*86400 + EqnEquinox(MJD_TT), pi2 );
+        //else
+        	out = MathUtils.Modulo( GMST(MJD_UT1) + EqnEquinox(MJD_TT), pi2 );    	
         return out;
     }
     
@@ -725,6 +750,64 @@ public class EarthRef implements BodyRef {
         return  out;
     }
     
+    public void computePole(Time t){
+    	//return computePole(t.mjd_utc());
+    }
+    private void computePole(double mjd_utc){
+    	
+		double a1 = 0.14926633324398;
+		double a2 = -0.34117340426258;
+		double a3 = -1.8388673096747;
+		double a4 =  0.10320829139742;
+		double a5 = 2.2954920265308;
+		double a6 = 0.030356241356650;
+		double a7 = -0.95611083632580;
+		double a8 = -1.7543492230047;
+		double a9 =  1.3504353199051;
+		double a10 = 2.1867543701143;
+		double Tp = 52187.0;
+    	
+    	//* Case 1_1
+//		double a1 = 0.13137346279621E+03;
+//		double a2 = 0.31421954870224E+03;
+//		double a3 = 0.19024293683469E+02;
+//		double a4 =  -0.44553695678711E+03;
+//		double a5 = -0.22882597982883E+02;
+//		double a6 = 0.70715136051178E+02;
+//		double a7 = 0.16834603309631E+03;
+//		double a8 = 0.67812896966934E+01;
+//		double a9 =  -0.23893760681152E+03;
+//		double a10 = -0.80865914225578E+01;
+//		double Tp = 52187.0;
+
+    	//* Case 1_6
+//		double a1 = -0.097873978689492;
+//		double a2 = -0.024595601235973;
+//		double a3 = -0.65797118746339;
+//		double a4 =  0.095555969865679;
+//		double a5 =  0.94278239745940;
+//		double a6 =  0.13268750786818;
+//		double a7 = -0.29741426364758;
+//		double a8 = -0.38409384587563;
+//		double a9 =  0.62823543875476;
+//		double a10 = 0.53300376467789;
+//		double Tp = 51013.0;
+		double A = 2*Constants.pi/365.25*(mjd_utc-Tp);
+		double C = 2*Constants.pi/435*(mjd_utc-Tp);
+		double xp = a1 + a2 *Math.cos(A) + a3* Math.sin(A) + a4*Math.cos(C) + a5*Math.sin(C);
+		double yp = a6 + a7 *Math.cos(A) + a8* Math.sin(A) + a9*Math.cos(C) + a10*Math.sin(C);
+		xp = xp*Constants.arcsec2rad;
+		yp = xp*Constants.arcsec2rad;
+		this.x_pole = xp;
+		this.y_pole = yp;
+		//Matrix out = new Matrix(3);
+		//out.A[0][2] = xp;
+		//out.A[2][0] = -xp;
+		//out.A[1][2] = -yp;
+		//out.A[2][1] = yp;
+		//return out;
+	}
+    
     /** J2000 to TOD Transformation
      * @return J2000 to ECEF transformation matrix
      */
@@ -742,8 +825,14 @@ public class EarthRef implements BodyRef {
     public Matrix eci2ecef(double MJD_UT1, double MJD_TT){
         Matrix T = trueOfDate(MJD_TT);
         Matrix G = GHAMatrix(MJD_UT1, MJD_TT);
-        Matrix Pole = PoleMatrix();
-        //Matrix Pole = new Matrix(3);
+        Matrix Pole;
+        if(debug_geons)
+        	computePole(MJD_UT1);
+        if(debug_polar){
+        	Pole = new Matrix(3);
+        }else{
+        	Pole = PoleMatrix();
+        }
         Matrix A = Pole.times(G);
         Matrix E = A.times(T);
         return E;
@@ -755,40 +844,105 @@ public class EarthRef implements BodyRef {
     public Matrix eci2ecef(Time t){
         Matrix T = trueOfDate(t.mjd_tt());
         Matrix G = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
-        Matrix Pole = PoleMatrix();
-        //Matrix Pole = new Matrix(3);
+        Matrix Pole;
+        if(debug_geons)
+        	computePole(t);
+        if(debug_polar){
+        	Pole = new Matrix(3);
+        }else{
+        	Pole = PoleMatrix();
+        }
         Matrix A = Pole.times(G);
         Matrix E = A.times(T);
+        
+//        double omega = Constants.WE_WGS84;
+//    	Matrix C = trueOfDate(t.mjd_tt());
+//        Matrix Rg = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
+//        Matrix B = PoleMatrix();
+//        this.E = C.transpose().times(Rg.transpose().times(B.transpose()));
+        
         return E;
     }
     
+    /**
+     * GEONS transformation between inertial and earth fixed
+     * @param recf earth fixed position
+     * @param vecf earth fixed velocity
+     * @param t time
+     * @return vector containing position and then velocity in inertial frame
+     */
     public VectorN ecf2eci(VectorN recf, VectorN vecf, Time t){
 //  	Compute derivative of GHA Matrix (S) and its transpose
-    	double omega = Constants.WE_WGS84;
-    	Matrix todMatrix = trueOfDate(t.mjd_tt());
-        Matrix ghaMatrix = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
-        Matrix poleMatrix = PoleMatrix();
+    	double omega = Constants.omega_e;//Constants.WE_WGS84;
+    	Matrix C = trueOfDate(t.mjd_tt());
+        Matrix Rg = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
+        Matrix B;
+        if(debug_geons)
+        	computePole(t);
+        if(debug_polar){
+        	B = new Matrix(3);
+        }else{
+        	B = PoleMatrix();
+        }
         //Matrix Pole = new Matrix(3);
-        Matrix A = poleMatrix.times(ghaMatrix);
-        Matrix E = A.times(todMatrix);
+        Matrix A = B.times(Rg);
+        Matrix E = A.times(C);
     	VectorN omegaE = new VectorN(0,0,omega);
-    	
-//    	% ---- perform transformations
-//        thetasa= 7.29211514670698e-05 * (1.0  - lod/86400.0 );
-//        omegaearth = [0; 0; thetasa;];
 
-//        rpef = pm'*recef;
-//        reci = prec'*nut'*st'*rpef;
-    	VectorN rpef = poleMatrix.transpose().times(recf);
-    	VectorN reci = E.transpose().times(recf);
-//        vpef = pm'*vecef;
-//        veci = prec'*nut'*st'*(vpef + cross(omegaearth,rpef));
-    	VectorN vpef = poleMatrix.transpose().times(vecf);
-    	VectorN veci = todMatrix.transpose().times(ghaMatrix.transpose()).times(vpef.plus(omegaE.crossProduct(rpef)));
+    	VectorN reci = C.transpose().times(Rg.transpose().times(B.transpose().times(recf)));
+
+    	VectorN rpef = B.transpose().times(recf);
+    	VectorN vpef = B.transpose().times(vecf);
+    	Matrix Rgdot = new Matrix(3,3);
+    	double ag = GAST(t.mjd_ut1(),t.mjd_tt());
+    	Rgdot.A[0][0] = -omega*Math.sin(ag);
+    	Rgdot.A[0][1] = omega*Math.cos(ag);
+    	Rgdot.A[1][0] = -omega*Math.cos(ag);
+    	Rgdot.A[1][1] = -omega*Math.sin(ag);
+    	VectorN v_pole = B.transpose().times(vecf);
+    	VectorN omegar = omegaE.crossProduct(recf);
+    	VectorN sum = v_pole.plus(omegar);
+    	VectorN sidereal = Rg.transpose().times(sum);
+    	VectorN PN = C.transpose().times(sidereal);
+    	VectorN veci = PN;
+    	//VectorN veci = (C.transpose().times(Rgdot.transpose().times(recf))).plus(C.transpose().times(Rg.transpose().times(B.transpose().times(vecf))));
+    	//VectorN veci = C.transpose().times(Rg.transpose().times((B.transpose().times(vecf)).plus(omegaE.crossProduct(recf))));
+    	//VectorN veci = E.transpose().times(vecf).plus(omegaE.crossProduct(reci));
     	VectorN out = new VectorN(reci,veci);
     	return out;
     }
-    
+    /**
+     * GEONS transformation between inertial and earth fixed
+     * @param recf earth fixed position
+     * @param vecf earth fixed velocity
+     * @param t time
+     * @return vector containing position and then velocity in inertial frame
+     */
+    public VectorN eci2ecf(VectorN reci, VectorN veci, Time t){
+//  	Compute derivative of GHA Matrix (S) and its transpose
+    	double omega = Constants.omega_e;//Constants.WE_WGS84;
+    	Matrix C = trueOfDate(t.mjd_tt());
+        Matrix Rg = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
+        Matrix B;
+        if(debug_geons)
+        	computePole(t);
+        if(debug_polar){
+        	B = new Matrix(3);
+        }else{
+        	B = PoleMatrix();
+        }
+        //Matrix Pole = new Matrix(3);
+        Matrix A = B.times(Rg);
+        Matrix E = A.times(C);
+    	VectorN omegaE = new VectorN(0,0,omega);
+
+    	VectorN recf = E.times(reci);
+
+    	VectorN rpef = Rg.times(C.times(reci));//st*nut*prec*reci;
+    	VectorN vecf = B.times((Rg.times(C.times(veci)).minus(omegaE.crossProduct(rpef))));
+    	VectorN out = new VectorN(recf,vecf);
+    	return out;
+    }
     
     /** Updates the Earth model.
      * 
@@ -1061,16 +1215,35 @@ public class EarthRef implements BodyRef {
         t.set_UT1_UTC(param[2]);
         t.update(0);
         EarthRef eRef = new EarthRef(t);
+        eRef.setIERS(param[0],param[1]);
         Matrix E = eRef.eci2ecef(t);
-        VectorN r = new VectorN(5102.5096, 6123.01152, 6378.1363);
+        double[] xd = {5102.5096, 6123.01152, 6378.1363, -4.7432196, 0.7905366, 5.53375619};
+        VectorN x = new VectorN(xd);
         Matrix M = eRef.PrecMatrix(t.mjd_tt());
-        VectorN rmod = M.times(r);
+        VectorN rmod = M.times(x.get(0,3));
         Matrix N = eRef.NutMatrix(t.mjd_tt());
         VectorN rtod = N.times(rmod);
         Matrix SD = eRef.GHAMatrix(t.mjd_ut1(),t.mjd_tt());
         VectorN rpef = SD.times(rtod);
         Matrix P = eRef.PoleMatrix();
         VectorN recef = P.times(rpef);
+        //double[] xvallado = {5102.509433,6123.011473,6378.136478,-4.74321966,0.79053639,5.53375617};
+        double[] xvallado = {-1120.598506,7894.483204,6374.079611,-3.18701800,-2.90527125,5.53765280};
+        VectorN vallado = new VectorN(xvallado);
+        System.out.println("error position: "+vallado.get(0,3).minus(recef));
+        
+        VectorN test = eRef.eci2ecf(x.get(0,3),x.get(3,3),t);
+        VectorN error = test.minus(vallado);
+        System.out.println("error: "+error);
+        
+        RotationMatrix E1 = new RotationMatrix(eRef.ECI2ECEF());
+        VectorN test2 = E1.times(x.get(0,3));
+        RotationMatrix E2 = new RotationMatrix(eRef.ECI2ECEF().transpose());
+        VectorN test3 = E2.times(test2.get(0,3));
+        VectorN error2 = test2.minus(vallado.get(0,3));
+        VectorN error3 = test3.minus(x.get(0,3));
+        System.out.println("error2: "+error2);
+        System.out.println("error3: "+error3);
         System.out.println("done");
     }
     

@@ -665,4 +665,101 @@ public class GPS_SV {
         VectorN out = new VectorN(reci, veci);
         return out;
     }
+    /** Compute the ECEF position and velocity vectors of a GPS SV at a particular MJD.
+     * Note: this correctly treats the longitude of ascending node to provide
+     * accurate GPS SV ECEF position and velocity vectors, which requires transformation
+     * matrices from jat.spacetime.EarthRef
+     * Added on 6/26/06 by DEG.
+     * Reference: Tak Ebinuma's dissertation.
+     * @param mjd Modified Julian Date.
+     * @param poleMatrix Matrix containing Pole transformation
+     * @param ghaMatrix Matrix containing GHA transformation
+     * @param todMatrix Matrix containing the TOD transformation
+     * @return ECEF position vector of the GPS SV in meters.
+     */
+    public VectorN rvECEF (double mjd){
+        // compute time since Ephemeris Epoch
+        double ephemTime = this.toe.mjd();
+        double dt = (mjd - ephemTime)*86400.0;
+        double t0 = (double) this.toe.gps_week();
+        double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
+        double toe_sow = this.toe.gps_sow();
+
+        // compute mean anomaly at current time
+        double sma = this.sqrtA * this.sqrtA;
+        double n0 = Math.sqrt(Constants.GM_WGS84/(sma*sma*sma));  // mean motion
+        double n = n0 + this.deltaN;              // apply mean motion correction
+        double mt = this.ma + n*dt;
+
+        // solve Kepler's equation
+        double E = TwoBody.solveKepler(mt, this.ecc);
+
+        // compute true anomaly
+        double sinE = Math.sin(E);
+        double cosE = Math.cos(E);
+        double den = 1.0 - this.ecc*cosE;
+        double sqrome2 = Math.sqrt(1.0 - this.ecc*this.ecc);
+        double sinv = (sqrome2*sinE)/den;
+        double cosv = (cosE - this.ecc)/den;
+        double f = Math.atan2(sinv, cosv);
+
+        // compute argument of latitude
+        double phi = f + this.argp;
+        double sin2u = Math.sin(2.0*phi);
+        double cos2u = Math.cos(2.0*phi);
+
+        // compute periodic corrections
+        double dr = this.Crs*sin2u + this.Crc*cos2u;
+        double du = this.Cus*sin2u + this.Cuc*cos2u;
+        double di = this.Cis*sin2u + this.Cic*cos2u;
+
+        // apply corrections
+        double r = sma*(1.0 - this.ecc*cosE) + dr;
+        double u = phi + du;
+        double i = this.inc + this.idot*dt + di;
+//        double L = this.omega + this.omegadot*dt - Constants.WE_WGS84*dt0;
+        double L = this.omega + (this.omegadot - Constants.WE_WGS84)*dt - Constants.WE_WGS84*toe_sow;
+
+        double cosu = Math.cos(u);
+        double sinu = Math.sin(u);
+
+        // Position in orbit frame
+        VectorN rpqw = new VectorN(r*cosu, r*sinu, 0.0);
+
+        // Rotation from orbit frame to ECEF
+        RotationMatrix M = new RotationMatrix(1,-i, 3,-L);
+
+        // Compute ECEF position
+        VectorN recef = M.times(rpqw);
+        
+        // Transform ECEF position to ECI
+        //Matrix temp = poleMatrix.times(ghaMatrix);
+        //Matrix eci2ecef = temp.times(todMatrix);
+    	//VectorN reci = eci2ecef.transpose().times(recef);
+
+    	// compute the velocity vector
+        double denom = 1.0 - ecc*Math.cos(E);
+        double Edot = n / denom;
+        double num = 1.0 + ecc*Math.cos(f);
+        double fdot = (n * num) / (sqrome2 * denom);
+        double drdot = 2.0*fdot*(this.Crs*cos2u-this.Cuc*sin2u);
+        if (E < 0.0) E = E + 2.0*MathUtils.PI;
+        double sqrE = Math.sqrt(E);
+        double ae = sma*ecc*sqrE*Edot;
+        double rdot =  ae + drdot;
+        double dudot = 2.0*fdot*(this.Cus*cos2u-this.Cuc*sin2u);
+        double didot = 2.0*fdot*(this.Cis*cos2u-this.Cic*sin2u);
+        double udot = fdot + dudot;
+//        System.out.println("sma = "+sma+" ecc = "+ecc+" E = "+E+" sqrE = "+sqrE+" Edot = "+Edot);
+
+        // rdot vector in PQW
+        double r1 = rdot*cosu - r*udot*sinu;
+        double r2 = rdot*sinu + r*udot*cosu;
+        VectorN rdotpqw = new VectorN(r1, r2, 0.0);
+
+        VectorN vecef = M.times(rdotpqw);
+        
+        VectorN out = new VectorN(recef, vecef);
+        return out;
+    }
 }

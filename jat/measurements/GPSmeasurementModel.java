@@ -411,6 +411,10 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		Matrix gha = earth.GHAMatrix(time.mjd_ut1(),time.mjd_tt());
 		Matrix tod = earth.TOD();
 		VectorN rvGPS = sv.rvECI(ts_mjd,pole,gha,tod);
+//		VectorN rvGPSecef = sv.rvECI(ts_mjd);
+//		VectorN recef = new VectorN(rvGPSecef.get(0,3));
+//		VectorN vecef = new VectorN(rvGPSecef.get(3,3));
+//		VectorN rvGPS = earth.ecf2eci(recef,vecef,time);
 //		VectorN rvGPS = sv.rvECI(ts_mjd);
 		VectorN rGPS = new VectorN(rvGPS.x[0], rvGPS.x[1], rvGPS.x[2]);
 		VectorN vGPS = new VectorN(rvGPS.x[3], rvGPS.x[4], rvGPS.x[5]);

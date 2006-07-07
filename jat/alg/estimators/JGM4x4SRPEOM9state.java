@@ -28,13 +28,10 @@ import java.util.HashMap;
 import jat.eph.DE405;
 import jat.forces.*;
 import jat.gps.GPS_Utils;
-import jat.spacecraft.Spacecraft;
 
 import jat.alg.integrators.Derivatives;
-import jat.math.MathUtils;
 import jat.matvec.data.*;
 import jat.spacetime.*;
-import jat.timeRef.RSW_Frame;
 import jat.util.FileUtil;
 
 
@@ -55,9 +52,9 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 	private static double h_0 = 920000.0; // atmosphere model parameter
 	private static double rho_0 = 4.36E-14; // atmosphere model parameter
 	private static double gamma_0 = 5.381E-06; // atmosphere model parameter
-	private static double omega_e = 7.2921157746E-05; // earth rotation rate
+	//private static double omega_e = 7.2921157746E-05; // earth rotation rate
 	public static int n;
-	public static HashMap hm;
+	public HashMap hm;
 	public static double mass0,mass1,area0,area1;
 	public static double Cr0,Cr1;
 	public DE405 jpl_ephem;
@@ -132,7 +129,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		//Obtain thet the correct time
 		int ctr = 0;
 		Time tt = new Time(t/86400 + mjd0);
-		double newttt = tt.UTC2TT(t/86400 + mjd0);
+		double newttt = Time.UTC2TT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
@@ -149,7 +146,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		
 		// Generate some vectors for use later on
 		VectorN r0 = new VectorN(y[0], y[1], y[2]);
-		VectorN v0 = new VectorN(y[3], y[4], y[5]);
+		//VectorN v0 = new VectorN(y[3], y[4], y[5]);
 		
 		// store elements of incoming state in more familiar looking variables
 		double xx0 = y[0];
@@ -274,6 +271,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		out[4] = ay0    - solarAcceleration0.get(1) + srpacc0.get(1) - lunarAcceleration0.get(1);
 		out[5] = az0     - solarAcceleration0.get(2) + srpacc0.get(2) - lunarAcceleration0.get(2);
 	
+		//Clock model
 		double w_f = (Math.random()-0.5)*2*.036;
 		out[6] = w_f + hc;
 		double w_g = (Math.random()-0.5)*2*7.106E-05;

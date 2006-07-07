@@ -22,13 +22,10 @@ package jat.alg.estimators;
  * File Created on May 7, 2003
  */
 import java.util.HashMap;
-import jat.alg.estimators.*;
 import jat.sim.*;
 import jat.matvec.data.*;
-import jat.alg.estimators.*;
 import jat.alg.integrators.LinePrinter;
 import jat.measurements.*;
-import jat.sim.initializer.*;
 import jat.spacecraft.SpacecraftModel;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;
@@ -131,7 +128,7 @@ public class EKF {
 			System.out.println("Process model not recognized.  Aborting");
 			System.exit(1);
 		}
-		double[] X = new double[n];
+		//double[] X = new double[n];
 		filterInitialize();
 		
 	}
@@ -181,7 +178,7 @@ public class EKF {
 			System.out.println("Process model not recognized.  Aborting");
 			System.exit(1);
 		}
-		double[] X = new double[n];
+		//double[] X = new double[n];
 		filterInitialize();
 		
 	}
@@ -248,7 +245,7 @@ public class EKF {
 		Matrix hp = h.times(p);
 		Matrix hph = hp.times(h);
 		Matrix hphTranspose = hph.transpose();
-		Matrix hphr = (hphTranspose.plus(r));
+		//Matrix hphr = (hphTranspose.plus(r));
 		Matrix hphr_inv = hphTranspose.inverse();
 		Matrix out = ph.times(hphr_inv);
 		return out;
@@ -265,7 +262,7 @@ public class EKF {
 		pnew = pold.copy();
 		xref = new EstSTM(process.xref0());
 		xprev = xref.longarray();
-		VectorN k = new VectorN(process.numberOfStates());
+		//VectorN k = new VectorN(process.numberOfStates());
 				
 	}
 
@@ -293,7 +290,6 @@ public class EKF {
 //			}
 			
 			//Propagate the state forward using the process model
-			//* TODO Watch for NaNs
 			double[] xnew = process.propagate(filterTime, xprev, tnext);
 			
 			//Get the state transition matrix for the current state

@@ -28,6 +28,7 @@ import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 import jat.spacetime.CalDate;
 import jat.spacetime.EarthRef;
+import jat.spacetime.FitIERS;
 import jat.spacetime.GPSTimeFormat;
 import jat.spacetime.Time;
 import jat.traj.Trajectory;
@@ -94,10 +95,10 @@ public class ObservationMeasurementList
 		String fs = FileUtil.file_separator();
 		//x.processRINEX(path+fs+"ExampleRINEXGEONS.rnx");
 		//x.processRINEX(path+fs+"Case-820.rnx");
-		x.processStateUpdateFile(path+fs+"test1_8.rnx");
+		x.processStateUpdateFile(path+fs+"test1_8.rnx",50985,50999);
 	}
 	
-	public void processStateUpdateFile(String fileName) throws IOException {
+	public void processStateUpdateFile(String fileName, double mjd0, double mjdf) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
 		boolean loop = true;
 		Time time;
@@ -107,7 +108,7 @@ public class ObservationMeasurementList
 		int year, day,i;
 		double sec, mjd;
 		GPSTimeFormat date;
-		double x,y,z;
+		double x,y,z,clock;
 		String line = "start";
 		StringTokenizer tok;
 		boolean processedOther = false;
@@ -125,34 +126,48 @@ public class ObservationMeasurementList
 				sec = Double.parseDouble(tok.nextToken());
 				date = new GPSTimeFormat(year,day,0,0,sec);
 				mjd = date.mjd();
-				time = new Time(mjd);
-				earth = new EarthRef(time);
-				x = Double.parseDouble(tok.nextToken());
-				y = Double.parseDouble(tok.nextToken());
-				z = Double.parseDouble(tok.nextToken());
-				r = new VectorN(x,y,z);
-				rot = new RotationMatrix((earth.eci2ecef(time)).transpose());
-				r = rot.transform(r);
-				v_data = new Vector();
-				v_data.add(""+r.x[0]);
-				v_data.add(""+r.x[1]);
-				v_data.add(""+r.x[2]);
-				if(processedOther){
-					i = searchListMJD(mjd);
-					for(int snum=0; snum<3; snum++){
-						om = new ObservationMeasurement(mjd,v_type,v_data,"0",this.input,
-								this.model_gpsstate,ObservationMeasurement.TYPE_GPSSTATE);
-						om.set_whichState(snum);
-						System.out.println(om.toString());
-						list.add(i,om);
-					}
-				}else{
-					for(int snum=0; snum<3; snum++){
-						om = new ObservationMeasurement(mjd,v_type,v_data,"0",this.input,
-								this.model_gpsstate,ObservationMeasurement.TYPE_GPSSTATE);
-						om.set_whichState(snum);
-						System.out.println(om.toString());
-						list.add(om);
+				if(mjd>=mjd0 && mjd<= mjdf){
+					x = Double.parseDouble(tok.nextToken());
+					y = Double.parseDouble(tok.nextToken());
+					z = Double.parseDouble(tok.nextToken());
+					//clock = Double.parseDouble(tok.nextToken())/jat.cm.Constants.c;
+					//mjd = mjd - clock/86400;
+					r = new VectorN(x,y,z);
+					time = new Time(mjd);
+					//*TODO watch
+					earth = new EarthRef(time);
+					
+					FitIERS iers = new FitIERS();
+					//iers.process(); //* don't need this
+					double[] param = iers.search(time.mjd_tt());
+					earth.setIERS(param[0],param[1]);
+					time.set_UT1_UTC(param[2]);
+					//earth.computePole(time);
+					
+					Matrix tmp = earth.eci2ecef(time);
+					rot = new RotationMatrix(tmp.transpose());
+					r = rot.transform(r);
+					v_data = new Vector();
+					v_data.add(""+r.x[0]);
+					v_data.add(""+r.x[1]);
+					v_data.add(""+r.x[2]);
+					if(processedOther){
+						i = searchListMJD(mjd);
+						for(int snum=0; snum<3; snum++){
+							om = new ObservationMeasurement(mjd,v_type,v_data,"0",this.input,
+									this.model_gpsstate,ObservationMeasurement.TYPE_GPSSTATE);
+							om.set_whichState(snum);
+							System.out.println(om.toString());
+							list.add(i,om);
+						}
+					}else{
+						for(int snum=0; snum<3; snum++){
+							om = new ObservationMeasurement(mjd,v_type,v_data,"0",this.input,
+									this.model_gpsstate,ObservationMeasurement.TYPE_GPSSTATE);
+							om.set_whichState(snum);
+							System.out.println(om.toString());
+							list.add(om);
+						}
 					}
 				}
 				line = in.readLine();
@@ -331,7 +346,7 @@ public class ObservationMeasurementList
 				GPSTimeFormat newDate =  ObservationMeasurementList.setDateStuff(lineNew);
 				//timeMjd =newDate.mjd();
 				//* TODO Watch this
-				timeMjd =newDate.mjd()-12.0/86400.0;
+				timeMjd =newDate.mjd()-13.0/86400.0;
 				//if(timeMjd > 52189.06403935186){
 					//int stop_to_debug = 0;
 				//}

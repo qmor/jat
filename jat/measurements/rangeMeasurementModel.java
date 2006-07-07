@@ -322,16 +322,23 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 			double a10 = 0.53300376467789;
 			double Tp = 51013.0;
 			double A = 2*Constants.pi/365.25*(t.mjd_utc()-Tp);
-			double xp = a1 + a2 cos A + a3 sin A + a4 cos C + a5 sin C;
-			double yp = a6 + a7 cos A + a8 sin A + a9 cos C + a10 sin C;
-			
+			double C = 2*Constants.pi/435*(t.mjd_utc()-Tp);
+			double xp = a1 + a2 *Math.cos(A) + a3* Math.sin(A) + a4*Math.cos(C) + a5*Math.sin(C);
+			double yp = a6 + a7 *Math.cos(A) + a8* Math.sin(A) + a9*Math.cos(C) + a10*Math.sin(C);
+			xp = xp*Constants.arcsec2rad;
+			yp = xp*Constants.arcsec2rad;
+			Matrix out = new Matrix(3);
+			out.A[0][2] = xp;
+			out.A[2][0] = -xp;
+			out.A[1][2] = -yp;
+			out.A[2][1] = yp;
+			return out;
 		}
 		private VectorN ecf2eci(VectorN recf, VectorN vecf, Time t){
 //	  	Compute derivative of GHA Matrix (S) and its transpose
 	    	double omega = Constants.WE_WGS84;
 	    	Matrix todMatrix = earth.trueOfDate(t.mjd_tt());
-	        Matrix ghaMatrix = earth.GHAMatrix(t.mjd_ut1(), t.mjd_tt());
-	        
+	        Matrix ghaMatrix = earth.GHAMatrix(t.mjd_ut1(), t.mjd_tt());	   	        
 	        Matrix poleMatrix = computePole(t);
 	        
 	        Matrix A = poleMatrix.times(ghaMatrix);

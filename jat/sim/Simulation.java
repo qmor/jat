@@ -19,14 +19,23 @@
  */
 package jat.sim;
 
+import java.util.Random;
+
 import jat.alg.integrators.LinePrinter;
 import jat.matlabInterface.MatlabControl;
 import jat.matlabInterface.MatlabFunc;
+import jat.matvec.data.RandomNumber;
+import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.Spacecraft;
 import jat.spacecraft.SpacecraftModel;
+import jat.spacetime.CalDate;
 import jat.spacetime.EarthRef;
+import jat.spacetime.FitIERS;
+import jat.spacetime.Time;
+import jat.test.propagator.PlotTrajectory;
 import jat.traj.RelativeTraj;
+import jat.traj.Trajectory;
 import jat.util.FileUtil;
 
 /**
@@ -34,7 +43,6 @@ import jat.util.FileUtil;
  * adhering to the specified XML Schema jat.sim.xml.input.sim_input.xsd, creates the necessary
  * objects, and propagates the trajectories.
  * 
- * @deprecated
  * @see jat.demo.simulation.Simulation
  * @author Richard C. Page III
  *
@@ -42,9 +50,11 @@ import jat.util.FileUtil;
 public class Simulation {
     
     public SimModel sim;
+    Random rand;
     
     public Simulation(){
         sim = new SimModel();
+        rand = new Random();
     }
         
     public void runSimTwo(){
@@ -53,22 +63,25 @@ public class Simulation {
         String fs = FileUtil.file_separator();
         String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
         
-        String[] tests = {"jat_demo"};
+        String[] tests = {"ISS","GEO","ISS","GEO"};
         //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
-        boolean[][] force_flag = 
-        {{false,true,true,true,true}};					//JGM3		0
-        String[][] test_nums = 
-        		{{""}};  							//JGM3		
+        boolean[][] force_flag = {{false,true,true,true,true},
+        		{false,true,true,true,true},
+        		{true,false,false,true,false},
+        		{true,false,false,false,true}};					//JGM3		0
+        String[] test_nums = 
+        		{"7_HP","35_HP","4_HP","33"};  							//JGM3		
         
         boolean plot_traj = true;
-        int i=0,j=0;
+        int i=3;
         //*ISS
-        VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
-        VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
+        //VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
+        //VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
         //*Molniya VectorN r = new VectorN(-1529.894287,-2672.877357,-6150.115340);
         //*Molniya VectorN v = new VectorN(8.717518,-4.989709,0);
-        //*GEO VectorN r = new VectorN(-1529.894287,-2672.877357,-6150.115340);
-        //*GEO VectorN v = new VectorN(8.717518,-4.989709,0);
+        //*GEO
+        VectorN r = new VectorN(36607.358256,-20921.723703,0.000000);
+        VectorN v = new VectorN(1.525636,2.669451,0);
         //*GPS VectorN r = new VectorN(5525.33668,-15871.18494,-20998.992446);
         //*GPS VectorN v = new VectorN(2.750341,2.434198,-1.068884);
         //*SunSync VectorN r = new VectorN(-2290.301063,-6379.471940,0);
@@ -77,31 +90,32 @@ public class Simulation {
         r = r.times(1000);
         //v = v.times(1755);
         v = v.times(1000);
-        double t0 = 0, tf = 86400;
+        double t0 = 0, tf = 3*86400; //604800;
         double mjd_utc = 53157.5;  
         //double mjd_utc = 53683;
         double stepsize = 60;
-        String out = dir+"output"+fs+tests[i]+test_nums[j][i]+".txt";
+        //String out = dir+"output"+fs+tests[i]+test_nums[j][i]+".txt";
+        String out = "C:/Code/Jat/jat/test/propagator/output/"+tests[i]+test_nums[i]+"_jat.txt";
         SpacecraftModel sm = new SpacecraftModel(r,v,1.2,2.2,20,1000);
-        for(j=0; j<1; j++){
-            for(i=0; i<1; i++){
+        //for(j=0; j<1; j++){
+          //  for(i=0; i<2; i++){
                 sim.initialize(sm,t0,tf,mjd_utc, stepsize, 1, out);
                 sim.set_showtimestep(true);
                 boolean use_JGM2 = false;
-                String test = tests[i]+test_nums[j][i];
-                sim.initializeForces(force_flag[j], use_JGM2, test);
+                String test = tests[i]+test_nums[i];
+                sim.initializeForces(force_flag[i], use_JGM2, test);
                 sim.runloop();
-            }	        
-        }
+            //}	        
+        //}
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
         System.out.println("Elapsed time [min]: "+elapsed);
+        plot_traj=false;
         if(plot_traj){
             	        jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
             	        try{
             	            i--;
-            	            j--;
             	            celestia.set_trajectory(sim.get_traj());
-            	            String name = tests[i]+test_nums[j][i];
+            	            String name = tests[i]+test_nums[i];
             	            celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
             	            System.out.println("Wrote to Celestia");
             	        }catch(java.io.IOException ioe){}
@@ -112,6 +126,9 @@ public class Simulation {
 //            System.out.println("error:  "+err);
 //            rel.process();
         }
+        String sjat = tests[i]+test_nums[i]+"_jat.txt";
+        String sstk = tests[i]+test_nums[i]+"_stk.txt";
+        PlotTrajectory.plot(sjat,sstk);
         System.out.println("Finished");    	
  
     }
@@ -281,10 +298,181 @@ public class Simulation {
         test.eval("disp('testing')");
     }
     
-      
+    public void runSim4Datsim(){
+        SimModel sim = new SimModel();
+        double start = System.currentTimeMillis();
+        String fs = FileUtil.file_separator();
+        String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
+        
+        //String[] tests = {"jat_ecef"};
+        String[] tests = {"jat_j2k"};
+        //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
+        boolean[][] force_flag = {{false,true,true,false,true},
+        						  {false,true,true,false,true},
+        						  {false,false,false,true,false}};					//JGM3		0
+        String[][] test_nums = 
+        		{{"1_8","1_1","1_6"}};  							//JGM3		
+        double ptsol_noise = 0.0;
+        int i=0,j=0;
+        //*ISS
+        VectorN r[] = new VectorN[3];
+        VectorN v[] = new VectorN[3];
+        r[0] = new VectorN(-1.86631428726119e+06,  4.21156716602933e+07, -8.23659306996206e+03);
+        v[0] = new VectorN(-3.07220560283457e+03, -1.35729347644219e+02,  1.35175509960231e+01);
+        r[1] = new VectorN(-4.02622553013133e+007,-1.24965505638999e+007,-4.27951891301160e+003);
+        v[1] = new VectorN(9.11185854997334e+002,-2.93710765139044e+003,1.39092766633154e+001);
+        r[2] = new VectorN(2.72701600600060e+06,-4.56452737925970e+06,-4.35529550517323e+06);
+        v[2] = new VectorN(4.45912406220447e+03,-3.63297132340426e+03,6.59775392945695e+03);
+        
+        double cd = 2.2, cr = 1.2, m = 1000, area = 10;
+        double t0 = 0, tf = 4*86400;
+        double mjd_utc[] = {50985,52187,51013.0};  
+        double stepsize = 60;
+        for(i=0; i<1; i++){
+        	String out = dir+"output"+fs+tests[j]+test_nums[j][i]+".txt";
+        	SpacecraftModel sm = new SpacecraftModel(r[i],v[i],cr,cd,area,m);
+        	sim.initialize(sm,t0,tf,mjd_utc[i], stepsize, 1, out);
+        	sim.set_showtimestep(true);
+        	boolean use_JGM2 = false;
+        	String test = tests[j]+test_nums[j][i];
+        	sim.initializeForces(force_flag[i], use_JGM2, test);
+        	sim.set_doPrint(false);
+        	if(i>0){
+        		sim.runloop();
+        		Trajectory traj = sim.get_traj();
+//        		FitIERS iers = new FitIERS();
+//                iers.process();
+//                Time time = new Time(mjd_utc[i]);
+//        		EarthRef earth = new EarthRef(time);
+//        		double[] param = iers.search(time.mjd_tt());
+//    		    //earth.setIERS(param[0],param[1]);
+//    		    //time.set_UT1_UTC(param[2]);
+//        		Trajectory traj_ecf = new Trajectory();
+//        		for(int k=0; k<traj.size(); k++){
+//        			double t = traj.getTimeAt(k);
+//        			VectorN x = new VectorN(traj.getState(k));
+//        			time.update(t);
+//        			//param = iers.search(time.mjd_tt());
+//        		    //earth.setIERS(param[0],param[1]);
+//        		    //time.set_UT1_UTC(param[2]);
+//        			VectorN xecf = earth.eci2ecf(x.get(0,3),x.get(3,3),new Time(t));
+//        			traj_ecf.add(t,xecf.x);
+//        		}
+        		//parse4datsim(traj_ecf,out);
+        		parse4datsim(traj,out);
+        	}else{
+        		Trajectory meas = new Trajectory();        
+        		double t = t0;
+        		double mjd = mjd_utc[i] + t/86400.0;
+        		VectorN x = new VectorN(sim.sc.get_spacecraft().toStateVector());
+        		Time time = new Time(mjd_utc[i]);
+        		EarthRef earth = new EarthRef(time);
+        		FitIERS iers = new FitIERS();
+                //iers.process(); //* don't need this               
+        		double[] param = iers.search(time.mjd_tt());
+    		    earth.setIERS(param[0],param[1]);
+    		    time.set_UT1_UTC(param[2]);
+        		//earth.update(time);
+        		RotationMatrix eci2ecf = new RotationMatrix(earth.eci2ecef(time));
+        		VectorN xecef = eci2ecf.transform(x.get(0,3));
+        		meas.add(mjd,make_ptsol(xecef.x,ptsol_noise));
+        		//meas.add(mjd,x.x);
+        		while(t<tf){
+        			sim.step(stepsize);
+        			t=t+stepsize;
+        			mjd = mjd_utc[i] + t/86400.0;
+        			x = new VectorN(sim.sc.get_spacecraft().toStateVector());
+        			time.update(t);
+        			param = iers.search(time.mjd_tt());
+        		    earth.setIERS(param[0],param[1]);
+        		    time.set_UT1_UTC(param[2]);        			        		    
+        		    //earth.update(time);
+            		eci2ecf = new RotationMatrix(earth.eci2ecef(time));
+            		xecef = eci2ecf.transform(x.get(0,3));
+            		meas.add(mjd,make_ptsol(xecef.x,ptsol_noise));
+            		//meas.add(mjd,x.x);
+        		}
+        		parsePtSol(meas,dir+"output"+fs+"test1_8_jat.rnx");
+        	}
+        }	        
+        double elapsed = (System.currentTimeMillis()-start)*0.001/60;
+        System.out.println("Elapsed time [min]: "+elapsed);
+        boolean plot_traj = false;
+        if(plot_traj){
+            	        jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+            	        try{
+            	            i--;
+            	            j--;
+            	            celestia.set_trajectory(sim.get_traj());
+            	            String name = tests[i]+test_nums[j][i];
+            	            celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
+            	            System.out.println("Wrote to Celestia");
+            	        }catch(java.io.IOException ioe){}
+            //LinePrinter lp2 = new LinePrinter();
+//            RelativeTraj rel = sim.get_rel_traj(lp2);
+//            rel.setVerbose(false);
+//            double err = rel.get_max_error()*1000;
+//            System.out.println("error:  "+err);
+//            rel.process();
+        }
+        System.out.println("Finished");    	
+ 
+    }
+    
+    private double[] make_ptsol(double[] state,double noise) {
+    	double[] out = new double[3];
+		for(int i=0; i<3; i++){
+			out[i] = state[i] + 2*(rand.nextGaussian()-0.5)*noise*noise;
+		}
+		return out;
+	}
+
+	private void parse4datsim(Trajectory traj, String filename){
+    	LinePrinter lp = new LinePrinter(filename);
+    	lp.println(""+filename+" Ephemeris file");
+    	lp.println("1998 6  21  0  0      0.00000     60.00000 YYYY MM DD HH MM SS Interval");
+    	lp.println("1998 172      0.00000 YYYY DOY SEC");
+    	lp.println(" 50985.00000 Modified Julian date");
+    	lp.println(" MJD         Seconds    Position (meters)                                                 Velocity (meter/second)");
+    	for(int i=0; i<traj.size(); i++){
+    		double time = traj.getTimeAt(i);
+    		double day = Math.floor(time);
+    		String sday = String.valueOf((int)day);
+    		double sec = (time - day)*86400.0;
+    		String ssec = String.valueOf(Math.round(sec));//new jat.util.PrintfFormat("%12.6f").sprintf(sec);
+    		String[] state = new String[6];
+    		for(int j=0; j<6; j++)
+    			state[j] = String.valueOf(traj.getState(i)[j]*1000);//new jat.util.PrintfFormat("%-23.14e").sprintf(traj.getState(i)[j]*1000.0);
+    		lp.println(" "+sday+" "+ssec+"  "+state[0]+"  "+state[1]+"  "+state[2]+"  "+state[3]+"  "+state[4]+"  "+state[5]);
+    	}
+    	lp.println("");
+    	lp.close();
+    }
+	private void parsePtSol(Trajectory traj, String filename){
+    	LinePrinter lp = new LinePrinter(filename);
+    	for(int i=0; i<traj.size(); i++){
+    		double t = traj.getTimeAt(i);
+    		CalDate time = new CalDate(t);
+    		int year = time.year();
+    		String syear = String.valueOf(year);//new jat.util.PrintfFormat("%4.0d").sprintf(year);
+    		int doy = time.doy();
+    		String sdoy = String.valueOf(doy);//new jat.util.PrintfFormat("%4.0d").sprintf(doy);
+    		double sec = Math.round(time.sec_of_day());
+    		String ssec = String.valueOf(sec);//new jat.util.PrintfFormat("%13.6f").sprintf(sec);
+    		String[] state = new String[6];
+    		double clock = 0.0;
+    		String misc = String.valueOf(clock);//new jat.util.PrintfFormat("%13.10f").sprintf(clock);
+    		for(int j=0; j<3; j++)
+    			state[j] = String.valueOf(traj.getState(i)[j]);//new jat.util.PrintfFormat("%-13f").sprintf(traj.getState(i)[j]);
+    		lp.println(""+syear+"  "+sdoy+"  "+ssec+"         "+state[0]+"         "+state[1]+"         "+state[2]+"         "+misc);
+    	}
+    	lp.println("");
+    	lp.close();
+    }
     public static void main(String[] args) throws InterruptedException {
         Simulation sim = new Simulation();
-        sim.runSimTwo();
+        sim.runSim4Datsim();
+        //sim.runSimTwo();
         //sim.runSimMatlab();
         //sim.runSimFormation();
     }
