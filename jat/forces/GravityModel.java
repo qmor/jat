@@ -21,14 +21,19 @@ package jat.forces;
 
 import jat.math.MathUtils;
 import jat.matvec.data.Matrix;
+import jat.spacetime.EarthFixedRef;
+import jat.spacetime.ReferenceFrame;
 import jat.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.StringTokenizer;
 
 /**
@@ -41,11 +46,11 @@ public class GravityModel extends SphericalHarmonicGravity {
 
 	private String file_separator = System.getProperty("file.separator");
 
-	private String filePath = null;
+    /** The GRV file to use */
+	private URL grvFile = null;
 	
-	private String path = null;
-
-	private GravityModelType type;
+    /** A file we output intermediate data to for test purposes. */
+	private File outputFile = null;
 
 	private int size = 0;
 	
@@ -62,21 +67,24 @@ public class GravityModel extends SphericalHarmonicGravity {
 	private boolean normalized;
 	
     /** Construct a gravity model from a STK gravity file included in JAT
+     * This constructor assumes Earth.
      * @param n Desired degree.
      * @param m Desired order.
      * @param typ GravityModelType
      */
 	public GravityModel(int n, int m, GravityModelType typ) {
-		super(n, m);		
-		type = typ;
-		try{
-		    path = FileUtil.getClassFilePath("jat.forces", "GravityModel")
-		    		+ "earthGravity";
-		}catch(NullPointerException e){
-		    path = "C:/Code/Jat/jat/forces/earthGravity/";
-		}
-		filePath = path + file_separator + type.toString() + ".grv";
-		System.out.println(filePath);
+		super(n, m, new EarthFixedRef());		
+		// We assume the gravity model is in the jat.forces.earthGravity
+        // package
+        ClassLoader loader = getClass().getClassLoader();
+        grvFile = loader.getResource("jat/forces/earthGravity/" + typ.toString() +
+            ".grv");
+        System.out.println(grvFile.toString());
+        // Put the output file in the earthGravity/ directory.
+        String path = FileUtil.getClassFilePath("jat.forces", "GravityModel") +
+          "earthGravity";
+		String filename = path + file_separator + "test.out";
+        outputFile = new File(filename);
 		initialize();
 	}
 	
@@ -85,16 +93,49 @@ public class GravityModel extends SphericalHarmonicGravity {
      * @param m Desired order.
      * @param filepath path and filename of gravity file
      */
-	public GravityModel(int n, int m, String filepath) {
-		super(n, m);
-		filePath = filepath;
-		System.out.println(filePath);
+	public GravityModel(int n, int m, ReferenceFrame bodyFixedFrame, 
+          File filepath) {
+		super(n, m, bodyFixedFrame);
+        try {
+          grvFile = filepath.toURI().toURL(); 
+          // We do the toURI() to handle spaces
+        }
+        catch (MalformedURLException e) {
+          throw new RuntimeException("Error decoding grv filename \"" +
+              filepath + "\"");
+        }
+        System.out.println(grvFile.toString());
+        outputFile = new File(filepath.getParentFile(), "test.out");
 		initialize();
 	}	
 
+    /** Construct a gravity model from a STK gravity file in the classpath
+     * @param n Desired degree.
+     * @param m Desired order.
+     * @param resouceName the name of a resource file 
+     *  (e.g. jat/forces/moonGravity/LP165P.grv).
+     */
+    public GravityModel(int n, int m, ReferenceFrame bodyFixedRef, 
+      String resourceName) {
+        super(n, m, bodyFixedRef);        
+        // We assume the gravity model is in the jat.forces.earthGravity
+        // package
+        ClassLoader loader = getClass().getClassLoader();
+        grvFile = loader.getResource(resourceName);
+        System.out.println(grvFile.toString());
+        // Put the output file in a temporary directory and put the 
+        // resource into the name.
+        int index = resourceName.lastIndexOf("/");
+        String shortName = (index < 0 ?
+            resourceName : resourceName.substring(index+1));
+        String path = System.getProperty("java.io.tmpdir");
+        outputFile = new File(path, shortName + "test.out");
+        initialize();
+    }
+    
 	public void initialize() {
 		// process the gravity file
-		Matrix cs = readGrvFile(filePath);
+		Matrix cs = readGrvFile(grvFile);
 		// check desired gravity model size vs what we have
 		if ((this.n_desired > nmax)||(this.m_desired > mmax)) {
 			System.err.println("GravityModel.initialize: desired size is greater than max size from gravity file");
@@ -106,28 +147,28 @@ public class GravityModel extends SphericalHarmonicGravity {
         this.initializeCS(nmax, mmax, cs.A);
 	}
 
-	private Matrix readGrvFile(String file) {
+	private Matrix readGrvFile(URL grvFile) {
 		
-		File outfile = new File(path + file_separator+"test.out");
 		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(outfile);
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
+        if (outputFile != null)
+        {
+          try {
+            pw = new PrintWriter(outputFile);
+          } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+          }
+        }
 		
 		
-		FileReader fr = null;
+		Reader rdr = null;
 		try {
-			fr = new FileReader(file);
-		} catch (FileNotFoundException e) {
+			rdr = new InputStreamReader(grvFile.openStream());
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		BufferedReader in = new BufferedReader(fr);
+		BufferedReader in = new BufferedReader(rdr);
 		String line = null;
-		String begin = "BEGIN";
 		boolean beginFound = false;
-		String end = "END";
 		boolean endFound = false;
 
 		while (!beginFound) {
@@ -138,7 +179,7 @@ public class GravityModel extends SphericalHarmonicGravity {
 				break;
 			}
 			// break line into space-delimited tokens
-			String[] tokens = line.split("\\s");
+			String[] tokens = line.trim().split("\\s");
 			
 			String first = tokens[0];			
 
@@ -241,6 +282,15 @@ public class GravityModel extends SphericalHarmonicGravity {
 		}
 		
 		out.print(pw);
+        pw.close();
+        
+        try {
+          in.close();
+          rdr.close();
+        }
+        catch (IOException ioe) {
+          ioe.printStackTrace();
+        }
 		return out;
 	}
 	
@@ -269,3 +319,4 @@ public class GravityModel extends SphericalHarmonicGravity {
 
 
 }
+

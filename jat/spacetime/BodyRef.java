@@ -30,7 +30,7 @@ import jat.matvec.data.VectorN;
  * @author Richard C. Page III
  *
  */
-public interface BodyRef {
+public interface BodyRef extends ReferenceFrame {
      
     /**
      * Spin rate
@@ -76,5 +76,15 @@ public interface BodyRef {
      * @return Vector [km]
      */
     public VectorN get_JPL_Moon_Vector();
+    
+    /**
+     * Creates a translate that can translate between two reference
+     * frames at a given time
+     * @param other another reference frame
+     * @param t the time at which translation will be done
+     * @return a translating object or null if the reference frame
+     * does not know how to translate to the other reference frame.
+     */
+    public ReferenceFrameTranslater getTranslater(ReferenceFrame other, Time t);   
     
 }

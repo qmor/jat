@@ -173,6 +173,8 @@ public class UniverseModel {
         		System.err.println("       Polar motion data will be set to zero.");
         		use_iers = false;
         	}
+		}else{
+			int donothing = 0;
 		}
         time.update(t);
         //if(MathUtils.mod(t,60)==0)

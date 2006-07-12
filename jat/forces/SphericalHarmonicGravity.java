@@ -23,6 +23,8 @@ import jat.matvec.data.*;
 import jat.timeRef.EarthRef;
 import jat.spacecraft.Spacecraft;
 import jat.spacetime.BodyRef;
+import jat.spacetime.ReferenceFrame;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 
 /** <P>
@@ -66,6 +68,9 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
     /** Order of gravity model desired.
      */
     protected int m_desired;
+    
+    /** The reference frame in which the gravity is computed. */
+    private ReferenceFrame bodyFixedRef;
 
     /** The user must supply a method to initialize the gravity model. The initialize() method must set the values of GM, R_ref, n_max, m_max and CS to be used.
      */
@@ -105,20 +110,20 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
      * @param n Desired degree.
      * @param m Desired order.
      */
-    public SphericalHarmonicGravity(int n, int m) {
+    public SphericalHarmonicGravity(int n, int m, 
+        ReferenceFrame bodyFixedFrame) {
+      
         this.n_desired = n;
         this.m_desired = m;
+        this.bodyFixedRef = bodyFixedFrame;
         V =  new double[this.n_desired+2][this.n_desired+2];
         W = new double[this.n_desired+2][this.n_desired+2];
     }
-    /** Evaluates the two harmonic functions V and W.
-     * @param r ECI position vector.
-     * @param E ECI to ECEF transformation matrix.
-     */
-    private void computeVW(VectorN r, Matrix E) {
 
-        // Rotate from ECI to ECEF
-        VectorN r_bf = E.times(r); 
+    /** Evaluates the two harmonic functions V and W.
+     * @param r_bf fixed body position vector.
+     */
+    private void computeVW(VectorN r_bf) {
 
         // Auxiliary quantities
         double r_sqr =  r_bf.dotProduct(r_bf);               // Square of distance
@@ -171,12 +176,31 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
     public VectorN gravity(VectorN r, Matrix E){
         // Local variables
 
+        // Evaluate harmonic functions
+        // Rotate from ECI to ECEF
+        VectorN r_bf = E.times(r); 
+        VectorN a_bf = bodyFixedGravity(r_bf);
+
+        // Inertial acceleration
+        VectorN out = E.transpose().times(a_bf);
+        
+        //out.print("acceleration");
+        return out;
+    }
+    
+    /** Computes the acceleration due to gravity in m/s^2.
+     * @param r_bf body fixed position vector.
+     * @return body-fixed acceleration in m/s^2.
+     */
+    public VectorN bodyFixedGravity(VectorN r_bf){
+        // Local variables
+
         int     n,m;                           // Loop counters
         double  Fac;                           // Auxiliary quantities
         double  C,S;                           // Gravitational coefficients
 
         // Evaluate harmonic functions
-        computeVW(r, E);
+        computeVW(r_bf);
 
         // Calculate accelerations ax,ay,az
         double ax = 0.0;
@@ -205,12 +229,7 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
         a_bf = a_bf.times(GM/(R_ref*R_ref));
 //        a_bf.print("body fixed gravity");
 
-        // Inertial acceleration
-        Matrix Etrans = E.transpose();
-        VectorN out = Etrans.times(a_bf);
-        
-        //out.print("acceleration");
-        return out;
+        return a_bf;
     }
     
     /** Implemented from the ForceModel interface
@@ -227,7 +246,12 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
      * @param sc Spacecraft parameters
      */
     public VectorN acceleration(Time t, BodyRef bRef, Spacecraft sc) {
-        return gravity(sc.r(),bRef.inertial_to_body(t));
+      
+      ReferenceFrameTranslater xlater = 
+        new ReferenceFrameTranslater(bRef, bodyFixedRef, t);
+      VectorN r_bf = xlater.translatePoint(sc.r());
+      VectorN a_bf = bodyFixedGravity(r_bf);
+      return xlater.transformDirectionBack(a_bf);
     }
     
     /** Computes the partial derivative of gravity with respect to position.
@@ -238,7 +262,8 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
     public Matrix gravityGradient(VectorN r, Matrix E){
 
         // Evaluate harmonic functions
-        computeVW(r, E);
+        VectorN r_bf = E.times(r);
+        computeVW(r_bf);
 
         double xx = 0.0;
         double xy = 0.0;

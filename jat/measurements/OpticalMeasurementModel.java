@@ -22,12 +22,9 @@
  **/
 package jat.measurements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
-import jat.alg.estimators.MeasurementFileModel;
 import jat.alg.estimators.MeasurementModel;
 import jat.alg.integrators.LinePrinter;
 import jat.eph.DE405;
@@ -38,8 +35,6 @@ import jat.matvec.data.RandomNumber;
 import jat.matvec.data.VectorN;
 import jat.matvec.data.Matrix;
 import jat.spacetime.EarthRef;
-import jat.spacetime.LunaRef;
-import jat.spacetime.TimeUtils;
 import jat.spacetime.Time;
 import jat.sim.EstimatorSimModel;
 import jat.sim.initializer;
@@ -63,6 +58,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private int vbody;
 	private Quaternion q;
 	private double R;
+	private int i_ydiskbias;
+	private int i_yanglebias;
 	
 	
 	private double mjd0;
@@ -70,7 +67,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private double jd0;
 	
 	//* global from camerr
-	private int biasflag;
+	private int biasflag = 1;
 	
 	private DE405 ephem;
 	
@@ -139,6 +136,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			else
 				vbody = 0;
 			R = initializer.parseDouble(hm,pref+"R");
+			try{
+			i_yanglebias = initializer.parseInt(hm,"FILTER.anglebias");
+			}catch(Exception e){ i_yanglebias = 6;}
 			break;
 		case TYPE_RANGE:
 			freq = initializer.parseDouble(hm,pref+"frequency");
@@ -151,6 +151,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 				cbody = BODY_MOON;
 			else
 				cbody = 0;
+			tmp = initializer.parseString(hm,pref+"vbody");
 			if(tmp.equalsIgnoreCase("earth"))
 				vbody = BODY_EARTH;
 			else if(tmp.equalsIgnoreCase("moon"))
@@ -158,6 +159,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			else
 				vbody = 0;
 			R = initializer.parseDouble(hm,pref+"R");
+			try{
+				i_yanglebias = initializer.parseInt(hm,"FILTER.rangebias");
+			}catch(Exception e){ i_yanglebias = 6;}	
 			break;
 		case TYPE_LANDMARK:
 			break;
@@ -190,8 +194,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	 % observation or for a scalar component of the line-of-sight measurement.
 	 %
 	 % INPUT:
-	 %   x      6x1   [x y z xdot ydot zdot ]' inertial position and velocity
-	 %                (km,sec)
+	 %   x      nx1   [x y z xdot ydot zdot other]' inertial position and velocity
+	 %                (m,sec)
 	 %   t      1x1   simulation time (sec)
 	 %   p      1x1   flag indicating type of vector observation
 	 %                  1 = Earth
@@ -227,7 +231,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			break;
 		case 2: //% Moon obs
 			//% Get lunar position relative to the Earth
-			VectorN xm=ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))); 
+			//* TODO watch units
+			VectorN xm=ephem.get_Geocentric_Moon_pos(
+					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400)));//.times(1000); //???
 			//getmoon(jd0+t/86400);  
 			v=xm.minus(r);
 			break;
@@ -246,6 +252,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		if (inoise==1){
 			double[] arnd_abias = camerr(v.mag(),p); //% 1-sigma noise and bias on angular measurement
 			y=Math.cos(Math.acos(y)+arnd_abias[0]*randn()+arnd_abias[1]);
+		}else{
+			//y= y + x.x[i_yanglebias];
 		}
 		
 		//% Compute Jacobian
@@ -281,7 +289,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	 % Camera anguler error as provided by Dan Schwab, Boeing
 	 % 
 	 % INPUT:
-	 %   r     1x1   range from the target body (km)
+	 %   r     1x1   range from the target body (m)
 	 %   ibody 1x1   integer indicating Earth (=1) or Moon (=2)
 	 % 
 	 % OUTPUT:
@@ -341,7 +349,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	 % Compute the sin of the predicted half-disk angle.
 	 %
 	 % INPUT:
-	 %   x       6x1  Earth-centered inertial position and velocity vector (km)
+	 %   x       6x1  Earth-centered inertial position and velocity vector (m)
 	 %   t       1x1  time (sec)
 	 %   p       1x1  integer parameter indicating Earth (=1) or Moon (=2)
 	 %   R       1x1  body's mean physical radius (km)
@@ -367,7 +375,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		if (p==1) //% Earth
 			xr=pos;
 		else if (p==2){ //% Moon
-			VectorN xm=ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd0+t/86400)));
+			//* TODO watch units
+			VectorN xm=ephem.get_Geocentric_Moon_pos(
+					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400)));//.times(1000); //??
 			xr=(pos.minus(xm));
 		} else
 			System.err.println("Parameter must be 1 for Earth or 2 for Moon.");
@@ -386,6 +396,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		if (inoise==1){
 			double[] arnd_abias =camerr(r,p); //% 1-sigma noise and bias on angular measurement
 			y=Math.sin(Math.asin(y)+arnd_abias[0]*randn()+arnd_abias[1]);
+		}else{
+			//y = y + state.x[i_ydiskbias];
 		}
 		
 		//% Compute Jacobian
@@ -425,7 +437,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		VectorN xhat=r.unitVector();
 		
 		//[rasc, decl, xs] = sun (jd);
-		VectorN rasc_decl_xs = ephem.get_Geocentric_Sun_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+		VectorN rasc_decl_xs = ephem.get_Geocentric_Sun_pos(
+				Time.TTtoTDB(Time.UTC2TT(jd)));
 		//VectorN rasc = rasc_decl_xs.get();
 		//VectorN decl = rasc_decl_xs.get();
 		VectorN xs = rasc_decl_xs;
@@ -473,7 +486,135 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		return out;
 		
 	}
-	
+
+    /**
+     * Computes the measurement between the LOS of a landmark on a body 
+     * and a star or the pseudorange to the landmark based on the apparent
+     * size of the landmark.  Note that the star can be a component vector 
+     * of the sensor if the inertial attitude of the spacecraft is known.
+     * Note that it assumes the position vector is inertial and relative 
+     * to the body that contains the landmark.  
+     * @param state state vector containing inertial s/c position and 
+     * velocity relative to the body (6 values).  May additionally
+     * contain body-fixed coordinates of a landmark.  If not provided,
+     * landmark location determined from structure.
+     * [x y z xdot ydot zdot xl yl zl]
+     * @param t time 
+     * @param p index into the gravbody structure which knows landmark
+     * positions
+     * @param s inertial reference unit vector.  If null is passed in
+     * (or a vector of length less than 3) this indicates that the pseudorange
+     * should be computed 
+     * @param lindex landmark index
+     * @param inoise noise flag
+     * @return a array of 10 doubles.  The first double is the angle between 
+     * unit vector from s/c to landmark and an inertial reference unit vector.
+     * The next 9 doubles are the Jacobian matrix (dydx)
+     */
+    private double[] y_landmark(VectorN x, Time t, int p,
+        VectorN s, int lindex, boolean inoise) {
+      
+      // We'll need a Gaussian random number generator
+      Random randn = new Random();
+      
+      double y = 0;
+      VectorN dydx = new VectorN(x.length);
+      
+      // TODO: Do we need t to be relative?
+      // jd=jd0+t/86400;
+      
+      // If the number of states is greater than 6, assume that the 
+      // components 7-9 are the body-fixed coordinates of the landmark, 
+      // otherwise, it is assumed the landmark is known and specified by 
+      // the structure.
+      VectorN lf = null;
+      if (x.length == 9) {
+        lf = x.get(7, 3);
+      }
+      else {
+        // TODO: This method needs to be translated
+        //  eval(['lf=gravbody(',int2str(p(1)),').lm(lind).lmf;']);
+        // SomeStructure body = someStructureSet.get(p);
+        // lf = body.lm(lind).lmf;
+      }
+                  
+      // Compute the coordinate transformation from body-fixed to inertial
+      // TODO: This method needs to be translated
+      // A=feval(gravbody(p(1)).fn_f2i,jd);
+      Matrix A = null;
+      VectorN li = lf.times(A);
+
+      // Compute the vector from the spacecraft to the landmark
+      VectorN d = li.minus(x.get(0, 3));
+      double dmag = d.mag();
+      VectorN dhat = d.unitVector();
+      if ((s != null) && (s.length == 3)) {
+        // Referece unit vector is provided.  Compute measurment
+        // between LOS.
+        
+        // Compute predicted measurement cos(theta)
+        y = d.dotProduct(s);
+
+        if (inoise) {
+          // Assume similar noise as star and zero bias for now
+          // TODO: Why do we have conflicting statements here?
+          double arnd=.0034*Math.PI/180;
+          arnd=.07*Math.PI/180;
+          double abias=0;
+          y=Math.cos(Math.acos(y)+arnd*randn.nextGaussian()+abias);
+        }
+
+        // (1/dmag)*s'*(-eye(3)+dhat*dhat')
+        VectorN rdot = s.divide(dmag);
+        Matrix tmp = dhat.outerProduct(dhat).minus(Matrix.identity(3,3));
+        rdot = rdot.times(tmp);
+        dydx.set(0, rdot);
+        // vdot is 0
+        
+        if (x.length == 9) {
+          VectorN ldot = rdot.times(A).times(-1);
+          dydx.set(6, ldot);
+        }
+      }
+      else {
+        // No reference unit vector is provided.  Compute pseudo range.
+        
+        // measurement is tan((D/2)/r)
+        // TODO: Implement gravbody
+        //  D=gravbody(p(1)).lm(lind).D;
+        // SomeStructure body = SomeStructureSet.gravbody(p);
+        // double D = body.lm(lind).D;
+        double D = 0;
+        y=D*.5/dmag;
+          
+        if (inoise) {
+          // 1-sigma noise and bias on angular measurement
+          // TODO: Translate camerr
+          //double[] noiseFactors = camerr(dmag,p(1));
+          double[] noiseFactors = null;
+          double arnd = noiseFactors[0];
+          double abias = noiseFactors[1];
+          y=Math.tan(Math.atan(y)+arnd*randn.nextGaussian()+abias);
+        }
+
+        double scale = (0.5 * D) / (dmag * dmag * dmag);
+        VectorN rpart = d.times(scale);
+ 
+        if (x.length == 9) {
+          VectorN ldot = rpart.times(A).times(-1);
+          dydx.set(6, ldot);
+        }
+      }
+
+      // TODO: Do we really want to shmoosh these into one array
+      // just to return it?
+      // We combine the angle and the Jacobian into a single array to return it
+      double[] toReturn = new double[dydx.length + 1];
+      toReturn[0] = y;
+      System.arraycopy(dydx, 0, toReturn, 1, dydx.length);
+      return toReturn; 
+    }
+    
 	private Matrix nadir_dcm(double jd, VectorN xsc, int cbody, int vbody){
 
 		//xsc=xsc(:);
@@ -623,8 +764,11 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	
 	public double zPred(int whichMeas, double t_sim, VectorN state) {
 		double out,obs;
-		obs = observedMeasurement(whichMeas,t_sim,new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector()));
-		double pred = predictedMeasurement(whichMeas, t_sim, state); 
+		VectorN truth = new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector()); 
+		obs = observedMeasurement(whichMeas,t_sim,truth);
+		double pred = predictedMeasurement(whichMeas, t_sim, state);
+		//* TODO watch this - following is a temporary hack to extract the bias only
+		//double pred = predictedMeasurement(whichMeas, t_sim, truth);
 		
 		if(obs == 0)
 		    out = 0.0;

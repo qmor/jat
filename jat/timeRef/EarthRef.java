@@ -21,6 +21,8 @@
 package jat.timeRef;
 import jat.matvec.data.*;
 import jat.math.*;
+import jat.spacetime.ReferenceFrame;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.util.FileUtil;
 import jat.cm.*;
@@ -1002,5 +1004,19 @@ public class EarthRef implements jat.spacetime.BodyRef {
         // TODO Auto-generated method stub
         return trueOfDate();
     }
-    
+   
+    /**
+     * Returns a translater to translate into other reference frames.
+     * @param other another reference frame
+     * @param t time at which translation will be done
+     * @return translater object or null if does not know how
+     * to translate
+     */
+    public ReferenceFrameTranslater getTranslater(ReferenceFrame other, Time t)
+    {
+      // Currently does not translate anything (but itself).
+      return (other instanceof EarthRef ?
+          new ReferenceFrameTranslater() : null);
+    }
+
 }

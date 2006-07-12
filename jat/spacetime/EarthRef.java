@@ -656,7 +656,8 @@ public class EarthRef implements BodyRef {
      *   @return  GMST in [rad]
      */
     public double GMST(double MJD_UT1) {
-        double Mjd_UT1 = MJD_UT1;
+        double Mjd_UT1 = MathUtils.round(MJD_UT1*1.0e6)/1.0e6;
+    	//double Mjd_UT1 = MJD_UT1;
         
         // Constants
         final double Secs = 86400.0;        // Seconds per day
@@ -682,17 +683,18 @@ public class EarthRef implements BodyRef {
 //        return tmp;
     
         //* JAT Validated vs STK
-        gmst  = 24110.54841 + 8640184.812866*T_0 + 1.002737909350795*UT1
-        	+ (0.093104-6.2e-6*T)*T*T;  // [s]
+        gmst  = 24110.54841 + 8640184.812866*T_0 + 1.002737909350795*UT1+ (0.093104-6.2e-6*T)*T*T;  // [s]
         	//- 0.3; // [s]
+        //???gmst  = 24110.54841 + 8640184.812866*T + (0.093104-6.2e-6*T)*T*T;  // [s]
         double tmp = pi2*MathUtils.Frac(gmst/Secs);       // [rad], 0..2pi
+        //tmp = tmp + omega_e*UT1;
         tmp = MathUtils.Modulo(tmp,pi2);
         if(tmp < 0) tmp = tmp + pi2;
         return tmp;
       //TODO
         //* debug below IERS 1997
 //        double r = 1.002737909350795 + (5.9006e-11 - 5.9e-15 * T_0)*T_0;
-//        gmst  = 24110.54841 + 8640184.812866*T_0 + (0.093104-6.2e-6*T_0)*T_0*T_0 + r*UT1; 
+//        gmst  = 24110.54841 + 8640184.812866*T_0 + (0.093104-6.2e-6*T_0)*T_0*T_0 + r*UT1;
 //        //double tmp =  gmst*Constants.omega_e;
 //        double tmp;
 //        tmp = pi2*MathUtils.Frac(gmst/Secs);
@@ -701,12 +703,17 @@ public class EarthRef implements BodyRef {
         
         //* Vallado p 191
         //gmst  = 24110.54841 + 8640184.812866*T_0 + (0.093104-6.2e-6*T_0)*T_0*T_0; // [s]
-//        gmst  = 100.4606184+36000.77005361*T_0+0.00038793*T_0*T_0-2.6e-8*T_0*T_0*T_0; // [deg]
-//        //gmst  = 67310.54841+(52596000.0+8640184.812866)*T_0+0.093104*T_0*T_0 - 6.2e-6*T_0*T_0*T_0; // [s]
-////        double tmp = pi2*MathUtils.Frac(gmst/Secs);       // [rad], 0..2pi
-////        tmp = MathUtils.Modulo(tmp,pi2);
-//        double tmp = MathUtils.Modulo(gmst*MathUtils.DEG2RAD,pi2);
-//        tmp = tmp + this.omega_e*UT1;//EarthRef.omega_e*UT1;
+        //gmst  = 100.4606184+36000.77005361*T_0+0.00038793*T_0*T_0-2.6e-8*T_0*T_0*T_0; // [deg]
+//        double d1 = 67310.54841;
+//        double d2 = (876600.0*3600.0+8640184.812866);
+//        double d3 = 0.093104;
+//        double d4 = -(6.2e-6);
+//        gmst = d1 + d2*T + d3* T*T + d4 * T*T*T;
+//        //gmst  = 67310.54841+(876600*3600+8640184.812866)*T+0.093104*T*T - (6.2e-6)*T*T*T; // [s]
+//        double tmp = pi2*MathUtils.Frac(gmst/Secs);       // [rad], 0..2pi
+//        tmp = MathUtils.Modulo(tmp,pi2);
+//        //double tmp = MathUtils.Modulo(gmst*MathUtils.DEG2RAD,pi2);
+//        //tmp = tmp + this.omega_e*UT1;//EarthRef.omega_e*UT1;
 //        //if(tmp < 0) tmp = tmp + pi2;
 //        return tmp;
         
@@ -722,7 +729,8 @@ public class EarthRef implements BodyRef {
         //if(this.debug_geons)
         	//out = MathUtils.Modulo( GMST_REF + omega_e*(MJD_UT1-MJD_UT1_0)*86400 + EqnEquinox(MJD_TT), pi2 );
         //else
-        	out = MathUtils.Modulo( GMST(MJD_UT1) + EqnEquinox(MJD_TT), pi2 );    	
+        	//out = MathUtils.Modulo( GMST(MJD_UT1) + EqnEquinox(MJD_TT), pi2 );//- 2.55020752e-5;//6.55020752e-6;
+        out = MathUtils.Modulo( GMST(MJD_UT1) + EqnEquinox(MJD_TT), pi2);// - 6.55020752e-6;
         return out;
     }
     
@@ -1200,51 +1208,84 @@ public class EarthRef implements BodyRef {
     }
   
     /**
+     * Returns a translater to translate into other reference frames.
+     * @param other another reference frame
+     * @param t time at which translation will be done
+     * @return translater object or null if does not know how
+     * to translate
+     */
+    public ReferenceFrameTranslater getTranslater(ReferenceFrame other, Time t)
+    {
+      // EarthRef is really ECI, which is a body-centered intertial
+      // reference frame.
+      return new BodyCenteredInertialRef(DE405.EARTH).getTranslater(other, t);
+    }
+    
+    /**
      * Test method.  See Vallado example 3-14.
      * @param args
      */
     public static void main(String[] args) {
         //* Follows Example 3-14 in Vallado
-        CalDate date = new CalDate(1991,4,6,7,51,28.386009);
-        double mjd_utc = date.mjd();
-        Time t = new Time(mjd_utc);
-        FitIERS iers = new FitIERS();
-        iers.process();
-        //double[] param = iers.search(mjd_utc);
-        double[] param = {-0.21959,0.30266,0.402521};
-        t.set_UT1_UTC(param[2]);
-        t.update(0);
-        EarthRef eRef = new EarthRef(t);
-        eRef.setIERS(param[0],param[1]);
-        Matrix E = eRef.eci2ecef(t);
-        double[] xd = {5102.5096, 6123.01152, 6378.1363, -4.7432196, 0.7905366, 5.53375619};
-        VectorN x = new VectorN(xd);
-        Matrix M = eRef.PrecMatrix(t.mjd_tt());
-        VectorN rmod = M.times(x.get(0,3));
-        Matrix N = eRef.NutMatrix(t.mjd_tt());
-        VectorN rtod = N.times(rmod);
-        Matrix SD = eRef.GHAMatrix(t.mjd_ut1(),t.mjd_tt());
-        VectorN rpef = SD.times(rtod);
-        Matrix P = eRef.PoleMatrix();
-        VectorN recef = P.times(rpef);
-        //double[] xvallado = {5102.509433,6123.011473,6378.136478,-4.74321966,0.79053639,5.53375617};
-        double[] xvallado = {-1120.598506,7894.483204,6374.079611,-3.18701800,-2.90527125,5.53765280};
-        VectorN vallado = new VectorN(xvallado);
-        System.out.println("error position: "+vallado.get(0,3).minus(recef));
-        
-        VectorN test = eRef.eci2ecf(x.get(0,3),x.get(3,3),t);
-        VectorN error = test.minus(vallado);
-        System.out.println("error: "+error);
-        
-        RotationMatrix E1 = new RotationMatrix(eRef.ECI2ECEF());
-        VectorN test2 = E1.times(x.get(0,3));
-        RotationMatrix E2 = new RotationMatrix(eRef.ECI2ECEF().transpose());
-        VectorN test3 = E2.times(test2.get(0,3));
-        VectorN error2 = test2.minus(vallado.get(0,3));
-        VectorN error3 = test3.minus(x.get(0,3));
-        System.out.println("error2: "+error2);
-        System.out.println("error3: "+error3);
-        System.out.println("done");
+//        CalDate date = new CalDate(1991,4,6,7,51,28.386009);
+//        double mjd_utc = date.mjd();
+//        Time t = new Time(mjd_utc);
+//        FitIERS iers = new FitIERS();
+//        iers.process();
+//        //double[] param = iers.search(mjd_utc);
+//        double[] param = {-0.21959,0.30266,0.402521};
+//        t.set_UT1_UTC(param[2]);
+//        t.update(0);
+//        EarthRef eRef = new EarthRef(t);
+//        eRef.setIERS(param[0],param[1]);
+//        Matrix E = eRef.eci2ecef(t);
+//        double[] xd = {5102.5096, 6123.01152, 6378.1363, -4.7432196, 0.7905366, 5.53375619};
+//        VectorN x = new VectorN(xd);
+//        Matrix M = eRef.PrecMatrix(t.mjd_tt());
+//        VectorN rmod = M.times(x.get(0,3));
+//        Matrix N = eRef.NutMatrix(t.mjd_tt());
+//        VectorN rtod = N.times(rmod);
+//        Matrix SD = eRef.GHAMatrix(t.mjd_ut1(),t.mjd_tt());
+//        VectorN rpef = SD.times(rtod);
+//        Matrix P = eRef.PoleMatrix();
+//        VectorN recef = P.times(rpef);
+//        //double[] xvallado = {5102.509433,6123.011473,6378.136478,-4.74321966,0.79053639,5.53375617};
+//        double[] xvallado = {-1120.598506,7894.483204,6374.079611,-3.18701800,-2.90527125,5.53765280};
+//        VectorN vallado = new VectorN(xvallado);
+//        System.out.println("error position: "+vallado.get(0,3).minus(recef));
+//        
+//        VectorN test = eRef.eci2ecf(x.get(0,3),x.get(3,3),t);
+//        VectorN error = test.minus(vallado);
+//        System.out.println("error: "+error);
+//        
+//        RotationMatrix E1 = new RotationMatrix(eRef.ECI2ECEF());
+//        VectorN test2 = E1.times(x.get(0,3));
+//        RotationMatrix E2 = new RotationMatrix(eRef.ECI2ECEF().transpose());
+//        VectorN test3 = E2.times(test2.get(0,3));
+//        VectorN error2 = test2.minus(vallado.get(0,3));
+//        VectorN error3 = test3.minus(x.get(0,3));
+//        System.out.println("error2: "+error2);
+//        System.out.println("error3: "+error3);
+  
+    	
+    	EarthRef eRef = new EarthRef(new Time(TimeUtils.MJD_J2000));
+    	Time t = new Time(Time.TT2UTC(TimeUtils.MJD_J2000));    	
+    	Matrix E = eRef.eci2ecef(t.mjd_ut1(),t.mjd_tt());
+    	System.out.println(""+E.toString());
+//        int year = 1992;
+//        int month = 8;
+//        int day = 20;
+//        int hour = 12;
+//        int min = 14;  // UT1
+//        
+//        Time ut1 = new Time(year,month,day,hour,min,0);
+//        EarthRef eRef = new EarthRef(ut1);
+//        double gmst = eRef.GMST(ut1.mjd_ut1());
+//        double gmst_v = MathUtils.Modulo(-232984181.090015915595*Constants.arcsec2rad,2*Constants.pi);
+//        System.out.println("gmst: "+gmst);
+//        System.out.println("error_gmst: "+(gmst-gmst_v));
+//        
+//        System.out.println("done");
     }
     
 }

@@ -92,6 +92,21 @@ public class SolarBarycenterRef implements BodyRef {
 		// TODO Auto-generated method stub
 		return null;
 	}
+    
+    /**
+     * Returns a translater to translate into other reference frames.
+     * @param other another reference frame
+     * @param t time at which translation will be done
+     * @return translater object or null if does not know how
+     * to translate
+     */
+    public ReferenceFrameTranslater getTranslater(ReferenceFrame other, Time t)
+    {
+      // Currently does not translate anything (but itself).
+      return (other instanceof SolarBarycenterRef ?
+          new ReferenceFrameTranslater() : null);
+    }
+
 
 	public static void main(String[] args) {
 	}

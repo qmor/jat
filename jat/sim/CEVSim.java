@@ -34,11 +34,11 @@ import jat.forces.SolarRadiationPressure;
 import jat.forces.Sun;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
-import jat.measurements.ObservationMeasurementList;
 import jat.measurements.OpticalMeasurementModel;
 import jat.measurements.createMeasurements;
 import jat.spacecraft.Spacecraft;
 import jat.spacecraft.SpacecraftModel;
+import jat.spacetime.LunaFixedRef;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;
 import jat.spacetime.UniverseModel;
@@ -47,14 +47,8 @@ import jat.traj.Trajectory;
 import jat.util.Celestia;
 import jat.util.FileUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.StringTokenizer;
 
 public class CEVSim extends EstimatorSimModel {
 
@@ -226,6 +220,7 @@ public class CEVSim extends EstimatorSimModel {
 	}
 	public static UniverseModel createUniverseModel(double mjd_utc,Spacecraft sc, boolean[] force_flag, boolean use_JGM2, String drag_model){
 		
+        boolean use_LP165P = false;
 		UniverseModel umodel = new UniverseModel(mjd_utc);
 		//ForceModelList forces = new ForceModelList();
 		VectorN zero = new VectorN(0,0,0);
@@ -254,11 +249,22 @@ public class CEVSim extends EstimatorSimModel {
 			umodel.addForce(sun);
 		}
 		if(force_flag[2]){
-			System.out.println("Moon");
-			umodel.set_compute_moon(true);
-			Moon moon =
-				new Moon(Constants.GM_Moon,zero,zero);
-			umodel.addForce(moon);
+            umodel.set_compute_moon(true);
+            if (use_LP165P) 
+            {
+                System.out.println("Moon - LP165P");
+                GravityModel moon_grav = 
+                  new GravityModel(2, 2, new LunaFixedRef(), 
+                      "jat/forces/moonGravity/LP165P.grv");
+                umodel.addForce(moon_grav);              
+            }
+            else 
+            {
+              System.out.println("Moon");
+              Moon moon =
+                new Moon(Constants.GM_Moon,zero,zero);
+              umodel.addForce(moon);
+            }
 		}
 		if(force_flag[3]){
 			double ap_opt = 14.918648166;
@@ -373,13 +379,13 @@ public class CEVSim extends EstimatorSimModel {
 					//int sat = initializer.parseInt(this.input,tmp);
 					
 					if(((OpticalMeasurementModel)created_meas.mm[i]).get_type()==OpticalMeasurementModel.TYPE_YANGLE_LOS){
-						newState = filter.estimate(simTime.get_sim_time(),i,0,true);
+						newState = filter.estimate(simTime.get_sim_time(),i,0,useMeas);
 						processedMeasurements ++;
-						newState = filter.estimate(simTime.get_sim_time(),i,1,true);
+						newState = filter.estimate(simTime.get_sim_time(),i,1,this.useMeas);
 						processedMeasurements ++;
 						//System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
 					} else {
-						newState = filter.estimate(simTime.get_sim_time(),i,0,true);
+						newState = filter.estimate(simTime.get_sim_time(),i,0,this.useMeas);
 						processedMeasurements ++;
 					}
 					
@@ -487,7 +493,7 @@ public class CEVSim extends EstimatorSimModel {
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 		this.tf = simLength;
 		set_verbose(this.verbose_estimation);
-		if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useMeas = false;
+		//if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useMeas = false;
 		//double simLength = Math.round(TF - T0);
 		//ObservationMeasurement obs = obs_list.getFirst();
 		
@@ -564,13 +570,16 @@ public class CEVSim extends EstimatorSimModel {
 		boolean useFilter = true;
 		
 		//* TODO Flag marker
-		EstimatorSimModel.JAT_case = 42;
+		EstimatorSimModel.JAT_case = 44;
 		
-		//CEVSim.JAT_name = "moon2earth_";
-		//CEVSim.InputFile = "initialConditions_cev_sun.txt";
+//		CEVSim.JAT_name = "moon2earth_";
+//		CEVSim.InputFile = "initialConditions_cev_sun.txt";
 		
 		CEVSim.JAT_name = "earth2moon";
 		CEVSim.InputFile = "initialConditions_cev_brent.txt";
+		
+//		CEVSim.JAT_name = "earth2moon";
+//		CEVSim.InputFile = "initialConditions_cev_e2m_bias.txt";
 		
 		CEVSim.PlotJAT = true;
 		

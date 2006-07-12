@@ -32,6 +32,7 @@ import jat.util.FileUtil;
 import jat.alg.ScalarfromArrayFunction;
 import jat.alg.integrators.Derivatives;
 import jat.alg.integrators.RungeKutta8;
+import jat.alg.opt.DFP;
 import jat.alg.opt.GradientSearch;
 import jat.audio.SoundPlayer;
 import jat.cm.Lambert;
@@ -240,15 +241,15 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
 	}
 	
     public static void main(String[] args) throws IOException{
-    	SolarSystemModel.test();
-    	//double mjd_utc = 53602;
-    	//SolarSystemModel test = new SolarSystemModel(mjd_utc);
-    	//test.optimize();
+    	//SolarSystemModel.test();
+    	double mjd_utc = 53602;
+    	SolarSystemModel test = new SolarSystemModel(mjd_utc);
+    	test.optimize();
     }
 
     public static void test() {
     	double start = System.currentTimeMillis();
-    	Celestia cel = new Celestia("C:/games/Celestia_Dev/my_celestia/");
+    	Celestia cel = new Celestia("C:/Code/Celestia/");
     	Trajectory traj = new Trajectory();
     	double mjd_utc = 53602; //53571;//53745.672118;
     	SolarSystemModel test = new SolarSystemModel(mjd_utc);
@@ -266,55 +267,55 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
 		.times(0.001).x;
     	traj.add(test.time.mjd_utc(),in);
     	
-//    	VectorN r = test.body[SolarSystemModel.EARTH].getPosition().plus(new VectorN(100000,100000,100000));
-//    	VectorN v = test.body[SolarSystemModel.EARTH].getVelocity();
-//    	//Spacecraft sc = new Spacecraft(r,v, 20, 1, 20, 1000);
-//    	Lambert lam = new Lambert(test.convert_GM_SI(SolarSystemModel.GM_body[SolarSystemModel.SUN]));
-//    	DE405 ephem2 = new DE405();
-//    	double travel_time = 7*29; //days
-//    	ephem2.planetary_ephemeris(Time.TTtoTDB(Time.UTC2TT(test.time.jd_utc()+travel_time)));
-//    	double[] xrf = ephem2.planet_r[DE405.MARS];
-//    	double[] xvf = ephem2.planet_rprime[DE405.MARS];
-//    	EarthRef earth = new EarthRef(new Time(test.time.mjd_utc()+travel_time));
+    	VectorN r = test.body[SolarSystemModel.EARTH].getPosition().plus(new VectorN(100000,100000,100000));
+    	VectorN v = test.body[SolarSystemModel.EARTH].getVelocity();
+    	//Spacecraft sc = new Spacecraft(r,v, 20, 1, 20, 1000);
+    	Lambert lam = new Lambert(test.convert_GM_SI(SolarSystemModel.GM_body[SolarSystemModel.SUN]));
+    	DE405 ephem2 = new DE405();
+    	double travel_time = 7*29; //days
+    	ephem2.planetary_ephemeris(Time.TTtoTDB(Time.UTC2TT(test.time.jd_utc()+travel_time)));
+    	double[] xrf = ephem2.planet_r[DE405.MARS];
+    	double[] xvf = ephem2.planet_rprime[DE405.MARS];
+    	EarthRef earth = new EarthRef(new Time(test.time.mjd_utc()+travel_time));
     	
-//		RotationMatrix rot = earth.EclMatrix(test.time.mjd_tdb());
+		RotationMatrix rot = earth.EclMatrix(test.time.mjd_tdb());
 		
-//		VectorN rf = new VectorN(xrf[1]*1000,xrf[2]*1000,xrf[3]*1000);
-//    	VectorN vf = new VectorN(xvf[1]*1000,xvf[2]*1000,xvf[3]*1000);		
-//    	rf = rot.transform(rf);
-//		vf = rot.transform(vf);
-//		vf = vf.unitVector().times(Math.sqrt(test.convert_GM_SI(SolarSystemModel.GM_body[SolarSystemModel.SUN])/rf.mag()));
-//    	double dt = travel_time*86400;
-//    	lam.compute(r,v,rf,vf,dt);
-//    	//v = v.plus(lam.deltav0.times(1));//0.9999999999999));
-//    	//v = new VectorN(18768.5485896016, 27159.53500768568, 1437.7670601153093);
-//    	v = new VectorN(18768.56762641506 , 27159.504157982643 , 1437.7664350751745);
-//    	double t = 0;
-//    	RungeKutta8 rk8 = new RungeKutta8(1800);
-//    	double[] x = {r.x[0],r.x[1],r.x[2],v.x[0],v.x[1],v.x[2]};
-//    	double[] xp = {x[0]/1000,x[1]/1000,x[2]/1000};
-//    	traj.add(test.time.mjd_utc(),xp);
-//    	double tsim = 2;
-//    	boolean flag=true;
-//    	for(int i=0; i<tsim*dt/1800; i++){
-//    		x = rk8.step(t,x,test);
-//    		xp[0] = x[0]/1000;
-//    		xp[1] = x[1]/1000;
-//    		xp[2] = x[2]/1000;
-//    		t = t+1800;
-//    		if(t>dt && flag){
-//    			x[3] = x[3] + lam.deltavf.x[0]*0.98;
-//    			x[4] = x[4] + lam.deltavf.x[1]*0.98;
-//    			x[5] = x[5] + lam.deltavf.x[2]*0.98;
-//    			flag = false;
-//    		}
-//    		test.time.update(t);
-//    		traj.add(test.time.mjd_utc(),xp);
-//    		System.out.println("step: "+t/(tsim*dt));
-//    	}
+		VectorN rf = new VectorN(xrf[1]*1000,xrf[2]*1000,xrf[3]*1000);
+    	VectorN vf = new VectorN(xvf[1]*1000,xvf[2]*1000,xvf[3]*1000);		
+    	rf = rot.transform(rf);
+		vf = rot.transform(vf);
+		vf = vf.unitVector().times(Math.sqrt(test.convert_GM_SI(SolarSystemModel.GM_body[SolarSystemModel.SUN])/rf.mag()));
+    	double dt = travel_time*86400;
+    	lam.compute(r,v,rf,vf,dt);
+    	//v = v.plus(lam.deltav0.times(1));//0.9999999999999));
+    	//v = new VectorN(18768.5485896016, 27159.53500768568, 1437.7670601153093);
+    	v = new VectorN(18768.56762641506 , 27159.504157982643 , 1437.7664350751745);
+    	double t = 0;
+    	RungeKutta8 rk8 = new RungeKutta8(1800);
+    	double[] x = {r.x[0],r.x[1],r.x[2],v.x[0],v.x[1],v.x[2]};
+    	double[] xp = {x[0]/1000,x[1]/1000,x[2]/1000};
+    	traj.add(test.time.mjd_utc(),xp);
+    	double tsim = 2;
+    	boolean flag=true;
+    	for(int i=0; i<tsim*dt/1800; i++){
+    		x = rk8.step(t,x,test);
+    		xp[0] = x[0]/1000;
+    		xp[1] = x[1]/1000;
+    		xp[2] = x[2]/1000;
+    		t = t+1800;
+    		if(t>dt && flag){
+    			x[3] = x[3] + lam.deltavf.x[0]*0.98;
+    			x[4] = x[4] + lam.deltavf.x[1]*0.98;
+    			x[5] = x[5] + lam.deltavf.x[2]*0.98;
+    			flag = false;
+    		}
+    		test.time.update(t);
+    		traj.add(test.time.mjd_utc(),xp);
+    		System.out.println("step: "+t/(tsim*dt));
+    	}
     	
     	cel.set_trajectory(traj);
-    	//try {
+   	    //try {
 			cel.write_xyz("verify3");
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
@@ -333,7 +334,7 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     public void optimize(){
 //    	 TODO Auto-generated method stub
     	double start = System.currentTimeMillis();
-    	Celestia cel = new Celestia("C:/games/Celestia_Dev/my_celestia/");
+    	Celestia cel = new Celestia("C:/Code/Celestia/");
     	Trajectory traj = new Trajectory();
     	double mjd_utc = 53602; //53571;//53745.672118;
     	this.epoch = mjd_utc;
@@ -356,9 +357,11 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     	//v = new VectorN(18768.5485896016, 27159.53500768568, 1437.7670601153093);
     	v = new VectorN(18768.56690768879, 27159.50563378906, 1437.766446555035);
     	double[] xinit = v.x;
-    	GradientSearch gs = new GradientSearch(this,xinit);
-    	gs.max_it = 1;
-    	double[] xsol = gs.find_min_gradient();
+    	//GradientSearch gs = new GradientSearch(this,xinit);
+    	DFP opt = new DFP(this,xinit);
+    	//DFP.max_it = 1;
+    	opt.max_it = 5;
+    	double[] xsol = opt.find_min_DFP();
     	
     	v = new VectorN(xsol);  
     	double t = 0;

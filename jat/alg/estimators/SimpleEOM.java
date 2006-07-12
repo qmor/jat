@@ -35,15 +35,14 @@ import jat.matvec.data.VectorN;
 import jat.sim.initializer;
 import jat.spacetime.Time;
 import jat.spacetime.UniverseModel;
-import jat.util.FileUtil;
 
 public class SimpleEOM implements Derivatives {
 	
 	private static double re = 6378136.3; // radius of earth in meters
-	private static double h_0 = 920000.0; // atmosphere model parameter
-	private static double rho_0 = 4.36E-14; // atmosphere model parameter
-	private static double gamma_0 = 5.381E-06; // atmosphere model parameter
-	private static double omega_e = 7.2921157746E-05; // earth rotation rate
+	//private static double h_0 = 920000.0; // atmosphere model parameter
+	//private static double rho_0 = 4.36E-14; // atmosphere model parameter
+	//private static double gamma_0 = 5.381E-06; // atmosphere model parameter
+	//private static double omega_e = 7.2921157746E-05; // earth rotation rate
 	public static int n;
 	public static HashMap hm;
 	public static double mass0,mass1,area0,area1;
@@ -54,7 +53,7 @@ public class SimpleEOM implements Derivatives {
 	double mu = Constants.mu*1e9;
 	boolean firsttime;
 	UniverseModel universe;
-
+	double Qbias; //noise for the angle bias
 
 	GravityModel earth_grav;
 	
@@ -63,13 +62,6 @@ public class SimpleEOM implements Derivatives {
 	public double hc;
 	
 	public SimpleEOM(HashMap hm){
-		String fs, dir_in;
-		fs = FileUtil.file_separator();
-		try{
-			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
-		}catch(Exception e){
-			dir_in = "";
-		}
 		mass0 = initializer.parseDouble(hm,"jat.0.mass");
 		area0 = initializer.parseDouble(hm,"jat.0.area");
 		Cr0 = initializer.parseDouble(hm,"jat.0.Cr");
@@ -79,7 +71,8 @@ public class SimpleEOM implements Derivatives {
 		mjd0 = initializer.parseDouble(hm,"init.MJD0");
 
 		
-		hc = -2.87956633585E-10 * GPS_Utils.c;
+		//hc = -2.87956633585E-10 * GPS_Utils.c;
+		//Qbias = initializer.parseDouble(hm,"Q.0.bias");
 		
 		earth_grav = new GravityModel(4,4,GravityModelType.JGM3);
 		
@@ -87,11 +80,6 @@ public class SimpleEOM implements Derivatives {
 		srp1 = new SolarRadiationPressure(mass1, area1, Cr1);
 		
 		//Set the Gravitational parameter path
-		try{
-			dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+"DE405data"+fs;
-		}catch(Exception e){
-			dir_in = "";
-		}
 		jpl_ephem = new DE405();
 		
 
@@ -114,9 +102,9 @@ public class SimpleEOM implements Derivatives {
 		double out[] = new double[n*n + n];
 		
 		//Obtain thet the correct time
-		int ctr = 0;
+		//int ctr = 0;
 		Time tt = new Time(t/86400 + mjd0);
-		double newttt = tt.UTC2TT(t/86400 + mjd0);
+		//double newttt = tt.UTC2TT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
@@ -133,15 +121,15 @@ public class SimpleEOM implements Derivatives {
 		
 		// Generate some vectors for use later on
 		VectorN r0 = new VectorN(y[0], y[1], y[2]);
-		VectorN v0 = new VectorN(y[3], y[4], y[5]);
+		//VectorN v0 = new VectorN(y[3], y[4], y[5]);
 		
 		// store elements of incoming state in more familiar looking variables
 		double xx0 = y[0];
 		double yy0 = y[1];
 		double zz0 = y[2];
-		double vx0 = y[3];
-		double vy0 = y[4];
-		double vz0 = y[5];
+		//double vx0 = y[3];
+		//double vy0 = y[4];
+		//double vz0 = y[5];
 	
 		// compute derived variables
 		double rmag0 = r0.mag();
@@ -178,11 +166,12 @@ public class SimpleEOM implements Derivatives {
 		double nn0 = -1.0 * (mu * zz0 / rcubed0) * (1.0 - 1.5 * re_r0 * j2 * (zsq_rsq0 - 2.0));
 		
 		// compute accelerations due to SRP
-		double AU_sqrd = Constants.AU*Constants.AU;
+		//double AU_sqrd = Constants.AU*Constants.AU;
 				
 		//compute acceleration due to lunar gravity
-		double ttt = tt.TTtoTDB(newttt) + 2400000.5;
-        VectorN r_moon = universe.earthRef.moonVector(newttt);
+		//double ttt = tt.TTtoTDB(newttt) + 2400000.5;
+        //VectorN r_moon = universe.earthRef.moonVector(newttt);
+		VectorN r_moon = jpl_ephem.get_Geocentric_Moon_pos(tt.jd_tdb()).times(1000.0);
         
         VectorN d0 = r0.minus(r_moon);
         
@@ -203,7 +192,8 @@ public class SimpleEOM implements Derivatives {
         //lunarAcceleration0.set(0);
     
         //Compute the acceleration due to the solar gravity
-        VectorN r_sun = universe.earthRef.sunVector(newttt);
+        //VectorN r_sun = universe.earthRef.get_JPL_Sun_Vector();
+        VectorN r_sun = jpl_ephem.get_Geocentric_Sun_pos(tt.jd_tdb()).times(1000.0);
         d0 = r0.minus(r_sun);
         
         dmag0 = d0.mag();
@@ -229,13 +219,13 @@ public class SimpleEOM implements Derivatives {
         }
         double visible0 = srp0.partial_illumination(r0,r_sun);
 		
-		double pressureConstant = 4.5344321837439e-06;
-		double SRPscale0 = pressureConstant*(area0/mass0)*visible0;
+		//double pressureConstant = 4.5344321837439e-06;
+		//double SRPscale0 = pressureConstant*(area0/mass0)*visible0;
         
         //Compute the relevant SRP information
-		double Xsun = r_sun.get(0);
-		double Ysun = r_sun.get(1);
-		double Zsun = r_sun.get(2);
+		//double Xsun = r_sun.get(0);
+		//double Ysun = r_sun.get(1);
+		//double Zsun = r_sun.get(2);
 		//double aa = 1.0 *Cr*(Xsun/magSun3)*AU_sqrd*visible;
 		//double bb = 1.0 *Cr*(Ysun/magSun3)*AU_sqrd*visible;
 		//double cc = 1.0 *Cr*(Zsun/magSun3)*AU_sqrd*visible;
@@ -258,11 +248,12 @@ public class SimpleEOM implements Derivatives {
 		out[4] = ay0    - solarAcceleration0.get(1) + srpacc0.get(1) - lunarAcceleration0.get(1);
 		out[5] = az0     - solarAcceleration0.get(2) + srpacc0.get(2) - lunarAcceleration0.get(2);
 	
-		double w_f = (Math.random()-0.5)*2*.036;
-		out[6] = w_f + hc;
-		double w_g = (Math.random()-0.5)*2*7.106E-05;
-		out[7] = w_g;
-	
+		//double w_f = (Math.random()-0.5)*2*.036;
+		//out[6] = w_f + hc;
+		//double w_g = (Math.random()-0.5)*2*7.106E-05;
+		//out[7] = w_g;
+		out[6] = 0 + Qbias;
+		
 		//Solar radiation Pressure states
 		out[8] = 0;
 		
@@ -281,7 +272,7 @@ public class SimpleEOM implements Derivatives {
 		double mur50 = mu / r50;
 
 		
-		double mur30 = mu / rcubed0;
+		//double mur30 = mu / rcubed0;
 		
 		
 		double sz2r20 = 7.0 * zz0 * zz0 / rsq0;
@@ -298,7 +289,7 @@ public class SimpleEOM implements Derivatives {
 		
 		double bracket50 = 3.0 - 7.5 * re_r0 * j2 * (sz2r20 - 5.0);
 		
-		double bracket20 = 1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 1.0);
+		//double bracket20 = 1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 1.0);
 		
 		//Note:  use this formulation for ll to avoid a singularity
 		ll0 = -1.0 * (mu  / rcubed0) * (1.0 - 1.5 * re_r0 * j2 * zsq_rsq0);
@@ -309,7 +300,7 @@ public class SimpleEOM implements Derivatives {
 		
 		double dldz0 = muxzr50 * bracket30;
 		
-		double dldj20 = mur30 * xx0 * bracket20;
+		//double dldj20 = mur30 * xx0 * bracket20;
 		
 		double dmdx0 = dldy0;		
 		
@@ -321,7 +312,7 @@ public class SimpleEOM implements Derivatives {
 		
 		double dmdz0 = muyzr50 * bracket30;
 		
-		double dmdj20 = mur30 * yy0 * bracket20;
+		//double dmdj20 = mur30 * yy0 * bracket20;
 		
 		double dndx0 = muxzr50 * bracket30;
 		
@@ -334,9 +325,9 @@ public class SimpleEOM implements Derivatives {
 		double dndz0 = nn0 + mur50 * zz0 * zz0 * bracket50;
 		
 		
-		double dndj20 = mur30 * zz0 * (1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 3.0));
+		//double dndj20 = mur30 * zz0 * (1.5 * re_r0 * (5.0 * zz0 * zz0 / rsq0 - 3.0));
 
-		SRPscale0 = 0;
+		//SRPscale0 = 0;
 		
 		a.A[0][3] = 1.0;
 		a.A[1][4] = 1.0;

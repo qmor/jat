@@ -35,7 +35,6 @@ import jat.traj.CoordinateSystem;
 import jat.traj.DistanceUnits;
 import jat.traj.TimeUnits;
 import jat.traj.Trajectory;
-import jat.util.FileUtil;
 
 public class SimpleProcessModel implements ProcessModel {
 

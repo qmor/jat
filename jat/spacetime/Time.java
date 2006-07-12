@@ -140,6 +140,7 @@ public class Time {
      * @return MJD_UT1
      */
     public double mjd_ut1(){
+    	//* TODO watch this
     	if(this.MJD_UT1==this.MJD_UTC)
     		this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
 //    	if(debugGEONS){
@@ -458,6 +459,18 @@ public class Time {
        // compute the difference between TT and UTC
        double tt_utc = (double)(TimeUtils.tai_utc(mjd_utc) + TimeUtils.TT_TAI);
        double out = mjd_utc + tt_utc/86400.0;
+       return out;
+   }
+   
+   /** Convert TT time to UTC
+    * @param mjd_tt
+    * @return mjd_utc
+    */
+   public static double TT2UTC(double mjd_tt){
+//	 compute the difference between TT and UTC
+       double tt_utc = (double)(TimeUtils.tai_utc(mjd_tt) + TimeUtils.TT_TAI);	   
+       //double out = mjd_utc + tt_utc/86400.0;
+       double out = mjd_tt - tt_utc/86400.0;
        return out;
    }
 

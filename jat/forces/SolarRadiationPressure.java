@@ -24,7 +24,10 @@ import jat.matvec.data.VectorN;
 import jat.timeRef.EarthRef;
 import jat.util.FileUtil;
 import jat.spacecraft.Spacecraft;
+import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.BodyRef;
+import jat.spacetime.ReferenceFrame;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.eph.DE405;
 
@@ -49,6 +52,10 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
 	/** Satellite coefficient of reflectivity 
      */
 	private double CR;
+    
+    /** All solar pressure radiation forces are determined based on
+     * position relative to the sun. */
+    private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405.SUN);
 	
 	/** Default constructor.
      */
@@ -84,14 +91,12 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
 	}
 	
     /** Compute the acceleration due to a solar radiation pressure.
-     * @param r ECI position vector [m].
-     * @param r_Sun ECI position vector of Sun in m.
+     * @param d Relative position vector of spacecraft w.r.t. Sun 
+     * (from the sun to s/c)
      * @return Acceleration due to solar radiation pressure in m/s^2.
      */
-    public VectorN accelSRP(VectorN r, VectorN r_Sun) 
+    public VectorN accelSRP(VectorN d) 
     {
-        // Relative position vector of spacecraft w.r.t. Sun (from the sun to s/c)
-        VectorN d = r.minus(r_Sun);
         double dmag = d.mag();
         double dcubed = dmag * dmag * dmag;
         double au2 = Constants.AU * Constants.AU;
@@ -133,6 +138,18 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
     	return (accelSRP(sc.r(),r_sun).times(partial_illumination(sc.r(),r_sun)));
     }
 
+    /** Compute the acceleration due to a solar radiation pressure.
+     * @param r ECI position vector [m].
+     * @param r_Sun ECI position vector of Sun in m.
+     * @return Acceleration due to solar radiation pressure in m/s^2.
+     */
+    public VectorN accelSRP(VectorN r, VectorN r_Sun) 
+    {
+      // Relative position vector of spacecraft w.r.t. Sun (from the sun to s/c)
+      VectorN d = r.minus(r_Sun);
+      return accelSRP(d);
+    }
+
     /** Implemented from the ForceModel interface
      * @param t Time reference object
      * @param bRef Earth reference object
@@ -142,12 +159,14 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
         area = sc.area();
     	mass = sc.mass();
     	CR = sc.cr();
-//        VectorN r_sunb = jpl_ephemeris.get_pos(DE405.SUN,jd);
-//        VectorN r_earth = jpl_ephemeris.get_pos(DE405.EARTH,jd);
-//        VectorN r_sun = r_sunb.minus(r_earth); 
-        VectorN r_sun = bRef.get_JPL_Sun_Vector();
-        r_sun = r_sun.times(1000);
-    	return (accelSRP(sc.r(),r_sun).times(partial_illumination(sc.r(),r_sun)));
+        
+        // We translate to a sun-centered reference frame to
+        // determine the distance from the sun
+        ReferenceFrameTranslater xlater = 
+          new ReferenceFrameTranslater(bRef, sunRef, t);
+        VectorN d = xlater.translatePoint(sc.r());
+        
+    	return (accelSRP(d).times(partial_illumination_rel(sc.r(), d)));
     }
     
     /** Update satellite mass.
@@ -191,13 +210,25 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
      * @return 0.0 if in shadow, 1.0 if in sunlight, 0 to 1.0 if in partial shadow
      */
     public double partial_illumination(VectorN r, VectorN r_Sun ){
-        double r_sun_mag = r_Sun.mag();
-        double r_mag = r.mag();
+      VectorN d = r_Sun.minus(r);
+      return partial_illumination_rel(r, d);
+    }
+    
+    /** Determines if the satellite is in sunlight or shadow based on simple cylindrical shadow model.
+     * Taken from Montenbruck and Gill p. 80-83
+     * @param r_earth position vector of spacecraft with respect to Earth (ECI).
+     * @param r_sun position vector of spacecraft with respect to the sun.
+     * @return 0.0 if in shadow, 1.0 if in sunlight, 0 to 1.0 if in partial shadow
+     */
+    public double partial_illumination_rel(VectorN r_earth, VectorN r_sun){
+        double r_mag = r_earth.mag();
         double R_sun = Constants.R_Sun;
+        // TODO: This is hard coded to Earth.  A planet reference
+        // frame and radius should be passed in to the SolarRadiationPressure
+        // at construction.
         double R_earth = Constants.R_Earth;
-        VectorN d = r_Sun.minus(r);
-        double dmag = d.mag();
-        double sd = -1.0 * r.dotProduct(d);
+        double dmag = r_sun.mag();
+        double sd = -1.0 * r_earth.dotProduct(r_sun);
         double a = Math.asin(R_sun/dmag);
         if(R_earth>r_mag){
         	System.err.println("Error! Collision detected with Earth.");

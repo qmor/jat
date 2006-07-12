@@ -20,6 +20,8 @@
 
 package jat.forces;
 
+import jat.spacetime.EarthFixedRef;
+
 /** <P>
  * The JGM3 class computes the acceleration due to gravity on a satellite
  * using the JGM-3 spherical harmonic gravity field.
@@ -157,7 +159,7 @@ public class JGM3 extends SphericalHarmonicGravity {
      * @param m Desired order.
      */
     public JGM3(int n, int m){
-        super(n, m);
+        super(n, m, new EarthFixedRef());
         this.initialize();
     }
 	

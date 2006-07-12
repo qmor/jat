@@ -25,6 +25,7 @@ import java.util.HashMap;
 import jat.sim.*;
 import jat.matvec.data.*;
 import jat.alg.integrators.LinePrinter;
+import jat.eph.DE405;
 import jat.measurements.*;
 import jat.spacecraft.SpacecraftModel;
 import jat.spacetime.Time;
@@ -43,6 +44,8 @@ import jat.util.FileUtil;
 */
 public class EKF {
 
+	DE405 ephem = new DE405();
+	double mjd_epoch;
 
 	/** Dynamics or Process Model */
 	public ProcessModel  process;
@@ -104,6 +107,7 @@ public class EKF {
 		this.n = initializer.parseInt(hm,"FILTER.states");
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
 		dtNominal = initializer.parseInt(hm,"FILTER.dt");
+		mjd_epoch = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0")/86400.0;
 		
 		filterTime = 0;//initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0");
 		System.out.println(stringPm);
@@ -140,7 +144,6 @@ public class EKF {
 		//obs_list = ol;
 		//next_obs = obs_list.getFirst();
 		hm = input;
-		
         String fs, dir_in;
         fs = FileUtil.file_separator();
         try{
@@ -153,6 +156,7 @@ public class EKF {
         //this.n=6;
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
 		dtNominal = initializer.parseInt(hm,"FILTER.dt");
+		mjd_epoch = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0")/86400.0;
 		
 		filterTime = 0;//initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0");
 		System.out.println(stringPm);
@@ -325,7 +329,7 @@ public class EKF {
 //				"Time:  "+simTime+"  Residual:  "+y+" Measurement Type:  "+
 //				createMeasurements.measurementTypes[measNum] + " State "+whichMeas;
 //			residuals.println(residualsOut);
-			String residualsOut = "Time: "+filterTime+" Residual: "+y+" Measurement Type: "+
+			String residualsOut = "Time: "+filterTime+" Residual: "+y+"    Measurement Type: "+
 				obs.get_measurementType()+" State "+obs.get_PRN();
 			residuals.println(residualsOut);
 			//Use the current reference trajectory to form the H matrix
@@ -501,28 +505,34 @@ public class EKF {
 			/*Catch the case where the measurement doesn't occur*/
 			//if( Math.abs(y) > 0)
 			//{
+			//* TODO watch this
+				VectorN moon = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(mjd_epoch+filterTime/86400.0)))).times(1000);
+				VectorN r_eci = xref.get(0,3);
+				//double dist = r_eci.mag();
+				double dist = (moon.minus(r_eci)).mag();
 				
-				double r = measurements.mm[measNum].R();
-//				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
-//					String residualsOut = "Time:  " + simTime + 
-//					"  Residual:  " + jat.math.MathUtils.RAD2DEG + "  deg  Measurement Type:  " + 
-//					measurements.measurementTypes[measNum] + " State " + whichMeas;
-//					residuals.println(residualsOut);
-//				}else if(measurements.measurementTypes[measNum].equalsIgnoreCase("range")){
-//					String residualsOut = "Time:  " + simTime + 
-//					"  Residual:  " + jat.math.MathUtils.RAD2DEG + "  deg  Measurement Type:  " + 
-//					measurements.measurementTypes[measNum] + " State " + whichMeas;
-//					residuals.println(residualsOut);
-//				}else{
+				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
+					//String residualsOut = "Time:  " + simTime +
+					String residualsOut = "Dist:  " + dist +
+					"  Residual:  " + (jat.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
+					measurements.measurementTypes[measNum] + " State " + whichMeas;
+					residuals.println(residualsOut);
+				}else if(measurements.measurementTypes[measNum].equalsIgnoreCase("range")){
+					String residualsOut = "Dist:  " + dist + 
+					"  Residual:  " + (jat.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
+					measurements.measurementTypes[measNum] + " State " + whichMeas;
+					residuals.println(residualsOut);
+				}else{
 					String residualsOut = "Time:  " + simTime + 
 					"  Residual:  " + y + " Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
-				//}
+				}
 				
 				//Use the current reference trajectory to form the H matrix
 				VectorN  H = measurements.mm[measNum].H(new VectorN(6));
 
+				double r = measurements.mm[measNum].R();
 				// compute the Kalman gain
 				VectorN k = this.kalmanGain(pnew, H, r);
 				

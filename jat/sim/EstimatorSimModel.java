@@ -1202,7 +1202,7 @@ public class EstimatorSimModel extends SimModel {
 			EstimatorSimModel.MEAS_GPSSTATE = "C:/Code/Jat/jat/measurements/test1_8.rnx";
 			EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/GEONS/Case1_8/test1_8.rel26a.sta";
 			EstimatorSimModel.Truth = "C:/Code/Misc/GEONS/Case1_8/test1_8.j2k.ascii";
-			//EstimatorSimModel.MEAS_GPSSTATE = "C:/Code/Jat/jat/measurements/test1_8_jat.rnx";
+			//EstimatorSimModel.MEAS_GPSSTATE = "C:/Code/Jat/jat/measurements/test1_8_jat_eci.rnx";
 			//EstimatorSimModel.MEAS_GPSSTATE = "C:/Code/Jat/jat/measurements/test1_8.meas";
 			//EstimatorSimModel.GEONS_Ref = "C:/Code/Misc/JAT_Traj/GEONS_1a.eci";
 			//EstimatorSimModel.Truth = "C:/Code/Misc/GEONS/Case1_8/jat_j2k1_8.txt";

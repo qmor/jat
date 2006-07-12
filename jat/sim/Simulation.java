@@ -33,6 +33,7 @@ import jat.spacetime.CalDate;
 import jat.spacetime.EarthRef;
 import jat.spacetime.FitIERS;
 import jat.spacetime.Time;
+import jat.spacetime.TimeUtils;
 import jat.test.propagator.PlotTrajectory;
 import jat.traj.RelativeTraj;
 import jat.traj.Trajectory;
@@ -63,17 +64,18 @@ public class Simulation {
         String fs = FileUtil.file_separator();
         String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
         
-        String[] tests = {"ISS","GEO","ISS","GEO"};
+        String[] tests = {"ISS","GEO","ISS","GEO","GEO"};
         //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
         boolean[][] force_flag = {{false,true,true,true,true},
         		{false,true,true,true,true},
         		{true,false,false,true,false},
-        		{true,false,false,false,true}};					//JGM3		0
+        		{true,false,false,false,true},
+        		{false,false,false,false,false}};					//JGM3		0
         String[] test_nums = 
-        		{"7_HP","35_HP","4_HP","33"};  							//JGM3		
+        		{"7_HP","35_HP","4_HP","33","34"};  							//JGM3		
         
         boolean plot_traj = true;
-        int i=3;
+        int i=4;
         //*ISS
         //VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
         //VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
@@ -91,7 +93,7 @@ public class Simulation {
         //v = v.times(1755);
         v = v.times(1000);
         double t0 = 0, tf = 3*86400; //604800;
-        double mjd_utc = 53157.5;  
+        double mjd_utc = 53157.5;
         //double mjd_utc = 53683;
         double stepsize = 60;
         //String out = dir+"output"+fs+tests[i]+test_nums[j][i]+".txt";
@@ -221,7 +223,7 @@ public class Simulation {
         String[] tests = {"ISS","Sun-Sync","GPS","Molniya","GEO"};
         //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
         boolean[][] force_flag = 
-        {{false,false,false,false,false},						//JGM3		0
+        {{false,false,false,false,false},								//JGM3		0
                 {true,  true,  false,     false,          false},		//Sun		1
                 {true,  false,  true,     false,          false},		//Moon		2
                 {true,  false, false,     true,           false},		//HP		3
@@ -231,7 +233,7 @@ public class Simulation {
                 {false, true, true, true, true},						//ALL NRL	7
                 {true, false, false, false, false}};					//two body  8
         String[][] test_nums = 
-        {{"6","13","20","27","34"},  							//JGM3		
+        {{"6","13","20","27","34"},  									//JGM3		
                 {"3","10","17","24","31"},  							//Sun		
                 {"2","9","16","23","30"},   							//Moon		
                 {"4_HP","11_HP","18_HP","25_HP","32_HP"}, 				//HP
@@ -312,7 +314,7 @@ public class Simulation {
         						  {false,false,false,true,false}};					//JGM3		0
         String[][] test_nums = 
         		{{"1_8","1_1","1_6"}};  							//JGM3		
-        double ptsol_noise = 0.0;
+        double ptsol_noise = 3.0;
         int i=0,j=0;
         //*ISS
         VectorN r[] = new VectorN[3];
@@ -324,7 +326,7 @@ public class Simulation {
         r[2] = new VectorN(2.72701600600060e+06,-4.56452737925970e+06,-4.35529550517323e+06);
         v[2] = new VectorN(4.45912406220447e+03,-3.63297132340426e+03,6.59775392945695e+03);
         
-        double cd = 2.2, cr = 1.2, m = 1000, area = 10;
+        double cd = 2.2, cr = 1.2, m = 2100, area = 54;
         double t0 = 0, tf = 4*86400;
         double mjd_utc[] = {50985,52187,51013.0};  
         double stepsize = 60;
@@ -375,24 +377,24 @@ public class Simulation {
         		//earth.update(time);
         		RotationMatrix eci2ecf = new RotationMatrix(earth.eci2ecef(time));
         		VectorN xecef = eci2ecf.transform(x.get(0,3));
-        		meas.add(mjd,make_ptsol(xecef.x,ptsol_noise));
-        		//meas.add(mjd,x.x);
+        		//meas.add(mjd,make_ptsol(xecef.x,ptsol_noise));
+        		meas.add(mjd,make_ptsol(x.x,ptsol_noise));
         		while(t<tf){
         			sim.step(stepsize);
         			t=t+stepsize;
         			mjd = mjd_utc[i] + t/86400.0;
         			x = new VectorN(sim.sc.get_spacecraft().toStateVector());
         			time.update(t);
-        			param = iers.search(time.mjd_tt());
-        		    earth.setIERS(param[0],param[1]);
-        		    time.set_UT1_UTC(param[2]);        			        		    
+        			//param = iers.search(time.mjd_tt());
+        		    //earth.setIERS(param[0],param[1]);
+        		    //time.set_UT1_UTC(param[2]);        			        		    
         		    //earth.update(time);
             		eci2ecf = new RotationMatrix(earth.eci2ecef(time));
             		xecef = eci2ecf.transform(x.get(0,3));
-            		meas.add(mjd,make_ptsol(xecef.x,ptsol_noise));
-            		//meas.add(mjd,x.x);
+            		//meas.add(mjd,make_ptsol(xecef.x,ptsol_noise));
+            		meas.add(mjd,make_ptsol(x.x,ptsol_noise));
         		}
-        		parsePtSol(meas,dir+"output"+fs+"test1_8_jat.rnx");
+        		parsePtSol(meas,dir+"output"+fs+"test1_8_jat_eci.rnx");
         	}
         }	        
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
@@ -421,8 +423,10 @@ public class Simulation {
     
     private double[] make_ptsol(double[] state,double noise) {
     	double[] out = new double[3];
+    	double tmp;
 		for(int i=0; i<3; i++){
-			out[i] = state[i] + 2*(rand.nextGaussian()-0.5)*noise*noise;
+			tmp = rand.nextGaussian()*noise*noise;
+			out[i] = state[i] + tmp;
 		}
 		return out;
 	}
@@ -471,8 +475,8 @@ public class Simulation {
     }
     public static void main(String[] args) throws InterruptedException {
         Simulation sim = new Simulation();
-        sim.runSim4Datsim();
-        //sim.runSimTwo();
+        //sim.runSim4Datsim();
+        sim.runSimTwo();
         //sim.runSimMatlab();
         //sim.runSimFormation();
     }
