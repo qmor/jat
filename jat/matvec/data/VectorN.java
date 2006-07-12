@@ -708,6 +708,27 @@ public class VectorN implements Cloneable, Serializable {
 		return out;
 	}
 
+    /**
+     * Compares two vectors to see if they have the same
+     * values.
+     * @param o another object (hopefully a vector)
+     * @return true if o is a vector with the same dimensions
+     * and same values as this.  false otherwise.
+     */
+    public boolean equals(Object o) {
+      boolean equals = false;
+      if (o instanceof VectorN) {
+        VectorN v = (VectorN)o;
+        if (this.length == v.length) {
+          equals = true;
+          for(int ctr=0; equals && (ctr<this.length); ++ctr) {
+            equals = (this.get(ctr) == v.get(ctr));
+          }
+        }
+      }
+      return equals;
+    }
+
 	//////////////////////////////
 	//Vector3 only methods.     //
 	//////////////////////////////
