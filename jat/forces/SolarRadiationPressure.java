@@ -130,12 +130,14 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
     	area = sc.area();
     	mass = sc.mass();
     	CR = sc.cr();
-//        VectorN r_sunb = jpl_ephemeris.get_pos(DE405.SUN,jd);
-//        VectorN r_earth = jpl_ephemeris.get_pos(DE405.EARTH,jd);
-//        VectorN r_sun = r_sunb.minus(r_earth); 
-        VectorN r_sun = eRef.get_JPL_Sun_Vector();
-        r_sun = r_sun.times(1000);
-    	return (accelSRP(sc.r(),r_sun).times(partial_illumination(sc.r(),r_sun)));
+
+        // We translate to a sun-centered reference frame to
+        // determine the distance from the sun
+        ReferenceFrameTranslater xlater = 
+          new ReferenceFrameTranslater(eRef, sunRef, new Time(eRef.mjd_utc()));
+        VectorN d = xlater.translatePoint(sc.r());
+        
+        return (accelSRP(d).times(partial_illumination_rel(sc.r(), d)));
     }
 
     /** Compute the acceleration due to a solar radiation pressure.

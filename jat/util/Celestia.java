@@ -75,7 +75,7 @@ public class Celestia {
      * Currently, only windows is supported (sincere apologies).
      */
     public Celestia(){
-    	searchWindows();
+    	this(null);
     }
     
     /**
@@ -83,7 +83,39 @@ public class Celestia {
      * @param dir The install directory of Celestia (e.g. "C:/Celestia/")
      */
     public Celestia(String dir) {
-        celestia_home = dir;
+        // We assume that every installation of Celestia has a
+        // celestia.cfg in the root directory.
+        final String targetName = "celestia.cfg";
+        File targetFile = (dir == null ? null : new File(dir, targetName));
+        if ((targetFile == null) || !targetFile.exists()) {
+          
+          // Try looking for it in the path
+          targetFile = searchPath(targetName);
+          if ((targetFile == null) || !targetFile.exists()) {
+            
+            // Other possibilities.
+            String[] dirs = {System.getenv("CELESTIA_HOME"),
+                "C:/Program Files/Celestia",
+                "/opt/kde3/share/apps/celestia"};
+            boolean found = false;
+            for (int ctr=0; (ctr < dirs.length) && !found; ++ctr) {
+              targetFile = (dirs[ctr] == null ?
+                  null : new File(dirs[ctr], targetName));
+              found = ((targetFile != null) && (targetFile.exists()));
+            }
+          }
+
+          if ((targetFile == null) || (!targetFile.exists())) {
+            String msg = "Cannot determine location of Celestia.";
+            if (dir != null) {
+              msg += "  Not found in " + dir;
+            }
+            throw new RuntimeException(msg);
+          }
+        }
+    
+        celestia_home = targetFile.getParentFile().getAbsolutePath() + 
+          File.separator;
     }
 
     /**
@@ -338,65 +370,26 @@ public class Celestia {
         this.write_ssc_heliocentric(pretty_name,filename,jd_begin);
         this.write_xyz(filename);
     }
-    
-    public void searchWindows(){
-    	System.out.println("...searching for the Celestia home directory...");
-    	File d = new File("C:/Program Files/Celestia/");
-//    	File s = new File(FileUtil.getClassFilePath("jat.util","Celestia"));
-//    	System.out.println("s: "+s.toString());
-//    	s = new File(s.getParent());
-//    	System.out.println("s: "+s.toString());
-//    	s = new File(s.getParent());
-//    	System.out.println("s: "+s.toString());
-//    	s = new File(s.getParent());
-//    	System.out.println("s: "+s.toString());
-    	File s = new File("C:/");
-    	if(d.exists()){
-    		Celestia.celestia_home = d.getPath();
-    		System.out.println("Celestia home: "+d.getPath());
-    	} else {
-    		s = search(s);
-    		if(s!=null){//  && s.getName().equalsIgnoreCase("Celestia")){
-    			Celestia.celestia_home = s.getPath();
-    			System.out.println("Celestia home: "+s.getPath());
-    			return;
-    		}
-    	}
-    	System.out.println("Couldn't find Celestia home directory.  Make sure it is installed.");
-    	System.out.println("Celestia can be downloaded from http://celestia.sourceforge.net");
-    	System.err.println("Fatal - Assumption that Celestia was installed failed.");
-    	System.exit(0);
-    }
-    
-    public File search(File s){
-    	String[] names = s.list();
-    	File tmp;
-    	String out = s.toString();
-    	if(names == null) return null;
-    	for(int i=0; i<names.length; i++){
-//    		if(names[i].equalsIgnoreCase("games") || s.getPath().contains("games")){
-//    			int j =0;
-//    		}
-			if(names[i].equalsIgnoreCase("celestia.exe")){
-				Celestia.celestia_home = s.getPath();
-				//System.out.println("home: "+s.getPath());
-				return new File(Celestia.celestia_home);
-			} else {
-				tmp = new File(s.getPath(),names[i]);
-				//System.out.println("? search ? - "+s.getPath()+" : "+tmp.toString());
-				if(tmp.isDirectory()){
-					tmp = search(tmp);
-					if(tmp!=null){
-						//System.out.println("? result ? - "+tmp.getName());
-						if(tmp.getName().equalsIgnoreCase("celestia")){
-							return tmp;
-						}
-						
-					}
-				}
-			}
-		}
-    	return null;
+
+    /**
+     * Search through the system PATH for Celestia
+     * @param targetName the name of a file that will be found
+     * in Celestia (and hopefully not elsewhere)
+     * @return the target file.  If Celestia is not in the path
+     * this may point to a non-existent file or null.
+     */
+    private File searchPath(String targetName){
+      File targetFile = null;
+      String pathStr = System.getenv("PATH");
+      if (pathStr != null) {
+        StringTokenizer tokenizer = new StringTokenizer(pathStr, File.pathSeparator);
+        boolean found = false;
+        while (!found && tokenizer.hasMoreTokens()) {
+          targetFile = new File(tokenizer.nextToken(), targetName);
+          found = targetFile.exists();
+        }
+      }
+      return targetFile;
     }
     
 	public static void main(String[] args) throws java.io.IOException {

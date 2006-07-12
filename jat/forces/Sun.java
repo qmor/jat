@@ -24,7 +24,10 @@ import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 //import jat.matvec.data.Matrix;
 import jat.spacecraft.Spacecraft;
+import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.BodyRef;
+import jat.spacetime.ReferenceFrame;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.timeRef.EarthRef;
 //import jat.timeRef.Time;
@@ -41,6 +44,10 @@ import jat.eph.DE405;
 public class Sun extends GravitationalBody {
 
     protected DE405 jpl_ephemeris;
+    
+    /** The reference frame in which the Sun computes its forces.
+     * It is a sun-centered J2000 inertial reference frame. */
+    private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405.SUN);
     
     /**
      * Default constructor. 
@@ -71,30 +78,28 @@ public class Sun extends GravitationalBody {
      */
     public VectorN acceleration(EarthRef eRef, Spacecraft sc){
 
-        VectorN r_sun = eRef.get_JPL_Sun_Vector();
-        r_sun = r_sun.times(1000.0);
+      ReferenceFrameTranslater xlater = 
+        new ReferenceFrameTranslater(eRef, sunRef, new Time(eRef.mjd_utc()));
+
+      // Get a vector (in the passed in reference frame) to the
+      // spacecraft and to the sun.
+      VectorN r_sun = xlater.translatePointBack(new VectorN(3));
+      VectorN r = sc.r();
+      VectorN d = r.minus(r_sun);
+      
+      
+      // Divide the sun vector and the sunn-to-spacecraft vector
+      // by their magnitude cubed, add them, and scale by mu.
+      double dmag = d.mag();
+      double dcubed = dmag * dmag *dmag;
+      VectorN temp1 = d.divide(dcubed);
+      double smag = r_sun.mag();
+      double scubed = smag * smag * smag;
+      VectorN temp2 = r_sun.divide(scubed);
+      VectorN sum = temp1.plus(temp2);
+      VectorN accel = sum.times(-mu);
         
-        //* July 7 2005 - buggy
-        //r_body = eRef.sunVector();
-//        double jd = eRef.mjd_utc()+2400000.5;
-//        VectorN r_sun = eRef.get_JPL_Sun_Vector();
-//        r_sun = r_sun.times(1000);
-        
-        VectorN d = sc.r().minus(r_sun);
-        double dmag = d.mag();
-        double dcubed = dmag * dmag *dmag;
-
-        VectorN temp1 = d.divide(dcubed);
-
-        double smag = r_sun.mag();
-        double scubed = smag * smag * smag;
-
-        VectorN temp2 = r_sun.divide(scubed);
-
-        VectorN sum = temp1.plus(temp2);
-        VectorN out = sum.times(-mu);
-        
-        return  out;
+      return  accel;
     }
     /** Call the relevant methods to compute the acceleration.
 	 * @param t Time reference class
@@ -104,30 +109,28 @@ public class Sun extends GravitationalBody {
      */
     public VectorN acceleration(Time t, BodyRef bRef, Spacecraft sc){
 
-        VectorN r_sun = bRef.get_JPL_Sun_Vector();
-        r_sun = r_sun.times(1000.0);
+      ReferenceFrameTranslater xlater = 
+        new ReferenceFrameTranslater(bRef, sunRef, t);
+
+      // Get a vector (in the passed in reference frame) to the
+      // spacecraft and to the sun.
+      VectorN r_sun = xlater.translatePointBack(new VectorN(3));
+      VectorN r = sc.r();
+      VectorN d = r.minus(r_sun);
+      
+      
+      // Divide the sun vector and the sunn-to-spacecraft vector
+      // by their magnitude cubed, add them, and scale by mu.
+      double dmag = d.mag();
+      double dcubed = dmag * dmag *dmag;
+      VectorN temp1 = d.divide(dcubed);
+      double smag = r_sun.mag();
+      double scubed = smag * smag * smag;
+      VectorN temp2 = r_sun.divide(scubed);
+      VectorN sum = temp1.plus(temp2);
+      VectorN accel = sum.times(-mu);
         
-        //* July 7 2005 - buggy
-        //r_body = eRef.sunVector();
-//        double jd = eRef.mjd_utc()+2400000.5;
-//        VectorN r_sun = eRef.get_JPL_Sun_Vector();
-//        r_sun = r_sun.times(1000);
-        
-        VectorN d = sc.r().minus(r_sun);
-        double dmag = d.mag();
-        double dcubed = dmag * dmag *dmag;
-
-        VectorN temp1 = d.divide(dcubed);
-
-        double smag = r_sun.mag();
-        double scubed = smag * smag * smag;
-
-        VectorN temp2 = r_sun.divide(scubed);
-
-        VectorN sum = temp1.plus(temp2);
-        VectorN out = sum.times(-mu);
-        
-        return  out;
+      return  accel;
     }    
     
 	public static void main(String[] args) throws java.io.IOException {
@@ -145,9 +148,8 @@ public class Sun extends GravitationalBody {
         RotationMatrix R = new RotationMatrix(1, -eps);
         VectorN r_new;
         r_new = R.times(r_body);
-        VectorN r_sun2 = eRef.get_JPL_Sun_Vector();
 	    r_body.print("r");
-	    r_sun2.print("r_sun ");
+	    r_sun.print("r_sun ");
         
 	    jd = eRef.mjd_utc()+2400000.5;
         jpl_ephemeris.planetary_ephemeris(jd);

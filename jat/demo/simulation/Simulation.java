@@ -125,7 +125,7 @@ public class Simulation {
         		//* append '_jat' to identify objects originating from JAT
         		String name = tests[i]+test_nums[j][i]+"_jat";
         		celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
-        		System.out.println("Wrote to Celestia");
+        		System.out.println("Wrote " + name + " to Celestia");
         	}catch(java.io.IOException ioe){}
         }
         System.out.println("Finished");    	

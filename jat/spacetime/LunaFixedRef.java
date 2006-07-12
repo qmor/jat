@@ -165,7 +165,8 @@ public class LunaFixedRef implements ReferenceFrame {
 					xlcf.x[j] = Double.parseDouble(tok.nextToken());
 				for(int j=0; j<6; j++)
 					xlci.x[j] = Double.parseDouble(tok.nextToken());
-				luna.getTranslater(lunaRef,time);
+				//TODO: Finish test
+                //luna.getTranslater(lunaRef,time);
 			}
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found.");

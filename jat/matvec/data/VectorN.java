@@ -707,7 +707,7 @@ public class VectorN implements Cloneable, Serializable {
 		double out = Math.sqrt(var);
 		return out;
 	}
-
+    
     /**
      * Compares two vectors to see if they have the same
      * values.

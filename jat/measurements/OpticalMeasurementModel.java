@@ -22,6 +22,7 @@
  **/
 package jat.measurements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -34,8 +35,14 @@ import jat.matvec.data.Quaternion;
 import jat.matvec.data.RandomNumber;
 import jat.matvec.data.VectorN;
 import jat.matvec.data.Matrix;
+import jat.spacetime.BodyCenteredInertialRef;
+import jat.spacetime.EarthFixedRef;
 import jat.spacetime.EarthRef;
+import jat.spacetime.LunaFixedRef;
+import jat.spacetime.ReferenceFrame;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
+import jat.spacetime.TimeUtils;
 import jat.sim.EstimatorSimModel;
 import jat.sim.initializer;
 import jat.sim.CEVSim;
@@ -46,6 +53,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	public static final int TYPE_YANGLE_LOS = 2;
 	public static final int TYPE_RANGE = 3;
 	public static final int TYPE_LANDMARK = 4;
+    
+    /** A list of bodies and the landmarks on them */
+    private static ArrayList<CentralBody> gravbody = setupCentralBodies();
 	
 	public static final int BODY_EARTH = 1;
 	public static final int BODY_MOON = 2;
@@ -92,7 +102,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		initialize(hm,measNum);
 		fobs = new LinePrinter("C:/Code/Jat/jat/sim/output/obs_"+CEVSim.JAT_case+".txt");
 		fpred = new LinePrinter("C:/Code/Jat/jat/sim/output/pred_"+CEVSim.JAT_case+".txt");
-		rnd = new RandomNumber();
+		rnd = new Random(System.currentTimeMillis());
 	}
 	
 	private void initialize(HashMap hm, int measNum){
@@ -439,19 +449,16 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		//% x is position relative to the central body
 		double xnorm=r.mag();
 		VectorN xhat=r.unitVector();
-		
-		//[rasc, decl, xs] = sun (jd);
-		//* TODO watch units
-		VectorN rasc_decl_xs = ephem.get_Geocentric_Sun_pos(
-				Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
-		//VectorN rasc = rasc_decl_xs.get();
-		//VectorN decl = rasc_decl_xs.get();
-		VectorN xs = rasc_decl_xs;
-		if (cbody.name.equalsIgnoreCase("moon")){
-			VectorN xm= new VectorN(feval(cbody.fn,jd));
-			xs=xs.minus(xm);
-		}
-		//double xsnorm=xs.mag();
+
+        // Figure out the vector from the central body to the sun.
+        // We translate the sun's origin to the central body's
+        // reference frame.
+        Time t = new Time(TimeUtils.JDtoMJD(jd));
+        BodyCenteredInertialRef sunRef = 
+          new BodyCenteredInertialRef(DE405.SUN);
+        ReferenceFrameTranslater xlater =
+          new ReferenceFrameTranslater(sunRef, cbody.inertialRef, t);
+        VectorN xs = xlater.translatePoint(new VectorN(3));
 		VectorN xshat=xs.unitVector();
 		
 		double R2r=0;
@@ -473,8 +480,11 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		}else if (frac_or_xlf.length==3){
 			VectorN xlf= new VectorN(frac_or_xlf);
 			//xlf=xlf(:);
-			//% Check if the landmark is visible and illuminated
-			VectorN xli = (feval2(cbody.fn_f2i,jd)).times(xlf);
+			// Check if the landmark is visible and illuminated
+            // We need to translate xlf to an inertial reference frame
+            xlater = new ReferenceFrameTranslater(cbody.bodyFixedRef,
+                cbody.inertialRef, t);
+            VectorN xli = xlater.translatePoint(xlf);
 			VectorN xlihat=xli.unitVector();//xli/norm(xli);
 			flag=0;          //% initialize
 			if (xlihat.dotProduct(xhat) > R2r){
@@ -499,7 +509,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
      * of the sensor if the inertial attitude of the spacecraft is known.
      * Note that it assumes the position vector is inertial and relative 
      * to the body that contains the landmark.  
-     * @param state state vector containing inertial s/c position and 
+     * @param x state vector containing inertial s/c position and 
      * velocity relative to the body (6 values).  May additionally
      * contain body-fixed coordinates of a landmark.  If not provided,
      * landmark location determined from structure.
@@ -532,22 +542,19 @@ public class OpticalMeasurementModel implements MeasurementModel{
       // components 7-9 are the body-fixed coordinates of the landmark, 
       // otherwise, it is assumed the landmark is known and specified by 
       // the structure.
+      CentralBody body = gravbody.get(p);
       VectorN lf = null;
       if (x.length == 9) {
         lf = x.get(7, 3);
       }
       else {
-        // TODO: This method needs to be translated
-        //  eval(['lf=gravbody(',int2str(p(1)),').lm(lind).lmf;']);
-        // SomeStructure body = someStructureSet.get(p);
-        // lf = body.lm(lind).lmf;
+        lf = body.getLandmark(lindex).lmf;
       }
                   
       // Compute the coordinate transformation from body-fixed to inertial
-      // TODO: This method needs to be translated
-      // A=feval(gravbody(p(1)).fn_f2i,jd);
-      Matrix A = null;
-      VectorN li = lf.times(A);
+      ReferenceFrameTranslater xlater = 
+        new ReferenceFrameTranslater(body.bodyFixedRef, body.inertialRef, t);
+      VectorN li = xlater.translatePoint(lf);
 
       // Compute the vector from the spacecraft to the landmark
       VectorN d = li.minus(x.get(0, 3));
@@ -562,7 +569,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 
         if (inoise) {
           // Assume similar noise as star and zero bias for now
-          // TODO: Why do we have conflicting statements here?
+          // TODO: Make arnd and abias configurable instead of
+          // hardcoded.
           double arnd=.0034*Math.PI/180;
           arnd=.07*Math.PI/180;
           double abias=0;
@@ -577,7 +585,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
         // vdot is 0
         
         if (x.length == 9) {
-          VectorN ldot = rdot.times(A).times(-1);
+          VectorN ldot = xlater.translatePointBack(rdot).times(-1);
           dydx.set(6, ldot);
         }
       }
@@ -585,18 +593,12 @@ public class OpticalMeasurementModel implements MeasurementModel{
         // No reference unit vector is provided.  Compute pseudo range.
         
         // measurement is tan((D/2)/r)
-        // TODO: Implement gravbody
-        //  D=gravbody(p(1)).lm(lind).D;
-        // SomeStructure body = SomeStructureSet.gravbody(p);
-        // double D = body.lm(lind).D;
-        double D = 0;
+        double D = body.getLandmark(lindex).D;
         y=D*.5/dmag;
           
         if (inoise) {
           // 1-sigma noise and bias on angular measurement
-          // TODO: Translate camerr
-          //double[] noiseFactors = camerr(dmag,p(1));
-          double[] noiseFactors = null;
+          double[] noiseFactors = camerr(dmag,p);
           double arnd = noiseFactors[0];
           double abias = noiseFactors[1];
           y=Math.tan(Math.atan(y)+arnd*randn.nextGaussian()+abias);
@@ -606,7 +608,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
         VectorN rpart = d.times(scale);
  
         if (x.length == 9) {
-          VectorN ldot = rpart.times(A).times(-1);
+          VectorN ldot = xlater.translatePointBack(rpart).times(-1);
           dydx.set(6, ldot);
         }
       }
@@ -668,35 +670,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		
 		return A_sensor_2_inertial.transpose();
 	}
-	
-	private double[] feval(String fn, double jd){
-		double[] out;
-		if(fn.equalsIgnoreCase("getearth")){
-			return new double[6];
-		}else if(fn.equalsIgnoreCase("getmoon")){
-			//* TODO watch units
-			VectorN xm=ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
-			out = xm.x;
-			return out;
-		}else if(fn.equalsIgnoreCase("getsun")){
-			VectorN sun = ephem.get_Geocentric_Sun_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
-			out = sun.x;
-			return out;
-		}
-		out = new double[1];
-		return out;
-	}
-	
-	private Matrix feval2(String fn, double jd){
-		if(fn.equalsIgnoreCase("ef2ei")){
-			EarthRef earth = new EarthRef(new Time(jd-2400000.5));
-			return earth.ECI2ECEF().transpose();
-		}else if(fn.equalsIgnoreCase("mf2ei")){
-			
-		}			
-		return new Matrix(3);
-	}
-	
+
 	public double observedMeasurement(int whichMeas, double t, VectorN x){
 		double[] out = new double[1];
 		//double t = (mjd-mjd0)*86400;
@@ -774,7 +748,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		double out,obs;
 		VectorN truth = new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector()); 
 		obs = observedMeasurement(whichMeas,t_sim,truth);
-		double pred = predictedMeasurement(whichMeas, t_sim, state);
+		double pred = predictedMeasurement(whichMeas, t_sim, state); 
 		//* TODO watch this - following is a temporary hack to extract the bias only
 		//double pred = predictedMeasurement(whichMeas, t_sim, truth);
 		
@@ -801,32 +775,96 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		return out;
 	}
 	
+    private static class Landmark {
+      
+      /** The spatial coordinates for the landmark in the body-fixed
+       * reference frame. */
+      private final VectorN lmf;
+      
+      /** The diameter of the landmark. */
+      private final double D;
+      
+      public Landmark(double inD, double lat, double longd, 
+          double alt, double planetR) {
+        lmf = latLongAlt2FixedCoords(lat, longd, alt, planetR);
+        D = inD;
+      }
+
+      private VectorN latLongAlt2FixedCoords(double lat, double longd, 
+          double alt, double planetR) {
+        VectorN coords = new VectorN(3);
+        double degrees2Radians = Math.PI/180;
+        lat = lat * degrees2Radians;
+        longd = longd * degrees2Radians;
+        double height = planetR + alt;
+        coords.set(0, Math.cos(lat) * Math.cos(longd) * height);
+        coords.set(1, Math.cos(lat) * Math.sin(longd) * height);
+        coords.set(2, Math.sin(lat) * height);
+        return coords;
+      }
+    }
 	
-	private class CentralBody {
-		public String name;
-		public String fn;
-		public String fn_f2i;
-		public double R;
-		public double MU;
-		
-		public static final int SUN = 0;
-		public static final int EARTH = 1;
-		public static final int MOON = 10;
-		
-		public CentralBody(int body){
-			switch(body){
-			case SUN:
-				name = "sun";
-				MU = 1.32712440018e11;
-				fn = "getsun";
-				break;
-			case EARTH:
-				name = "earth";
-				fn = "getearth";
-					break;
-			case MOON:
-				break;
-			}
+	private static class CentralBody {
+		public final String name;
+		public final double R;
+		public final double MU;
+        
+        /** The body-centered inertial reference frame */
+        public final ReferenceFrame inertialRef;
+        
+        private ArrayList<Landmark> landmarks;
+        
+        /** The body-centered body-fixed reference frame */
+        public final ReferenceFrame bodyFixedRef;
+				
+		public CentralBody(String inName, double inMu, double inR, 
+            ReferenceFrame inInertial, ReferenceFrame inFixed) {
+          name = inName;
+          MU = inMu;
+          R = inR;
+          inertialRef = inInertial;
+          bodyFixedRef = inFixed;
+          landmarks = new ArrayList<Landmark>();
 		}
-	}
+        
+        public void addLandmark(double diam, double lat, double longd, 
+            double alt) {
+          Landmark l = new Landmark(diam, lat, longd, alt, R);
+          landmarks.add(l);
+        }
+        
+        public Landmark getLandmark(int i) {
+          return landmarks.get(i);
+        }
+   	}
+    
+    private static ArrayList<CentralBody> setupCentralBodies() {
+      ArrayList<CentralBody> bodies = new ArrayList<CentralBody>();
+      
+      // Setup Earth
+      // TODO: This is a guess at R.  Figure out real R.
+      CentralBody earth = new CentralBody("earth", 398600.436, 6377.8037, 
+          new BodyCenteredInertialRef(DE405.EARTH),
+          new EarthFixedRef());
+      // Add earth landmark
+      // TODO: Read these landmarks from a file somewhere?
+      earth.addLandmark(20, -50.75, 127, 0);
+      bodies.add(earth);
+      
+      // Setup the Moon
+      CentralBody moon = new CentralBody("moon", 4902.801056, 1738,
+          new BodyCenteredInertialRef(DE405.MOON),
+          new LunaFixedRef());
+      // Add moon landmarks
+      moon.addLandmark(20, -50.7, 127.4, 0);
+      moon.addLandmark(20, 0, 127.4, 0);
+      moon.addLandmark(20, 50.7, 127.4, 0);
+      bodies.add(moon);
+      
+      // Setup the Sun
+      CentralBody sun = new CentralBody("sun", 1.32712440018e11, 0,
+          new BodyCenteredInertialRef(DE405.SUN), null);
+      bodies.add(sun);
+      return bodies;
+    }
 }
