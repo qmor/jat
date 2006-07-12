@@ -54,6 +54,7 @@ public class GPSStateMeasurementModel implements MeasurementFileModel,Measuremen
 			
 			/*Scale the error as Gaussian noise times the 
 			 square of the measurement noise*/
+			//* TODO .nextGaussian() is already zero mean
 			pointSolution.x[j] =  truth[j] +(2*(generator.nextGaussian()-0.5))*R*R;
 		}	
 		return pointSolution;

@@ -136,6 +136,56 @@ public class EKF {
 		filterInitialize();
 		
 	}
+	
+	/**
+	 * Constructor.
+	 * @param h HashMap from parsing input
+	 */
+	public EKF(HashMap h, int JAT_Case) {
+		hm = h;
+		measurements = new createMeasurements(hm);
+		
+        String fs, dir_in;
+        fs = FileUtil.file_separator();
+        try{
+            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"output"+fs;
+        }catch(Exception e){
+            dir_in = "";
+        }
+        residuals = new LinePrinter(dir_in+"Residuals_"+JAT_Case+".txt");
+		this.n = initializer.parseInt(hm,"FILTER.states");
+		String stringPm = initializer.parseString(hm,"FILTER.pm");
+		dtNominal = initializer.parseInt(hm,"FILTER.dt");
+		mjd_epoch = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0")/86400.0;
+		
+		filterTime = 0;//initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm,"init.T0");
+		System.out.println(stringPm);
+		if(stringPm.equals("JGM4x4SRPProcess15state"))
+		{
+			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
+	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
+			this.process= new JGM4x4SRPProcess15state(lp1, lp2,hm);
+	
+		}
+		else if(stringPm.equals("JGM4x4SRPProcess9state"))
+		{
+			LinePrinter lp1 = new LinePrinter(dir_in+"geom1_1.txt");
+	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
+			this.process= new JGM4x4SRPProcess9state(lp1, lp2,hm);
+	
+		}
+		else if(stringPm.equals("Simple"))
+		{
+			this.process = new SimpleProcessModel(hm);
+		}else{
+			System.out.println("Process model not recognized.  Aborting");
+			System.exit(1);
+		}
+		//double[] X = new double[n];
+		filterInitialize();
+		
+	}
+	
 	/**
 	 * Constructor.
 	 * @param ol ObservationMeasurementList initialized from a file
@@ -345,9 +395,9 @@ public class EKF {
 
 			// update state and covariance
 			xref.update(xhat); 
-			if(Double.isNaN(xref.state().x[0])){
-				int donothing = 0;
-			}
+//			if(Double.isNaN(xref.state().x[0])){
+//				int donothing = 0;
+//			}
 			pold = this.updateCov(k, H, pnew);
 		}else{
 			System.err.println("Error: negative residual!"); //else visible = false;
@@ -505,20 +555,22 @@ public class EKF {
 			/*Catch the case where the measurement doesn't occur*/
 			//if( Math.abs(y) > 0)
 			//{
-			//* TODO watch this
+			//* TODO watch this 
 				VectorN moon = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(mjd_epoch+filterTime/86400.0)))).times(1000);
 				VectorN r_eci = xref.get(0,3);
+				//* Gets earth range
 				//double dist = r_eci.mag();
+				//* Gets Moon range
 				double dist = (moon.minus(r_eci)).mag();
 				
 				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
 					//String residualsOut = "Time:  " + simTime +
-					String residualsOut = "Dist:  " + dist +
+					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist +
 					"  Residual:  " + (jat.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
 				}else if(measurements.measurementTypes[measNum].equalsIgnoreCase("range")){
-					String residualsOut = "Dist:  " + dist + 
+					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist + 
 					"  Residual:  " + (jat.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);

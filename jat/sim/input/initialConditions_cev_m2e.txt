@@ -9,16 +9,19 @@ init.mode    1
 init.fromfile false
 
 #Initial MJD and Seconds past MJD0 for simulation start
-init.MJD0 57044   
+init.MJD0 57044.00069  
+#init.T0 21600.0		 
 init.T0 0.0		 
 
 #Final MJD and Seconds past MJDF for simulation end
-init.MJDF    57044
-init.TF      259200		 
+#init.MJDF    57047.00069
+init.MJDF    57046.25069
+#init.TF      21600	 
+init.TF      0	 
 
 #The step size in the propagation step.
 #NOTE:  This number should be smaller than the desired measurement period
-init.dt      60     
+init.dt      60    
 				
 
 
@@ -28,20 +31,38 @@ prop.NumSpacecraft  1
 
 #ECI position and velocity (m and m/s)        
 #GEONS TRUE
-TRUE_STATE.0.X   2.82505882900000e+008 
-TRUE_STATE.0.Y   2.82505882900000e+008
-TRUE_STATE.0.Z   -0.64261622210000e+008 
-TRUE_STATE.0.VX  -0.00000795264000e+008
-TRUE_STATE.0.VY  0.00000721616000e+008
-TRUE_STATE.0.VZ   0.00000922000000e+008
+#TRUE_STATE.0.X   2.675264403e8
+#TRUE_STATE.0.Y   -2.039608462e8
+#TRUE_STATE.0.Z   -0.6456322161e8
+#TRUE_STATE.0.VX  -496.811
+#TRUE_STATE.0.VY  460.144
+#TRUE_STATE.0.VZ  -52.466
+TRUE_STATE.0.X   282406920.7
+TRUE_STATE.0.Y   -212684538.
+TRUE_STATE.0.Z   -64186635.16
+TRUE_STATE.0.VX  -1662.899
+TRUE_STATE.0.VY  0639.598
+TRUE_STATE.0.VZ  1214.703
 
 #GEONS REFERENCE
-REF_STATE.0.X   2.79680824071000E+08
-REF_STATE.0.Y   -2.10596670900000E+08
-REF_STATE.0.Z   -0.63619005987900E+08
-REF_STATE.0.VX  -0.00000787311360E+08
-REF_STATE.0.VY  0.00000714399840E+08
-REF_STATE.0.VZ   0.00000912780000E+08
+#REF_STATE.0.X   264851175.897
+#REF_STATE.0.Y   -201921237.738
+#REF_STATE.0.Z   -63917589.3939
+#REF_STATE.0.VX  -491.84289
+#REF_STATE.0.VY  455.54256
+#REF_STATE.0.VZ  -51.94134
+REF_STATE.0.X   282407715.3
+REF_STATE.0.Y   -212684885.1
+REF_STATE.0.Z   -64183163.7
+REF_STATE.0.VX  -1664.312505
+REF_STATE.0.VY  639.2041685
+REF_STATE.0.VZ  1214.517541
+#REF_STATE.0.X   282406920.7
+#REF_STATE.0.Y   -212684538.
+#REF_STATE.0.Z   -64186635.16
+#REF_STATE.0.VX  -1662.899
+#REF_STATE.0.VY  0639.598
+#REF_STATE.0.VZ  1214.703
 
 #Initial Clock Bias Term 
 jat.0.clockBias  0.0
@@ -94,72 +115,102 @@ FILTER.pm Simple
 Q.0.X   1e-13 
 Q.0.Y   1e-13
 Q.0.Z   1e-13
-Q.0.VX   1e-13   
-Q.0.VY   1e-13
-Q.0.VZ   1e-13
-Q.0.clockBias  .12
-Q.0.clockDrift 1e-4  
+Q.0.VX   1e-3   
+Q.0.VY   1e-3
+Q.0.VZ   1e-3
 
 #Set the Initial Position and Velocity Covariance (m and m/s)
-P0.0.X    1e12		 
-P0.0.Y    1e12				
-P0.0.Z    1e12			
-P0.0.VX   10		
-P0.0.VY   10			
-P0.0.VZ   10
+P0.0.X    1e7		 
+P0.0.Y    1e7				
+P0.0.Z    1e7			
+P0.0.VX   3e1	
+P0.0.VY   3e1			
+P0.0.VZ   3e1
+#P0.0.X    1		 
+#P0.0.Y    1				
+#P0.0.Z    1			
+#P0.0.VX   0.01	
+#P0.0.VY   0.01			
+#P0.0.VZ   0.01
 
 #Set thhe Initial Clock Offset and Drift Covariance (m and m/s)		
 #P0.0.clockBias 10000	
 #P0.0.clockDrift 10
-#P0.0.clockBias 10000	
-#P0.0.clockDrift 10
+P0.0.clockBias 10000	
+P0.0.clockDrift 10
 
 
 #Set the Initial Solar Radiation Pressure and Drag Coefficient Covariances	
-#P0.0.Cr   .12	
-#P0.0.Cd  1e-30	
+P0.0.Cr   .12	
+P0.0.Cd	  1e-30	
 
 
 
 #MEASUREMENTS
 
 #Set the number of types of measurements
-MEAS.types 3
+MEAS.types 1
 
 #Measurement type position.  Assumed an ECI absolute position can 
 #be measured or provided by a ground station.  The associated
 #measurement noise is also provided 
 
-MEAS.0.desc OPT
-MEAS.0.satellite 0
-MEAS.0.frequency 60
-MEAS.0.t0 0
-MEAS.0.tf 259200
-MEAS.0.type y_angle_star
-MEAS.0.ustar.1 1.0
-MEAS.0.ustar.2 0.0
-MEAS.0.ustar.3 0.0
-MEAS.0.cbody earth
-MEAS.0.R 2.741556778080377e-007
+#MEAS.0.desc OPT
+#MEAS.0.satellite 0
+#MEAS.0.frequency 60
+#MEAS.0.t0 0
+#MEAS.0.tf 259200
+#MEAS.0.type y_angle_star
+#MEAS.0.ustar.1 1.0
+#MEAS.0.ustar.2 0.0
+#MEAS.0.ustar.3 0.0
+#MEAS.0.cbody earth
+#MEAS.0.R 2.741556778080377e-007
+
+#MEAS.0.desc OPT
+#MEAS.0.satellite 0
+#MEAS.0.frequency 60
+#MEAS.0.t0 0
+#MEAS.0.tf 259200
+#MEAS.0.type y_angle_los
+#MEAS.0.cbody earth
+#MEAS.0.vbody earth
+#MEAS.0.q.1 0
+#MEAS.0.q.2 0
+#MEAS.0.q.3 0
+#MEAS.0.q.4 1
+#MEAS.0.R 2.741556778080377e-007
 
 MEAS.0.desc OPT
 MEAS.0.satellite 0
 MEAS.0.frequency 60
 MEAS.0.t0 0
 MEAS.0.tf 259200
-MEAS.0.type y_angle_los
+MEAS.0.type range
 MEAS.0.cbody earth
-MEAS.0.q.1 0
-MEAS.0.q.2 0
-MEAS.0.q.3 0
-MEAS.0.q.4 1
+MEAS.0.vbody earth
 MEAS.0.R 2.741556778080377e-007
 
-MEAS.1.desc OPT
-MEAS.1.satellite 0
-MEAS.1.frequency 60
-MEAS.1.t0 0
-MEAS.1.tf 259200
-MEAS.1.type range
-MEAS.1.cbody earth
-MEAS.1.R 2.741556778080377e-007
+#MEAS.2.desc OPT
+#MEAS.2.satellite 0
+#MEAS.2.frequency 10
+#MEAS.2.t0 0
+#MEAS.2.tf 259200
+#MEAS.2.type y_angle_los
+#MEAS.2.cbody earth
+#MEAS.2.vbody moon
+#MEAS.2.q.1 0
+#MEAS.2.q.2 0
+#MEAS.2.q.3 0
+#MEAS.2.q.4 1
+#MEAS.2.R 2.741556778080377e-007
+
+#MEAS.3.desc OPT
+#MEAS.3.satellite 0
+#MEAS.3.frequency 60
+#MEAS.3.t0 0
+#MEAS.3.tf 259200
+#MEAS.3.type range
+#MEAS.3.cbody earth
+#MEAS.3.vbody moon
+#MEAS.3.R 2.741556778080377e-007

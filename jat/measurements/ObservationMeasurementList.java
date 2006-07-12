@@ -130,8 +130,8 @@ public class ObservationMeasurementList
 					x = Double.parseDouble(tok.nextToken());
 					y = Double.parseDouble(tok.nextToken());
 					z = Double.parseDouble(tok.nextToken());
-					//clock = Double.parseDouble(tok.nextToken())/jat.cm.Constants.c;
-					//mjd = mjd - clock/86400;
+					clock = Double.parseDouble(tok.nextToken())/jat.cm.Constants.c;
+					mjd = mjd - (clock)/86400;
 					r = new VectorN(x,y,z);
 					time = new Time(mjd);
 					//*TODO watch

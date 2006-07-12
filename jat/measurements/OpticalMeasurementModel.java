@@ -38,6 +38,7 @@ import jat.spacetime.EarthRef;
 import jat.spacetime.Time;
 import jat.sim.EstimatorSimModel;
 import jat.sim.initializer;
+import jat.sim.CEVSim;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	
@@ -73,13 +74,15 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	
 	public static LinePrinter fobs,fpred;
 	
-	private RandomNumber rnd;
+	//private RandomNumber rnd;
+	private Random rnd;
 	
 	public OpticalMeasurementModel(double mjd_epoch,DE405 jpl){
 		mjd0=mjd_epoch;
 		jd0 = mjd0+2400000.5;
 		ephem = jpl;
-		rnd = new RandomNumber();
+		//rnd = new RandomNumber();
+		rnd = new Random(System.currentTimeMillis());
 	}
 	
 	public OpticalMeasurementModel(HashMap hm, int measNum) {
@@ -87,8 +90,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		jd0 = mjd0+2400000.5;
 		ephem = new DE405();
 		initialize(hm,measNum);
-		fobs = new LinePrinter("C:/Code/Jat/jat/sim/output/obs.txt");
-		fpred = new LinePrinter("C:/Code/Jat/jat/sim/output/pred.txt");
+		fobs = new LinePrinter("C:/Code/Jat/jat/sim/output/obs_"+CEVSim.JAT_case+".txt");
+		fpred = new LinePrinter("C:/Code/Jat/jat/sim/output/pred_"+CEVSim.JAT_case+".txt");
 		rnd = new RandomNumber();
 	}
 	
@@ -233,7 +236,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			//% Get lunar position relative to the Earth
 			//* TODO watch units
 			VectorN xm=ephem.get_Geocentric_Moon_pos(
-					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400)));//.times(1000); //???
+					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000); 
 			//getmoon(jd0+t/86400);  
 			v=xm.minus(r);
 			break;
@@ -279,7 +282,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private double randn(){
 		//* http://www.mathworks.com/access/helpdesk/help/techdoc/matlab.html
 		//RandomNumber rnd = new RandomNumber(System.currentTimeMillis());
-		return rnd.normal();
+		//return rnd.normal();
+		return rnd.nextGaussian();
 		//return 0;
 	}
 	
@@ -377,7 +381,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		else if (p==2){ //% Moon
 			//* TODO watch units
 			VectorN xm=ephem.get_Geocentric_Moon_pos(
-					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400)));//.times(1000); //??
+					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000); 
 			xr=(pos.minus(xm));
 		} else
 			System.err.println("Parameter must be 1 for Earth or 2 for Moon.");
@@ -437,8 +441,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		VectorN xhat=r.unitVector();
 		
 		//[rasc, decl, xs] = sun (jd);
+		//* TODO watch units
 		VectorN rasc_decl_xs = ephem.get_Geocentric_Sun_pos(
-				Time.TTtoTDB(Time.UTC2TT(jd)));
+				Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
 		//VectorN rasc = rasc_decl_xs.get();
 		//VectorN decl = rasc_decl_xs.get();
 		VectorN xs = rasc_decl_xs;
@@ -515,7 +520,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
         VectorN s, int lindex, boolean inoise) {
       
       // We'll need a Gaussian random number generator
-      Random randn = new Random();
+      Random randn = new Random(System.currentTimeMillis());
       
       double y = 0;
       VectorN dydx = new VectorN(x.length);
@@ -626,14 +631,15 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		if(cbody==BODY_EARTH){
 			xce = new VectorN(3);
 		}else if(cbody == BODY_MOON){
-			xce = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+			//* TODO watch units
+			xce = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
 		}
 		//% Second get vbody relative to earth
 		//xve=feval(vbody.fn,jd);
 		if(vbody==BODY_EARTH){
 			xve = new VectorN(3);
 		}else if(vbody == BODY_MOON){
-			xve = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+			xve = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
 		}
 		
 		//% Finally spacecraft relative to vbody
@@ -668,11 +674,12 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		if(fn.equalsIgnoreCase("getearth")){
 			return new double[6];
 		}else if(fn.equalsIgnoreCase("getmoon")){
-			VectorN xm=ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+			//* TODO watch units
+			VectorN xm=ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
 			out = xm.x;
 			return out;
 		}else if(fn.equalsIgnoreCase("getsun")){
-			VectorN sun = ephem.get_Geocentric_Sun_pos(Time.TTtoTDB(Time.UTC2TT(jd)));
+			VectorN sun = ephem.get_Geocentric_Sun_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
 			out = sun.x;
 			return out;
 		}
@@ -714,8 +721,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		default:
 			return 0;
 		}
-		H = new VectorN(6);
-		for(int i=1; i<7;i++) H.x[i-1] = out[i];
+		
 		return out[0];
 	}
 	
@@ -743,6 +749,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		default:
 			return 0;
 		}
+		H = new VectorN(6);
+		for(int i=1; i<7;i++) H.x[i-1] = out[i];
 		return out[0];
 	}
 	

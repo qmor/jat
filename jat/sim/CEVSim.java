@@ -510,10 +510,10 @@ public class CEVSim extends EstimatorSimModel {
 			
 			filter();
 			
-			if(Double.isNaN(ref[0].get_spacecraft().toStateVector()[0])){// || simTime.get_sim_time()>4620){
-				int donothing = 0;
-				donothing++;
-			}
+//			if(Double.isNaN(ref[0].get_spacecraft().toStateVector()[0])){// || simTime.get_sim_time()>4620){
+//				int donothing = 0;
+//				donothing++;
+//			}
 			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
 			
 			for(int i=0; i<numSpacecraft; i++){
@@ -573,10 +573,10 @@ public class CEVSim extends EstimatorSimModel {
 		EstimatorSimModel.JAT_case = 44;
 		
 //		CEVSim.JAT_name = "moon2earth_";
-//		CEVSim.InputFile = "initialConditions_cev_sun.txt";
+//		CEVSim.InputFile = "initialConditions_cev_m2e.txt";
 		
 		CEVSim.JAT_name = "earth2moon";
-		CEVSim.InputFile = "initialConditions_cev_brent.txt";
+		CEVSim.InputFile = "initialConditions_cev_e2m.txt";
 		
 //		CEVSim.JAT_name = "earth2moon";
 //		CEVSim.InputFile = "initialConditions_cev_e2m_bias.txt";
