@@ -21,8 +21,7 @@ package jat.forces;
 
 import jat.math.MathUtils;
 import jat.matvec.data.Matrix;
-import jat.spacetime.EarthFixedRef;
-import jat.spacetime.ReferenceFrame;
+import jat.spacetime.*;
 import jat.util.FileUtil;
 
 import java.io.BufferedReader;
@@ -34,7 +33,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * This class alows access to the gravity model data files (e.g. JGM2, JGM3, etc)
@@ -65,6 +64,12 @@ public class GravityModel extends SphericalHarmonicGravity {
 	private boolean foundSize = false;
 	
 	private boolean normalized;
+	
+	private boolean monteCarlo = false;
+	
+	private double gmUncertainty = 0.0;
+	
+	private Random rand = new Random(System.currentTimeMillis());
 	
     /** Construct a gravity model from a STK gravity file included in JAT
      * This constructor assumes Earth.
@@ -107,13 +112,37 @@ public class GravityModel extends SphericalHarmonicGravity {
         System.out.println(grvFile.toString());
         outputFile = new File(filepath.getParentFile(), "test.out");
 		initialize();
-	}	
+	}
+
+	/** Construct a gravity model from any STK gravity file
+     * @param n Desired degree.
+     * @param m Desired order.
+     * @param filepath path and filename of gravity file
+     */
+	public GravityModel(int n, int m, ReferenceFrame bodyFixedFrame, File filepath, boolean monte) {
+		super(n, m, bodyFixedFrame);
+		monteCarlo = monte;
+        try {
+          grvFile = filepath.toURI().toURL(); 
+          // We do the toURI() to handle spaces
+        }
+        catch (MalformedURLException e) {
+          throw new RuntimeException("Error decoding grv filename \"" +
+              filepath + "\"");
+        }
+        System.out.println(grvFile.toString());
+        outputFile = new File(filepath.getParentFile(), "test.out");
+		initialize();
+		
+	}
+	
 
     /** Construct a gravity model from a STK gravity file in the classpath
      * @param n Desired degree.
      * @param m Desired order.
      * @param resouceName the name of a resource file 
      *  (e.g. jat/forces/moonGravity/LP165P.grv).
+     *  @param monte Boolean to turn on gravity model variation for Monte Carlo
      */
     public GravityModel(int n, int m, ReferenceFrame bodyFixedRef, 
       String resourceName) {
@@ -133,6 +162,32 @@ public class GravityModel extends SphericalHarmonicGravity {
         initialize();
     }
     
+    /** Construct a gravity model from a STK gravity file in the classpath
+     * @param n Desired degree.
+     * @param m Desired order.
+     * @param resouceName the name of a resource file 
+     *  (e.g. jat/forces/moonGravity/LP165P.grv).
+     *  @param monte Boolean to turn on gravity model variation for Monte Carlo
+     */
+    public GravityModel(int n, int m, ReferenceFrame bodyFixedRef, 
+      String resourceName, boolean monte) {
+        super(n, m, bodyFixedRef);        
+        // We assume the gravity model is in the jat.forces.earthGravity
+        // package
+        ClassLoader loader = getClass().getClassLoader();
+        grvFile = loader.getResource(resourceName);
+        System.out.println(grvFile.toString());
+        // Put the output file in a temporary directory and put the 
+        // resource into the name.
+        int index = resourceName.lastIndexOf("/");
+        String shortName = (index < 0 ?
+            resourceName : resourceName.substring(index+1));
+        String path = System.getProperty("java.io.tmpdir");
+        outputFile = new File(path, shortName + "test.out");
+        monteCarlo = monte;
+        initialize();
+    }    
+    
 	public void initialize() {
 		// process the gravity file
 		Matrix cs = readGrvFile(grvFile);
@@ -146,7 +201,7 @@ public class GravityModel extends SphericalHarmonicGravity {
         this.initializeR_ref(rref);
         this.initializeCS(nmax, mmax, cs.A);
 	}
-
+	
 	private Matrix readGrvFile(URL grvFile) {
 		
 		PrintWriter pw = null;
@@ -214,6 +269,18 @@ public class GravityModel extends SphericalHarmonicGravity {
 				}
 				System.out.println("GravityModel: normalized = " + normalized);
 			}
+			
+			if (first.matches("GmUncertainty")) {
+				gmUncertainty = Double.parseDouble(tokens[tokens.length-1]) + 1;
+				System.out.println("GravityModel: GM Uncertainty = " + gmUncertainty);
+				
+				// if doing Monte Carlo, apply GM uncertainty
+				if (monteCarlo) {
+					gm = gm + rand.nextDouble()*gmUncertainty;
+					System.out.println("GravityModel: Adjusted GM = " + gm);					
+				}
+				
+			}
 
 			
 			if (first.matches("BEGIN")) {
@@ -262,7 +329,11 @@ public class GravityModel extends SphericalHarmonicGravity {
 			}
 			
 			// parse the data records
+			
 			if (ntokens == 4) {
+				if (monteCarlo){
+					System.err.println("You did not supply variances on the gravity coefficients");					
+				}
 				int n = Integer.parseInt(first);
 				int m = Integer.parseInt(tokens.nextToken());
 				
@@ -279,6 +350,36 @@ public class GravityModel extends SphericalHarmonicGravity {
 				out.set(n, m, c);
 				if (m > 0) out.set(m-1, n, s);				
 			}
+			// parse the data records
+			if (ntokens == 6) {
+				int n = Integer.parseInt(first);
+				int m = Integer.parseInt(tokens.nextToken());
+				
+				// compute unnormalization factor
+				double nf = 1.0;				
+				if (normalized) nf = normFactor(n, m);
+				
+				// obtain the c and s values
+				double c = nf * Double.parseDouble(tokens.nextToken());
+				double s = nf * Double.parseDouble(tokens.nextToken());
+//				System.out.println(ntokens+":"+n+":"+m+":"+c+":"+s);
+				
+				// obtain the c and s uncertainties
+				double cSigma = nf * Double.parseDouble(tokens.nextToken());
+				double sSigma = nf * Double.parseDouble(tokens.nextToken());
+				
+				// if doing Monte Carlo, apply the uncertainties
+				double adjustC = rand.nextDouble()*cSigma;
+				double adjustS = rand.nextDouble()*sSigma;
+				c = c + adjustC;
+				s = s + adjustS;
+//				System.out.println(ntokens+":"+n+":"+m+":"+adjustC+":"+adjustS);
+				
+				// put c and s into the correct places in the cs matrix
+				out.set(n, m, c);
+				if (m > 0) out.set(m-1, n, s);				
+			}
+			
 		}
 		
 		out.print(pw);
@@ -312,7 +413,8 @@ public class GravityModel extends SphericalHarmonicGravity {
 	}
 
 	public static void main(String args[]) {
-		GravityModel x = new GravityModel(20, 20, GravityModelType.JGM3);
+		BodyCenteredInertialRef ref = new BodyCenteredInertialRef(11);
+		GravityModel x = new GravityModel(165, 165, ref, "jat/forces/moonGravity/LP165P-Cov.grv", true);
 		x.printParameters();
 	}
 
