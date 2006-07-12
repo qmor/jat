@@ -28,6 +28,8 @@ import jat.timeRef.EarthRef;
 import jat.timeRef.Geodetic;
 import jat.spacecraft.Spacecraft;
 import jat.spacetime.BodyRef;
+import jat.spacetime.EarthTrueOfDateRef;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.cm.Constants;
 
@@ -325,10 +327,10 @@ public class NRLMSISE_Drag extends AtmosphericDrag {
       	struct_nrlmsise_flags flags = new struct_nrlmsise_flags();
     	struct_ap_array aph = new struct_ap_array();
 
-    	//* Get the J2000 to TOD transformation
-        Matrix T = ref.trueOfDate(t);
-        //* Transform r from J2000 to TOD
-        VectorN r_tod = T.times(r);
+        // Translate from J2000 to TOD
+        ReferenceFrameTranslater xlater =
+          new ReferenceFrameTranslater(ref, new EarthTrueOfDateRef(), t);
+        VectorN r_tod = xlater.translatePoint(r);
         //* Satellite true altitude
         Matrix eci2ecef = ref.inertial_to_body(t);     //*debug
         VectorN r_ecef = eci2ecef.times(r);   //*debug
@@ -336,7 +338,7 @@ public class NRLMSISE_Drag extends AtmosphericDrag {
         //Geodetic geod = new Geodetic(r_tod);
         double alt = geod.getHAE()/1000.0;	 //* [km]
         if (alt > 1000) return 0; 			 //* Valid from 0 to 1000 km
-        double dist2sun = ref.get_JPL_Sun_Vector().mag()*1000;
+        double dist2sun = ref.get_JPL_Sun_Vector(t).mag()*1000;
         //double f107_in = this.f107_opt*Math.pow(dist2sun/Constants.AU,2);
         //double f107_in = this.f107_opt*Math.pow(Constants.AU/dist2sun,2);
         double f107_in = this.f107_opt;

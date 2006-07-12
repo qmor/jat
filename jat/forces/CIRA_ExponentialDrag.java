@@ -22,6 +22,8 @@ package jat.forces;
 import jat.matvec.data.*;
 import jat.spacecraft.Spacecraft;
 import jat.spacetime.BodyRef;
+import jat.spacetime.EarthTrueOfDateRef;
+import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.timeRef.*;
 import jat.audio.*;
@@ -134,11 +136,10 @@ public class CIRA_ExponentialDrag extends AtmosphericDrag{
     public double computeDensity(Time t, BodyRef ref, VectorN r) {
         r.checkVectorDimensions(3);
         
-        // Get the J2000 to TOD transformation
-        Matrix N = ref.trueOfDate(t);
-        
-        // Transform r from J2000 to TOD
-        VectorN r_tod = N.times(r);
+        // Translate from J2000 to TOD
+        ReferenceFrameTranslater xlater =
+          new ReferenceFrameTranslater(ref, new EarthTrueOfDateRef(), t);
+        VectorN r_tod = xlater.translatePoint(r);
         double rmag = r_tod.mag();
 
         // Satellite height

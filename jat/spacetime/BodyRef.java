@@ -60,23 +60,13 @@ public interface BodyRef extends ReferenceFrame {
      * @return Transformation matrix
      */
     public Matrix body_to_inertial(Time t);
-    /**
-     * Transformation from J2000 to true of date equinox
-     * @param t Time object
-     * @return Transformation matrix
-     */
-    public Matrix trueOfDate(Time t);
+
     /**
      * Get the current JPL vector to the Sun [km]
      * @return Vector [km]
      */
-    public VectorN get_JPL_Sun_Vector();
-    /**
-     * Get the current JPL vector to the Moon [km]
-     * @return Vector [km]
-     */
-    public VectorN get_JPL_Moon_Vector();
-    
+    public VectorN get_JPL_Sun_Vector(Time t);
+
     /**
      * Creates a translate that can translate between two reference
      * frames at a given time

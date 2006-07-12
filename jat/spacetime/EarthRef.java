@@ -35,7 +35,7 @@ import jat.eph.DE405;
  * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
  * @version 1.0
  */
-public class EarthRef implements BodyRef {
+public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
     
     public boolean use_moon = false;
     public boolean use_sun = false;
@@ -102,6 +102,7 @@ public class EarthRef implements BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef(Time t0){
+      super(DE405.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.T = trueOfDate(t0.mjd_tt());
@@ -124,6 +125,7 @@ public class EarthRef implements BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef(double MJD_UT1, double MJD_TT){
+      super(DE405.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.T = trueOfDate(MJD_TT);
@@ -146,10 +148,13 @@ public class EarthRef implements BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef(double MJD_UT1, double MJD_TT, boolean use_moon, boolean use_sun){
+      super(DE405.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.T = trueOfDate(MJD_TT);
         this.E = eci2ecef(MJD_UT1,MJD_TT);
+        this.use_sun = use_sun;
+        this.use_moon = use_moon;
         if(this.use_moon || this.use_sun){
             String fs, dir_in;
             fs = FileUtil.file_separator();
@@ -160,8 +165,6 @@ public class EarthRef implements BodyRef {
             }
             jpl_ephem = new DE405(dir_in);
         }
-        this.use_sun = use_sun;
-        this.use_moon = use_moon;
         //double JD_TDB = MJD_TT+2400000.5;
         //if(this.use_sun) compute_JPL_Sun_Vector(JD_TDB);
         if(this.use_sun) compute_JPL_Sun_Vector(MJD_TT);
@@ -1006,7 +1009,9 @@ public class EarthRef implements BodyRef {
      * @return Vector from the center of the Earth to the Sun [km].
      */
     // [km]
-    public VectorN get_JPL_Sun_Vector(){
+    public VectorN get_JPL_Sun_Vector(Time t){
+        // We assume (hope) the time passed in is the same
+        // as the current time.
         if(this.use_sun)
             return r_sun;
         else
@@ -1207,20 +1212,6 @@ public class EarthRef implements BodyRef {
         return trueOfDate(t.mjd_tt());
     }
   
-    /**
-     * Returns a translater to translate into other reference frames.
-     * @param other another reference frame
-     * @param t time at which translation will be done
-     * @return translater object or null if does not know how
-     * to translate
-     */
-    public ReferenceFrameTranslater getTranslater(ReferenceFrame other, Time t)
-    {
-      // EarthRef is really ECI, which is a body-centered intertial
-      // reference frame.
-      return new BodyCenteredInertialRef(DE405.EARTH).getTranslater(other, t);
-    }
-    
     /**
      * Test method.  See Vallado example 3-14.
      * @param args

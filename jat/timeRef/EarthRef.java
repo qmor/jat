@@ -21,6 +21,7 @@
 package jat.timeRef;
 import jat.matvec.data.*;
 import jat.math.*;
+import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
@@ -44,7 +45,7 @@ import jat.eph.DE405;
  * @version 1.0
  * @see jat.spacetime.EarthRef
  */
-public class EarthRef implements jat.spacetime.BodyRef {
+public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.BodyRef {
     
     protected double sim_time = 0;
     public int n = 0;
@@ -107,6 +108,7 @@ public class EarthRef implements jat.spacetime.BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef( double mjd_UTC ){
+        super(DE405.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.MJD_UTC = mjd_UTC;
@@ -134,6 +136,7 @@ public class EarthRef implements jat.spacetime.BodyRef {
      * @param date CalDate object containing UTC time.
      */
     public EarthRef(CalDate date){
+        super(DE405.EARTH);
         this.MJD_UTC = date.mjd();
         this.MJD_UTC_START = date.mjd();
         this.MJD_TT = CalDate.UTC2TT(this.MJD_UTC);
@@ -151,6 +154,7 @@ public class EarthRef implements jat.spacetime.BodyRef {
 
     // For use with matlab
     public EarthRef( double mjd_UTC , boolean usingmatlab){
+        super(DE405.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.MJD_UTC = mjd_UTC;
@@ -803,7 +807,9 @@ public class EarthRef implements jat.spacetime.BodyRef {
     }
     
     // [km]
-    public VectorN get_JPL_Sun_Vector(){
+    public VectorN get_JPL_Sun_Vector(Time t){
+        // We assume (hope) that the passed in time is the current
+        // EarthRef time.
         if(this.use_sun)
             return r_sun;
         else

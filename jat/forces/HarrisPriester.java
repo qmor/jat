@@ -202,10 +202,10 @@ public class HarrisPriester extends AtmosphericDrag{
 	public double computeDensity(Time t, BodyRef ref, VectorN r){
 	    double density = 0;
 	    r.checkVectorDimensions(3);
-        //* Get the J2000 to TOD transformation
-        Matrix N = ref.trueOfDate(t);
-        //* Transform r from J2000 to TOD
-        VectorN r_tod = N.times(r);
+        // Translate from J2000 to TOD
+        ReferenceFrameTranslater xlater =
+          new ReferenceFrameTranslater(ref, new EarthTrueOfDateRef(), t);
+        VectorN r_tod = xlater.translatePoint(r);
         double rmag = r_tod.mag();
         //* Variables
         int    i, ih;                              // Height section variables
@@ -223,7 +223,7 @@ public class HarrisPriester extends AtmosphericDrag{
         if ( alt >= upper_limit || alt <= lower_limit )
            return 0.0;
         //* Sun right ascension, declination
-        VectorN r_Sun = ref.get_JPL_Sun_Vector();
+        VectorN r_Sun = ref.get_JPL_Sun_Vector(t);
         ra_Sun  = Math.atan2( r_Sun.x[1], r_Sun.x[0] );
         dec_Sun = Math.atan2( r_Sun.x[2], Math.sqrt( Math.pow(r_Sun.x[0],2)+Math.pow(r_Sun.x[1],2) ) );
         //* Unit vector u towards the apex of the diurnal bulge
@@ -305,7 +305,7 @@ public class HarrisPriester extends AtmosphericDrag{
         if ( alt >= upper_limit || alt <= lower_limit )
            return 0.0;
         //* Sun right ascension, declination
-        VectorN r_Sun = ref.get_JPL_Sun_Vector();
+        VectorN r_Sun = ref.get_JPL_Sun_Vector(new Time(ref.mjd_utc()));
         ra_Sun  = Math.atan2( r_Sun.x[1], r_Sun.x[0] );
         dec_Sun = Math.atan2( r_Sun.x[2], Math.sqrt( Math.pow(r_Sun.x[0],2)+Math.pow(r_Sun.x[1],2) ) );
         //* Unit vector u towards the apex of the diurnal bulge

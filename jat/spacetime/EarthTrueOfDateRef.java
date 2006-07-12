@@ -21,64 +21,32 @@
  **/
 package jat.spacetime;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
-
 import jat.eph.DE405;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
-import jat.traj.Trajectory;
 
 /**
- * Represents the Lunar Centered Fixed or Selenographic Reference Frame.
+ * Represents the Earth-Centered True of Date Reference Frame.
  * 
  * @author Rob Antonucci
  */
-public class LunaFixedRef implements ReferenceFrame {
+public class EarthTrueOfDateRef implements ReferenceFrame {
   
     /**
-     * Construct a LCF reference frame.
+     * Construct a TOD reference frame.
      */
-    public LunaFixedRef()
+    public EarthTrueOfDateRef()
     {
       // Does nothing.
     }
     
     /**
-     * Compute the LCI to LCF transformation matrix.
+     * Compute the ECI to TOD transformation matrix.
      */
-    private Matrix computeLCI2LCF(Time t) {
-      
-      // First compute the Euler angles
-      DE405 jpl_ephem = new DE405();
-      double[] angles = jpl_ephem.get_Moon_Libration(t.jd_tdb());
-
-      // Then compute the transformation matrix
-      double alpha = angles[0] - Math.PI/2;
-      double sina = Math.sin(alpha);
-      double cosa = Math.cos(alpha);
-      double delta = Math.PI/2 - angles[1];
-      double sind = Math.sin(delta);
-      double cosd = Math.cos(delta);
-      double lambda = angles[2];
-      double sinl = Math.sin(lambda);
-      double cosl = Math.cos(lambda);
-      Matrix xform = new Matrix(3, 3);
-      xform.set(0, 0, -cosl*sina - sinl*sind*cosa);
-      xform.set(0, 1, cosl*cosa - sinl*sind*sina);
-      xform.set(0, 2, sinl*cosd);
-      xform.set(1, 0, sinl*sina-cosl*sind*cosa);
-      xform.set(1, 1, -sinl*cosa - cosl*sind*sina);
-      xform.set(1, 2, cosl*cosd);
-      xform.set(2, 0, cosd*cosa);
-      xform.set(2, 1, cosd*sina);
-      xform.set(2, 2, sind);
-      
-      return xform;
+    private Matrix computeECI2TOD(Time t) {
+      // EarthRef already does this.
+      EarthRef ref = new EarthRef(t);
+      return ref.trueOfDate(t);
     }
 
 
@@ -92,22 +60,18 @@ public class LunaFixedRef implements ReferenceFrame {
     public ReferenceFrameTranslater getTranslater(ReferenceFrame other, Time t)
     {
       ReferenceFrameTranslater xlater = null;
-      if (other instanceof LunaFixedRef) {
+      if (other instanceof EarthTrueOfDateRef) {
         // Same reference frame.  No translation needed.
         xlater = new ReferenceFrameTranslater();
       }
       else if (other instanceof BodyCenteredInertialRef) {
         xlater = getTranslater((BodyCenteredInertialRef)other, t);
       }
-      else if (other instanceof EarthRef) {
-        // EarthRef is just a BodyCenteredInertialRef centered on Earth
-        xlater = getTranslater(new BodyCenteredInertialRef(DE405.EARTH), t);
-      }
       return xlater;
     }
     
     /**
-     * Returns a translater to translate to LCI or ECI or any
+     * Returns a translater to translate to ECI or LCI or any
      * other something-CI.
      * @param inertialRef an inertial reference frame
      * @param t time at which translation will be done
@@ -116,26 +80,25 @@ public class LunaFixedRef implements ReferenceFrame {
     private ReferenceFrameTranslater 
       getTranslater(BodyCenteredInertialRef inertialRef, Time t)
     {
-      // We determine the transformation matrix from LCF to LCI.
+      // We determine the transformation matrix from ECF to ECI.
       // This can be used for transformation to any body-centered
       // inertial frame.
-      Matrix lci2lcf = computeLCI2LCF(t);
-      Matrix xform = lci2lcf.transpose();
+      Matrix eci2tod = computeECI2TOD(t);
+      Matrix xform = eci2tod.transpose();
       
-      // Determine the position of the other body relative to the Moon.
-      // Then transform it to the LCF reference frame.
+      // Determine the position of the other body relative to the Earth.
+      // Then transform it to the ECF reference frame.
       DE405 jpl_ephem = new DE405();
-      VectorN origin1 = jpl_ephem.get_pos(DE405.MOON, t.jd_tdb());
+      VectorN origin1 = jpl_ephem.get_pos(DE405.EARTH, t.jd_tdb());
       VectorN origin2 = 
         (inertialRef.getBody() == BodyCenteredInertialRef.SOLAR_SYSTEM ?
             new VectorN(3) : jpl_ephem.get_pos(inertialRef.getBody(), t.jd_tdb()));
       // We difference and convert to meters (JPL reports kilometers)
       VectorN diff = origin2.minus(origin1).times(1000);
-      VectorN bodyPos = lci2lcf.times(diff);
+      VectorN bodyPos = eci2tod.times(diff);
       ReferenceFrameTranslater xlater =
         new ReferenceFrameTranslater(xform, bodyPos);
       
       return xlater;
     }
-    
 }

@@ -67,10 +67,6 @@ public class EarthFixedRef implements ReferenceFrame {
       else if (other instanceof BodyCenteredInertialRef) {
         xlater = getTranslater((BodyCenteredInertialRef)other, t);
       }
-      else if (other instanceof EarthRef) {
-        // EarthRef is just a BodyCenteredInertialRef centered on Earth
-        xlater = getTranslater(new BodyCenteredInertialRef(DE405.EARTH), t);
-      }
       return xlater;
     }
     

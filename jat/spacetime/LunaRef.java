@@ -26,7 +26,8 @@ import jat.eph.DE405;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 
-public class LunaRef {
+public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
+  
 	/** Earth's rotation rate in rad/s.
      */
     public final static double omega = 2.6617e-6;  // converted from Vallado - rounded to 5 sigfigs
@@ -74,6 +75,7 @@ public class LunaRef {
     private VectorN r_earth;
     
     public LunaRef(){
+        super(DE405.MOON);
     	jpl_ephem = new DE405();
     }
     
@@ -98,5 +100,16 @@ public class LunaRef {
 		//*TODO update LCI2LCF
 		return this.LCI2LCF.transpose();
 	}
+
+    /**
+     * Get the current JPL vector to the Sun [km]
+     * @return Vector [km]
+     */
+    public VectorN get_JPL_Sun_Vector(Time t) {
+      DE405 jpl_ephemeris = new DE405();
+      VectorN moon = jpl_ephemeris.get_pos(DE405.MOON, t.jd_tdb());
+      VectorN sun = jpl_ephemeris.get_pos(DE405.SUN, t.jd_tdb());
+      return sun.minus(moon);
+    }
 
 }

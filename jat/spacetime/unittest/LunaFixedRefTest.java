@@ -29,8 +29,6 @@ import jat.spacetime.LunaFixedRef;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;
-import jat.traj.RelativeTraj;
-import jat.traj.Trajectory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -107,14 +105,12 @@ public class LunaFixedRefTest extends TestCase {
   private void compareData(BufferedReader rdr, int numLines, double epoch,
       int startLine) throws IOException
   {
+    final double MARGIN = 0.005;
     BodyCenteredInertialRef inertial = new BodyCenteredInertialRef(DE405.MOON);
     LunaFixedRef fixed = new LunaFixedRef();
     int numEntriesRead = 0;
     int lineCtr = startLine;
     boolean done = false;
-    Trajectory lpos = new Trajectory();
-    Trajectory comp = new Trajectory();
-    RelativeTraj rel;
     Time t = new Time(TimeUtils.JDtoMJD(epoch));
     while ((numEntriesRead < numLines) && !done) {
       Entry nextEntry = new Entry();
@@ -129,26 +125,26 @@ public class LunaFixedRefTest extends TestCase {
         ReferenceFrameTranslater xlater = 
           new ReferenceFrameTranslater(inertial, fixed, t);
         VectorN computedF = xlater.translatePoint(nextEntry.lciPos);
-        //assertEquals("Computed incorrect LCF value on line "+lineCtr,
-        //    nextEntry.lcfPos, computedF);
-        lpos.add(t.get_sim_time()/3600.0,nextEntry.lcfPos.times(1000).x,new double[3]);
-        comp.add(t.get_sim_time()/3600.0,computedF.times(1000).x,new double[3]);
+        double distance = computedF.minus(nextEntry.lcfPos).mag();
+        double allowed = nextEntry.lcfPos.mag() * MARGIN;
+        assertTrue("Line " + lineCtr + ": " + computedF + " is off from " + 
+            nextEntry.lcfPos + " by " + distance,  distance <= allowed);
         ReferenceFrameTranslater backXlater = 
           new ReferenceFrameTranslater(fixed, inertial, t);
         VectorN computedI = backXlater.translatePoint(nextEntry.lcfPos);
-        //assertEquals("Computed incorrect LCI value on line "+lineCtr,
-        //    nextEntry.lciPos, computedI);
-        VectorN recomputedF = backXlater.translatePointBack(nextEntry.lciPos);
-        //assertEquals("Reverse translation failed on line "+lineCtr,
-        //    nextEntry.lcfPos, recomputedF);
+        distance = computedI.minus(nextEntry.lciPos).mag();
+        allowed = nextEntry.lciPos.mag() * MARGIN;
+        assertTrue("Line " + lineCtr + ": " + computedI + " is off from " + 
+            nextEntry.lciPos + " by " + distance,  distance <= allowed);
+        VectorN recomputedI = xlater.translatePointBack(nextEntry.lcfPos);
+        distance = recomputedI.minus(nextEntry.lciPos).mag();
+        assertTrue("Line " + lineCtr + ": " + recomputedI + " is off from " + 
+            nextEntry.lciPos + " by " + distance,  distance <= allowed);
         ++numEntriesRead;
       }
     }
-    rel = new RelativeTraj(lpos,comp,new LinePrinter());
-    rel.setVerbose(false);
-    rel.process(1e-6);
-    //assertEquals("Encountered " + numEntriesRead + " lines of data when " +
-    //    numLines + " were expected.", numLines, numEntriesRead);
+    assertEquals("Encountered " + numEntriesRead + " lines of data when " +
+        numLines + " were expected.", numLines, numEntriesRead);
   }
   
   private void parseNext(String input, Entry entry, int lineNum)
