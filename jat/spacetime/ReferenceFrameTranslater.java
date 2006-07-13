@@ -32,11 +32,22 @@ public class ReferenceFrameTranslater {
     
     /** The matrix to transform from the source reference frame
      * to the target reference frame. */
-    private Matrix xform;
+    private final Matrix xform;
     
     /** The origin of the target reference frame in terms of the
      * source reference frame. */
-    private VectorN origin;
+    private final VectorN origin;
+    
+    /** The velocity of the target reference frame with respect to the
+     * source reference frame in terms of the source reference frame. */
+    private final VectorN originVel;
+    
+    /** The rate of rotation of the target reference frame with respect
+     * to the source reference frame in terms of the source reference frame. */
+    private final VectorN omega;
+    
+    /** Whether this translater can be used to translate velocities. */
+    private final boolean supportsVelocity;
     
     /**
      * Constructs a translater that translates from the source
@@ -66,6 +77,9 @@ public class ReferenceFrameTranslater {
       // This is a constructor.  Copy the found values into this class.
       xform = xlater.xform;
       origin = xlater.origin;
+      originVel = xlater.originVel;
+      omega = xlater.omega;
+      supportsVelocity = xlater.supportsVelocity;
     }
     
     /**
@@ -77,6 +91,9 @@ public class ReferenceFrameTranslater {
     {
       xform = null;
       origin = null;
+      originVel = null;
+      omega = null;
+      supportsVelocity = true;
     }
 
     /**
@@ -86,16 +103,38 @@ public class ReferenceFrameTranslater {
      * the target reference frame
      * @param originDifference the origin of the target reference frame
      * in terms of the source reference frame
-     * @param eulerAngles the euler angles of the target reference frame
-     * in terms of the source reference frame (in radians)
+     */
+    public ReferenceFrameTranslater(Matrix transformationMatrix,
+        VectorN originDifference, VectorN originVelocity, VectorN rotation)
+    {
+      xform = transformationMatrix;
+      origin = originDifference;
+      originVel = originVelocity;
+      omega = rotation;
+      supportsVelocity = true;
+    }
+    
+    /**
+     * Construct a translater that does not support velocity transformations.
+     * Useful when you know you will only do position transformations and
+     * don't want to spend computation time figuring out
+     * rotation and velocity dynamics.
+     * @param transformationMatrix the transformation matrix for 
+     * transforming directions from the source reference frame to
+     * the target reference frame
+     * @param originDifference the origin of the target reference frame
+     * in terms of the source reference frame
      */
     public ReferenceFrameTranslater(Matrix transformationMatrix,
         VectorN originDifference)
     {
       xform = transformationMatrix;
       origin = originDifference;
+      originVel = null;
+      omega = null;
+      supportsVelocity = false;
     }
-    
+
     /**
      * Translates a given position's coordinates from the source 
      * reference frame to the coordinates in the target reference frame
@@ -134,6 +173,62 @@ public class ReferenceFrameTranslater {
         coords = (origin == null ? coords : coords.plus(origin));
       }
       return coords;
+    }
+    
+    /**
+     * Translates a given velocity's coordinates from the source 
+     * reference frame to the coordinates in the target reference frame
+     * @param velocity x,y, and z coordinates in the source reference frame
+     * (in meters/sec)
+     * @param position x,y, and z coordinates in the source reference frame
+     * (in meters/sec)
+     * @return x,y, and z coordinates in the target reference frame
+     * (in meters/sec)
+     */
+    public VectorN translateVelocity(VectorN velocity, VectorN position)
+    {
+      if (!supportsVelocity) {
+        throw new RuntimeException("Reference frames do not have a translation " +
+                "that supports translating velocities.");
+      }
+      if ((originVel == null) && (xform == null) && (omega == null)) {
+        velocity = velocity.copy();
+      }
+      else {
+        velocity = (omega == null ? 
+            velocity : velocity.plus(omega.crossProduct(position)));
+        velocity = (originVel == null ? velocity : velocity.plus(originVel));
+        velocity = (xform == null ? velocity : xform.times(velocity));
+      }
+      return velocity;
+    }
+    
+    /**
+     * Translates a given velocity's coordinates from the TARGET 
+     * reference frame to the coordinates in the SOURCE reference frame
+     * @param coords x,y, and z coordinates in the target reference frame
+     * (in meters/sec)
+     * @param position x,y, and z coordinates in the source reference frame
+     * (in meters/sec)
+     * @return x,y, and z coordinates in the source reference frame
+     * (in meters/sec)
+     */
+    public VectorN translateVelocityBack(VectorN velocity, VectorN position)
+    {
+      if (!supportsVelocity) {
+        throw new RuntimeException("Reference frames do not have a translation " +
+                "that supports translating velocities.");
+      }
+      if ((originVel == null) && (xform == null) && (omega == null)) {
+        velocity = velocity.copy();
+      }
+      else {
+        velocity = (xform == null ? velocity : xform.transpose().times(velocity));
+        velocity = (omega == null ? 
+            velocity : velocity.minus(omega.crossProduct(position)));
+        velocity = (originVel == null ? velocity : velocity.minus(originVel));
+      }
+      return velocity;
     }
     
     /**
@@ -194,6 +289,8 @@ public class ReferenceFrameTranslater {
      */
     public ReferenceFrameTranslater reverse() {
       VectorN newOrigin = null;
+      VectorN newVelocity = null;
+      VectorN newRotation = null;
       Matrix newXform = (xform == null ? null : xform.transpose());
       if (origin != null) {
         // We have to reverse and transform the origin
@@ -202,6 +299,20 @@ public class ReferenceFrameTranslater {
           newOrigin = xform.times(newOrigin);
         }
       }
-      return new ReferenceFrameTranslater(newXform, newOrigin);
+      if (originVel != null) {
+        // We have to reverse and transform the origin velocity
+        newVelocity = originVel.times(-1);
+        if (xform != null) {
+          newVelocity = xform.times(newVelocity);
+        }
+      }
+      if (omega != null) {
+        // We have to reverse and transform the rotation of the frame
+        newRotation = omega.times(-1);
+        if (xform != null) {
+          newRotation = xform.times(newRotation);
+        }
+      }
+      return new ReferenceFrameTranslater(newXform, newOrigin, newVelocity, newRotation);
     }
 }

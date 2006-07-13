@@ -84,6 +84,8 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
       return xlater;
     }
     
+    
+    
     /**
      * Creates a translate that can translate between two inertial reference
      * frames at a given time
@@ -105,18 +107,18 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
         // Inertial reference frames have the same orientation, so
         // no transformation matrix is needed no matter where the
         // reference frame is centered.
-        Matrix xform = Matrix.identity(3, 3);
         
         // To determine the distance between origins, we check the JPL
         // ephemeris of the two bodies and difference their positions.
         DE405 jpl_ephemeris = new DE405();
-        VectorN origin1 = (this.body == SOLAR_SYSTEM ? 
-            new VectorN(3) : jpl_ephemeris.get_pos(this.body, t.jd_tdb()));
-        VectorN origin2 = (other.body == SOLAR_SYSTEM ?
-            new VectorN(3) : jpl_ephemeris.get_pos(other.body, t.jd_tdb()));
+        VectorN state1 = new VectorN(this.body == SOLAR_SYSTEM ?
+            new double[6] : jpl_ephemeris.get_planet_posvel(this.body, t.jd_tdb()));
+        VectorN state2 = new VectorN(other.body == SOLAR_SYSTEM ?
+            new double[6] : jpl_ephemeris.get_planet_posvel(other.body, t.jd_tdb()));
         // We difference and convert to meters (JPL reports kilometers)
-        VectorN diff = origin2.minus(origin1).times(1000);
-        xlater = new ReferenceFrameTranslater(xform, diff);
+        VectorN originDiff = state2.get(0, 3).minus(state1.get(0,3)).times(1000);
+        VectorN originVel = state2.get(3, 3).minus(state1.get(3, 3)).times(1000);
+        xlater = new ReferenceFrameTranslater(null, originDiff, originVel, null);
       }
       return xlater;
     }

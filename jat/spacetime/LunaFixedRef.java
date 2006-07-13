@@ -122,18 +122,21 @@ public class LunaFixedRef implements ReferenceFrame {
       Matrix lci2lcf = computeLCI2LCF(t);
       Matrix xform = lci2lcf.transpose();
       
-      // Determine the position of the other body relative to the Moon.
-      // Then transform it to the LCF reference frame.
+      // Determine the position of the other body relative to the Earth.
+      // Then transform it to the ECF reference frame.
       DE405 jpl_ephem = new DE405();
-      VectorN origin1 = jpl_ephem.get_pos(DE405.MOON, t.jd_tdb());
-      VectorN origin2 = 
-        (inertialRef.getBody() == BodyCenteredInertialRef.SOLAR_SYSTEM ?
-            new VectorN(3) : jpl_ephem.get_pos(inertialRef.getBody(), t.jd_tdb()));
+      VectorN state1 = new VectorN(jpl_ephem.get_planet_posvel(DE405.MOON, t.jd_tdb()));
+      VectorN state2 = new 
+        VectorN(inertialRef.getBody() == BodyCenteredInertialRef.SOLAR_SYSTEM ?
+          new double[6] : jpl_ephem.get_planet_posvel(inertialRef.getBody(), t.jd_tdb()));
       // We difference and convert to meters (JPL reports kilometers)
-      VectorN diff = origin2.minus(origin1).times(1000);
-      VectorN bodyPos = lci2lcf.times(diff);
+      VectorN originDiff = state2.get(0, 3).minus(state1.get(0, 3)).times(1000);
+      VectorN bodyPos = lci2lcf.times(originDiff);
+      VectorN originVel = state2.get(3, 3).minus(state1.get(3, 3)).times(1000);
+      VectorN bodyVel = lci2lcf.times(originVel);
+      double[] rotation = {0, 0, LunaRef.omega};
       ReferenceFrameTranslater xlater =
-        new ReferenceFrameTranslater(xform, bodyPos);
+        new ReferenceFrameTranslater(xform, bodyPos, bodyVel, new VectorN(rotation));
       
       return xlater;
     }

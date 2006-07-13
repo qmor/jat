@@ -80,7 +80,7 @@ public class SolarBarycenterRef implements BodyRef {
 	/* (non-Javadoc)
 	 * @see jat.spacetime.BodyRef#get_JPL_Sun_Vector()
 	 */
-	public VectorN get_JPL_Sun_Vector() {
+	public VectorN get_JPL_Sun_Vector(Time t) {
 		// TODO Auto-generated method stub
 		return null;
 	}
