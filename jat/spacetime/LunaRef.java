@@ -28,7 +28,7 @@ import jat.matvec.data.VectorN;
 
 public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
   
-	/** Earth's rotation rate in rad/s.
+	/** Moon's rotation rate in rad/s.
      */
     public final static double omega = 2.6617e-6;  // converted from Vallado - rounded to 5 sigfigs
     
@@ -40,7 +40,7 @@ public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
      */
     public final static double M_Luna = 734.9e20; //[kg] HORIZONS
     
-    /** Equatorial radius of earth in m from WGS-84
+    /** Equatorial radius of moon in m 
      */
     public final static double R_Luna = 1737.53e3;      // Radius Moon [m]; HORIZONS +-0.03e3
     
@@ -51,6 +51,10 @@ public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
     /** Moon gravity constant in m^3/s^2 from HORIZONS
      */
     public final static double GM_Luna    = 4902.798e9;    // [m^3/s^2]; HORIZONS +-0.005e9
+    
+    /** Moon J2 term for gravity 
+     */
+    public final static double J2_Luna = 0.0002027;  // from vallado p906
     
     /** Obliquity to orbit for the Moon 6.67 deg converted to radians
      */

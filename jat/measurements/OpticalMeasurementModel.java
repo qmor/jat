@@ -39,6 +39,7 @@ import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.EarthFixedRef;
 import jat.spacetime.EarthRef;
 import jat.spacetime.LunaFixedRef;
+import jat.spacetime.LunaRef;
 import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
@@ -46,6 +47,7 @@ import jat.spacetime.TimeUtils;
 import jat.sim.EstimatorSimModel;
 import jat.sim.initializer;
 import jat.sim.CEVSim;
+import jat.util.FileUtil;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	
@@ -100,8 +102,15 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		jd0 = mjd0+2400000.5;
 		ephem = new DE405();
 		initialize(hm,measNum);
-		fobs = new LinePrinter("C:/Code/Jat/jat/sim/output/obs_"+CEVSim.JAT_case+".txt");
-		fpred = new LinePrinter("C:/Code/Jat/jat/sim/output/pred_"+CEVSim.JAT_case+".txt");
+		String dir_in,fs;
+		fs = FileUtil.file_separator();
+		try{
+			dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"output"+fs;
+		}catch(Exception e){
+			dir_in = "";
+		}
+		fobs = new LinePrinter(dir_in+"obs_"+CEVLunarSim.JAT_case+".txt");
+		fpred = new LinePrinter(dir_in+"pred_"+CEVLunarSim.JAT_case+".txt");
 		rnd = new Random(System.currentTimeMillis());
 	}
 	
@@ -349,7 +358,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		interp1 = new Interpolator(rv,angerr_bias_deg);
 		double abias=MathUtils.DEG2RAD*(interp1.get_value(r));//interp1(rv,angerr_bias_deg,r,'linear','extrap')*pi/180;
 		//*TODO watch this
-		//arnd = 0;
+		arnd = 0;
 		//abias = 0;
 		double[] out = {arnd, abias};
 		return out;
@@ -386,18 +395,19 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		
 		VectorN xr = new VectorN(3);
 		VectorN pos = state.get(0,3);
+		VectorN xm = new VectorN(3);
 		if (p==1) //% Earth
 			xr=pos;
 		else if (p==2){ //% Moon
 			//* TODO watch units
-			VectorN xm=ephem.get_Geocentric_Moon_pos(
+			xm=ephem.get_Geocentric_Moon_pos(
 					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000); 
 			xr=(pos.minus(xm));
 		} else
 			System.err.println("Parameter must be 1 for Earth or 2 for Moon.");
 		
 		double r=xr.mag();
-		double y=R/r;  //% sin(half-angle)
+		double y=R/r;  //% sin(half-angle)		
 		
 		if (y>1){
 			System.out.println("R/r greater than 1, pause");
@@ -690,7 +700,10 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			out = y_angle(x,t,vbody,s,1);
 			break;
 		case TYPE_RANGE:
-			out = y_disk2(x,t,vbody,EarthRef.R_Earth,1);
+			if(vbody == BODY_EARTH)
+				out = y_disk2(x,t,vbody,EarthRef.R_Earth,1);
+			else //if(vbody == BODY_MOON)
+				out = y_disk2(x,t,vbody,LunaRef.R_Luna,1);
 			break;
 		default:
 			return 0;
@@ -718,7 +731,10 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			out = y_angle(x,t,vbody,s,0);
 			break;
 		case TYPE_RANGE:
-			out = y_disk2(x,t,vbody,EarthRef.R_Earth,0);
+			if(vbody == BODY_EARTH)
+				out = y_disk2(x,t,vbody,EarthRef.R_Earth,1);
+			else //if(vbody == BODY_MOON)
+				out = y_disk2(x,t,vbody,LunaRef.R_Luna,1);
 			break;
 		default:
 			return 0;

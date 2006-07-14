@@ -125,7 +125,7 @@ public class EKF {
 			this.process= new JGM4x4SRPProcess9state(lp1, lp2,hm);
 	
 		}
-		else if(stringPm.equals("Simple"))
+		else if(stringPm.equals("Simple") || stringPm.equals("Lunar"))
 		{
 			this.process = new SimpleProcessModel(hm);
 		}else{
@@ -594,7 +594,7 @@ public class EKF {
 
 				// update state and covariance
 				xref.update(xhat); 
-				y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
+				//y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
 
 				pold = this.updateCov(k, H, pnew);
 			//} //else visible = false;

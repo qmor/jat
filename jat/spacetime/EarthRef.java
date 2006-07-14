@@ -659,8 +659,8 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      *   @return  GMST in [rad]
      */
     public double GMST(double MJD_UT1) {
-        double Mjd_UT1 = MathUtils.round(MJD_UT1*1.0e6)/1.0e6;
-    	//double Mjd_UT1 = MJD_UT1;
+        //double Mjd_UT1 = MathUtils.round(MJD_UT1*1.0e6)/1.0e6;
+    	double Mjd_UT1 = MJD_UT1;
         
         // Constants
         final double Secs = 86400.0;        // Seconds per day

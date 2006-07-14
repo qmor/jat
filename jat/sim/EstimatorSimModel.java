@@ -210,7 +210,7 @@ public class EstimatorSimModel extends SimModel {
 				ref_traj[i] = new Trajectory();
 			}
 			created_meas = new createMeasurements(input);
-			filter = new EKF(input);
+			filter = new EKF(input,JAT_case);
 		}
 	}
 	protected void initialize()
@@ -329,7 +329,7 @@ public class EstimatorSimModel extends SimModel {
 		}		
 	}
 	
-	public static UniverseModel createUniverseModel(double mjd_utc,Spacecraft sc, boolean[] force_flag, boolean use_JGM2, String drag_model){
+	public UniverseModel createUniverseModel(double mjd_utc,Spacecraft sc, boolean[] force_flag, boolean use_JGM2, String drag_model){
 		
 		UniverseModel umodel = new UniverseModel(mjd_utc);
 		//ForceModelList forces = new ForceModelList();
