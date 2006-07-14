@@ -98,7 +98,9 @@ public class EarthFixedRef implements ReferenceFrame {
       VectorN bodyPos = eci2ecf.times(originDiff);
       VectorN originVel = state2.get(3, 3).minus(state1.get(3, 3)).times(1000);
       VectorN bodyVel = eci2ecf.times(originVel);
-      double[] rotation = {0, 0, EarthRef.omega_e};
+      // We use -omega because we want the rotation of inertial frame with respect to
+      // the fixed frame.
+      double[] rotation = {0, 0, -EarthRef.omega_e};
       ReferenceFrameTranslater xlater =
         new ReferenceFrameTranslater(xform, bodyPos, bodyVel, new VectorN(rotation));
      

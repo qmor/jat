@@ -21,17 +21,9 @@
  **/
 package jat.spacetime;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
-
 import jat.eph.DE405;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
-import jat.traj.Trajectory;
 
 /**
  * Represents the Lunar Centered Fixed or Selenographic Reference Frame.
@@ -134,7 +126,9 @@ public class LunaFixedRef implements ReferenceFrame {
       VectorN bodyPos = lci2lcf.times(originDiff);
       VectorN originVel = state2.get(3, 3).minus(state1.get(3, 3)).times(1000);
       VectorN bodyVel = lci2lcf.times(originVel);
-      double[] rotation = {0, 0, LunaRef.omega};
+      // We use -omega because we want the rotation of inertial frame with respect to
+      // the fixed frame.
+      double[] rotation = {0, 0, -LunaRef.omega};
       ReferenceFrameTranslater xlater =
         new ReferenceFrameTranslater(xform, bodyPos, bodyVel, new VectorN(rotation));
       

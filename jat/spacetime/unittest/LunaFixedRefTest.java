@@ -21,23 +21,23 @@
  **/
 package jat.spacetime.unittest;
 
-import jat.alg.integrators.LinePrinter;
 import jat.eph.DE405;
 import jat.matvec.data.VectorN;
 import jat.spacetime.BodyCenteredInertialRef;
+import jat.spacetime.EarthRef;
 import jat.spacetime.LunaFixedRef;
+import jat.spacetime.LunaRef;
+import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 import junit.framework.TestCase;
 
@@ -58,7 +58,7 @@ public class LunaFixedRefTest extends TestCase {
   /*
    * Test method for 'jat.spacetime.LunaFixedRef.getTranslater(ReferenceFrame, Time)'
    */
-  public void testLCItoLCF() throws IOException {
+  public void testLCItoLCF(boolean hi) throws IOException {
     final String COMMENT = "#";
     final String DECLARATION = "%";
     final String NUM_LINES_VAR = "num";
@@ -169,6 +169,49 @@ public class LunaFixedRefTest extends TestCase {
       fail("Failure to parse doubles on line " + lineNum + ". " +
           e.getMessage());
     }
+  }
+  
+  public void testECIVelocityToLCFVelocity() {
+    //double[] startEciPos = {-2.7555712051348615E8, 2.278862267130929E8, 1.0302526370467307E8};
+    //double[] startEciVel = {719.703479618275,  737.5548929186978,   220.44009064585677};
+    double[] startEciPos = {1.7232607076253737e+002,  1.6379287856614317e+003, -8.1592709137349675e+002};
+    double[] startEciVel = {1.3836671664810035e-001,  7.1393322649210633e-001,  1.4624051437086556e+000};
+    double timestep = 0.5; // in seconds
+    double ERROR = 0.01;
+    
+    Time t = new Time(TimeUtils.JDtoMJD(2.458232499999999e+006));
+    ReferenceFrame eciRef = new LunaRef();
+    ReferenceFrame lcfRef = new LunaFixedRef();
+    
+    VectorN eciPos1 = new VectorN(startEciPos);
+    VectorN eciVel1 = new VectorN(startEciVel);
+    System.out.println("ECI Position =\t\t" + eciPos1);
+    System.out.println("ECI Velocity =\t\t" + eciVel1);
+    ReferenceFrameTranslater xlater = new ReferenceFrameTranslater(eciRef, lcfRef, t);
+    VectorN lcfPos1 = xlater.translatePoint(eciPos1);
+    VectorN lcfVel1 = xlater.translateVelocity(eciVel1, eciPos1);
+    System.out.println("LCF Position =\t\t" + lcfPos1);
+    System.out.println("LCF Velocity =\t\t" + lcfVel1);
+    
+    t.update(timestep);
+    VectorN eciPos2 = eciVel1.times(timestep).plus(eciPos1);
+    VectorN lcfPos2 = lcfVel1.times(timestep).plus(lcfPos1);
+    System.out.println("ECI New Position =\t" + eciPos2);
+    xlater = new ReferenceFrameTranslater(eciRef, lcfRef, t);
+    VectorN lcfPos2True = xlater.translatePoint(eciPos2);
+    System.out.println("LCF New Position =\t" + lcfPos2True);
+    System.out.println("LCF Estimated =\t\t" + lcfPos2);
+    
+    VectorN change = lcfPos2.minus(lcfPos1);
+    VectorN changeTrue = lcfPos2True.minus(lcfPos1);
+    VectorN error = lcfPos2.minus(lcfPos2True);
+    System.out.println("LCF Position changed by\t" + changeTrue);
+    System.out.println("LCF estimated to change\t" + change);
+    System.out.println("Error was\t\t" + error);
+    assertTrue("velocity produced change " + change + " instead of " +
+        changeTrue, error.mag() < changeTrue.mag() * ERROR);
+    
+    
   }
 
 }

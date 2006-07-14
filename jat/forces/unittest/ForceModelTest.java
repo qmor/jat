@@ -8,12 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jat.eph.DE405;
 import jat.forces.ForceModel;
-import jat.forces.SolarRadiationPressure;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.Spacecraft;
-import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.EarthRef;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;

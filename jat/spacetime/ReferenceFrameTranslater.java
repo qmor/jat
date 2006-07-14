@@ -103,6 +103,8 @@ public class ReferenceFrameTranslater {
      * the target reference frame
      * @param originDifference the origin of the target reference frame
      * in terms of the source reference frame
+     * @param originVelocity the velocity of the target reference frame with
+     * respect to the source reference frame
      */
     public ReferenceFrameTranslater(Matrix transformationMatrix,
         VectorN originDifference, VectorN originVelocity, VectorN rotation)
@@ -196,8 +198,8 @@ public class ReferenceFrameTranslater {
       }
       else {
         velocity = (omega == null ? 
-            velocity : velocity.plus(omega.crossProduct(position)));
-        velocity = (originVel == null ? velocity : velocity.plus(originVel));
+            velocity : velocity.minus(omega.crossProduct(position)));
+        velocity = (originVel == null ? velocity : velocity.minus(originVel));
         velocity = (xform == null ? velocity : xform.times(velocity));
       }
       return velocity;
@@ -225,8 +227,8 @@ public class ReferenceFrameTranslater {
       else {
         velocity = (xform == null ? velocity : xform.transpose().times(velocity));
         velocity = (omega == null ? 
-            velocity : velocity.minus(omega.crossProduct(position)));
-        velocity = (originVel == null ? velocity : velocity.minus(originVel));
+            velocity : velocity.plus(omega.crossProduct(position)));
+        velocity = (originVel == null ? velocity : velocity.plus(originVel));
       }
       return velocity;
     }
