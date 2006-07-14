@@ -48,7 +48,9 @@ public class LunaFixedRefTest extends TestCase {
   {
     public double epochSecs;
     public VectorN lciPos;
+    public VectorN lciVel;
     public VectorN lcfPos;
+    public VectorN lcfVel;
   }
     
   public static void main(String[] args) {
@@ -58,7 +60,7 @@ public class LunaFixedRefTest extends TestCase {
   /*
    * Test method for 'jat.spacetime.LunaFixedRef.getTranslater(ReferenceFrame, Time)'
    */
-  public void testLCItoLCF(boolean hi) throws IOException {
+  public void testLCItoLCF() throws IOException {
     final String COMMENT = "#";
     final String DECLARATION = "%";
     final String NUM_LINES_VAR = "num";
@@ -105,7 +107,7 @@ public class LunaFixedRefTest extends TestCase {
   private void compareData(BufferedReader rdr, int numLines, double epoch,
       int startLine) throws IOException
   {
-    final double MARGIN = 0.005;
+    final double MARGIN = 0.01;
     BodyCenteredInertialRef inertial = new BodyCenteredInertialRef(DE405.MOON);
     LunaFixedRef fixed = new LunaFixedRef();
     int numEntriesRead = 0;
@@ -120,26 +122,44 @@ public class LunaFixedRefTest extends TestCase {
       if ((nextLine != null) && !nextLine.trim().equals(""))
       {
         parseNext(nextLine, nextEntry, lineCtr);
-        //Time t = new Time(epoch.mjd_utc());
         t.update(nextEntry.epochSecs);
+        
+        // Verify the point translations
         ReferenceFrameTranslater xlater = 
           new ReferenceFrameTranslater(inertial, fixed, t);
         VectorN computedF = xlater.translatePoint(nextEntry.lciPos);
         double distance = computedF.minus(nextEntry.lcfPos).mag();
         double allowed = nextEntry.lcfPos.mag() * MARGIN;
-        assertTrue("Line " + lineCtr + ": " + computedF + " is off from " + 
+        assertTrue("Line " + lineCtr + " position: " + computedF + " is off from " + 
             nextEntry.lcfPos + " by " + distance,  distance <= allowed);
         ReferenceFrameTranslater backXlater = 
           new ReferenceFrameTranslater(fixed, inertial, t);
         VectorN computedI = backXlater.translatePoint(nextEntry.lcfPos);
         distance = computedI.minus(nextEntry.lciPos).mag();
         allowed = nextEntry.lciPos.mag() * MARGIN;
-        assertTrue("Line " + lineCtr + ": " + computedI + " is off from " + 
+        assertTrue("Line " + lineCtr + " position: " + computedI + " is off from " + 
             nextEntry.lciPos + " by " + distance,  distance <= allowed);
         VectorN recomputedI = xlater.translatePointBack(nextEntry.lcfPos);
         distance = recomputedI.minus(nextEntry.lciPos).mag();
-        assertTrue("Line " + lineCtr + ": " + recomputedI + " is off from " + 
+        assertTrue("Line " + lineCtr + " position: " + recomputedI + " is off from " + 
             nextEntry.lciPos + " by " + distance,  distance <= allowed);
+        
+        // Verify the velocity translations
+        computedF = xlater.translateVelocity(nextEntry.lciVel, nextEntry.lciPos);
+        double difference = computedF.minus(nextEntry.lcfVel).mag();
+        allowed = nextEntry.lcfVel.mag() * MARGIN;
+        assertTrue("Line " + lineCtr + " velocity: " + computedF + " is off from " + 
+            nextEntry.lcfVel + " by " + difference,  difference <= allowed);
+        computedI = backXlater.translateVelocity(nextEntry.lcfVel, nextEntry.lcfPos);
+        difference = computedI.minus(nextEntry.lciVel).mag();
+        allowed = nextEntry.lciVel.mag() * MARGIN;
+        assertTrue("Line " + lineCtr + " velocity: " + computedI + " is off from " + 
+            nextEntry.lciVel + " by " + difference,  difference <= allowed);
+        recomputedI = xlater.translateVelocityBack(nextEntry.lcfVel, nextEntry.lcfPos);
+        difference = recomputedI.minus(nextEntry.lciVel).mag();
+        assertTrue("Line " + lineCtr + " velocity: " + recomputedI + " is off from " + 
+            nextEntry.lciVel + " by " + difference,  difference <= allowed);
+        
         ++numEntriesRead;
       }
     }
@@ -160,10 +180,18 @@ public class LunaFixedRefTest extends TestCase {
       entry.lcfPos.set(0, Double.parseDouble(doubles[1]));
       entry.lcfPos.set(1, Double.parseDouble(doubles[2]));
       entry.lcfPos.set(2, Double.parseDouble(doubles[3]));
+      entry.lcfVel = new VectorN(3);
+      entry.lcfVel.set(0, Double.parseDouble(doubles[4]));
+      entry.lcfVel.set(1, Double.parseDouble(doubles[5]));
+      entry.lcfVel.set(2, Double.parseDouble(doubles[6]));
       entry.lciPos = new VectorN(3);
       entry.lciPos.set(0, Double.parseDouble(doubles[7]));
       entry.lciPos.set(1, Double.parseDouble(doubles[8]));
       entry.lciPos.set(2, Double.parseDouble(doubles[9]));
+      entry.lciVel = new VectorN(3);
+      entry.lciVel.set(0, Double.parseDouble(doubles[10]));
+      entry.lciVel.set(1, Double.parseDouble(doubles[11]));
+      entry.lciVel.set(2, Double.parseDouble(doubles[12]));
     }
     catch (NullPointerException e) {
       fail("Failure to parse doubles on line " + lineNum + ". " +

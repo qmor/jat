@@ -199,8 +199,8 @@ public class ReferenceFrameTranslater {
       else {
         velocity = (omega == null ? 
             velocity : velocity.minus(omega.crossProduct(position)));
-        velocity = (originVel == null ? velocity : velocity.minus(originVel));
         velocity = (xform == null ? velocity : xform.times(velocity));
+        velocity = (originVel == null ? velocity : velocity.minus(originVel));
       }
       return velocity;
     }
@@ -225,10 +225,10 @@ public class ReferenceFrameTranslater {
         velocity = velocity.copy();
       }
       else {
+        velocity = (originVel == null ? velocity : velocity.plus(originVel));
         velocity = (xform == null ? velocity : xform.transpose().times(velocity));
         velocity = (omega == null ? 
             velocity : velocity.plus(omega.crossProduct(position)));
-        velocity = (originVel == null ? velocity : velocity.plus(originVel));
       }
       return velocity;
     }
