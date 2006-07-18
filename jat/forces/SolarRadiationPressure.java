@@ -22,7 +22,6 @@ package jat.forces;
 import jat.cm.Constants;
 import jat.matvec.data.VectorN;
 import jat.timeRef.EarthRef;
-import jat.util.FileUtil;
 import jat.spacecraft.Spacecraft;
 import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.BodyRef;
@@ -56,38 +55,47 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
     /** All solar pressure radiation forces are determined based on
      * position relative to the sun. */
     private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405.SUN);
+    
+    /** A reference frame relative to a planet casting a shadow.  Will be used
+     * to determine the spacecraft's position relative to the planet to determine
+     * the shadow. */
+    private final ReferenceFrame shadowRef;
+    
+    /** The radius of planet casting shadow.  Or ignored if shadowRef is null. */
+    private final double shadowR;
 	
-	/** Default constructor.
-     */
-	public SolarRadiationPressure(){
-		
-	}
-	
-	/** Constructor
-	 * @param p ECI position vector [m].
-     * @param p_Sun ECI position vector of the Sun in m.
+	/** Constructor.  Assumes an Earth shadow.
      * @param m New satellite mass value [kg].
      * @param A New satellite area value [m^2].
      * @param coeff Coefficient of reflectivity
 	 */
 	public SolarRadiationPressure(double m, double A, double coeff){
-		mass = m;
-		area = A;
-		CR = coeff;
+      this(m, A, coeff, new BodyCenteredInertialRef(DE405.EARTH), Constants.R_Earth);
 	}
 	
+    /** Constructor
+     * @param m New satellite mass value [kg].
+     * @param A New satellite area value [m^2].
+     * @param coeff Coefficient of reflectivity
+     * @param bodyRef reference frame that can tell the spacecraft's position
+     * relative to a planet that may cast a shadow on the spacecraft.
+     * @param bodyRadius radius of the planet in meters
+     */
+    public SolarRadiationPressure(double m, double A, double coeff, 
+          ReferenceFrame bodyRef, double bodyRadius){
+        mass = m;
+        area = A;
+        CR = coeff;
+        shadowRef = bodyRef;
+        shadowR = bodyRadius;
+    }
+    
 	/**
 	 * Constructor
 	 * @param sc Spacecraft Parameters
 	 */
 	public SolarRadiationPressure(Spacecraft sc){
-	    mass = sc.mass();
-	    area = sc.area();
-	    CR = sc.cr();
-	    String filesep = FileUtil.file_separator();
-        String directory = FileUtil.getClassFilePath("jat.eph","DE405");
-        directory = directory+filesep+"DE405data"+filesep;
-        //jpl_ephemeris = new DE405(directory);
+	    this(sc.mass(), sc.area(), sc.cr());
 	}
 	
     /** Compute the acceleration due to a solar radiation pressure.
@@ -99,10 +107,10 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
     {
         double dmag = d.mag();
         double dcubed = dmag * dmag * dmag;
-        double au2 = Constants.AU * Constants.AU;
+        //double au2 = Constants.AU * Constants.AU;
         //double r_sun_mag = r_Sun.mag();
         //double au2 = r_sun_mag*r_sun_mag;
-        double P_STK = 4.5344321837439e-06;
+        //double P_STK = 4.5344321837439e-06;
         //4.560E-6
         //THE REAL WAY
         double Ls = 3.823e26; //* STK [W]
@@ -212,7 +220,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
      * @return 0.0 if in shadow, 1.0 if in sunlight, 0 to 1.0 if in partial shadow
      */
     public double partial_illumination(VectorN r, VectorN r_Sun ){
-      VectorN d = r_Sun.minus(r);
+      VectorN d = r.minus(r_Sun);
       return partial_illumination_rel(r, d);
     }
     
@@ -229,7 +237,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
         // frame and radius should be passed in to the SolarRadiationPressure
         // at construction.
         double R_earth = Constants.R_Earth;
-        double dmag = r_sun.mag();
+        double dmag = -1 * r_sun.mag();
         double sd = -1.0 * r_earth.dotProduct(r_sun);
         double a = Math.asin(R_sun/dmag);
         if(R_earth>r_mag){

@@ -20,6 +20,10 @@ public class ForceModelTest extends TestCase {
   
   /** Used to indicate comments in the test data files */
   public static final String COMMENT_PREFIX = "#";
+  
+  /** Acceptable error margin.  Error should only result from
+   * floating point arithmetic, so errors should be VERY small. */
+  private static double MARGIN = 0.000001;
 
   public static void main(String[] args) {
     junit.textui.TestRunner.run(ForceModelTest.class);
@@ -93,8 +97,11 @@ public class ForceModelTest extends TestCase {
       if (fwrtr == null) {
         // Doing compare
         VectorN target = readTarget(fLine);
-        assertEquals("Error computing " + targetName + " at " +
-            "time/position specified on line " + lineNum, target, computed);
+        double distance = target.minus(computed).mag();
+        double allowed = target.mag() * MARGIN;
+        assertTrue("Error computing " + targetName + " at " +
+            "time/position specified on line " + lineNum + ".  " + computed + 
+            " is off from " + target + " by " + distance, distance <= allowed);
         fLine = frdr.readLine();
       }
       else {

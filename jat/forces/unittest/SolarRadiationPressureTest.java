@@ -19,7 +19,7 @@ public class SolarRadiationPressureTest extends ForceModelTest {
     sc.set_area(20);
     sc.set_mass(1000);
     sc.set_cr(0.07);
-    SolarRadiationPressure force = new SolarRadiationPressure();
+    SolarRadiationPressure force = new SolarRadiationPressure(sc); 
     
     testForceModelAcceleration(sc, force, "solar_pressure.txt", 
         "solar pressure radiation");
