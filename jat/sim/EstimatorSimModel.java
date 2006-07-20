@@ -28,7 +28,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import jat.alg.estimators.EKF;
@@ -124,18 +127,21 @@ public class EstimatorSimModel extends SimModel {
 	public EstimatorSimModel(boolean filter_is_on){
 		super();
 		initializeConst();
+        configurePlotting();
 		useMeas = filter_is_on;
 		
 	}
 	public EstimatorSimModel(double[] r, double[] v, double cr, double cd, double area, double mass){
 		super(r, v, cr, cd, area, mass);
 		initializeConst();
+        configurePlotting();
 		obsFromFile = false;
 	}
 	public EstimatorSimModel(double[][] r, double[][] v, double[] cr, double[] cd,
 			double[] area, double[] mass){
 		super(r, v, cr,cd,area, mass);
 		initializeConst();
+        configurePlotting();
 		obsFromFile = false;
 	}
 	
@@ -213,6 +219,43 @@ public class EstimatorSimModel extends SimModel {
 			filter = new EKF(input,JAT_case);
 		}
 	}
+    
+    /**
+     * Read the configuration setup for indications on what to plot.
+     * If the program has already explicitly changed the plot settings,
+     * the configuration overides it.
+     * If the program has not explicitly changed the plot settings and
+     * nothing is specified in the configuration, will plot everything.
+     */
+    private void configurePlotting() {
+      String plotNames = (String)this.input.get("output.plot");
+      if (plotNames == null) {
+        // Determine if any of the flags have been explicitly turned on
+        // If so, don't turn everything on.
+        if (!PlotJAT && !PlotGEONSRef && !PlotTruth && !PlotGEONSBoth &&
+            !PlotMeasurements) {
+          PlotJAT = true;
+          PlotGEONSRef = true;
+          PlotTruth = true;
+          PlotGEONSBoth = true;
+          PlotMeasurements = true;
+        }
+      }
+      else {
+        plotNames = plotNames.toLowerCase();
+        List<String> plotList = 
+          new ArrayList(Arrays.asList(plotNames.split("\\s*,\\s*")));
+        PlotJAT = plotList.remove("jat");
+        PlotTruth = plotList.remove("truth");
+        PlotGEONSRef = plotList.remove("geonsref");
+        PlotGEONSBoth = plotList.remove("geonsboth");
+        PlotMeasurements = plotList.remove("measurements");
+        if (!plotList.isEmpty()) {
+          System.err.println("Warning: Unknown plot names " + plotList);
+        }
+      }
+    }
+    
 	protected void initialize()
 	{
 		double[] r = new double[3];
@@ -1187,13 +1230,6 @@ public class EstimatorSimModel extends SimModel {
 		int jat_case = 1;
 		EstimatorSimModel.JAT_case = jat_case;
 		EstimatorSimModel.JAT_runtruth = true;
-		
-		//* TODO Flag marker
-		EstimatorSimModel.PlotJAT = true;
-		EstimatorSimModel.PlotGEONSRef = true;
-		EstimatorSimModel.PlotTruth = true;
-		EstimatorSimModel.PlotGEONSBoth = true;
-		EstimatorSimModel.PlotMeasurements = true;
 		
 		EstimatorSimModel.COV_printoffdiag = false;
 		

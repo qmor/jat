@@ -586,8 +586,12 @@ public class CEVSim extends EstimatorSimModel {
 		CEVSim Sim = new CEVSim(useFilter);
 		Sim.set_verbose(true);
 		Sim.runloop();
-        OpticalMeasurementModel.fobs.close();
-        OpticalMeasurementModel.fpred.close();
+        if (OpticalMeasurementModel.fobs != null) {
+          OpticalMeasurementModel.fobs.close();
+        }
+        if (OpticalMeasurementModel.fpred != null) {
+          OpticalMeasurementModel.fpred.close();
+        }
         System.out.println("Finished.");
 	}
 }

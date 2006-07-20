@@ -4,6 +4,14 @@
 
 # Mode: 0 = Trajectory Generation Only, 1 = Trajectory and Filter
 init.mode    1
+init.runMonteCarlo true
+MONTE.r_error 1000
+MONTE.v_error 10
+MONTE.lm_error 100
+# To turn on plotting specify possible values jat, truth, geonsref, geonsboth, and measurements
+# If omitted, will default to whatever the program specifies.  If blank, nothing plotted.
+output.plot
+# output.plot	jat,truth,measurements
 
 # Flag indicating whether to read observations from a file or generate them
 init.fromfile false

@@ -89,7 +89,7 @@ public class TrajTest implements Printable
         System.out.println("Printing to an ASCII file");
         String dir = "C:\\Temp\\";
         String file = "traj1.txt";
-        LinePrinter lpout = new LinePrinter(dir, file);
+        LinePrinter lpout = new LinePrinter(dir + file);
         x.traj.sendToLinePrinter(lpout);
         lpout.close();
         System.out.println("traj1.txt written");

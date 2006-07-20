@@ -19,7 +19,10 @@
  */
 
 package jat.alg.integrators;
+import jat.util.FileUtil;
+
 import java.io.*;
+import java.net.URL;
 
 /** <P>
  * The LinePrinter Class provides a way to print out integrator output data
@@ -31,12 +34,9 @@ import java.io.*;
  */
 public class LinePrinter implements Printable {
 
-	private int[] indices;
+	private final int[] indices;
 	private PrintWriter pw;
-	private FileOutputStream outfile;
-	private boolean printall;
-	private String directory = "C:\\Temp\\";
-	private String filename = "output.txt";
+	private final boolean printall;
 	private double multiple = 1;
 	private int counter = 0;
 	private boolean isadaptive = false;
@@ -44,100 +44,82 @@ public class LinePrinter implements Printable {
 	/** Default constructor. Prints the entire state array to System.out.
 	 */
 	public LinePrinter() {
-		this.printall = true;
-		this.pw = new PrintWriter(System.out, true);
+		this(null, true, null);
 	}
 
 	/** Prints a subset of the state array to System.out.
 	 * @param i Integer array containing the indices of the elements of the state array to be printed.
 	 */
 	public LinePrinter(int[] i) {
-		this.printall = false;
-		this.indices = new int[i.length];
-		for (int j = 0; j < i.length; j++) {
-			this.indices[j] = i[j];
-		}
-		this.pw = new PrintWriter(System.out, true);
+		this(null, false, (i == null ? new int[0] : i));
 	}
 
 	/** Prints the entire state array to the user supplied directory and file.
-	 * @param dir String containing the directory.
 	 * @param fname String containing the filename.
-	 * @throws IOException thrown if it can't open the file.
-	 */
-	public LinePrinter(String dir, String fname) {
-		this.printall = true;
-		this.directory = new String(dir);
-		this.filename = new String(fname);
-		openFile();
-	}
-
-	/** Prints the entire state array to the user supplied directory and file.
-	 * @param dir String containing the directory.
-	 * @param fname String containing the filename.
-	 * @throws IOException thrown if it can't open the file.
 	 */
 	public LinePrinter(String fname) {
-		this.printall = true;
-		openFile(fname);
+        // We want to make sure we throw NullPointerException if null is passed in,
+        // but still want to use "this(...)" syntax which requires there be only
+        // one line.  So we sneakily call toString() on the string.
+		this(fname.toString(), true, null);
 	}
 
 	/** Prints the entire state array to the user supplied directory and file.
 	 * @param dir String containing the directory.
 	 * @param fname String containing the filename.
 	 * @param i Integer array containing the indices of the elements of the state array to be printed.
-	 * @throws IOException thrown if it can't open the file.
 	 */
-	public LinePrinter(String dir, String fname, int[] i) {
-		this.printall = false;
-		this.directory = new String(dir);
-		this.filename = new String(fname);
-		this.indices = new int[i.length];
-		for (int j = 0; j < i.length; j++) {
-			this.indices[j] = i[j];
-		}
-		openFile();
-	}
-	/** Opens the file
-	 */
-	private void openFile() {
-		try {
-			this.outfile = new FileOutputStream(directory + filename);
-			this.pw = new PrintWriter(outfile);
-		} catch (IOException e) {
-			System.err.println("LinePrinter error opening file: " + e);
-		}
-		return;
-	}
-
-	/** Opens the file
-	 * @param fname String containing directory and filename
-	 */
-	private void openFile(String fname) {
-		try {
-			this.outfile = new FileOutputStream(fname);
-			this.pw = new PrintWriter(outfile);
-		} catch (IOException e) {
-			System.err.println("LinePrinter error opening file: " + e);
-		}
-		return;
+    public LinePrinter(String fname, int[] i) {
+      // We want to make sure we throw NullPointerException if null is passed in,
+      // but still want to use "this(...)" syntax which requires there be only
+      // one line.  So we sneakily call toString() on the string.
+      this(fname.toString(), false, (i == null ? new int[0] : i));
+    }
+    
+    
+    /** Prints the entire state array to the user supplied directory and file.
+     * @param dir String containing the directory.
+     * @param fname String containing the filename.
+     * @param i Integer array containing the indices of the elements of the state array to be printed.
+     * @throws IOException thrown if it can't open the file.
+     */
+    private LinePrinter(String fname, boolean printAllIndexes, int[] i) {
+		this.printall = printAllIndexes;
+		this.indices = (printAllIndexes ? null : new int[i.length]);
+        if (!printAllIndexes) {
+          System.arraycopy(i, 0, this.indices, 0, i.length);
+        }
+        
+        // We open a writer to the output media.
+        // If fname is null, we open a writer to System.out
+        // If fname is a filename with no directory names at all
+        //   (or if it specifies the default directory)
+        //   we put it in the default directory.
+        // Otherwise, we open a writer to the file and if not
+        //   an absolute file name will create it relative to
+        //   the working directory.
+        
+        try {
+          if (fname == null) {
+            this.pw = new PrintWriter(System.out, true);
+          }
+          else {
+            OutputStream ostrm = FileUtil.openOutputFile(fname);
+            this.pw = new PrintWriter(ostrm);
+          }
+        } catch (IOException e) {
+            System.err.println("LinePrinter error opening file: " + e);
+            System.err.println("All output to line printer will be lost.");
+        }
 	}
 
 	/** Closes the LinePrinter, the PrintWriter and the output file. Always remember to call this method when you are done printing!
 	 */
 	public void close() {
-		// close the PrintWriter
+	  // close the PrintWriter
+      if (pw != null) {
 		pw.close();
-
-		// if necessary, close the output file
-		if (this.outfile != null) {
-			try {
-				outfile.close();
-			} catch (IOException e) {
-				System.err.println("LinePrinter error closing file: " + e);
-			}
-		}
-		return;
+      }
 	}
 	
 	/** Set whether the print calls are fixed step (false) or adaptive (true).
@@ -169,7 +151,8 @@ public class LinePrinter implements Printable {
 	 * @param t time or independent variable.
 	 * @param y state or dependent variable array.
 	 */
-	public void print(double t, double[] y) {	
+	public void print(double t, double[] y) {
+      if (pw != null) {
 		double tprint = counter * multiple;
 		if (t == tprint || isadaptive) {
 			// print the time variable
@@ -198,13 +181,14 @@ public class LinePrinter implements Printable {
 			pw.println();
 			counter = counter + 1;
 		}		
+      }
 	}
 
 	/** Implements the Printable interface. This method is called once per integration step by the integrator.
 	 * @param y double array.
 	 */
 	public void print(double[] y) {
-
+	  if (pw != null) {
 		// print the state array
 		if (printall) {
 			// print all of the y array
@@ -225,6 +209,7 @@ public class LinePrinter implements Printable {
 
 		// add the linefeed for the next line
 		pw.println();
+      }
 	}
 
 	/** Print a string to a line
@@ -238,10 +223,12 @@ public class LinePrinter implements Printable {
 	 * @param str string array to be printed
 	 */
 	public void println(String[] str) {
+      if (pw != null) {
 		for (int i = 0; i < str.length; i++) {
 			pw.print(str[i] + "\t");
 		}
 		pw.println();
+      }
 	}
 
 	/** Print a string array to a line
@@ -249,11 +236,13 @@ public class LinePrinter implements Printable {
 	 * @param str string array to be printed
 	 */
 	public void println(String title, String[] str) {
+      if (pw != null) {
 		pw.print(title + "\t");
 		for (int i = 0; i < str.length; i++) {
 			pw.print(str[i] + "\t");
 		}
 		pw.println();
+      }
 	}
 
 }
