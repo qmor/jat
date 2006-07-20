@@ -576,7 +576,7 @@ public class CEVSim extends EstimatorSimModel {
 //		CEVSim.InputFile = "initialConditions_cev_m2e.txt";
 		
 		CEVSim.JAT_name = "earth2moon";
-		CEVSim.InputFile = "initialConditions_cev_e2m.txt";
+		CEVSim.InputFile = (args.length > 0 ? args[0] : "initialConditions_cev_e2m.txt");
 		
 //		CEVSim.JAT_name = "earth2moon";
 //		CEVSim.InputFile = "initialConditions_cev_e2m_bias.txt";

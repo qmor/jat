@@ -849,37 +849,37 @@ public class CEVLunarSim {
 		double mc_start = System.currentTimeMillis();
 		
 		for(int c=0; c<1; c++){
-//			CEVSim.JAT_name = "moon2earth_";
-//			CEVSim.InputFile = "initialConditions_cev_m2e.txt";
-
-//			CEVSim.JAT_name = "earth2moon";
-//			CEVSim.InputFile = "initialConditions_cev_e2m.txt";
 
 			CEVLunarSim.JAT_name = "lowlunar";
-			//CEVLunarSim.InputFile = "initialConditions_cev_llo.txt";
-			switch(JAT_case){
-			case 90:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
-				break;
-			case 91:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_01.txt";
-				break;
-			case 92:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_1.txt";
-				break;
-			case 80:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_001.txt";
-				break;
-			case 81:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_01.txt";
-				break;
-			case 82:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_1.txt";
-				break;
-			default:
-				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
-			break;
-			}
+            if (args.length > 0) {
+              CEVLunarSim.InputFile = args[0];
+            }
+            else {
+              //CEVLunarSim.InputFile = "initialConditions_cev_llo.txt";
+              switch(JAT_case){
+              case 90:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
+                break;
+              case 91:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_01.txt";
+                break;
+              case 92:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_1.txt";
+                break;
+              case 80:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_001.txt";
+                break;
+              case 81:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_01.txt";
+                break;
+              case 82:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_1.txt";
+                break;
+              default:
+                CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
+              break;
+              }
+            }
 			CEVLunarSim Sim = new CEVLunarSim(useFilter);
 			Sim.set_verbose(true);
 			Sim.runloop();
