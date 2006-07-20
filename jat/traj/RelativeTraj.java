@@ -22,10 +22,13 @@ package jat.traj;
  * File Created on Jun 8, 2003
  */
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 import jat.matvec.data.*;
 import jat.alg.integrators.*;
 import jat.plot.*;
-import jat.timeRef.*;
+import jat.spacetime.*;
 
 /**
 * The RelativeTraj.java Class takes two trajectories and computes the relative trajectory.
@@ -42,6 +45,7 @@ public class RelativeTraj {
 	private double omega;
 	private LinePrinter lp;
 	SinglePlot traj_plot = new SinglePlot();
+	TwoPlots rss_plot = new TwoPlots();
 	ThreePlots xyz_plot = new ThreePlots();
 	ThreePlots vel_plot = new ThreePlots();
 	private boolean verbose = true;
@@ -58,6 +62,12 @@ public class RelativeTraj {
         traj_plot.setTitle("Relative Trajectory");
         traj_plot.plot.setXLabel("along track");
         traj_plot.plot.setYLabel("radial");
+        
+        rss_plot.setTitle("RSS Error");
+        rss_plot.topPlot.setXLabel("t");
+        rss_plot.topPlot.setYLabel("RSS Position");
+        rss_plot.bottomPlot.setXLabel("t");
+        rss_plot.bottomPlot.setYLabel("RSS Velocity");
         
         xyz_plot.setTitle("Relative Position vs Time");
         xyz_plot.bottomPlot.setXLabel("t");
@@ -86,6 +96,12 @@ public class RelativeTraj {
         traj_plot.setTitle(title+" : Relative Trajectory");
         traj_plot.plot.setXLabel("along track");
         traj_plot.plot.setYLabel("radial");
+        
+        rss_plot.setTitle(title+" : RSS Error");
+        rss_plot.topPlot.setXLabel("t");
+        rss_plot.topPlot.setYLabel("RSS Position");
+        rss_plot.bottomPlot.setXLabel("t");
+        rss_plot.bottomPlot.setYLabel("RSS Velocity");
         
         xyz_plot.setTitle(title+" : Relative Position vs Time");
         xyz_plot.bottomPlot.setXLabel("t");
@@ -128,8 +144,60 @@ public class RelativeTraj {
 		    System.out.println(t + "\t" + x.toString());
 		}
 	}
-	
+	/** Implements the Printable interface
+	 * @param t time
+	 * @param y double[] containing data
+	 */
+	public void printRSS(double t, double pos, double vel) {
 
+		// handle the first variable for plotting - this is a little mystery but it works
+		boolean first = true;
+		if (t == 0.0)
+			first = false;
+
+		// add data point to the plot
+		this.rss_plot.topPlot.addPoint(0, t, pos, first);
+		this.rss_plot.bottomPlot.addPoint(0, t, vel, first);
+
+		// also print to the screen for warm fuzzy feeling or plotting in matlab (boo!)
+		if(verbose){
+		    this.lp.println(t + "\t" + pos);
+		    System.out.println(t + "\t" + vel);
+		}
+	}	
+	/** Implements the Printable interface
+	 * @param t time
+	 * @param y double[] containing data
+	 */
+	public void printCov(double t, VectorN x, int c) {
+
+		// handle the first variable for plotting - this is a little mystery but it works
+		boolean first = true;
+		if (t == 0.0)
+			first = false;
+		Color tmp;
+		// add data point to the plot
+		//this.traj_plot.plot.addPoint(c, x.x[1], x.x[0], first);
+		this.vel_plot.topPlot.addPoint(1, t, x.x[3], first);
+		this.vel_plot.middlePlot.addPoint(1, t, x.x[4], first);
+		this.vel_plot.bottomPlot.addPoint(1, t, x.x[5], first);		
+		this.xyz_plot.topPlot.addPoint(1, t, x.x[0], first);
+		this.xyz_plot.middlePlot.addPoint(1, t, x.x[1], first);
+		this.xyz_plot.bottomPlot.addPoint(1, t, x.x[2], first);
+		//plot the negative
+		this.vel_plot.topPlot.addPoint(2, t, -x.x[3], first);
+		this.vel_plot.middlePlot.addPoint(2, t, -x.x[4], first);
+		this.vel_plot.bottomPlot.addPoint(2, t, -x.x[5], first);		
+		this.xyz_plot.topPlot.addPoint(2, t, -x.x[0], first);
+		this.xyz_plot.middlePlot.addPoint(2, t, -x.x[1], first);
+		this.xyz_plot.bottomPlot.addPoint(2, t, -x.x[2], first);
+		
+		// also print to the screen for warm fuzzy feeling or plotting in matlab (boo!)
+		if(verbose){
+		    this.lp.println(t + "\t" + x.toString());
+		    System.out.println(t + "\t" + x.toString());
+		}
+	}
 
 	/** Compute the relative trajectory
 	 */
@@ -243,6 +311,87 @@ public class RelativeTraj {
 		xyz_plot.setVisible(true);
 		this.lp.close();
 	}
+	
+	/** Compute the relative trajectory
+	 * @param tol Tolerance for time mismatch
+	 */
+	public void process(double tol, Trajectory cov) {
+		cov.reset();
+		int ncov = cov.npts();
+		this.chaser.reset();
+		this.target.reset();
+		int nchaser = this.chaser.npts();
+		int ntgt = this.target.npts();
+		int n = 0;
+		if (ntgt > nchaser) {
+			n = nchaser;
+		} else {
+			n = ntgt;
+		}
+		double units = 1;
+		double mjd0 = 0;
+		if(this.target.getTimeAt(0)!=0){
+			units = 24.0; //hours
+			mjd0 = this.target.getTimeAt(0);
+		}
+		if(verbose)
+		    System.out.println("number of points = "+n+" "+nchaser+" "+ntgt);
+		int i=0, j=0;
+		while( i<nchaser && j<ntgt ){
+			double[] chase = chaser.get(i);//chaser.next();
+			double[] tgt = target.get(j);//target.next();			
+			double t = tgt[0];
+			double dt = chase[0] - t;
+			if(Math.abs(dt) < tol){
+				
+				VectorN r = new VectorN(chase[1], chase[2], chase[3]);
+				VectorN v = new VectorN(chase[4], chase[5], chase[6]);
+				
+				VectorN rtgt = new VectorN(tgt[1], tgt[2], tgt[3]);
+				VectorN vtgt = new VectorN(tgt[4], tgt[5], tgt[6]);
+				
+				RSW_Frame rsw = new RSW_Frame(rtgt, vtgt);
+				
+				VectorN dr_eci = r.minus(rtgt);
+				VectorN dv_eci = v.minus(vtgt);
+				
+				VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
+				
+				t = (t - mjd0)*units;
+				this.print(t, x_rsw);
+				i++;
+				j++;
+				if( cov.hasNext()){
+					double[] dcov = cov.getNext();
+					double tt = dcov[0];
+					VectorN rr = new VectorN(dcov[1], dcov[2], dcov[3]);
+					VectorN vv = new VectorN(dcov[4], dcov[5], dcov[6]);
+						
+					//RSW_Frame rsw = new RSW_Frame(r, v);
+						
+						//VectorN dr_eci = r.minus(rtgt);
+						//VectorN dv_eci = v.minus(vtgt);
+						
+						//VectorN xx_rsw = rsw.transform(rr, vv);
+						
+						tt = (tt - mjd0)*units;
+						this.printCov(tt, new VectorN(rr,vv),1);
+				}
+
+			} else if(dt<0){
+				i++;
+			} else {
+				j++;
+			}
+		}
+		
+		System.out.println("done processing");
+		traj_plot.setVisible(true);
+		vel_plot.setVisible(true);
+		xyz_plot.setVisible(true);
+		this.lp.close();
+	}
+	
 	/** Compute the relative trajectory in ECI (X Y Z)
 	 * @param tol Tolerance for time mismatch
 	 */
@@ -307,6 +456,65 @@ public class RelativeTraj {
 		xyz_plot.setVisible(true);
 		this.lp.close();
 	}
+	
+	/** Compute the RSS error relative trajectory in ECI (X Y Z)
+	 * @param tol Tolerance for time mismatch
+	 */
+	public void process_RSS(double tol) {
+		this.chaser.reset();
+		this.target.reset();
+		int nchaser = this.chaser.npts();
+		int ntgt = this.target.npts();
+		int n = 0;
+		if (ntgt > nchaser) {
+			n = nchaser;
+		} else {
+			n = ntgt;
+		}
+		if(verbose)
+		    System.out.println("number of points = "+n+" "+nchaser+" "+ntgt);
+		int i=0, j=0;
+		while( i<nchaser && j<ntgt ){
+			double[] chase = chaser.get(i);//chaser.next();
+			double[] tgt = target.get(j);//target.next();
+			double t = tgt[0];
+			double dt = chase[0] - t;
+			if(Math.abs(dt) < tol){
+				
+				VectorN r = new VectorN(chase[1], chase[2], chase[3]);
+				VectorN v = new VectorN(chase[4], chase[5], chase[6]);
+				
+				VectorN rtgt = new VectorN(tgt[1], tgt[2], tgt[3]);
+				VectorN vtgt = new VectorN(tgt[4], tgt[5], tgt[6]);
+				
+				//RSW_Frame rsw = new RSW_Frame(rtgt, vtgt);
+				
+				VectorN dr_eci = r.minus(rtgt);
+				VectorN dv_eci = v.minus(vtgt);
+				
+				//VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
+				
+				this.printRSS(t, dr_eci.mag(),dv_eci.mag());
+				i++;
+				j++;
+			} else if(dt<0){
+				i++;
+			} else {
+				j++;
+			}
+		}
+		
+		rss_plot.topPlot.setXLabel("t");
+        rss_plot.bottomPlot.setXLabel("t");
+        rss_plot.topPlot.setYLabel("Position");
+        rss_plot.bottomPlot.setYLabel("Velocity");
+
+        System.out.println("done processing");
+		//traj_plot.setVisible(true);
+		rss_plot.setVisible(true);
+		this.lp.close();
+	}
+	
 	/** Run it
 	 */
 	public static void main(String[] args) {

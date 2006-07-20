@@ -55,6 +55,11 @@ public class SimpleEOM implements Derivatives {
 	UniverseModel universe;
 	double Qbias; //noise for the angle bias
 
+	boolean f_srp = true;
+	boolean f_sun = true;
+	boolean f_moon = true;
+	boolean f_e2b = false;
+	
 	GravityModel earth_grav;
 	
 	SolarRadiationPressure srp0; 
@@ -77,7 +82,7 @@ public class SimpleEOM implements Derivatives {
 		earth_grav = new GravityModel(4,4,GravityModelType.JGM3);
 		
 		srp0 = new SolarRadiationPressure(mass0, area0, Cr0);
-		srp1 = new SolarRadiationPressure(mass1, area1, Cr1);
+		//srp1 = new SolarRadiationPressure(mass1, area1, Cr1);
 		
 		//Set the Gravitational parameter path
 		jpl_ephem = new DE405();
@@ -85,6 +90,12 @@ public class SimpleEOM implements Derivatives {
 
 		universe = new UniverseModel(mjd0);
 		n = initializer.parseInt(hm,"FILTER.states");
+		
+		f_srp = initializer.parseBool(hm,"jat.0.srp");
+		f_sun = initializer.parseBool(hm,"jat.0.solar");
+		f_moon = initializer.parseBool(hm,"jat.0.lunar");
+		f_e2b = initializer.parseBool(hm,"jat.0.2body");
+		
 	}
 	
 	/**
@@ -112,10 +123,12 @@ public class SimpleEOM implements Derivatives {
 			earth_grav.initialize();
 			firsttime = true;
 			//universe.set_use_iers(true);
-			srp0.updateArea(area0);
-			srp1.updateArea(area1);
-			srp0.updateMass(mass0);
-			srp1.updateMass(mass1);
+			if(f_srp){
+				srp0.updateArea(area0);
+				srp1.updateArea(area1);
+				srp0.updateMass(mass0);
+				srp1.updateMass(mass1);
+			}
 			
 		}
 		
@@ -189,7 +202,8 @@ public class SimpleEOM implements Derivatives {
   
         VectorN lunarAcceleration0 = sum0.times(Constants.GM_Moon);
         //* TODO Watch this
-        //lunarAcceleration0.set(0);
+        if(!f_moon)
+        	lunarAcceleration0.set(0);
     
         //Compute the acceleration due to the solar gravity
         //VectorN r_sun = universe.earthRef.get_JPL_Sun_Vector();
@@ -211,31 +225,35 @@ public class SimpleEOM implements Derivatives {
 
         VectorN solarAcceleration0 = sum0.times(Constants.GM_Sun);
         //* TODO watch
-        //solarAcceleration0.set(0);
+        if(!f_sun)
+        	solarAcceleration0.set(0);
         
         //Determine if the sun is visible
-        if(r0.x[0]==650869.3445073176){
-        	int donothing = 0;
+//      if(r0.x[0]==650869.3445073176){
+//      int donothing = 0;
+//      }
+        VectorN srpacc0 = new VectorN(3);
+        if(f_srp){
+        	double visible0 = srp0.partial_illumination(r0,r_sun);
+        	
+        	//double pressureConstant = 4.5344321837439e-06;
+        	//double SRPscale0 = pressureConstant*(area0/mass0)*visible0;
+        	
+        	//Compute the relevant SRP information
+        	//double Xsun = r_sun.get(0);
+        	//double Ysun = r_sun.get(1);
+        	//double Zsun = r_sun.get(2);
+        	//double aa = 1.0 *Cr*(Xsun/magSun3)*AU_sqrd*visible;
+        	//double bb = 1.0 *Cr*(Ysun/magSun3)*AU_sqrd*visible;
+        	//double cc = 1.0 *Cr*(Zsun/magSun3)*AU_sqrd*visible;
+        	
+        	srpacc0 = srp0.accelSRP(r0,r_sun);
+        	
+        	srpacc0 = srpacc0.times(visible0);
+        	//* TODO watch this
+        }else{
+        	srpacc0.set(0);
         }
-        double visible0 = srp0.partial_illumination(r0,r_sun);
-		
-		//double pressureConstant = 4.5344321837439e-06;
-		//double SRPscale0 = pressureConstant*(area0/mass0)*visible0;
-        
-        //Compute the relevant SRP information
-		//double Xsun = r_sun.get(0);
-		//double Ysun = r_sun.get(1);
-		//double Zsun = r_sun.get(2);
-		//double aa = 1.0 *Cr*(Xsun/magSun3)*AU_sqrd*visible;
-		//double bb = 1.0 *Cr*(Ysun/magSun3)*AU_sqrd*visible;
-		//double cc = 1.0 *Cr*(Zsun/magSun3)*AU_sqrd*visible;
-        
-		VectorN srpacc0 = srp0.accelSRP(r0,r_sun);
-
-		srpacc0 = srpacc0.times(visible0);
-		//* TODO watch this
-		srpacc0.set(0);
-		
 		// compute state derivatives
 
         //Velocity for spacecraft 0

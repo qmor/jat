@@ -28,6 +28,7 @@ import java.util.Random;
 
 import jat.alg.estimators.MeasurementModel;
 import jat.alg.integrators.LinePrinter;
+import jat.cm.Constants;
 import jat.eph.DE405;
 import jat.math.Interpolator;
 import jat.math.MathUtils;
@@ -44,6 +45,7 @@ import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;
+import jat.sim.CEVLunarSim;
 import jat.sim.EstimatorSimModel;
 import jat.sim.initializer;
 import jat.sim.CEVSim;
@@ -59,8 +61,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
     /** A list of bodies and the landmarks on them */
     private static ArrayList<CentralBody> gravbody = setupCentralBodies();
 	
-	public static final int BODY_EARTH = 1;
-	public static final int BODY_MOON = 2;
+	public static final int BODY_EARTH = 0;
+	public static final int BODY_MOON = 1;
+	public static final int BODY_SUN = 2;
 	private VectorN H;
 	
 	private int type;
@@ -71,8 +74,11 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private int vbody;
 	private Quaternion q;
 	private double R;
+	private double Rdeg;
 	private int i_ydiskbias;
 	private int i_yanglebias;
+	private int num_landmarks=0;
+	private int current_landmark=0;
 	
 	
 	private double mjd0;
@@ -88,6 +94,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	
 	//private RandomNumber rnd;
 	private Random rnd;
+	private boolean runMonteCarlo;
 	
 	public OpticalMeasurementModel(double mjd_epoch,DE405 jpl){
 		mjd0=mjd_epoch;
@@ -109,8 +116,13 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		}catch(Exception e){
 			dir_in = "";
 		}
-		fobs = new LinePrinter(dir_in+"obs_"+CEVLunarSim.JAT_case+".txt");
-		fpred = new LinePrinter(dir_in+"pred_"+CEVLunarSim.JAT_case+".txt");
+		int jat_case = CEVSim.JAT_case;
+		if(CEVSim.JAT_case == 0) jat_case = CEVLunarSim.JAT_case;
+		runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+		if(!runMonteCarlo){
+			fobs = new LinePrinter(dir_in+"obs_"+jat_case+".txt");
+			fpred = new LinePrinter(dir_in+"pred_"+jat_case+".txt");
+		}
 		rnd = new Random(System.currentTimeMillis());
 	}
 	
@@ -183,9 +195,37 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			R = initializer.parseDouble(hm,pref+"R");
 			try{
 				i_yanglebias = initializer.parseInt(hm,"FILTER.rangebias");
-			}catch(Exception e){ i_yanglebias = 6;}	
+			}catch(Exception e){ i_yanglebias = 6;}
 			break;
 		case TYPE_LANDMARK:
+			freq = initializer.parseDouble(hm,pref+"frequency");
+			t0 = initializer.parseDouble(hm,pref+"t0");
+			tf = initializer.parseDouble(hm,pref+"tf");
+			tmp = initializer.parseString(hm,pref+"cbody");
+			if(tmp.equalsIgnoreCase("earth"))
+				cbody = BODY_EARTH;
+			else if(tmp.equalsIgnoreCase("moon"))
+				cbody = BODY_MOON;
+			else
+				cbody = 0;
+			tmp = initializer.parseString(hm,pref+"vbody");
+			if(tmp.equalsIgnoreCase("earth"))
+				vbody = BODY_EARTH;
+			else if(tmp.equalsIgnoreCase("moon"))
+				vbody = BODY_MOON;
+			else
+				vbody = 0;
+			R = initializer.parseDouble(hm,pref+"R");
+			Rdeg = initializer.parseDouble(hm, pref+"Rdeg");
+			num_landmarks = initializer.parseInt(hm, pref+"datacount");
+			for(int L=0; L<num_landmarks; L++){
+				double diam = initializer.parseDouble(hm, pref+L+".bounding_diameter");
+				double lat = initializer.parseDouble(hm, pref+L+".latitude");
+				double longd = initializer.parseDouble(hm, pref+L+".longitude");
+				double alt = initializer.parseDouble(hm, pref+L+".altitude");
+				boolean k = initializer.parseBool(hm, pref+L+".known");
+				gravbody.get(vbody).addLandmark(diam, lat, longd, alt,k);
+			}			
 			break;
 		default:
 			break;			
@@ -327,12 +367,12 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	private double[] camerr(double r, int ibody){
 		//% Range from Earth in m
 		//double[] erange= {1069177850, 213835570, 71278520, 21383560, 13364720};
-		double[] erange= {13364720,21383560,71278520,213835570,1069177850};
+		double[] erange= {0,0,13364720,21383560,71278520,213835570,1069177850};
 		//VectorN erange = new VectorN(erange_tmp);
 		
 		//% Range from Moon in m
 		//double[] mrange = {291342820, 58268560, 19422850, 5826860, 3641790};
-		double[] mrange = {3641790,5826860,19422850,58268560,291342820};
+		double[] mrange = {1788000,1838000, 3641790,5826860,19422850,58268560,291342820};
 		//VectorN mrange = new VectorN(mrange_tmp);
 		
 		double[] rv = new double[5];
@@ -345,9 +385,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		
 		
 		//double[] angerr_rnd_deg= {0.0022, 0.011, 0.032, 0.105, 0.169};
-		double[] angerr_rnd_deg= {0.169,0.105,0.032,0.011,0.0022};
+		double[] angerr_rnd_deg= {0.47,0.44,0.169,0.105,0.032,0.011,0.0022};
 		//double[] angerr_bias_deg= {biasflag*0.0046, biasflag*0.023, biasflag*0.070, biasflag*0.235, biasflag*0.375};
-		double[] angerr_bias_deg= {biasflag*0.375,biasflag*0.235,biasflag*0.070,biasflag*0.023,biasflag*0.0046};
+		double[] angerr_bias_deg= {biasflag*1.055,biasflag*0.98, biasflag*0.375,biasflag*0.235,biasflag*0.070,biasflag*0.023,biasflag*0.0046};
 		
 		//% Apollo numbers corresponding to 3km horizon sensing error
 		//%angerr_rnd_deg=  [ 0.0002    0.0008    0.0024    0.0080    0.0129]';
@@ -358,8 +398,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		interp1 = new Interpolator(rv,angerr_bias_deg);
 		double abias=MathUtils.DEG2RAD*(interp1.get_value(r));//interp1(rv,angerr_bias_deg,r,'linear','extrap')*pi/180;
 		//*TODO watch this
-		arnd = 0;
-		//abias = 0;
+		//arnd = 0;
+		abias = 0;
 		double[] out = {arnd, abias};
 		return out;
 	}
@@ -401,7 +441,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		else if (p==2){ //% Moon
 			//* TODO watch units
 			xm=ephem.get_Geocentric_Moon_pos(
-					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000); 
+					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000);			
 			xr=(pos.minus(xm));
 		} else
 			System.err.println("Parameter must be 1 for Earth or 2 for Moon.");
@@ -411,14 +451,17 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		
 		if (y>1){
 			System.out.println("R/r greater than 1, pause");
-			try{
-				System.in.read();
-			}catch(Exception e){}
+//			try{
+//				System.in.read();
+//			}catch(Exception e){}
 		}
 		
 		//% Add noise
 		if (inoise==1){
 			double[] arnd_abias =camerr(r,p); //% 1-sigma noise and bias on angular measurement
+			if(type==TYPE_LANDMARK){
+				arnd_abias[0] = arnd_abias[0]*1;
+			}
 			y=Math.sin(Math.asin(y)+arnd_abias[0]*randn()+arnd_abias[1]);
 		}else{
 			//y = y + state.x[i_ydiskbias];
@@ -435,7 +478,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		//% end
 		
 		
-		double[] out = new double[7];
+		double[] out = new double[state.length+1];
 		out[0] = y;
 		for(int i=1; i<7; i++) out[i] = dydx[i-1];
 		return out;
@@ -511,7 +554,118 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		return out;
 		
 	}
+	public boolean isIllum(double mjd, VectorN state){
+		VectorN xlf = new VectorN(gravbody.get(vbody).getLandmark(current_landmark).lmf);
+		double[] in = illum2(TimeUtils.MJDtoJD(mjd),cbody,vbody,state.get(0,3),xlf.x);
+		if(in[0]==2) return true;
+		else return false;
+	}
+	/**
+	 * Converted from Matlab.
+	% More accurate than illum.m
+	% It either checks to see if there is enough illumination to obtain centroid 
+	% information of the body based on the user-specified limit on the fraction of
+	% illumination or if an earth-fixed landmark position is visible and
+	% illuminated.  The check selection depends on the size of the input
+	% parameter frac_or_xlf.
+	% cbody is body that x is relative to
+	% vbody is body that you are looking at
+	 * @param jd
+	 * @param origin
+	 * @param target
+	 * @param state
+	 * @param frac_or_xlf
+	 * @return
+	 */
+	private double[] illum2(double jd, int origin, int target, 
+			VectorN state, double[] frac_or_xlf){
+		//% xc is position relative to the central body
+		VectorN r = state.get(0,3);
+		double xnorm=r.mag();
+		VectorN xhat=r.unitVector();
+		VectorN r_vbody;
+//		Figure out the vector from the central body to the sun.
+		// We translate the sun's origin to the central body's
+		// reference frame.
+		Time t = new Time(TimeUtils.JDtoMJD(jd));
+		CentralBody originBody,targetBody;
+		if(origin == BODY_MOON){
+			originBody = gravbody.get(1);
+		}else{
+			originBody = gravbody.get(0);
+		}
+		if(target == BODY_MOON){
+			targetBody = gravbody.get(1);
+		}else{
+			targetBody = gravbody.get(0);
+		}
+		ReferenceFrameTranslater xlater =
+			new ReferenceFrameTranslater(originBody.inertialRef, targetBody.inertialRef, t);
+		VectorN xsv = xlater.translatePoint(r);
+		VectorN xsvhat=xsv.unitVector(); 
 
+		BodyCenteredInertialRef sunRef = 
+			new BodyCenteredInertialRef(DE405.SUN);
+		xlater =  new ReferenceFrameTranslater(sunRef, originBody.inertialRef, t);
+		VectorN xs = xlater.translatePoint(new VectorN(3));
+		VectorN shat=xs.unitVector();
+
+		double R2r = targetBody.R/xsv.mag();
+		int flag = 2;
+		double ratio = 1;
+		//	% Determine if accurate measurements can be had
+		if (frac_or_xlf.length==1){
+			    double frac=frac_or_xlf[0];
+			    //% half-angle of the horizon disk centered at body
+			    double theta= Math.acos(R2r); 
+			    VectorN z= shat.crossProduct(xsvhat);
+			    double znorm=z.mag();
+			    if( znorm<1e-20){
+			        ratio=1;
+			    }else{
+			        z=z.divide(znorm);
+			        VectorN p=z.crossProduct(shat);
+			        double sig=Math.signum(z.dotProduct(p.crossProduct(xsvhat)));
+			        double gam=Math.acos(p.dotProduct(xsvhat));
+			        ratio=(theta-sig*gam)/(2*theta);
+			        ratio=Math.max(0,ratio);
+			        ratio=Math.min(1,ratio);
+			    }			    
+			    if( ratio>=frac){
+			        flag=1;  
+			    }else{
+			        flag=0;  //% Not enough illumination for accurate measurement
+			    }
+		}else if( frac_or_xlf.length==3){
+			    VectorN xlf= new VectorN(frac_or_xlf);
+			    //% Check if the landmark is visible and illuminated
+			    ReferenceFrame lfr = targetBody.bodyFixedRef;
+			    ReferenceFrame lref = targetBody.inertialRef;
+			    xlater =  new ReferenceFrameTranslater(lfr, lref , t);
+			    VectorN xli = xlater.translatePoint(xlf);
+			    VectorN xlihat= xli.divide(xli.mag());
+			    flag=0;          //% initialize
+			    if( xlihat.dotProduct(xsvhat) > R2r){
+			        flag=1;      //% is visible
+			        if( xlihat.dotProduct(shat) > 0){
+			            flag=2;  //% is visible and illuminated
+					}else{
+						flag=1;
+					}
+				}
+			}else{
+			    System.err.println("Invalid frac_or_xlf");
+			}
+		int stop;
+		if(flag!=2) 
+			stop = 0;
+		double[] out = {flag,ratio};
+		return out;
+		
+	}
+	public int get_num_landmarks(){
+		return this.num_landmarks;
+	}
     /**
      * Computes the measurement between the LOS of a landmark on a body 
      * and a star or the pseudorange to the landmark based on the apparent
@@ -540,7 +694,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
         VectorN s, int lindex, boolean inoise) {
       
       // We'll need a Gaussian random number generator
-      Random randn = new Random(System.currentTimeMillis());
+      //Random randn = new Random(System.currentTimeMillis());    	
       
       double y = 0;
       VectorN dydx = new VectorN(x.length);
@@ -555,7 +709,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
       CentralBody body = gravbody.get(p);
       VectorN lf = null;
       if (x.length == 9) {
-        lf = x.get(7, 3);
+        lf = x.get(6, 3);
       }
       else {
         lf = body.getLandmark(lindex).lmf;
@@ -575,16 +729,17 @@ public class OpticalMeasurementModel implements MeasurementModel{
         // between LOS.
         
         // Compute predicted measurement cos(theta)
-        y = d.dotProduct(s);
+        y = dhat.dotProduct(s);
 
         if (inoise) {
           // Assume similar noise as star and zero bias for now
           // TODO: Make arnd and abias configurable instead of
           // hardcoded.
-          double arnd=.0034*Math.PI/180;
-          arnd=.07*Math.PI/180;
+          double arnd=.0034*Math.PI/180.0;
+          //arnd=.07*Math.PI/180.0;
+          arnd=Rdeg*Math.PI/180.0;
           double abias=0;
-          y=Math.cos(Math.acos(y)+arnd*randn.nextGaussian()+abias);
+          y=Math.cos(Math.acos(y)+arnd*rnd.nextGaussian()+abias);
         }
 
         // (1/dmag)*s'*(-eye(3)+dhat*dhat')
@@ -611,7 +766,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
           double[] noiseFactors = camerr(dmag,p);
           double arnd = noiseFactors[0];
           double abias = noiseFactors[1];
-          y=Math.tan(Math.atan(y)+arnd*randn.nextGaussian()+abias);
+          y=Math.tan(Math.atan(y)+arnd*rnd.nextGaussian()+abias);
         }
 
         double scale = (0.5 * D) / (dmag * dmag * dmag);
@@ -626,10 +781,11 @@ public class OpticalMeasurementModel implements MeasurementModel{
       // TODO: Do we really want to shmoosh these into one array
       // just to return it?
       // We combine the angle and the Jacobian into a single array to return it
-      double[] toReturn = new double[dydx.length + 1];
-      toReturn[0] = y;
-      System.arraycopy(dydx, 0, toReturn, 1, dydx.length);
-      return toReturn; 
+      double[] out = new double[x.length+1];
+      out[0] = y;
+      //System.arraycopy(dydx, 0, toReturn, 1, dydx.length);
+		for(int i=1; i<x.length+1; i++) out[i] = dydx.x[i-1];
+      return out; 
     }
     
 	private Matrix nadir_dcm(double jd, VectorN xsc, int cbody, int vbody){
@@ -705,6 +861,15 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			else //if(vbody == BODY_MOON)
 				out = y_disk2(x,t,vbody,LunaRef.R_Luna,1);
 			break;
+		case TYPE_LANDMARK:
+			Matrix A2 = nadir_dcm(mjd+2400000.5,x,cbody,vbody);
+			VectorN s2;
+			if(whichMeas==0)
+				s2 = new VectorN(A2.getRowVector(0));
+			else
+				s2 = new VectorN(A2.getRowVector(1));
+			out = y_landmark(x,new Time(mjd0+t/86400.0),vbody,s2,current_landmark,true);
+			break;
 		default:
 			return 0;
 		}
@@ -732,15 +897,24 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			break;
 		case TYPE_RANGE:
 			if(vbody == BODY_EARTH)
-				out = y_disk2(x,t,vbody,EarthRef.R_Earth,1);
+				out = y_disk2(x,t,vbody,EarthRef.R_Earth,0);
 			else //if(vbody == BODY_MOON)
-				out = y_disk2(x,t,vbody,LunaRef.R_Luna,1);
+				out = y_disk2(x,t,vbody,LunaRef.R_Luna,0);
+			break;
+		case TYPE_LANDMARK:
+			Matrix A2 = nadir_dcm(mjd+2400000.5,x,cbody,vbody);
+			VectorN s2;
+			if(whichMeas==0)
+				s2 = new VectorN(A2.getRowVector(0));
+			else
+				s2 = new VectorN(A2.getRowVector(1));
+			out = y_landmark(x,new Time(mjd0+t/86400.0),vbody,s2,current_landmark,false);
 			break;
 		default:
 			return 0;
 		}
-		H = new VectorN(6);
-		for(int i=1; i<7;i++) H.x[i-1] = out[i];
+		H = new VectorN(x.length);
+		for(int i=1; i<x.length+1;i++) H.x[i-1] = out[i];
 		return out[0];
 	}
 	
@@ -762,36 +936,61 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	
 	public double zPred(int whichMeas, double t_sim, VectorN state) {
 		double out,obs;
-		VectorN truth = new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector()); 
-		obs = observedMeasurement(whichMeas,t_sim,truth);
-		double pred = predictedMeasurement(whichMeas, t_sim, state); 
-		//* TODO watch this - following is a temporary hack to extract the bias only
-		//double pred = predictedMeasurement(whichMeas, t_sim, truth);
-		
-		if(obs == 0)
-		    out = 0.0;
-		else
-			out = obs-pred;
-		
-		String typestring = "blank";
-		if(type==TYPE_YANGLE_STAR){
-			typestring = "yangle_star";
-			OpticalMeasurementModel.fobs.println("obs: "+Math.acos(obs)*MathUtils.RAD2DEG+"   "+typestring);
-			OpticalMeasurementModel.fpred.println("obs: "+Math.acos(pred)*MathUtils.RAD2DEG+"   "+typestring);
-		}else if(type==TYPE_YANGLE_LOS){
-			typestring = "yangle_los";
-			OpticalMeasurementModel.fobs.println("obs: "+Math.acos(obs)*MathUtils.RAD2DEG+"   "+typestring);
-			OpticalMeasurementModel.fpred.println("obs: "+Math.acos(pred)*MathUtils.RAD2DEG+"   "+typestring);
-		}else if(type== TYPE_RANGE){
-			typestring = "range";
-			OpticalMeasurementModel.fobs.println("obs: "+Math.asin(obs)*MathUtils.RAD2DEG+"   "+typestring);
-			OpticalMeasurementModel.fpred.println("obs: "+Math.asin(pred)*MathUtils.RAD2DEG+"   "+typestring);
+		VectorN truth;
+		try{
+			truth = new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector());
+		}catch(NullPointerException ne){
+			truth = new VectorN(CEVLunarSim.truth[0].get_spacecraft().toStateVector());
 		}
-		
+		double[] in = {1,0};
+		if(type==TYPE_LANDMARK){
+			VectorN xlf = new VectorN(gravbody.get(vbody).getLandmark(current_landmark).lmf);
+			in = illum2(TimeUtils.MJDtoJD(mjd0+t_sim/86400.0),cbody,vbody,truth,xlf.x);
+		}
+		if(in[0] ==2 || type!=TYPE_LANDMARK){
+			obs = observedMeasurement(whichMeas,t_sim,truth);
+			double pred = predictedMeasurement(whichMeas, t_sim, state); 
+			//* TODO watch this - following is a temporary hack to extract the bias only
+			//double pred = predictedMeasurement(whichMeas, t_sim, truth);
+
+			if(obs == 0)
+				out = 0.0;
+			else
+				out = obs-pred;
+
+			if(!runMonteCarlo){
+			String typestring = "blank";
+			if(type==TYPE_YANGLE_STAR){
+				typestring = "yangle_star";
+				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+Math.acos(obs)*MathUtils.RAD2DEG+"   "+typestring);
+				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+Math.acos(pred)*MathUtils.RAD2DEG+"   "+typestring);
+			}else if(type==TYPE_YANGLE_LOS){
+				typestring = "yangle_los";
+				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+Math.acos(obs)*MathUtils.RAD2DEG+"   "+typestring+" "+whichMeas);
+				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+Math.acos(pred)*MathUtils.RAD2DEG+"   "+typestring+" "+whichMeas);
+			}else if(type== TYPE_RANGE){
+				typestring = "range";
+				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+Math.asin(obs)*MathUtils.RAD2DEG+"   "+typestring);
+				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+Math.asin(pred)*MathUtils.RAD2DEG+"   "+typestring);
+			}else if(type== TYPE_LANDMARK){
+				typestring = "landmark";
+				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+obs+"   "+typestring+" L"+current_landmark+"-"+whichMeas);
+				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+pred+"   "+typestring+" L"+current_landmark+"-"+whichMeas);
+			}
+			}
+		}else{
+			out = 0.0;
+			this.H = new VectorN(state.length);
+			String typestring = "landmark";
+			if(!runMonteCarlo){
+				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+0+"   "+typestring+" "+whichMeas+"  dark");
+				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+0+"   "+typestring+" "+whichMeas+"  dark");
+			}
+		}
 		return out;
 	}
 	
-    private static class Landmark {
+    public static class Landmark {
       
       /** The spatial coordinates for the landmark in the body-fixed
        * reference frame. */
@@ -800,10 +999,23 @@ public class OpticalMeasurementModel implements MeasurementModel{
       /** The diameter of the landmark. */
       private final double D;
       
+      /** Flag indicating whether it is a known or unknown landmark */
+      private boolean isKnown = true;
+      
       public Landmark(double inD, double lat, double longd, 
           double alt, double planetR) {
+    	inD = inD*1000.0;
+    	alt = alt*1000.0;
         lmf = latLongAlt2FixedCoords(lat, longd, alt, planetR);
         D = inD;
+      }
+      public Landmark(double inD, double lat, double longd, 
+              double alt, double planetR, boolean known) {
+        	inD = inD*1000.0;
+        	alt = alt*1000.0;
+            lmf = latLongAlt2FixedCoords(lat, longd, alt, planetR);
+            D = inD;
+            isKnown = known;
       }
 
       private VectorN latLongAlt2FixedCoords(double lat, double longd, 
@@ -848,7 +1060,11 @@ public class OpticalMeasurementModel implements MeasurementModel{
           Landmark l = new Landmark(diam, lat, longd, alt, R);
           landmarks.add(l);
         }
-        
+        public void addLandmark(double diam, double lat, double longd, 
+                double alt,boolean known) {
+              Landmark l = new Landmark(diam, lat, longd, alt, R,known);             
+              landmarks.add(l);
+            }
         public Landmark getLandmark(int i) {
           return landmarks.get(i);
         }
@@ -859,28 +1075,51 @@ public class OpticalMeasurementModel implements MeasurementModel{
       
       // Setup Earth
       // TODO: This is a guess at R.  Figure out real R.
-      CentralBody earth = new CentralBody("earth", 398600.436, 6377.8037, 
-          new BodyCenteredInertialRef(DE405.EARTH),
-          new EarthFixedRef());
+//      CentralBody earth = new CentralBody("earth", 398600.436, 6377.8037, 
+//          new BodyCenteredInertialRef(DE405.EARTH),
+//          new EarthFixedRef());
+      CentralBody earth = new CentralBody("earth", EarthRef.GM_Earth, EarthRef.R_Earth, 
+              new BodyCenteredInertialRef(DE405.EARTH),
+              new EarthFixedRef());
       // Add earth landmark
       // TODO: Read these landmarks from a file somewhere?
-      earth.addLandmark(20, -50.75, 127, 0);
+      //earth.addLandmark(20, -50.75, 127, 0);
       bodies.add(earth);
       
       // Setup the Moon
-      CentralBody moon = new CentralBody("moon", 4902.801056, 1738,
-          new BodyCenteredInertialRef(DE405.MOON),
-          new LunaFixedRef());
+//      CentralBody moon = new CentralBody("moon", 4902.801056, 1738,
+//          new BodyCenteredInertialRef(DE405.MOON),
+//          new LunaFixedRef());
+      CentralBody moon = new CentralBody("moon", LunaRef.GM_Luna, LunaRef.R_Luna,
+              new BodyCenteredInertialRef(DE405.MOON),
+              new LunaFixedRef());
       // Add moon landmarks
-      moon.addLandmark(20, -50.7, 127.4, 0);
-      moon.addLandmark(20, 0, 127.4, 0);
-      moon.addLandmark(20, 50.7, 127.4, 0);
+      //moon.addLandmark(20, -50.7, 127.4, 0);
+      //moon.addLandmark(20, 0, 127.4, 0);
+      //moon.addLandmark(20, 50.7, 127.4, 0);
       bodies.add(moon);
       
       // Setup the Sun
-      CentralBody sun = new CentralBody("sun", 1.32712440018e11, 0,
-          new BodyCenteredInertialRef(DE405.SUN), null);
+//      CentralBody sun = new CentralBody("sun", 1.32712440018e11, 0,
+//          new BodyCenteredInertialRef(DE405.SUN), null);
+      CentralBody sun = new CentralBody("sun", Constants.GM_Sun, Constants.R_Sun,
+              new BodyCenteredInertialRef(DE405.SUN), null);
       bodies.add(sun);
       return bodies;
     }
+
+	public void currentLandmark(int nmark) {
+		this.current_landmark = nmark;		
+	}
+	
+//	public static void main(String args[]){
+//		
+//		double jd = ;
+//		int origin;
+//		int target; 
+//		VectorN state;
+//		double[] frac_or_xlf;
+//		OpticalMeasurementModel test = new OpticalMeasurementModel(jd-2400000.5,new DE405());
+//		double[] out = test.illum2(jd,origin,target,state,frac_or_xlf);
+//	}
 }

@@ -26,10 +26,17 @@ import java.util.HashMap;
 import jat.alg.integrators.Derivatives;
 import jat.alg.integrators.LinePrinter;
 import jat.alg.integrators.RungeKutta8;
+import jat.eph.DE405;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
+import jat.measurements.OpticalMeasurementModel;
 import jat.sim.initializer;
+import jat.spacetime.LunaFixedRef;
+import jat.spacetime.LunaRef;
 import jat.spacetime.RSW_Frame;
+import jat.spacetime.ReferenceFrameTranslater;
+import jat.spacetime.Time;
+import jat.spacetime.TimeUtils;
 import jat.traj.CentralBody;
 import jat.traj.CoordinateSystem;
 import jat.traj.DistanceUnits;
@@ -65,6 +72,11 @@ public class SimpleProcessModel implements ProcessModel {
 			eom = new JGM4x4SRPEOM15state(hm);
 		}else if(eomdata.equalsIgnoreCase("JGM4x4DragProcess9state")){
 			eom = new JGM4x4DragEOM9state(hm);
+		}else if(eomdata.equalsIgnoreCase("Simple")){
+			eom = new SimpleEOM(hm);
+		}else if(eomdata.equalsIgnoreCase("Lunar")){
+			int ncoef = initializer.parseInt(hm,"jat.0.lunar_n.filter");
+			eom = new LunarEOM(hm,ncoef,true);
 		}else{
 			eom = new SimpleEOM(hm);
 		}
@@ -118,6 +130,11 @@ public class SimpleProcessModel implements ProcessModel {
 			sigmas[6*i + 5] = initializer.parseDouble(hm,tmp);
 		}
 				
+		if(n>6){
+			sigmas[6] = initializer.parseDouble(hm, "P0.0.LX");
+			sigmas[7] = initializer.parseDouble(hm, "P0.0.LY");
+			sigmas[8] = initializer.parseDouble(hm, "P0.0.LZ");
+		}
 		//sigmas[6] = initializer.parseDouble(hm,"P0.0.clockBias");
 		//sigmas[7] = initializer.parseDouble(hm,"P0.0.clockDrift");
 		//sigmas[8] = initializer.parseDouble(hm,"P0.0.Cr");
@@ -159,6 +176,16 @@ public class SimpleProcessModel implements ProcessModel {
 			Q.set((6*i + 5),(6*i + 5), initializer.parseDouble(hm,tmp));
 		}
 				
+		if(n>6){
+			String tmp;
+			tmp = "Q."+0+".LX";
+			Q.set(6,6, initializer.parseDouble(hm,tmp));
+			tmp = "Q."+0+".LY";
+			Q.set(7,7, initializer.parseDouble(hm,tmp));
+			tmp = "Q."+0+".LZ";
+			Q.set(8,8, initializer.parseDouble(hm,tmp));
+		}
+		
 		//Q.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		//Q.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
 		//Q.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
@@ -184,6 +211,11 @@ public class SimpleProcessModel implements ProcessModel {
 		QXYZ.set(4,4,1e-13);
 		QXYZ.set(5,5,1e-13);
 				
+		if(n>6){
+			QXYZ.set(6, 6, initializer.parseDouble(hm, "Q.0.LX"));
+			QXYZ.set(7, 7, initializer.parseDouble(hm, "Q.0.LY"));
+			QXYZ.set(7, 7, initializer.parseDouble(hm, "Q.0.LZ"));
+		}
 		//QXYZ.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		//QXYZ.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
 		//QXYZ.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
@@ -271,6 +303,31 @@ public class SimpleProcessModel implements ProcessModel {
 			tmp = ref+ i + ".VZ";
 			out.x[6 * i + 5] = initializer.parseDouble(hm, tmp);
 			
+			if(initializer.parseString(hm,"FILTER.pm").equalsIgnoreCase("Lunar")){
+				LunaFixedRef lfr = new LunaFixedRef();
+				LunaRef lref = new LunaRef();
+				double MJD0 =  initializer.parseDouble(hm,"init.MJD0") + initializer.parseDouble(hm,"init.T0")/86400.0;
+				ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lfr,lref,new Time(MJD0));
+//				DE405 ephem = new DE405();				
+//				VectorN e2m = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(MJD0));
+				VectorN rr = out.get(0,3);
+				VectorN vv = out.get(3,3);
+				//rr = (rr.plus(e2m));
+				rr = rr.times(1000);
+				vv = vv.times(1000);
+				vv = trans.translateVelocity(vv,rr);
+				rr = trans.translatePoint(rr);
+				if(n==6)
+					out = new VectorN(rr,vv);
+				else
+					out = new VectorN(new VectorN(rr,vv),new VectorN(n-6));
+			}
+			
+			if(n>6){
+				out.x[6] = initializer.parseDouble(hm, ref+i+".LX");
+				out.x[7] = initializer.parseDouble(hm, ref+i+".LY");
+				out.x[8] = initializer.parseDouble(hm, ref+i+".LZ");					
+			}
 			// Other clock states can be initialized here . .
 			//ref = "jat.";
 			//tmp = ref+"0.clockBias";

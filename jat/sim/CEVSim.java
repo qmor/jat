@@ -218,7 +218,7 @@ public class CEVSim extends EstimatorSimModel {
 			ref[i].set_GPS_noise(state_noise,range_noise);
 		}		
 	}
-	public static UniverseModel createUniverseModel(double mjd_utc,Spacecraft sc, boolean[] force_flag, boolean use_JGM2, String drag_model){
+	public UniverseModel createUniverseModel(double mjd_utc,Spacecraft sc, boolean[] force_flag, boolean use_JGM2, String drag_model){
 		
         boolean use_LP165P = false;
 		UniverseModel umodel = new UniverseModel(mjd_utc);

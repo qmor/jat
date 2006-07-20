@@ -306,7 +306,14 @@ public class GravityModel extends SphericalHarmonicGravity {
 				break;
 			}
 			// break line into tokens
-			StringTokenizer tokens = new StringTokenizer(line, " ");
+			StringTokenizer tokens;
+			StringTokenizer tmp1 = new StringTokenizer(line," ");
+			StringTokenizer tmp2 = new StringTokenizer(line,"\t");
+			if(tmp1.countTokens() > tmp2.countTokens()){
+				tokens = tmp1;
+			}else{
+				tokens = tmp2;
+			}
 			int ntokens = tokens.countTokens();
 			nlines = nlines + 1;
 //			System.out.println("number of tokens = "+ntokens);

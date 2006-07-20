@@ -350,6 +350,10 @@ public class Trajectory implements Serializable, Printable {
 		boolean out = this.traj.hasNext();
 		return out;
 	}
+	
+	public double[] getNext() {
+		return this.traj.next();
+	}
 
 	/** Return a double array containing the trajectory data in Java3D format,
 	 *  which is: [x1, y1, z1, x2, y2, z2,...]
@@ -476,6 +480,10 @@ public class Trajectory implements Serializable, Printable {
 		lp.println("CoordinateSystem = " + this.cs);
 		lp.println("DistanceUnits = " + this.du);
 		lp.println("TimeUnits = " + this.tu);
+		if(this.labels==null){
+			String[] tmp = {"t [mjd]","x [m]","y [m]","z [m]","xdot [m]","ydot [m]","zdot [m]"};
+			labels = tmp;
+		}
 		lp.println(this.labels);
 		this.sendToLinePrinter(lp);
 	}

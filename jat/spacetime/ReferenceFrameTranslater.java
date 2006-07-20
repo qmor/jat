@@ -317,4 +317,17 @@ public class ReferenceFrameTranslater {
       }
       return new ReferenceFrameTranslater(newXform, newOrigin, newVelocity, newRotation);
     }
+    
+    public static void main(String[] args){
+    	VectorN r = new VectorN(-7.0653447440413493e+002,  9.2387238910403778e+002, -1.4232051310790273e+003);
+    	VectorN v = new VectorN(-7.6578459477044203e-001,  1.0064446005845396e+000,  1.0334979559135251e+000);
+    	LunaFixedRef lfr = new LunaFixedRef();
+		LunaRef lref = new LunaRef();
+		Time t = new Time(58232);
+		ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lfr,lref,t);
+		VectorN rLCI = trans.transformDirection(r);
+		VectorN vLCI = trans.translateVelocity(v,r);
+		System.out.println("rLCI: "+rLCI);
+		System.out.println("vLCI: "+vLCI);
+    }
 }
