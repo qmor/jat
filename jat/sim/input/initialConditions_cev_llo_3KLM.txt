@@ -5,6 +5,9 @@
 # Mode: 0 = Trajectory Generation Only, 1 = Trajectory and Filter
 init.mode    1
 init.runMonteCarlo true
+MONTE.r_error 1000
+MONTE.v_error 10
+MONTE.lm_error 100
 
 # Flag indicating whether to read observations from a file or generate them
 init.fromfile false

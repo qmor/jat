@@ -69,7 +69,7 @@ import java.util.StringTokenizer;
 public class CEVLunarSim {
 
 	//** Static Variables **//
-	
+
 	//* TODO Cheating
 	//** Externally referenced Static Variables **//
 	public static SpacecraftModel truth[];
@@ -87,13 +87,13 @@ public class CEVLunarSim {
 	public static boolean Flag_GPSState = false;
 	public static boolean Flag_Cross = false;
 	public static boolean COV_printoffdiag = false;
-	
+
 	//** Object Variables **//
-	
+
 	protected boolean gravityModel;
 	protected HashMap input;
 	protected createMeasurements created_meas;
-	
+
 	//private SpacecraftModel truth[];
 	protected SpacecraftModel ref[];
 	protected Trajectory truth_traj[];
@@ -107,7 +107,7 @@ public class CEVLunarSim {
 	protected FileOutputStream[] truths;
 	protected FileOutputStream[] ECIError;
 	protected FileOutputStream[] covariance;
-	
+
 	protected int simStep;
 	public EKF filter;
 	protected double dt;
@@ -127,13 +127,13 @@ public class CEVLunarSim {
 	public static String JAT_name;
 	private static boolean PlotBoeing;
 	private static boolean PlotCov;
-	
+
 	public CEVLunarSim(boolean useFilter) {
 		//super(useFilter);
 		this.useMeas = useFilter;
 		initializeConst();
 	}
-	
+
 //	** Object Methods **//
 	protected void initializeConst(){		
 		String fs, dir_in;
@@ -150,9 +150,9 @@ public class CEVLunarSim {
 		double MJDF =  initializer.parseDouble(input, "init.MJDF");
 		double TF = initializer.parseDouble(input, "init.TF");
 		simTime = new Time(MJD0+T0/86400);
-		
+
 		//geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),MJDF+TF/86400);
-			
+
 		numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
 		numStates = initializer.parseInt(input,"FILTER.states");
 		dt = initializer.parseInt(input,"init.dt");
@@ -182,11 +182,11 @@ public class CEVLunarSim {
 		tmp = "P0."+i+".VZ";
 		sigmas[6*i + 5] = initializer.parseDouble(input,tmp);
 		sim_cov.add(simTime.get_sim_time(), sigmas);
-		
+
 		created_meas = new createMeasurements(input);
 		filter = new EKF(input,CEVLunarSim.JAT_case,created_meas);
 		rk8 = new RungeKutta8(dt);
-		
+
 	}
 
 	protected void initialize()
@@ -196,7 +196,7 @@ public class CEVLunarSim {
 		double[] v = new double[3];
 		double[] tv = new double[3];  //variable for true trajectory
 		double cr,cd,area,mass,dt;
-		
+
 		double MJD0 =  initializer.parseDouble(input,"init.MJD0") + initializer.parseDouble(input,"init.T0")/86400.0;
 		simTime = new Time(MJD0);
 		double MJDF =  initializer.parseDouble(input,"init.MJDF") + initializer.parseDouble(input,"init.TF")/86400.0;
@@ -209,55 +209,55 @@ public class CEVLunarSim {
 			/*Position*/
 			String refs = "REF_STATE.";
 			String tru = "TRUE_STATE.";
-			
+
 			String str  = refs+i+".X";
 			String strt = tru+i+".X";
 			r[0] = initializer.parseDouble(this.input,str);
 			tr[0] = initializer.parseDouble(this.input,strt);
-			
+
 			str  = refs+i+".Y";
 			strt = tru+i+".Y";
 			r[1] = initializer.parseDouble(this.input,str);
 			tr[1] = initializer.parseDouble(this.input,strt);
-			
+
 			str  = refs+i+".Z";
 			strt = tru+i+".Z";
 			r[2] = initializer.parseDouble(this.input,str);
 			tr[2] = initializer.parseDouble(this.input,strt);
-			
+
 			/*Velocity*/
 			str  = refs+i+".VX";
 			strt = tru+i+".VX";
 			v[0] = initializer.parseDouble(this.input,str);
 			tv[0] = initializer.parseDouble(this.input,strt);
-			
+
 			str  = refs+i+".VY";
 			strt = tru+i+".VY";
 			v[1] = initializer.parseDouble(this.input,str);
 			tv[1] = initializer.parseDouble(this.input,strt);
-			
+
 			str  = refs+i+".VZ";
 			strt = tru+i+".VZ";
 			v[2] = initializer.parseDouble(this.input,str);
 			tv[2] = initializer.parseDouble(this.input,strt);
-			
-			
+
+
 			/*Solar Radiation Pressure Coefficient*/
 			str = "jat."+i+".Cr";
 			cr   = initializer.parseDouble(this.input,str);
-			
+
 			/*Drag Coefficient*/
 			str = "jat."+i+".Cd";
 			cd   = initializer.parseDouble(this.input,str);
-			
+
 			/*Initial Mass*/
 			str = "jat."+i+".mass";
 			mass = initializer.parseDouble(this.input,str);
-			
+
 			/*Initial Area*/
 			str = "jat."+i+".area";
 			area = initializer.parseDouble(this.input,str);
-						
+
 			LunaFixedRef lfr = new LunaFixedRef();
 			LunaRef lref = new LunaRef();
 			ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lfr,lref,simTime);
@@ -271,13 +271,13 @@ public class CEVLunarSim {
 			vv = vv.times(1000);			
 			vv = trans.translateVelocity(vv,rr);
 			rr = trans.translatePoint(rr);
-			
+
 			Spacecraft s = new Spacecraft(rr,vv,cr,cd,area,mass);
 			s.set_use_params_in_state(false);
 			int ncoef = initializer.parseInt(input,"jat.0.lunar_n.jat");
 			LunarEOM eom = new LunarEOM(input,ncoef,false);
 			ref[i] = new SpacecraftModel(s,eom,MJD0);
-			
+
 			rr = new VectorN(tr);
 			vv = new VectorN(tv);
 			//rr = (rr.plus(e2m));
@@ -285,26 +285,26 @@ public class CEVLunarSim {
 			vv = vv.times(1000);		
 			TwoBody orbit2 = new TwoBody(LunaRef.GM_Luna,rr,vv);
 			orbit2.printElements("Lunar LCF");
-			
+
 			vv = trans.translateVelocity(vv,rr);
 			rr = trans.translatePoint(rr);
 			s = new Spacecraft(rr,vv,cr,cd,area,mass);
 			s.set_use_params_in_state(false);
 			truth[i] = new SpacecraftModel(s,eom,MJD0);			
-			
+
 			TwoBody orbit = new TwoBody(LunaRef.GM_Luna,rr,vv);
 			orbit.printElements("Lunar");
-			
-			
+
+
 			/*Set the step size for the trajectory generation*/
 			/*Set the integrator Step size*/
 			dt = initializer.parseInt(this.input,"init.dt");
 			//ref[i].set_sc_dt(dt);
 			//truth[i].set_sc_dt(dt);
-			
+
 		}		
 	}
-	
+
 	/**
 	 * Propagation method for an individual spacecraft.  Increments the 
 	 * model held in the spacecraft flight computer by a time 'dt'.
@@ -317,7 +317,7 @@ public class CEVLunarSim {
 		if(verbose_timestep ){
 			System.out.println("step: "+t+" / "+tf+"    stepsize: "+dt);
 		}
-		
+
 		//rk8.setStepSize(sm.get_sc_dt());
 		//rk8.setStepSize(dt);
 		//* update models
@@ -330,7 +330,7 @@ public class CEVLunarSim {
 		//double[] tmp = new double[6];
 		double num_sc = 1;
 		for(int i=0; i<num_sc; i++){
-			
+
 			Spacecraft s = sm.get_spacecraft();
 			X = s.toStateVector(false);
 			Xnew = rk8.step(t, X, sm);
@@ -354,70 +354,70 @@ public class CEVLunarSim {
 		sm.update(t);
 		//iteration++;
 	}
-	
-	
+
+
 	/**
 	 * 
 	 */
 	protected void filter()
 	{
-		
+
 		/*Provide the algorithm to run the Kalman filter one step at
 		 a time.  This may need to be placed into another file later on*/
-		
+
 		/*Determine the num ber of measurements that we will be processing.
 		 * Since this is a scalar update, we can simply loop over the 
 		 * measurement update step that many times
 		 */
 		int numMeas = created_meas.getNumberMeasurements(); 
-		
+
 		/*Loop over the number of measurements being carefull to 
 		 * omit measurements of 0
 		 */
-		
+
 		VectorN newState = new VectorN(ref[0].get_spacecraft().toStateVector());
 		int processedMeasurements = 0;
 		for(int i = 0;i<numMeas;i++)
 		{			
 			if(simTime.get_sim_time()%(created_meas.frequency[i]) ==0 )
 			{
-					//String tmp = "MEAS."+i+".satellite";
-					//int sat = initializer.parseInt(this.input,tmp);
-					
-					if(((OpticalMeasurementModel)created_meas.mm[i]).get_type()==OpticalMeasurementModel.TYPE_YANGLE_LOS){
+				//String tmp = "MEAS."+i+".satellite";
+				//int sat = initializer.parseInt(this.input,tmp);
+
+				if(((OpticalMeasurementModel)created_meas.mm[i]).get_type()==OpticalMeasurementModel.TYPE_YANGLE_LOS){
+					newState = filter.estimate(simTime.get_sim_time(),i,0,useMeas);
+					processedMeasurements ++;
+					newState = filter.estimate(simTime.get_sim_time(),i,1,this.useMeas);
+					processedMeasurements ++;
+					//System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
+				} else if(((OpticalMeasurementModel)created_meas.mm[i]).get_type()==OpticalMeasurementModel.TYPE_LANDMARK){
+					OpticalMeasurementModel opt = (OpticalMeasurementModel)created_meas.mm[i];						
+					int num_landmarks = opt.get_num_landmarks();
+					for(int nmark=0; nmark < num_landmarks; nmark++){
+						opt.currentLandmark(nmark);
 						newState = filter.estimate(simTime.get_sim_time(),i,0,useMeas);
 						processedMeasurements ++;
-						newState = filter.estimate(simTime.get_sim_time(),i,1,this.useMeas);
+						newState = filter.estimate(simTime.get_sim_time(),i,1,useMeas);
 						processedMeasurements ++;
-						//System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
-					} else if(((OpticalMeasurementModel)created_meas.mm[i]).get_type()==OpticalMeasurementModel.TYPE_LANDMARK){
-						OpticalMeasurementModel opt = (OpticalMeasurementModel)created_meas.mm[i];						
-							int num_landmarks = opt.get_num_landmarks();
-							for(int nmark=0; nmark < num_landmarks; nmark++){
-								opt.currentLandmark(nmark);
-								newState = filter.estimate(simTime.get_sim_time(),i,0,useMeas);
-								processedMeasurements ++;
-								newState = filter.estimate(simTime.get_sim_time(),i,1,useMeas);
-								processedMeasurements ++;
-							}						
-					} else {
-						newState = filter.estimate(simTime.get_sim_time(),i,0,this.useMeas);
-						processedMeasurements ++;
-					}
-					
+					}						
+				} else {
+					newState = filter.estimate(simTime.get_sim_time(),i,0,this.useMeas);
+					processedMeasurements ++;
+				}
+
 			}	
-			
+
 		}
-		
+
 		//catch the case where there are no measurements, set the measurement
 		//flag to false to tell the filter to just propagate
 		if(processedMeasurements  == 0)
 			newState = filter.estimate(simTime.get_sim_time(), 0,0,false);
-		
-		
+
+
 		//Update the current state with the output of the filter
 		//Write the current state information to files
-		
+
 		double tmpState[] = new double[newState.length];
 		for(int numSats = 0; numSats < numSpacecraft; numSats ++)
 		{
@@ -430,21 +430,21 @@ public class CEVLunarSim {
 			ref[numSats].update(simTime.get_sim_time());
 //			Write out the current True States
 			double [] true_state = truth[numSats].get_spacecraft().toStateVector();
-			
+
 			//Print out simStep + 1 because we didn't output the initial state
 			VectorN vecTime =  new VectorN(1,(simStep)*dt);
 			VectorN trueState = new VectorN(true_state);
 			VectorN truthOut = new VectorN(vecTime,trueState);
 			if(!runMonteCarlo)
 				new PrintStream(truths[numSats]).println (truthOut.toString());
-			
+
 			//Write out the current State estimates
 			double [] ref_state  = tmpState;//ref[numSats].get_spacecraft().toStateVector();
 			VectorN vecState = new VectorN(ref_state);
 			VectorN stateOut = new VectorN(vecTime,vecState);
 			if(!runMonteCarlo)
 				new PrintStream(trajectories[numSats]).println (stateOut.toString());
-			
+
 			//Output the current ECI error
 			VectorN error_out = new VectorN(6);
 			for(int i = 0; i < 6; i++)
@@ -454,17 +454,17 @@ public class CEVLunarSim {
 			VectorN ErrState = new VectorN(error_out);
 			stateOut = new VectorN(vecTime,ErrState);
 			new PrintStream(ECIError[numSats]).println (stateOut.toString());
-			
+
 //			Output the current Covariances
 //			Matrix Covariance = EKF.pold;
 			Matrix Covariance = filter.get_pold();
 			VectorN var = new VectorN(6);
 			if(!runMonteCarlo){
-			RSW_Frame trans = new RSW_Frame(trueState.get(0, 3),trueState.get(3, 3));
-			Matrix covtrans = trans.ECI2RSW();
-			Matrix covr =   covtrans.times((Covariance.getMatrix(0, 2, 0, 2)).times(covtrans.transpose()));
-			Matrix covv =   covtrans.times((Covariance.getMatrix(3, 5, 3, 5)).times(covtrans.transpose()));
-			var = new VectorN(covr.diagonal(),covv.diagonal());
+				RSW_Frame trans = new RSW_Frame(trueState.get(0, 3),trueState.get(3, 3));
+				Matrix covtrans = trans.ECI2RSW();
+				Matrix covr =   covtrans.times((Covariance.getMatrix(0, 2, 0, 2)).times(covtrans.transpose()));
+				Matrix covv =   covtrans.times((Covariance.getMatrix(3, 5, 3, 5)).times(covtrans.transpose()));
+				var = new VectorN(covr.diagonal(),covv.diagonal());
 			}
 			int numStates = filter.get_numStates();
 			//double[] tmp = new double[numStates*numStates];
@@ -475,14 +475,14 @@ public class CEVLunarSim {
 			{
 				//for(int j = 0; j < numStates; j++)
 				//{
-					tmp[k] = Covariance.get(i,i);
-					try{
-						if(!runMonteCarlo)
-							tmp2[k] = Math.sqrt(var.get(i));
-					}catch(Exception e){
-						//out of range
-					}
-					k++;
+				tmp[k] = Covariance.get(i,i);
+				try{
+					if(!runMonteCarlo)
+						tmp2[k] = Math.sqrt(var.get(i));
+				}catch(Exception e){
+					//out of range
+				}
+				k++;
 				//}
 			}			
 			if(!runMonteCarlo)
@@ -491,7 +491,7 @@ public class CEVLunarSim {
 			stateOut = new VectorN(vecTime,ErrCov);
 			new PrintStream(covariance[numSats]).println (stateOut.toString());
 		}
-		
+
 	}
 	protected void openFiles()
 	{
@@ -505,8 +505,8 @@ public class CEVLunarSim {
 		}
 		ECIError     = new FileOutputStream [numSpacecraft];
 		covariance   = new FileOutputStream [numSpacecraft];
-		
-		
+
+
 		String fs, dir_in;
 		fs = FileUtil.file_separator();
 		try{
@@ -514,7 +514,7 @@ public class CEVLunarSim {
 		}catch(Exception e){
 			dir_in = "";
 		}
-		
+
 		//String fileName5 = dir_in+"Visible.txt";
 		/*	try {
 		 visableSats = new FileOutputStream(fileName5);
@@ -554,16 +554,18 @@ public class CEVLunarSim {
 	{
 		/*The number and types of files that are created are based
 		 * upon the number of spacecraft and the simulation mode*/
-		
+
 		for(int numFiles = 0; numFiles < numSpacecraft; numFiles++)
 		{
 			{
 				// Close the files
 				try 
 				{
-					trajectories[numFiles].close();
-					if(JAT_runtruth){
-						truths[numFiles].close();
+					if(!runMonteCarlo){
+						trajectories[numFiles].close();					
+						if(JAT_runtruth){
+							truths[numFiles].close();
+						}
 					}
 					ECIError[numFiles].close();
 					covariance[numFiles].close();
@@ -581,7 +583,7 @@ public class CEVLunarSim {
 			   e.printStackTrace();
 			   }*/
 		}
-		
+
 		System.out.println("Closing files and exiting . . ");
 	}
 	protected void propagate(double simStep)
@@ -589,14 +591,14 @@ public class CEVLunarSim {
 		/*In the propagation step we want to move the orbits of all the
 		 satellites forward the desired timestep.  Output the states of 
 		 each vehicle*/
-		
+
 		for(int numSats = 0; numSats < numSpacecraft; numSats ++)
 		{
 			//Step the trajectory forward the indicated amount
-			
+
 			//step(truth[numSats],truth_traj[numSats]);
 			step(truth[numSats]); 
-			
+
 			//Extract the State Vector
 			//Only need to propagate the reference state if 
 			//We aren't estimating it
@@ -605,14 +607,14 @@ public class CEVLunarSim {
 			if(initializer.parseDouble(this.input,"init.mode") == 0)
 			{
 				double [] true_state = truth[numSats].get_spacecraft().toStateVector();
-				
+
 				//Print out simStep + 1 because we didn't output the initial state
 				VectorN vecTime =  new VectorN(1,(simStep)*dt);
 				VectorN trueState = new VectorN(true_state);
 				VectorN truthOut = new VectorN(vecTime,trueState);
 				new PrintStream(truths[numSats]).println (truthOut.toString());
-				
-				
+
+
 				//step(ref[numSats],ref_traj[numSats]);
 				step(ref[numSats]);
 				double [] ref_state  = ref[numSats].get_spacecraft().toStateVector();
@@ -620,9 +622,9 @@ public class CEVLunarSim {
 				VectorN stateOut = new VectorN(vecTime,vecState);
 				new PrintStream(trajectories[numSats]).println (stateOut.toString());
 			}
-			
+
 		}
-		
+
 	}
 
 	public void runloop(){
@@ -630,120 +632,120 @@ public class CEVLunarSim {
 		//and, trajectory generation, measurement generation as well as
 		//guidance and control hooks.
 		double start = System.currentTimeMillis();
-		
+
 		//Open files for saving off the generated data.  
 		openFiles();
-		
-		
+
+
 		//Initialize
 		//This step should read in all the variables and set up all the required
 		//models and functionality accordingly.  One should try to be careful
 		//to flag any inconsistancies in the input data to save crashes later on.
-		
+
 		initialize();
-		
+
 		//for(int i=0; i<numSpacecraft; i++){
-			//truth_traj[i].add(truth[i].get_sc_t(),truth[i].get_spacecraft().toStateVector());
-			//ref_traj[i].add(ref[i].get_sc_t(),ref[i].get_spacecraft().toStateVector());
-			LunaRef lref = new LunaRef();
-			EarthRef eref = new EarthRef(simTime);
-			LunaFixedRef lfr = new LunaFixedRef();
-			//ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lref,eref,simTime);
-			ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lref,lfr,simTime);
-			VectorN xt = new VectorN(truth[0].get_spacecraft().toStateVector());
-			VectorN xr = new VectorN(ref[0].get_spacecraft().toStateVector());
-			VectorN vt = trans.translateVelocity(xt.get(3,3),xt.get(0,3));
-			VectorN vr = trans.translateVelocity(xr.get(3,3),xr.get(0,3));			
-			VectorN rt = trans.translatePoint(xt.get(0,3));
-			VectorN rr = trans.translatePoint(xr.get(0,3));
-			truth_traj[0].add(simTime.mjd_utc(),new VectorN(rt,vt).x);
-			ref_traj[0].add(simTime.mjd_utc(),new VectorN(rr,vr).x);
-			truth_traj[1].add(simTime.get_sim_time()/3600.0,xt.x);
-			ref_traj[1].add(simTime.get_sim_time()/3600.0,xr.x);
+		//truth_traj[i].add(truth[i].get_sc_t(),truth[i].get_spacecraft().toStateVector());
+		//ref_traj[i].add(ref[i].get_sc_t(),ref[i].get_spacecraft().toStateVector());
+		LunaRef lref = new LunaRef();
+		EarthRef eref = new EarthRef(simTime);
+		LunaFixedRef lfr = new LunaFixedRef();
+		//ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lref,eref,simTime);
+		ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lref,lfr,simTime);
+		VectorN xt = new VectorN(truth[0].get_spacecraft().toStateVector());
+		VectorN xr = new VectorN(ref[0].get_spacecraft().toStateVector());
+		VectorN vt = trans.translateVelocity(xt.get(3,3),xt.get(0,3));
+		VectorN vr = trans.translateVelocity(xr.get(3,3),xr.get(0,3));			
+		VectorN rt = trans.translatePoint(xt.get(0,3));
+		VectorN rr = trans.translatePoint(xr.get(0,3));
+		truth_traj[0].add(simTime.mjd_utc(),new VectorN(rt,vt).x);
+		ref_traj[0].add(simTime.mjd_utc(),new VectorN(rr,vr).x);
+		truth_traj[1].add(simTime.get_sim_time()/3600.0,xt.x);
+		ref_traj[1].add(simTime.get_sim_time()/3600.0,xr.x);
 		//}
-		
+
 		/*Cache off the simulation mode */
 		int filterMode = initializer.parseInt(this.input,"init.mode");
-		
+
 		//Compute the length of the simulation in seconds
 		double MJD0 =  initializer.parseDouble(this.input,"init.MJD0");
 		double MJDF =  initializer.parseDouble(this.input,"init.MJDF");
 		double T0   =  initializer.parseDouble(this.input,"init.T0");
 		double TF   =  initializer.parseDouble(this.input,"init.TF");
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
-		
+
 		MJD0 = MJD0 + T0/86400.0;
 		MJDF = MJDF + TF/86400.0;
 		//simTime = 0; //* this is done in call to "initialize()"
 		simTime = new Time(MJD0);
-		
+
 		this.tf = simLength;
 		set_verbose(this.verbose_estimation);
 		//if(!Flag_GPS && !Flag_GPSState && !Flag_Cross ) this.useMeas = false;
 		//double simLength = Math.round(TF - T0);
 		//ObservationMeasurement obs = obs_list.getFirst();
-		
+
 		for( simStep = 1; simStep < simLength/dt; simStep ++)
 		{
 			//if(this.verbose_estimation) 
-				//System.out.println("running..."+(dt*simStep)+" / "+simLength);
+			//System.out.println("running..."+(dt*simStep)+" / "+simLength);
 			//if(simStep%100 == 0)
 			//	System.out.println(simStep*5);
-			
+
 			//simTime = simStep*dt;			
 			propagate(simStep*dt);
 			simTime.update(simStep*dt);
-			
+
 			filter();
-			
+
 //			if(Double.isNaN(ref[0].get_spacecraft().toStateVector()[0])){// || simTime.get_sim_time()>4620){
-//				int donothing = 0;
-//				donothing++;
+//			int donothing = 0;
+//			donothing++;
 //			}
 			//System.out.println("SimTime: " + simTime.get_sim_time() + " SimStep: " + simStep);
-			
+
 			//for(int i=0; i<numSpacecraft; i++){
-				//lref = new LunaRef();
-				eref = new EarthRef(simTime);
-				//trans = new ReferenceFrameTranslater(lref,eref,simTime);
-				trans = new ReferenceFrameTranslater(lref,lfr,simTime);
-				xt = new VectorN(truth[0].get_spacecraft().toStateVector());
-				xr = new VectorN(ref[0].get_spacecraft().toStateVector());
-				vt = trans.translateVelocity(xt.get(3,3),xt.get(0,3));
-				vr = trans.translateVelocity(xr.get(3,3),xr.get(0,3));			
-				rt = trans.translatePoint(xt.get(0,3));
-				rr = trans.translatePoint(xr.get(0,3));
-				truth_traj[0].add(simTime.mjd_utc(),new VectorN(rt,vt).x);
-				ref_traj[0].add(simTime.mjd_utc(),new VectorN(rr,vr).x);			
-				truth_traj[1].add(simTime.get_sim_time()/3600.0,xt.x);
-				ref_traj[1].add(simTime.get_sim_time()/3600.0,xr.x);
+			//lref = new LunaRef();
+			eref = new EarthRef(simTime);
+			//trans = new ReferenceFrameTranslater(lref,eref,simTime);
+			trans = new ReferenceFrameTranslater(lref,lfr,simTime);
+			xt = new VectorN(truth[0].get_spacecraft().toStateVector());
+			xr = new VectorN(ref[0].get_spacecraft().toStateVector());
+			vt = trans.translateVelocity(xt.get(3,3),xt.get(0,3));
+			vr = trans.translateVelocity(xr.get(3,3),xr.get(0,3));			
+			rt = trans.translatePoint(xt.get(0,3));
+			rr = trans.translatePoint(xr.get(0,3));
+			truth_traj[0].add(simTime.mjd_utc(),new VectorN(rt,vt).x);
+			ref_traj[0].add(simTime.mjd_utc(),new VectorN(rr,vr).x);			
+			truth_traj[1].add(simTime.get_sim_time()/3600.0,xt.x);
+			ref_traj[1].add(simTime.get_sim_time()/3600.0,xr.x);
 			//}			
 		}
-		
+
 		/*Close all output files*/
 		closeFiles();
 		System.gc();
-		
+
 		double elapsed = (System.currentTimeMillis()-start)*0.001/60;
 		System.out.println("Elapsed time [min]: "+elapsed);
-		
+
 		/* Post Processing */
 		if(!runMonteCarlo ){
-		LinePrinter lp = new LinePrinter();
-		RelativeTraj[] reltraj = new RelativeTraj[3];
-		Trajectory[] boeing = new Trajectory[2];
-		if(PlotBoeing){
-			boeing = parseBoeing();
-		}
-		LinePrinter traj_lp = new LinePrinter("C:/Code/Misc/truth_LCF.txt");
-		truth_traj[0].printAll(traj_lp);
-		traj_lp.close();
-		LinePrinter traj_lp2 = new LinePrinter("C:/Code/Misc/truth_LCI.txt");
-		truth_traj[1].printAll(traj_lp2);
-		traj_lp2.close();
-		
-		double mismatch_tol = 0.00001;
-		//* TODO Plot marker
+			LinePrinter lp = new LinePrinter();
+			RelativeTraj[] reltraj = new RelativeTraj[3];
+			Trajectory[] boeing = new Trajectory[2];
+			if(PlotBoeing){
+				boeing = parseBoeing();
+			}
+			LinePrinter traj_lp = new LinePrinter("C:/Code/Misc/truth_LCF.txt");
+			truth_traj[0].printAll(traj_lp);
+			traj_lp.close();
+			LinePrinter traj_lp2 = new LinePrinter("C:/Code/Misc/truth_LCI.txt");
+			truth_traj[1].printAll(traj_lp2);
+			traj_lp2.close();
+
+			double mismatch_tol = 0.00001;
+			//* TODO Plot marker
 			if(PlotJAT){
 				reltraj[0] = new RelativeTraj(ref_traj[1],truth_traj[1],lp,""+JAT_case+" Jat(Ref) v Jat(Truth)");
 				reltraj[0].setVerbose(false);
@@ -770,8 +772,8 @@ public class CEVLunarSim {
 				cel.set_trajectory_meters(truth_traj[0],MJD0);
 				cel.write_trajectory("jat_truth_"+JAT_name+JAT_case,"jat_truth_"+JAT_name+JAT_case,TimeUtils.MJDtoJD(MJD0));
 				if(PlotBoeing){
-				cel.set_trajectory_meters(boeing[0],MJD0);
-				cel.write_trajectory("jat_boeing_"+JAT_name+JAT_case,"jat_boeing_"+JAT_name+JAT_case,TimeUtils.MJDtoJD(MJD0));
+					cel.set_trajectory_meters(boeing[0],MJD0);
+					cel.write_trajectory("jat_boeing_"+JAT_name+JAT_case,"jat_boeing_"+JAT_name+JAT_case,TimeUtils.MJDtoJD(MJD0));
 				}
 //				cel.set_trajectory_meters(truth_traj[1],MJD0);				
 //				cel.write_trajectory("jat_lunar_"+JAT_name+JAT_case,"jat_lunar_"+JAT_name+JAT_case,TimeUtils.MJDtoJD(MJD0));
@@ -781,13 +783,13 @@ public class CEVLunarSim {
 			}
 		}
 	}
-	
+
 	public void set_verbose(boolean b){
 		this.verbose_estimation = b;
 		if(filter != null)
 			filter.set_verbose(b,this.tf);
 	}
-	
+
 	public Trajectory[] parseBoeing(){
 		Trajectory[] traj = new Trajectory[2];
 		traj[0] = new Trajectory();
@@ -827,10 +829,10 @@ public class CEVLunarSim {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e){
-			
+
 		}
 		return traj;
-		
+
 	}
 //	** Main **//
 
@@ -839,10 +841,12 @@ public class CEVLunarSim {
 		boolean useFilter = true;
 
 		//* TODO Flag marker
-		CEVLunarSim.JAT_case = 92;
+		CEVLunarSim.JAT_case = 80;
 		CEVLunarSim.PlotJAT = true;
 		CEVLunarSim.PlotBoeing = false;
 		CEVLunarSim.PlotCov = true;
+		
+		double mc_start = System.currentTimeMillis();
 		
 		for(int c=0; c<1; c++){
 //			CEVSim.JAT_name = "moon2earth_";
@@ -853,9 +857,29 @@ public class CEVLunarSim {
 
 			CEVLunarSim.JAT_name = "lowlunar";
 			//CEVLunarSim.InputFile = "initialConditions_cev_llo.txt";
-			CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_1.txt";
-			//CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_001.txt";
-
+			switch(JAT_case){
+			case 90:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
+				break;
+			case 91:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_01.txt";
+				break;
+			case 92:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_1.txt";
+				break;
+			case 80:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_001.txt";
+				break;
+			case 81:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_01.txt";
+				break;
+			case 82:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_1.txt";
+				break;
+			default:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
+			break;
+			}
 			CEVLunarSim Sim = new CEVLunarSim(useFilter);
 			Sim.set_verbose(true);
 			Sim.runloop();
@@ -868,6 +892,10 @@ public class CEVLunarSim {
 			}
 			JAT_case++;
 		}
-        System.out.println("Finished.");
+		
+		double mc_elapsed = (System.currentTimeMillis()-mc_start)*0.001/60;
+		System.out.println("MonteCarlo time [min]: "+mc_elapsed);
+		
+		System.out.println("Finished.");
 	}
 }

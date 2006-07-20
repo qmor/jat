@@ -87,6 +87,8 @@ public class EKF {
 	private boolean verbose=false;
 	public static boolean visible;
 	public static int measNum, stateNum;
+	
+	private boolean runMonteCarlo = false;
 	 
 	/**
 	 * Constructor.
@@ -103,7 +105,10 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
-        residuals = new LinePrinter(dir_in+"Residuals.txt");
+        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        if(!runMonteCarlo){
+        	residuals = new LinePrinter(dir_in+"Residuals.txt");
+        }
 		this.n = initializer.parseInt(hm,"FILTER.states");
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
 		dtNominal = initializer.parseInt(hm,"FILTER.dt");
@@ -152,7 +157,10 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
-        residuals = new LinePrinter(dir_in+"Residuals_"+JAT_Case+".txt");
+        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        if(!runMonteCarlo){
+        	residuals = new LinePrinter(dir_in+"Residuals.txt");
+        }
 		this.n = initializer.parseInt(hm,"FILTER.states");
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
 		dtNominal = initializer.parseInt(hm,"FILTER.dt");
@@ -201,7 +209,10 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
-        residuals = new LinePrinter(dir_in+"Residuals.txt");
+        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        if(!runMonteCarlo){
+        	residuals = new LinePrinter(dir_in+"Residuals.txt");
+        }
 		this.n = initializer.parseInt(hm,"FILTER.states");
         //this.n=6;
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
@@ -248,7 +259,10 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
-        residuals = new LinePrinter(dir_in+"Residuals_"+jat_case+".txt");
+        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        if(!runMonteCarlo){
+        	residuals = new LinePrinter(dir_in+"Residuals.txt");
+        }
 		this.n = initializer.parseInt(hm,"FILTER.states");
 		String stringPm = initializer.parseString(hm,"FILTER.pm");
 		dtNominal = initializer.parseInt(hm,"FILTER.dt");
@@ -365,7 +379,9 @@ public class EKF {
 	}
 
 	public void closeFiles(){
-		this.residuals.close();
+		if(!runMonteCarlo){
+			this.residuals.close();
+		}
 	}
 	public double get_filterTime(){
 		return this.filterTime;
@@ -406,7 +422,7 @@ public class EKF {
 			xprev = xref.longarray();
 			pold = pnew.copy();
 		}		
-		if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime+"  range: "+new VectorN(xprev).get(0,3).mag());
+		if(this.verbose) System.out.println("Running... "+filterTime+" / "+finalTime);//+"  range: "+new VectorN(xprev).get(0,3).mag());
 	}
 	
 	private void process(SpacecraftModel sc, ObservationMeasurement obs){
@@ -419,6 +435,8 @@ public class EKF {
 		{
 			double r = obs.get_noise(sc);
 			//double r = createMeasurements.mm[measNum].R();
+			
+			if(!runMonteCarlo){
 //			String residualsOut = 
 //				"Time:  "+simTime+"  Residual:  "+y+" Measurement Type:  "+
 //				createMeasurements.measurementTypes[measNum] + " State "+whichMeas;
@@ -426,6 +444,7 @@ public class EKF {
 			String residualsOut = "Time: "+filterTime+" Residual: "+y+"    Measurement Type: "+
 				obs.get_measurementType()+" State "+obs.get_PRN();
 			residuals.println(residualsOut);
+			}
 			//Use the current reference trajectory to form the H matrix
 			VectorN H = obs.get_H(new VectorN(6));
 			//VectorN  H = createMeasurements.mm[measNum].H(new VectorN(6));
@@ -519,9 +538,9 @@ public class EKF {
 		
 		VectorN out = new VectorN(xref.get(0,n));
 		
-		if(Double.isNaN(out.x[0])){
-			int donothing = 0;
-		}
+//		if(Double.isNaN(out.x[0])){
+//			int donothing = 0;
+//		}
 		return out;
 		
 	}	
@@ -611,6 +630,7 @@ public class EKF {
 				//* Gets Moon range
 				double dist = 0;//(moon.minus(r_eci)).mag(); 
 				
+				if(!runMonteCarlo){
 				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
 					//String residualsOut = "Time:  " + simTime +
 					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist +
@@ -627,6 +647,7 @@ public class EKF {
 					"  Residual:  " + y + " Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
+				}
 				}
 				
 				//Use the current reference trajectory to form the H matrix

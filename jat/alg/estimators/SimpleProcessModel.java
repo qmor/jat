@@ -22,6 +22,7 @@
 package jat.alg.estimators;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import jat.alg.integrators.Derivatives;
 import jat.alg.integrators.LinePrinter;
@@ -287,6 +288,8 @@ public class SimpleProcessModel implements ProcessModel {
 		//initial errors should be.  This could be a good place
 		//double tmp = Math.random();
 		
+		Random rnd = new Random(System.currentTimeMillis());
+		
 		//first set in the Satellite States
 		for (int i = 0; i < initializer.parseInt(hm, "prop.NumSpacecraft"); i++) {
 			String ref = "REF_STATE.";
@@ -328,14 +331,18 @@ public class SimpleProcessModel implements ProcessModel {
 				out.x[7] = initializer.parseDouble(hm, ref+i+".LY");
 				out.x[8] = initializer.parseDouble(hm, ref+i+".LZ");					
 			}
-			// Other clock states can be initialized here . .
-			//ref = "jat.";
-			//tmp = ref+"0.clockBias";
-			//out.x[6] = initializer.parseDouble(hm, tmp);
-			//tmp = ref+"0.clockDrift";
-			//out.x[7] = initializer.parseDouble(hm, tmp);
-			//tmp = ref+"0.Cr";
-			//out.x[8] = initializer.parseDouble(hm, tmp);
+						
+			if(initializer.parseBool(hm, "init.runMonteCarlo")){
+				double r_error = initializer.parseDouble(hm, "MONTE.r_error");
+				double v_error = initializer.parseDouble(hm, "MONTE.v_error");
+				double lm_error = 0;
+				if(n>6)	lm_error = initializer.parseDouble(hm, "MONTE.lm_error");
+				for(int k=0; k<3; k++){
+					out.x[k] = out.x[k] + rnd.nextGaussian()*r_error;
+					out.x[k+3] = out.x[k+3] + rnd.nextGaussian()*v_error;
+					if(n>6) out.x[k+6] = out.x[k+6] + rnd.nextGaussian()*lm_error;
+				}
+			}
 		}
 		
 		return out;

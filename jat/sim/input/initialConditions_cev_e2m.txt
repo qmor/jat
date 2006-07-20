@@ -13,7 +13,7 @@ init.MJD0 57037
 init.T0 0.0		 
 
 #Final MJD and Seconds past MJDF for simulation end
-init.MJDF    57039
+init.MJDF    57038
 #init.MJDF    57040
 init.TF      000		 
 
@@ -108,19 +108,19 @@ FILTER.pm Simple
 
 #PROCESS NOISE
 #Set the process noise for each of the states
-#Q.0.X   1e-8
-#Q.0.Y   1e-8
-#Q.0.Z   1e-8
-#Q.0.VX   1e-4   
-#Q.0.VY   1e-4
-#Q.0.VZ   1e-4
+Q.0.X   1e-8
+Q.0.Y   1e-8
+Q.0.Z   1e-8
+Q.0.VX   1e-4   
+Q.0.VY   1e-4
+Q.0.VZ   1e-4
 
-Q.0.X   1e-13
-Q.0.Y   1e-13
-Q.0.Z   1e-13
-Q.0.VX   1e-8   
-Q.0.VY   1e-8
-Q.0.VZ   1e-8
+#Q.0.X   1e-13
+#Q.0.Y   1e-13
+#Q.0.Z   1e-13
+#Q.0.VX   1e-8   
+#Q.0.VY   1e-8
+#Q.0.VZ   1e-8
 
 #Q.0.X   1e-20 
 #Q.0.Y   1e-20
@@ -160,7 +160,7 @@ P0.0.VZ   3
 #MEASUREMENTS
 
 #Set the number of types of measurements
-MEAS.types 1
+MEAS.types 2
 
 #Measurement type position.  Assumed an ECI absolute position can 
 #be measured or provided by a ground station.  The associated
@@ -194,15 +194,15 @@ MEAS.0.R 2.741556778080377e-007
 
 #MEAS.0.R 4e-4
 
-MEAS.0.desc OPT
-MEAS.0.satellite 0
-MEAS.0.frequency 60
-MEAS.0.t0 0
-MEAS.0.tf 259200
-MEAS.0.type range
-MEAS.0.cbody earth
-MEAS.0.vbody moon
-MEAS.0.R 2.741556778080377e-007
+MEAS.1.desc OPT
+MEAS.1.satellite 0
+MEAS.1.frequency 60
+MEAS.1.t0 0
+MEAS.1.tf 259200
+MEAS.1.type range
+MEAS.1.cbody earth
+MEAS.1.vbody moon
+MEAS.1.R 2.741556778080377e-007
 
 #MEAS.1.R 4e-4
 
