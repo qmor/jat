@@ -61,7 +61,7 @@ end
 ###################################################################
 # Now figure out the Java class to execute.  Defaults to CEVSim.
 
-if (($#argv == 0) then
+if ($#argv == 0) then
   setenv _MAIN_CLASS jat.sim.CEVSim
 else
   setenv _MAIN_CLASS $1
