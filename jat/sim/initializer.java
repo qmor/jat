@@ -198,48 +198,57 @@ public class initializer{
 		return hm;
     }
     
-    public static double parseDouble (HashMap hm, String key)
+    public static Double parseDouble (HashMap hm, String key)
     {
-    	double out;
+    	Double out = null;
     	
    	 	Object ob =  hm.get(key);
-   	 	String ss = ob.toString();
-   	 	out = Double.parseDouble(ss);
-    	
+        if (ob != null) {
+          String ss = ob.toString();
+          out = new Double(Double.parseDouble(ss));
+        }
+        
     	return out;
     }
     
-    public static int parseInt (HashMap hm, String key)
+    public static Integer parseInt (HashMap hm, String key)
     {
-    	int out;
+    	Integer out = null;
     	
    	 	Object ob =  hm.get(key);
-   	 	String ss = ob.toString();
-   	 	out = Integer.parseInt(ss);   	
+        if (ob != null) {
+          String ss = ob.toString();
+          out = new Integer(Integer.parseInt(ss));
+        }
     	return out;
     }
     
      
-    public static boolean parseBool (HashMap hm, String key)
+    public static Boolean parseBool (HashMap hm, String key)
     {
-    	boolean out;
+    	Boolean out = null;
     	
    	 	Object ob =  hm.get(key);
-   	 	String ss = ob.toString();
-   	 	if(ss.equals("true")||ss.equals("True"))
-   	 		out = true;
-   	 	else
-   	 		out = false;
+        if (ob != null) {
+          String ss = ob.toString();
+          if(ss.equals("true")||ss.equals("True"))
+            out = Boolean.TRUE;
+          else
+   	 		out = Boolean.FALSE;
+        }
     	
     	return out;
     }
     
     public static String parseString(HashMap hm, String key)
     {
-
+        String out = null;
+        
    	 	Object ob =  hm.get(key);
-   	 	String ss = ob.toString();
-    	
-    	return ss;
+        if (ob != null) {
+          out = ob.toString();
+        }
+        
+    	return out;
     }
 }

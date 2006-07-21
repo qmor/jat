@@ -875,10 +875,21 @@ public class CEVLunarSim {
           CEVLunarSim.InputFile = args[0];
         }
 
-        initializer input = new initializer();
-        HashMap hm = input.parse_file(CEVLunarSim.InputFile);
-        int num_runs = initializer.parseInt(hm,"MONTE.num_runs");
-        if(!initializer.parseBool(hm,"init.runMonteCarlo")) num_runs=1;
+        String fs, dir_in;
+        fs = FileUtil.file_separator();
+        try{
+            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+        }catch(Exception e){
+            dir_in = "";
+        }
+        HashMap hm = initializer.parse_file(dir_in + CEVLunarSim.InputFile);
+        boolean runningMonteCarlo = initializer.parseBool(hm,"init.runMonteCarlo");
+        int num_runs = (runningMonteCarlo ? 
+            initializer.parseInt(hm,"MONTE.num_runs") : 1);
+        Integer startCase = initializer.parseInt(hm, "MONTE.start_case_num");
+        if (runningMonteCarlo && (startCase != null)) {
+          CEVLunarSim.JAT_case = startCase;
+        }
 		for(int c=0; c<num_runs; c++){
 
 			CEVLunarSim.JAT_name = "lowlunar";
