@@ -5,6 +5,7 @@
 # Mode: 0 = Trajectory Generation Only, 1 = Trajectory and Filter
 init.mode    1
 init.runMonteCarlo false
+MONTE.num_runs 3
 MONTE.r_error 1000
 MONTE.v_error 10
 MONTE.lm_error 100
