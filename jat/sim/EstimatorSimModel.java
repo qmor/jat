@@ -54,6 +54,7 @@ import jat.measurements.createMeasurements;
 import jat.spacecraft.Spacecraft;
 import jat.spacecraft.SpacecraftModel;
 import jat.spacetime.FitIERS;
+import jat.spacetime.RSW_Frame;
 import jat.spacetime.Time;
 import jat.spacetime.TimeUtils;
 import jat.spacetime.UniverseModel;
@@ -96,6 +97,7 @@ public class EstimatorSimModel extends SimModel {
 	protected Trajectory truth_traj[];
 	protected Trajectory ref_traj[];
 	protected Trajectory sim_truth;
+	protected Trajectory sim_cov;
 	protected static int numSpacecraft;
 	//public SimModel[] truth = null;
 	//public SimModel[] ref   = null;
@@ -200,6 +202,24 @@ public class EstimatorSimModel extends SimModel {
 				ref_traj[i] = new Trajectory();
 			}
 			filter = new EKF(obs_list,input);
+			
+			sim_cov = new Trajectory();
+			int i=0;
+			double[] sigmas = new double[6];
+			String tmp = "P0."+i+".X";
+			sigmas[6*i + 0] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".Y";
+			sigmas[6*i + 1] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".Z";
+			sigmas[6*i + 2] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".VX";
+			sigmas[6*i + 3] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".VY";
+			sigmas[6*i + 4] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".VZ";
+			sigmas[6*i + 5] = initializer.parseDouble(input,tmp);
+			sim_cov.add(simTime.mjd_utc(), sigmas);
+
 		}else{
 			
 			numSpacecraft = initializer.parseInt(input,"prop.NumSpacecraft");
@@ -215,6 +235,24 @@ public class EstimatorSimModel extends SimModel {
 				if(JAT_runtruth) truth_traj[i] = new Trajectory();
 				ref_traj[i] = new Trajectory();
 			}
+			
+			sim_cov = new Trajectory();
+			int i=0;
+			double[] sigmas = new double[6];
+			String tmp = "P0."+i+".X";
+			sigmas[6*i + 0] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".Y";
+			sigmas[6*i + 1] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".Z";
+			sigmas[6*i + 2] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".VX";
+			sigmas[6*i + 3] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".VY";
+			sigmas[6*i + 4] = initializer.parseDouble(input,tmp);
+			tmp = "P0."+i+".VZ";
+			sigmas[6*i + 5] = initializer.parseDouble(input,tmp);
+			sim_cov.add(simTime.mjd_utc(), sigmas);
+			
 			created_meas = new createMeasurements(input);
 			filter = new EKF(input,JAT_case);
 		}
@@ -701,36 +739,72 @@ public class EstimatorSimModel extends SimModel {
 			}
 //			Output the current Covariances
 			//Matrix Covariance = EKF.pold;
+			
 			Matrix Covariance = filter.get_pold();
-			if(COV_printoffdiag){
-				double[] tmp = new double[numStates*numStates];
-				int k = 0;
-				for(int i = 0; i < numStates; i++)
-				{
-					for(int j = 0; j < numStates; j++)
-					{
-						tmp[k] = Covariance.get(i,j);
-						k++;
-					}
-				}
-				VectorN ErrCov = new VectorN(tmp);
-				stateOut = new VectorN(vecTime,ErrCov);
-				new PrintStream(covariance[numSats]).println (stateOut.toString());
-			}else{
-				double[] tmp = new double[numStates];
-				int k = 0;
-				for(int i = 0; i < numStates; i++)
-				{
-					//for(int j = 0; j < numStates; j++)
-					//{
-						tmp[k] = Covariance.get(i,i);
-						k++;
-					//}
-				}
-				VectorN ErrCov = new VectorN(tmp);
-				stateOut = new VectorN(vecTime,ErrCov);
-				new PrintStream(covariance[numSats]).println (stateOut.toString());
+			VectorN var = new VectorN(6);
+			if(true){
+				RSW_Frame trans = new RSW_Frame(true_state.get(0, 3),true_state.get(3, 3));
+				Matrix covtrans = trans.ECI2RSW();
+				Matrix covr =   covtrans.times((Covariance.getMatrix(0, 2, 0, 2)).times(covtrans.transpose()));
+				Matrix covv =   covtrans.times((Covariance.getMatrix(3, 5, 3, 5)).times(covtrans.transpose()));
+				var = new VectorN(covr.diagonal(),covv.diagonal());
 			}
+			int numStates = filter.get_numStates();
+			//double[] tmp = new double[numStates*numStates];
+			double[] tmp = new double[numStates];
+			double[] tmp2 = new double[numStates];
+			int k = 0;
+			boolean runMonteCarlo = false;
+			for(int i = 0; i < numStates; i++)
+			{
+				//for(int j = 0; j < numStates; j++)
+				//{
+				tmp[k] = Covariance.get(i,i);
+				try{
+					if(!runMonteCarlo)
+						tmp2[k] = Math.sqrt(var.get(i));
+				}catch(Exception e){
+					//out of range
+				}
+				k++;
+				//}
+			}			
+			if(!runMonteCarlo)
+				sim_cov.add(simTime.mjd_utc(), new VectorN(tmp2,6).x);
+			VectorN ErrCov = new VectorN(tmp);
+			stateOut = new VectorN(vecTime,ErrCov);
+			new PrintStream(covariance[numSats]).println (stateOut.toString());
+			
+//			Matrix Covariance = filter.get_pold();
+//			if(COV_printoffdiag){
+//				double[] tmp = new double[numStates*numStates];
+//				int k = 0;
+//				for(int i = 0; i < numStates; i++)
+//				{
+//					for(int j = 0; j < numStates; j++)
+//					{
+//						tmp[k] = Covariance.get(i,j);
+//						k++;
+//					}
+//				}
+//				VectorN ErrCov = new VectorN(tmp);
+//				stateOut = new VectorN(vecTime,ErrCov);
+//				new PrintStream(covariance[numSats]).println (stateOut.toString());
+//			}else{
+//				double[] tmp = new double[numStates];
+//				int k = 0;
+//				for(int i = 0; i < numStates; i++)
+//				{
+//					//for(int j = 0; j < numStates; j++)
+//					//{
+//						tmp[k] = Covariance.get(i,i);
+//						k++;
+//					//}
+//				}
+//				VectorN ErrCov = new VectorN(tmp);
+//				stateOut = new VectorN(vecTime,ErrCov);
+//				new PrintStream(covariance[numSats]).println (stateOut.toString());
+//			}
 			
 			//Output the Number of Visible Satellites
 			//stateOut =  new VectorN(2);
@@ -860,16 +934,36 @@ public class EstimatorSimModel extends SimModel {
 //			Output the current Covariances
 //			Matrix Covariance = EKF.pold;
 			Matrix Covariance = filter.get_pold();
-			double[] tmp = new double[numStates*numStates];
+			VectorN var = new VectorN(6);
+			if(true){
+				RSW_Frame trans = new RSW_Frame(trueState.get(0, 3),trueState.get(3, 3));
+				Matrix covtrans = trans.ECI2RSW();
+				Matrix covr =   covtrans.times((Covariance.getMatrix(0, 2, 0, 2)).times(covtrans.transpose()));
+				Matrix covv =   covtrans.times((Covariance.getMatrix(3, 5, 3, 5)).times(covtrans.transpose()));
+				var = new VectorN(covr.diagonal(),covv.diagonal());
+			}
+			int numStates = filter.get_numStates();
+			//double[] tmp = new double[numStates*numStates];
+			double[] tmp = new double[numStates];
+			double[] tmp2 = new double[numStates];
 			int k = 0;
+			boolean runMonteCarlo = false;
 			for(int i = 0; i < numStates; i++)
 			{
-				for(int j = 0; j < numStates; j++)
-				{
-					tmp[k] = Covariance.get(i,j);
-					k++;
+				//for(int j = 0; j < numStates; j++)
+				//{
+				tmp[k] = Covariance.get(i,i);
+				try{
+					if(!runMonteCarlo)
+						tmp2[k] = Math.sqrt(var.get(i));
+				}catch(Exception e){
+					//out of range
 				}
-			}
+				k++;
+				//}
+			}			
+			if(!runMonteCarlo)
+				sim_cov.add(simTime.mjd_utc(), new VectorN(tmp2,6).x);
 			VectorN ErrCov = new VectorN(tmp);
 			stateOut = new VectorN(vecTime,ErrCov);
 			new PrintStream(covariance[numSats]).println (stateOut.toString());
@@ -956,7 +1050,7 @@ public class EstimatorSimModel extends SimModel {
 			for(int i=0; i<numSpacecraft; i++){
 				if(JAT_runtruth)
 					truth_traj[i].add(truth[i].get_sc_mjd_utc(),truth[i].get_spacecraft().toStateVector());
-				ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
+					ref_traj[i].add(ref[i].get_sc_mjd_utc(),ref[i].get_spacecraft().toStateVector());
 			}
 			
 		}
@@ -1004,7 +1098,9 @@ public class EstimatorSimModel extends SimModel {
 				}
 				reltraj[i] = new RelativeTraj(ref_traj[i],sim_truth,lp,"Jat(Ref) v(Truth)");
 				reltraj[i].setVerbose(false);
-				reltraj[i].process(mismatch_tol);
+				//reltraj[i].process(mismatch_tol);
+				reltraj[i].process(mismatch_tol,sim_cov);
+				reltraj[i].process_RSS(mismatch_tol);
 			}
 			if(PlotTruth && PlotGEONSRef && PlotGEONSBoth){
 				reltraj[i] = new RelativeTraj(geons_ref,sim_truth,lp,"Geons(Ref) v (Truth)");
@@ -1230,6 +1326,13 @@ public class EstimatorSimModel extends SimModel {
 		int jat_case = 1;
 		EstimatorSimModel.JAT_case = jat_case;
 		EstimatorSimModel.JAT_runtruth = true;
+		
+		//* TODO Flag marker
+		EstimatorSimModel.PlotJAT = true;
+		EstimatorSimModel.PlotGEONSRef = false;
+		EstimatorSimModel.PlotTruth = true;
+		EstimatorSimModel.PlotGEONSBoth = false;
+		EstimatorSimModel.PlotMeasurements = false;
 		
 		EstimatorSimModel.COV_printoffdiag = false;
 		

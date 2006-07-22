@@ -181,45 +181,45 @@ public class LunarEOM implements Derivatives {
 		//compute acceleration due to lunar gravity
 		//double ttt = tt.TTtoTDB(newttt) + 2400000.5;
 		//VectorN r_moon = universe.earthRef.moonVector(newttt);
-		VectorN r_moon = jpl_ephem.get_Geocentric_Moon_pos(tt.jd_tdb()).times(1000.0);
-		
-		VectorN d0 = (r0.plus(r_moon)).times(-1.0);
-		
-		double dmag0 = d0.mag();
-		
-		double dcubed0 = dmag0 * dmag0 * dmag0;
-		
-		VectorN temp0 = d0.divide(dcubed0);
-		
-		double smag = r_moon.mag();
-		double scubed = smag * smag * smag;
-		
-		VectorN temp2 = r_moon.divide(scubed);
-		VectorN sum0 = temp0.plus(temp2);
-		
-		VectorN earthAcceleration0 = sum0.times(Constants.mu);
-		
-		
-		//Compute the acceleration due to the solar gravity
-		//VectorN r_sun = universe.earthRef.get_JPL_Sun_Vector();
-		VectorN r_sun = jpl_ephem.get_Geocentric_Sun_pos(tt.jd_tdb()).times(1000.0);
-		r_sun = r_sun.minus(r_moon);
-		d0 = r_sun.minus(r0);
-		
-		dmag0 = d0.mag();
-		
-		dcubed0 = dmag0 * dmag0 *dmag0;
-		
-		temp0 = d0.divide(dcubed0);
-		
-		smag = r_sun.mag();
-		double magSun3 = smag * smag * smag;
-		
-		temp2 = r_sun.divide(magSun3);
-		
-		sum0 = temp0.plus(temp2);
-		
-		VectorN solarAcceleration0 = sum0.times(Constants.GM_Sun);
+//		VectorN r_moon = jpl_ephem.get_Geocentric_Moon_pos(tt.jd_tdb()).times(1000.0);
+//		
+//		VectorN d0 = (r0.plus(r_moon)).times(-1.0);
+//		
+//		double dmag0 = d0.mag();
+//		
+//		double dcubed0 = dmag0 * dmag0 * dmag0;
+//		
+//		VectorN temp0 = d0.divide(dcubed0);
+//		
+//		double smag = r_moon.mag();
+//		double scubed = smag * smag * smag;
+//		
+//		VectorN temp2 = r_moon.divide(scubed);
+//		VectorN sum0 = temp0.plus(temp2);
+//		
+//		VectorN earthAcceleration0 = sum0.times(Constants.mu);
+//		
+//		
+//		//Compute the acceleration due to the solar gravity
+//		//VectorN r_sun = universe.earthRef.get_JPL_Sun_Vector();
+//		VectorN r_sun = jpl_ephem.get_Geocentric_Sun_pos(tt.jd_tdb()).times(1000.0);
+//		r_sun = r_sun.minus(r_moon);
+//		d0 = r_sun.minus(r0);
+//		
+//		dmag0 = d0.mag();
+//		
+//		dcubed0 = dmag0 * dmag0 *dmag0;
+//		
+//		temp0 = d0.divide(dcubed0);
+//		
+//		smag = r_sun.mag();
+//		double magSun3 = smag * smag * smag;
+//		
+//		temp2 = r_sun.divide(magSun3);
+//		
+//		sum0 = temp0.plus(temp2);
+//		
+//		VectorN solarAcceleration0 = sum0.times(Constants.GM_Sun);
 		
 		// compute state derivatives
 		
@@ -240,8 +240,8 @@ public class LunarEOM implements Derivatives {
 			//out[6] = w_f + hc;
 			//double w_g = (Math.random()-0.5)*2*7.106E-05;
 			//out[7] = w_g;
-			out[6] = 0 + Qbias;
-			
+			out[6] = 0;
+			out[7] = 0;
 			//Solar radiation Pressure states
 			out[8] = 0;
 			

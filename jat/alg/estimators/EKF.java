@@ -209,7 +209,11 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
+        try{
         runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        }catch(Exception e){
+        	runMonteCarlo = false;
+        }
         if(!runMonteCarlo){
         	residuals = new LinePrinter(dir_in+"Residuals.txt");
         }
@@ -661,7 +665,10 @@ public class EKF {
 				// compute new best estimate
 				VectorN xhat = k.times(y);
 				
-
+//				if(xhat.get(6,3).mag() > 15){
+//					int s= 1;
+//					s++;
+//				}
 				// update state and covariance
 				xref.update(xhat); 
 				//y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));

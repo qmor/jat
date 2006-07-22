@@ -324,6 +324,14 @@ public class SimpleProcessModel implements ProcessModel {
 					out = new VectorN(rr,vv);
 				else
 					out = new VectorN(new VectorN(rr,vv),new VectorN(n-6));
+
+//				out.x[0] = 0.01721537446918e7;
+//				out.x[1] = 0.16362908568758e7;
+//				out.x[2] = -0.08151111642821e7;
+//				out.x[3] = 0.13822834993145e7;
+//				out.x[4] = 0.71321929326561e7;
+//				out.x[5] = 1.46094273856495e7;
+					
 			}
 			
 			if(n>6){
@@ -331,7 +339,9 @@ public class SimpleProcessModel implements ProcessModel {
 				out.x[7] = initializer.parseDouble(hm, ref+i+".LY");
 				out.x[8] = initializer.parseDouble(hm, ref+i+".LZ");					
 			}
-						
+			
+			
+			
 			if(initializer.parseBool(hm, "init.runMonteCarlo")){
 				double r_error = initializer.parseDouble(hm, "MONTE.r_error");
 				double v_error = initializer.parseDouble(hm, "MONTE.v_error");

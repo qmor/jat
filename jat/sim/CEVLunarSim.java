@@ -257,7 +257,7 @@ public class CEVLunarSim {
 			/*Initial Area*/
 			str = "jat."+i+".area";
 			area = initializer.parseDouble(this.input,str);
-
+			
 			LunaFixedRef lfr = new LunaFixedRef();
 			LunaRef lref = new LunaRef();
 			ReferenceFrameTranslater trans = new ReferenceFrameTranslater(lfr,lref,simTime);
@@ -272,6 +272,16 @@ public class CEVLunarSim {
 			vv = trans.translateVelocity(vv,rr);
 			rr = trans.translatePoint(rr);
 
+//			VectorN out = new VectorN(6);
+//			out.x[0] = 0.01721537446918e7;
+//			out.x[1] = 0.16362908568758e7;
+//			out.x[2] = -0.08151111642821e7;
+//			out.x[3] = 0.13822834993145e7;
+//			out.x[4] = 0.71321929326561e7;
+//			out.x[5] = 1.46094273856495e7;
+//			rr = out.get(0,3);
+//			vv = out.get(3,3);
+			
 			Spacecraft s = new Spacecraft(rr,vv,cr,cd,area,mass);
 			s.set_use_params_in_state(false);
 			int ncoef = initializer.parseInt(input,"jat.0.lunar_n.jat");
@@ -545,6 +555,7 @@ public class CEVLunarSim {
 			}
 			catch (IOException e)
 			{
+				e.printStackTrace();
 				System.err.println ("Unable to write to file");
 				System.exit(-1);
 			}
@@ -841,7 +852,7 @@ public class CEVLunarSim {
 		boolean useFilter = true;
 
 		//* TODO Flag marker
-		CEVLunarSim.JAT_case = 80;
+		CEVLunarSim.JAT_case = 82;
 		CEVLunarSim.PlotJAT = true;
 		CEVLunarSim.PlotBoeing = false;
 		CEVLunarSim.PlotCov = true;

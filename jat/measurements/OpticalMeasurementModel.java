@@ -295,7 +295,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			//% Get lunar position relative to the Earth
 			//* TODO watch units
 			VectorN xm=ephem.get_Geocentric_Moon_pos(
-					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000); 
+					TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(mjd0+t/86400)))).times(1000); 
 			//getmoon(jd0+t/86400);  
 			v=xm.minus(r);
 			break;
@@ -436,15 +436,21 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		VectorN xr = new VectorN(3);
 		VectorN pos = state.get(0,3);
 		VectorN xm = new VectorN(3);
-		if (p==1) //% Earth
-			xr=pos;
-		else if (p==2){ //% Moon
+//		if (p==BODY_EARTH) //% Earth
+//			xr=pos;
+//		else if (p==BODY_MOON){ //% Moon
 			//* TODO watch units
-			xm=ephem.get_Geocentric_Moon_pos(
-					Time.TTtoTDB(Time.UTC2TT(jd0+t/86400))).times(1000);			
-			xr=(pos.minus(xm));
-		} else
-			System.err.println("Parameter must be 1 for Earth or 2 for Moon.");
+//			xm=ephem.get_Geocentric_Moon_pos(
+//					TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(mjd0+t/86400)))).times(1000);
+			CentralBody cbod = gravbody.get(cbody);
+			CentralBody vbod = gravbody.get(p);
+			ReferenceFrameTranslater xlater = 
+		        new ReferenceFrameTranslater(cbod.inertialRef, vbod.inertialRef, new Time(mjd0+t/86400.0));
+		      //VectorN li = xlater.translatePoint(lf);
+		      xr = xlater.translatePoint(pos);
+			//xr=(pos.minus(xm));
+//		} else
+	//		System.err.println("Parameter must be 1 for Earth or 2 for Moon.");
 		
 		double r=xr.mag();
 		double y=R/r;  //% sin(half-angle)		
@@ -578,7 +584,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 	 * @return
 	 */
 	private double[] illum2(double jd, int origin, int target, 
-			VectorN state, double[] frac_or_xlf){
+			VectorN state, double[] frac_or_xlf){		
+		
 		//% xc is position relative to the central body
 		VectorN r = state.get(0,3);
 		double xnorm=r.mag();
@@ -660,6 +667,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		if(flag!=2) 
 			stop = 0;
 		double[] out = {flag,ratio};
+		
+		//out[0] = 2;
 		return out;
 		
 	}
@@ -710,6 +719,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
       VectorN lf = null;
       if (x.length == 9) {
         lf = x.get(6, 3);
+    	  //Landmark mark = new Landmark(20, x.get(6), x.get(7), x.get(8),LunaRef.R_Luna);
+    	  //lf = mark.lmf;
       }
       else {
         lf = body.getLandmark(lindex).lmf;
@@ -750,7 +761,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
         // vdot is 0
         
         if (x.length == 9) {
-          VectorN ldot = xlater.translatePointBack(rdot).times(-1);
+          //VectorN ldot = xlater.translatePointBack(rdot);//.times(-1);
+          VectorN ldot = xlater.translatePointBack(rdot.times(-1));
           dydx.set(6, ldot);
         }
       }
@@ -800,14 +812,14 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			xce = new VectorN(3);
 		}else if(cbody == BODY_MOON){
 			//* TODO watch units
-			xce = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
+			xce = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(TimeUtils.JDtoMJD(jd))))).times(1000);
 		}
 		//% Second get vbody relative to earth
 		//xve=feval(vbody.fn,jd);
 		if(vbody==BODY_EARTH){
 			xve = new VectorN(3);
 		}else if(vbody == BODY_MOON){
-			xve = ephem.get_Geocentric_Moon_pos(Time.TTtoTDB(Time.UTC2TT(jd))).times(1000);
+			xve = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(TimeUtils.JDtoMJD(jd))))).times(1000);
 		}
 		
 		//% Finally spacecraft relative to vbody
