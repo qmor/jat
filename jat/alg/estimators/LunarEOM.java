@@ -119,7 +119,8 @@ public class LunarEOM implements Derivatives {
 		
 		//Obtain thet the correct time
 		//int ctr = 0;
-		Time tt = new Time(t/86400.0 + mjd0);
+		Time tt = new Time(mjd0);
+		tt.update(t);
 		//double newttt = tt.UTC2TT(t/86400 + mjd0);
 		
 		
@@ -158,7 +159,6 @@ public class LunarEOM implements Derivatives {
 		
 		
 		//Get the acceleration directly from the model
-		tt.update(t);
 		sc.updateMotion(y);
 		VectorN acc0 = moon_grav.acceleration(tt,moon_ref,sc);
 		

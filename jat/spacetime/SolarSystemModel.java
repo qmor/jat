@@ -241,10 +241,10 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
 	}
 	
     public static void main(String[] args) throws IOException{
-    	//SolarSystemModel.test();
-    	double mjd_utc = 53602;
-    	SolarSystemModel test = new SolarSystemModel(mjd_utc);
-    	test.optimize();
+    	SolarSystemModel.test();
+    	//double mjd_utc = 53602;
+    	//SolarSystemModel test = new SolarSystemModel(mjd_utc);
+    	//test.optimize();
     }
 
     public static void test() {
@@ -254,18 +254,18 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     	double mjd_utc = 53602; //53571;//53745.672118;
     	SolarSystemModel test = new SolarSystemModel(mjd_utc);
     	double step_dt = 86400;
-    	double[] in = new double[6];
-    	for(int i=0; i<100; i++){
-    		in = test.body[SolarSystemModel.MARS].getPosition()
-					.minus(test.body[SolarSystemModel.SUN].getPosition())
-					.times(0.001).x;
-    		traj.add(test.time.mjd_utc(),in);
-    		test.update_dt(step_dt);
-    	}
-    	in = test.body[SolarSystemModel.MARS].getPosition()
-		.minus(test.body[SolarSystemModel.SUN].getPosition())
-		.times(0.001).x;
-    	traj.add(test.time.mjd_utc(),in);
+//    	double[] in = new double[6];
+//    	for(int i=0; i<100; i++){
+//    		in = test.body[SolarSystemModel.MARS].getPosition()
+//					.minus(test.body[SolarSystemModel.SUN].getPosition())
+//					.times(0.001).x;
+//    		//traj.add(test.time.mjd_utc(),in);
+//    		test.update_dt(step_dt);
+//    	}
+//    	in = test.body[SolarSystemModel.MARS].getPosition()
+//		.minus(test.body[SolarSystemModel.SUN].getPosition())
+//		.times(0.001).x;
+    	//traj.add(test.time.mjd_utc(),in);
     	
     	VectorN r = test.body[SolarSystemModel.EARTH].getPosition().plus(new VectorN(100000,100000,100000));
     	VectorN v = test.body[SolarSystemModel.EARTH].getVelocity();
@@ -295,7 +295,7 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     	double[] x = {r.x[0],r.x[1],r.x[2],v.x[0],v.x[1],v.x[2]};
     	double[] xp = {x[0]/1000,x[1]/1000,x[2]/1000};
     	traj.add(test.time.mjd_utc(),xp);
-    	double tsim = 2;
+    	double tsim = 0.5;
     	boolean flag=true;
     	for(int i=0; i<tsim*dt/1800; i++){
     		x = rk8.step(t,x,test);
@@ -303,24 +303,90 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     		xp[1] = x[1]/1000;
     		xp[2] = x[2]/1000;
     		t = t+1800;
+//    		if(t>dt && flag){
+//    			x[3] = x[3] + lam.deltavf.x[0]*0.98;
+//    			x[4] = x[4] + lam.deltavf.x[1]*0.98;
+//    			x[5] = x[5] + lam.deltavf.x[2]*0.98;
+//    			flag = false;
+//    		}
+    		test.time.update(t);
+    		traj.add(test.time.mjd_utc(),xp);
+    		System.out.println("step: "+t/(3*tsim*dt));
+    	}
+    	r = new VectorN(x[0],x[1],x[2]);
+    	v = new VectorN(x[3],x[4],x[5]);
+    	double dt2 = (travel_time + mjd_utc - test.time.mjd_utc())*86400.0;
+    	lam.compute(r,v,rf,vf,dt2);
+    	x[3] = x[3] + lam.deltav0.x[0];
+    	x[4] = x[4] + lam.deltav0.x[1];
+    	x[5] = x[5] + lam.deltav0.x[2];
+    	
+    	for(int i=0; i<1.1*tsim*dt/1800; i++){
+    		x = rk8.step(t,x,test);
+    		xp[0] = x[0]/1000;
+    		xp[1] = x[1]/1000;
+    		xp[2] = x[2]/1000;
+    		t = t+1800;
     		if(t>dt && flag){
-    			x[3] = x[3] + lam.deltavf.x[0]*0.98;
-    			x[4] = x[4] + lam.deltavf.x[1]*0.98;
-    			x[5] = x[5] + lam.deltavf.x[2]*0.98;
+    			x[3] = x[3] + lam.deltavf.x[0];
+    			x[4] = x[4] + lam.deltavf.x[1];
+    			x[5] = x[5] + lam.deltavf.x[2];
     			flag = false;
     		}
     		test.time.update(t);
     		traj.add(test.time.mjd_utc(),xp);
-    		System.out.println("step: "+t/(tsim*dt));
+    		System.out.println("step: "+t/(3*tsim*dt));
+    	}
+    	
+    	double mjd3 = test.time.mjd_utc()+100;
+    	VectorN tmp = test.ephem.get_pos_vel(DE405.MARS, TimeUtils.MJDtoJD(mjd3));
+    	rot = earth.EclMatrix(test.time.mjd_tdb());
+    	rf = tmp.get(0, 3).times(1000);
+    	vf = tmp.get(3, 3).times(1000);
+    	rf = rot.transform(rf);
+    	vf = rot.transform(vf);
+    	r = new VectorN(x[0],x[1],x[2]);
+    	v = new VectorN(x[3],x[4],x[5]);
+    	double dt3 = (100)*86400.0;
+    	lam.compute(r,v,rf,vf,dt3);
+    	x[3] = x[3] + lam.deltav0.x[0];
+    	x[4] = x[4] + lam.deltav0.x[1];
+    	x[5] = x[5] + lam.deltav0.x[2];
+    	
+    	while(test.time.mjd_utc() < mjd3){
+    		x = rk8.step(t,x,test);
+    		xp[0] = x[0]/1000;
+    		xp[1] = x[1]/1000;
+    		xp[2] = x[2]/1000;
+    		t = t+1800;
+    		test.time.update(t);
+    		traj.add(test.time.mjd_utc(),xp);
+    		System.out.println("step: "+t/((mjd3+100-mjd_utc)*86400));
+    	}
+    	
+    	x[3] = x[3] + lam.deltavf.x[0];
+    	x[4] = x[4] + lam.deltavf.x[1];
+    	x[5] = x[5] + lam.deltavf.x[2];
+    	
+    	while(test.time.mjd_utc() < mjd3+100){
+    		x = rk8.step(t,x,test);
+    		xp[0] = x[0]/1000;
+    		xp[1] = x[1]/1000;
+    		xp[2] = x[2]/1000;
+    		t = t+1800;
+    		test.time.update(t);
+    		traj.add(test.time.mjd_utc(),xp);
+    		System.out.println("step: "+t/((mjd3+100-mjd_utc)*86400));
     	}
     	
     	cel.set_trajectory(traj);
-   	    //try {
-			cel.write_xyz("verify3");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+   	    try {
+			cel.write_xyz("jat_MRO");
+			cel.write_ssc_heliocentric("jat_MRO", "jat_MRO", TimeUtils.MJDtoJD(mjd_utc));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		double elapsed = (System.currentTimeMillis()-start)*0.001/60;
         System.out.println("Elapsed time [min]: "+elapsed);
     	System.out.println("Finished.");

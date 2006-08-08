@@ -54,12 +54,13 @@ public class FitIERS {
      * IERS EOP file (Bulletin A)
      */
 	private String filename;
+	private String prev_filename;
 //	protected VectorN u,ax,ay;
 	/**
 	 * Time array
 	 */
-	protected double[] mjd;
-	protected double mjd_1=0.0;
+	protected static double[] mjd;
+	protected static double mjd_1=0.0;
 //	protected double tp=0.0; 
 //	private double pmx = 0;
 //    private double pmy = 0;
@@ -68,7 +69,10 @@ public class FitIERS {
     /**
      * Parameters
      */
-    protected double[][] eop;
+    protected static double[][] eop;
+	private static double out_mjd;
+	private static double[] out_data;
+	private static boolean initialized = false;
 
     /**
      * Default constructor
@@ -83,7 +87,8 @@ public class FitIERS {
 		}
 		//filename = directory+"iers.dat";
 		filename = directory+"EOP.dat";
-		process();
+		prev_filename = filename;
+		process();		
     }
     /**
      * Constructor
@@ -91,6 +96,7 @@ public class FitIERS {
      */
 	public FitIERS(String fname) {
 		filename = fname;
+		prev_filename = filename;
 		process();
 	}
 	
@@ -100,227 +106,237 @@ public class FitIERS {
 	public void process() {
 
 		//System.out.println("Processing File: " + filename);
-		FileReader fr;
-		BufferedReader in = null;
-		try {
-			fr = new FileReader(filename);
-			in = new BufferedReader(fr);			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		ArrayList lineCollection = new ArrayList();
-
-		// read in the file
-		boolean eof = false;
-		while (!eof) {
-			String line;
+		if(!prev_filename.equals(filename) || !initialized){
+			FileReader fr;
+			BufferedReader in = null;
 			try {
-				if ((line = in.readLine()) == null) {
-					eof = true;
-				} else {
-					// add to the collection
-					lineCollection.add(line);
-				}
-			} catch (IOException e1) {
-				e1.printStackTrace();
+				fr = new FileReader(filename);
+				in = new BufferedReader(fr);			
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
-		}
+			ArrayList lineCollection = new ArrayList();
 
-		int n = lineCollection.size() - 1;
-//		int n = 28;
-//		int n = 48;
-	//	int n = 2191;
-//		double[] mjd = new double[n];
-		mjd = new double[n];
-		double[] y = new double[n];
-		Matrix hth = new Matrix(3, 3);
-		Matrix ht = new Matrix(3, n);
-		Matrix ata = new Matrix(5, 5);
-		VectorN aty = new VectorN(5);
-		VectorN atx = new VectorN(5);
-		
-		String str;
-		StringTokenizer tok;
-		
-		eop = new double[n][3];
-		
-		for (int i = 0; i < n; i++) {
-//			str = (String) lineCollection.get(i);
-//			tok = new StringTokenizer(str, " ");
-//			mjd[i] = Double.parseDouble(tok.nextToken());
-//			double pmx = Double.parseDouble(tok.nextToken());
-//			double pmy = Double.parseDouble(tok.nextToken());
-//			y[i] = Double.parseDouble(tok.nextToken());
+			// read in the file
+			boolean eof = false;
+			while (!eof) {
+				String line;
+				try {
+					if ((line = in.readLine()) == null) {
+						eof = true;
+					} else {
+						// add to the collection
+						lineCollection.add(line);
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 
-		    //***Read EOP.dat
-			//System.out.println("parse:  "+filename);
-		    
-		    //str = (String) lineCollection.get(i+1860);//1870);
-		    str = (String) lineCollection.get(i+1);//all
-//System.out.println("line "+i+":  "+str);
-			tok = new StringTokenizer(str, " ");
-			mjd[i] = Double.parseDouble(tok.nextToken());
-			double pmx = Double.parseDouble(tok.nextToken());
-			eop[i][0] = pmx;
-			tok.nextToken();
-			double pmy = Double.parseDouble(tok.nextToken());
-			eop[i][1] = pmy;
-			tok.nextToken();
-			y[i] = Double.parseDouble(tok.nextToken());
-			eop[i][2] = y[i];
-			tok.nextToken();
-//}//*DEBUG
-			//System.out.println(""+mjd[i]+"  "+pmx+"  "+pmy+"  "+y[i]);
-		    
-//		    double x = 0.0;
-//			double dtleap = 0.0;
-//			if (i > 0) {
+			int n = lineCollection.size() - 1;
+//			int n = 28;
+//			int n = 48;
+			//	int n = 2191;
+//			double[] mjd = new double[n];
+			mjd = new double[n];
+			double[] y = new double[n];
+			Matrix hth = new Matrix(3, 3);
+			Matrix ht = new Matrix(3, n);
+			Matrix ata = new Matrix(5, 5);
+			VectorN aty = new VectorN(5);
+			VectorN atx = new VectorN(5);
+
+			String str;
+			StringTokenizer tok;
+
+			eop = new double[n][3];
+
+			for (int i = 0; i < n; i++) {
+//				str = (String) lineCollection.get(i);
+//				tok = new StringTokenizer(str, " ");
+//				mjd[i] = Double.parseDouble(tok.nextToken());
+//				double pmx = Double.parseDouble(tok.nextToken());
+//				double pmy = Double.parseDouble(tok.nextToken());
+//				y[i] = Double.parseDouble(tok.nextToken());
+
+				//***Read EOP.dat
+				//System.out.println("parse:  "+filename);
+
+				//str = (String) lineCollection.get(i+1860);//1870);
+				str = (String) lineCollection.get(i+1);//all
+//				System.out.println("line "+i+":  "+str);
+				tok = new StringTokenizer(str, " ");
+				mjd[i] = Double.parseDouble(tok.nextToken());
+				double pmx = Double.parseDouble(tok.nextToken());
+				eop[i][0] = pmx;
+				tok.nextToken();
+				double pmy = Double.parseDouble(tok.nextToken());
+				eop[i][1] = pmy;
+				tok.nextToken();
+				y[i] = Double.parseDouble(tok.nextToken());
+				eop[i][2] = y[i];
+				tok.nextToken();
+//				}//*DEBUG
+				//System.out.println(""+mjd[i]+"  "+pmx+"  "+pmy+"  "+y[i]);
+
+//				double x = 0.0;
+//				double dtleap = 0.0;
+//				if (i > 0) {
 //				//x = mjd[i] - mjd[i - 1];
-//			    //x += (mjd[i]-mjd[i-1]);
-//			    x = i * 1.0; // one day increment in data file
+//				//x += (mjd[i]-mjd[i-1]);
+//				x = i * 1.0; // one day increment in data file
 //				if (Math.abs(y[i] - y[i - 1]) > 0.5) {
-//					dtleap = 1.0;
+//				dtleap = 1.0;
 //				}
 //				y[i] = y[i] - dtleap;
-//			}
-//
-//			double x2 = x * x;
-//			double x3 = x2 * x;
-//			double x4 = x3 * x;
-//			hth.set(2, 2, (hth.get(2, 2) + 1.0));
-//			hth.set(2, 1, (hth.get(2, 1) + x));
-//			hth.set(1, 2, (hth.get(2, 1)));
-//			hth.set(2, 0, (hth.get(2, 0) + x2));
-//			hth.set(1, 1, (hth.get(2, 0)));
-//			hth.set(0, 2, (hth.get(2, 0)));
-//			hth.set(1, 0, (hth.get(1, 0) + x3));
-//			hth.set(0, 1, (hth.get(1, 0)));
-//			hth.set(0, 0, (hth.get(0, 0) + x4));
-//
-//			ht.set(0, i, x2);
-//			ht.set(1, i, x);
-//			ht.set(2, i, 1.0);
-//			// process polar motion data
-//			tp = mjd[0] - 1.0;
-//			double num = 2.0 * (mjd[i] - tp) * MathUtils.PI;
-//			double ca = num / 365.25;
-//			double cc = num / 435.0;
-//			double cosa = Math.cos(ca);
-//			double sina = Math.sin(ca);
-//			double cosc = Math.cos(cc);
-//			double sinc = Math.sin(cc);
-//
-//			ata.set(0, 0, (ata.get(0, 0) + 1.0));
-//			ata.set(1, 0, (ata.get(1, 0) + cosa));
-//			ata.set(2, 0, (ata.get(2, 0) + sina));
-//			ata.set(3, 0, (ata.get(3, 0) + cosc));
-//			ata.set(4, 0, (ata.get(4, 0) + sinc));
-//			ata.set(0, 1, (ata.get(1, 0)));
-//			ata.set(0, 2, (ata.get(2, 0)));
-//			ata.set(0, 3, (ata.get(3, 0)));
-//			ata.set(0, 4, (ata.get(4, 0)));
-//			ata.set(1, 1, (ata.get(1, 1) + cosa * cosa));
-//			ata.set(2, 1, (ata.get(2, 1) + cosa * sina));
-//			ata.set(3, 1, (ata.get(3, 1) + cosa * cosc));
-//			ata.set(4, 1, (ata.get(4, 1) + cosa * sinc));
-//			ata.set(1, 2, (ata.get(2, 1)));
-//			ata.set(1, 3, (ata.get(3, 1)));
-//			ata.set(1, 4, (ata.get(4, 1)));
-//			ata.set(2, 2, (ata.get(2, 2) + sina * sina));
-//			ata.set(3, 2, (ata.get(3, 2) + sina * cosc));
-//			ata.set(4, 2, (ata.get(4, 2) + sina * sinc));
-//			ata.set(2, 3, (ata.get(3, 2)));
-//			ata.set(2, 4, (ata.get(4, 2)));
-//			ata.set(3, 3, (ata.get(3, 3) + cosc * cosc));
-//			ata.set(3, 4, (ata.get(3, 4) + cosc * sinc));
-//			ata.set(4, 3, (ata.get(3, 4)));
-//			ata.set(4, 4, (ata.get(4, 4) + sinc * sinc));
-//			
-//			atx.set(0, (atx.get(0) + pmx));
-//			atx.set(1, (atx.get(1) + pmx * cosa));
-//			atx.set(2, (atx.get(2) + pmx * sina));
-//			atx.set(3, (atx.get(3) + pmx * cosc));
-//			atx.set(4, (atx.get(4) + pmx * sinc));
-//			aty.set(0, (aty.get(0) + pmy));
-//			aty.set(1, (aty.get(1) + pmy * cosa));
-//			aty.set(2, (aty.get(2) + pmy * sina));
-//			aty.set(3, (aty.get(3) + pmy * cosc));
-//			aty.set(4, (aty.get(4) + pmy * sinc));
-//			
-//		}
-//		//* Get inverse
-//		Matrix hthinv = hth.inverse();
-//		//* Get hty
-//		VectorN ymat = new VectorN(y);
-//		VectorN hty = ht.times(ymat);
-//
-//		//* solve
-//		u = hthinv.times(hty);
-//		//* invert ata (least squares fit for x- and y- parameters
-//		Matrix atainv = ata.inverse();
-//		//* multiply the inverses
-//		ax = atainv.times(atx);
-//		ay = atainv.times(aty);
+//				}
+
+//				double x2 = x * x;
+//				double x3 = x2 * x;
+//				double x4 = x3 * x;
+//				hth.set(2, 2, (hth.get(2, 2) + 1.0));
+//				hth.set(2, 1, (hth.get(2, 1) + x));
+//				hth.set(1, 2, (hth.get(2, 1)));
+//				hth.set(2, 0, (hth.get(2, 0) + x2));
+//				hth.set(1, 1, (hth.get(2, 0)));
+//				hth.set(0, 2, (hth.get(2, 0)));
+//				hth.set(1, 0, (hth.get(1, 0) + x3));
+//				hth.set(0, 1, (hth.get(1, 0)));
+//				hth.set(0, 0, (hth.get(0, 0) + x4));
+
+//				ht.set(0, i, x2);
+//				ht.set(1, i, x);
+//				ht.set(2, i, 1.0);
+//				// process polar motion data
+//				tp = mjd[0] - 1.0;
+//				double num = 2.0 * (mjd[i] - tp) * MathUtils.PI;
+//				double ca = num / 365.25;
+//				double cc = num / 435.0;
+//				double cosa = Math.cos(ca);
+//				double sina = Math.sin(ca);
+//				double cosc = Math.cos(cc);
+//				double sinc = Math.sin(cc);
+
+//				ata.set(0, 0, (ata.get(0, 0) + 1.0));
+//				ata.set(1, 0, (ata.get(1, 0) + cosa));
+//				ata.set(2, 0, (ata.get(2, 0) + sina));
+//				ata.set(3, 0, (ata.get(3, 0) + cosc));
+//				ata.set(4, 0, (ata.get(4, 0) + sinc));
+//				ata.set(0, 1, (ata.get(1, 0)));
+//				ata.set(0, 2, (ata.get(2, 0)));
+//				ata.set(0, 3, (ata.get(3, 0)));
+//				ata.set(0, 4, (ata.get(4, 0)));
+//				ata.set(1, 1, (ata.get(1, 1) + cosa * cosa));
+//				ata.set(2, 1, (ata.get(2, 1) + cosa * sina));
+//				ata.set(3, 1, (ata.get(3, 1) + cosa * cosc));
+//				ata.set(4, 1, (ata.get(4, 1) + cosa * sinc));
+//				ata.set(1, 2, (ata.get(2, 1)));
+//				ata.set(1, 3, (ata.get(3, 1)));
+//				ata.set(1, 4, (ata.get(4, 1)));
+//				ata.set(2, 2, (ata.get(2, 2) + sina * sina));
+//				ata.set(3, 2, (ata.get(3, 2) + sina * cosc));
+//				ata.set(4, 2, (ata.get(4, 2) + sina * sinc));
+//				ata.set(2, 3, (ata.get(3, 2)));
+//				ata.set(2, 4, (ata.get(4, 2)));
+//				ata.set(3, 3, (ata.get(3, 3) + cosc * cosc));
+//				ata.set(3, 4, (ata.get(3, 4) + cosc * sinc));
+//				ata.set(4, 3, (ata.get(3, 4)));
+//				ata.set(4, 4, (ata.get(4, 4) + sinc * sinc));
+
+//				atx.set(0, (atx.get(0) + pmx));
+//				atx.set(1, (atx.get(1) + pmx * cosa));
+//				atx.set(2, (atx.get(2) + pmx * sina));
+//				atx.set(3, (atx.get(3) + pmx * cosc));
+//				atx.set(4, (atx.get(4) + pmx * sinc));
+//				aty.set(0, (aty.get(0) + pmy));
+//				aty.set(1, (aty.get(1) + pmy * cosa));
+//				aty.set(2, (aty.get(2) + pmy * sina));
+//				aty.set(3, (aty.get(3) + pmy * cosc));
+//				aty.set(4, (aty.get(4) + pmy * sinc));
+
+//				}
+//				//* Get inverse
+//				Matrix hthinv = hth.inverse();
+//				//* Get hty
+//				VectorN ymat = new VectorN(y);
+//				VectorN hty = ht.times(ymat);
+
+//				//* solve
+//				u = hthinv.times(hty);
+//				//* invert ata (least squares fit for x- and y- parameters
+//				Matrix atainv = ata.inverse();
+//				//* multiply the inverses
+//				ax = atainv.times(atx);
+//				ay = atainv.times(aty);
+			}
+			mjd_1 = mjd[0];
+			initialized = true;
 		}
-		mjd_1 = mjd[0];
 	}
-	
+
 	/**
 	 * Interpolate (linear) the data to find the parameters.
 	 * @param mjd_arg
 	 * @return [xpole ypole UT1-UTC]
 	 */
 	public double[] search(double mjd_arg){
-//	    System.out.println("***SEARCH***");
-	    int n = mjd.length;
-	    int out = n-2;
-	    //System.out.println("mjd0: "+mjd[0]+"   mjdarg: "+mjd_arg);
-	    //System.out.println("mjd2: "+mjd[n/2]+"   mjdf: "+mjd[n-1]);
-	    //System.out.println("mjd_arg: "+mjd_arg);
-	    //System.out.println("length: "+mjd.length);
-	    //System.out.println("den:    "+(mjd[mjd.length-1]-mjd[0]));
-	    double ref = (mjd.length/(mjd[mjd.length-1]-mjd[0]));
-	    int ai = (int)( (mjd_arg-mjd[0])*ref-5);
-	    for(int i=ai; i<ai+10;i++){
-//System.out.println("MATLAB: FitIERS search: "+i+"  ai: "+ai+"  ref: "+ref);
-	        if((mjd_arg - mjd[i])<1.0){
-                out = i;
-                //System.out.println("mjd1: "+mjd[i]+"  "+eop[i][0]);
-                break;
-	        }
-	    }
-	    if(out == n-2) {
-	        if( mjd_arg <= mjd[0]) return eop[0];
-	        else if(mjd_arg < mjd[n/2]){
-	            for(int i=0; i<n/2; i++){
-	                if((mjd_arg - mjd[i])<1.0){
-	                    out = i;
-	                    //System.out.println("mjd1: "+mjd[i]+"  "+eop[i][0]);
-	                    break;
-	                }
-	            }
-	        } else if(mjd_arg >= mjd[n/2] && mjd_arg <= mjd[n-1]){
-	            for(int i=n/2; i<n; i++){
-	                //System.out.println("i: "+i+"  "+mjd[i]+"  "+eop[i][0]);
-	                if((mjd_arg - mjd[i])<1.0){
-	                    out = i;
-	                    //System.out.println("mjd2: "+mjd[i]+"  "+eop[i][0]);
-	                    break;
-	                }
-	            }
-	        }
-	    }
-	    //* linear interpolation
-	    double[] output = new double[3];
-	    output[0] = (eop[out+1][0]-eop[out][0])/(mjd[out+1]-mjd[out])*(mjd_arg-mjd[out])+eop[out][0];
-	    output[1] = (eop[out+1][1]-eop[out][1])/(mjd[out+1]-mjd[out])*(mjd_arg-mjd[out])+eop[out][1];
-	    output[2] = (eop[out+1][2]-eop[out][2])/(mjd[out+1]-mjd[out])*(mjd_arg-mjd[out])+eop[out][2];
-	    return output;
+//		System.out.println("***SEARCH***");
+		double[] output = new double[3];
+		if(Math.abs(mjd_arg-FitIERS.out_mjd) <1.0){
+			output = FitIERS.out_data;
+		}else{
+			int n = mjd.length;
+			int out = n-2;
+			//System.out.println("mjd0: "+mjd[0]+"   mjdarg: "+mjd_arg);
+			//System.out.println("mjd2: "+mjd[n/2]+"   mjdf: "+mjd[n-1]);
+			//System.out.println("mjd_arg: "+mjd_arg);
+			//System.out.println("length: "+mjd.length);
+			//System.out.println("den:    "+(mjd[mjd.length-1]-mjd[0]));
+			double ref = (mjd.length/(mjd[mjd.length-1]-mjd[0]));
+			int ai = (int)( (mjd_arg-mjd[0])*ref-5);
+			for(int i=ai; i<ai+10;i++){
+//				System.out.println("MATLAB: FitIERS search: "+i+"  ai: "+ai+"  ref: "+ref);
+				if((mjd_arg - mjd[i])<1.0){
+					out = i;
+					//System.out.println("mjd1: "+mjd[i]+"  "+eop[i][0]);
+					break;
+				}
+			}
+			if(out == n-2) {
+				if( mjd_arg <= mjd[0]) return eop[0];
+				else if(mjd_arg < mjd[n/2]){
+					for(int i=0; i<n/2; i++){
+						if((mjd_arg - mjd[i])<1.0){
+							out = i;
+							//System.out.println("mjd1: "+mjd[i]+"  "+eop[i][0]);
+							break;
+						}
+					}
+				} else if(mjd_arg >= mjd[n/2] && mjd_arg <= mjd[n-1]){
+					for(int i=n/2; i<n; i++){
+						//System.out.println("i: "+i+"  "+mjd[i]+"  "+eop[i][0]);
+						if((mjd_arg - mjd[i])<1.0){
+							out = i;
+							//System.out.println("mjd2: "+mjd[i]+"  "+eop[i][0]);
+							break;
+						}
+					}
+				}
+			}
+			//* linear interpolation
 
-//	    System.out.println("Search out: "+mjd[out]+"  "+eop[out][0]);
-	    //return eop[out];
+			output[0] = (eop[out+1][0]-eop[out][0])/(mjd[out+1]-mjd[out])*(mjd_arg-mjd[out])+eop[out][0];
+			output[1] = (eop[out+1][1]-eop[out][1])/(mjd[out+1]-mjd[out])*(mjd_arg-mjd[out])+eop[out][1];
+			output[2] = (eop[out+1][2]-eop[out][2])/(mjd[out+1]-mjd[out])*(mjd_arg-mjd[out])+eop[out][2];
+			FitIERS.out_mjd = mjd[out];
+			FitIERS.out_data = output;
+		}
+		return output;
+
+//		System.out.println("Search out: "+mjd[out]+"  "+eop[out][0]);
+		//return eop[out];
 	}
-	
+
 	
 //	/**
 //	 * Fit the x and y poles to the given Julian Date

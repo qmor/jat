@@ -73,7 +73,7 @@ public class SimpleEOM implements Derivatives {
 		//mass1 = initializer.parseDouble(hm,"jat.1.mass");
 		//area1 = initializer.parseDouble(hm,"jat.1.area");
 		//Cr1 = initializer.parseDouble(hm,"jat.1.Cr");
-		mjd0 = initializer.parseDouble(hm,"init.MJD0");
+		mjd0 = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm, "init.T0")/86400.0;
 
 		
 		//hc = -2.87956633585E-10 * GPS_Utils.c;
@@ -114,7 +114,8 @@ public class SimpleEOM implements Derivatives {
 		
 		//Obtain thet the correct time
 		//int ctr = 0;
-		Time tt = new Time(t/86400 + mjd0);
+		Time tt = new Time(mjd0);
+		tt.update(t);
 		//double newttt = tt.UTC2TT(t/86400 + mjd0);
 		
 		
@@ -160,7 +161,6 @@ public class SimpleEOM implements Derivatives {
 
 		
 		//Get the acceleration directly from the model
-		tt.update(t);
 		universe.update(t);
 		Matrix M = universe.earthRef.eci2ecef(universe.time.mjd_ut1(),universe.time.mjd_tt());
 		VectorN acc0 = earth_grav.gravity(r0,M);

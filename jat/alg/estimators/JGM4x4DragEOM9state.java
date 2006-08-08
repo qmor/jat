@@ -74,7 +74,7 @@ public class JGM4x4DragEOM9state implements Derivatives{
 		mass0 = initializer.parseDouble(hm,"jat.0.mass");
 		area0 = initializer.parseDouble(hm,"jat.0.area");
 		Cd0 = initializer.parseDouble(hm,"jat.0.Cd");
-		mjd0 = initializer.parseDouble(hm,"init.MJD0");
+		mjd0 = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm, "init.T0")/86400.0;
 
 		drag = new HarrisPriester(Cd0,area0,mass0);
 		

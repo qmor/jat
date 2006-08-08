@@ -105,7 +105,9 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
-        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        try{
+        	runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        }catch(NullPointerException ne){ runMonteCarlo = false;}
         if(!runMonteCarlo){
         	residuals = new LinePrinter(dir_in+"Residuals.txt");
         }
@@ -157,7 +159,11 @@ public class EKF {
         }catch(Exception e){
             dir_in = "";
         }
-        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+        try{
+        runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");        
+        }catch(Exception e){
+        	runMonteCarlo = false;
+        }
         if(!runMonteCarlo){
         	residuals = new LinePrinter(dir_in+"Residuals.txt");
         }
@@ -181,6 +187,9 @@ public class EKF {
 	 		LinePrinter lp2 = new LinePrinter(dir_in+"geom1_2.txt");
 			this.process= new JGM4x4SRPProcess9state(lp1, lp2,hm);
 	
+		}
+		else if(stringPm.equals("JGM4x4DragProcess9state")){
+			this.process= new JGM4x4DragProcess9state(hm);
 		}
 		else if(stringPm.equals("Simple") || stringPm.equals("Lunar"))
 		{
@@ -435,7 +444,7 @@ public class EKF {
 		
 		/*Catch the case where the measurement doesn't occur*/
 		//*TODO Watch this
-		if( true ) //Math.abs(y) > 0)
+		if( !Double.isNaN(y)) //Math.abs(y) > 0)
 		{
 			double r = obs.get_noise(sc);
 			//double r = createMeasurements.mm[measNum].R();
@@ -484,9 +493,14 @@ public class EKF {
 		if(measFlag){
 			ObservationMeasurement obs = obslist.getCurrent();
 			double measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
-			//while(obs.time_mjd()<simTime.mjd_utc()) obs = obslist.getNext();
-			while(measTime<filterTime && measTime>=0){ obs = obslist.getNext(); measTime=Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));}
-			
+			while(obs.time_mjd()<sim_Time.get_epoch_mjd_utc() && obs!=null){ 
+				obs = obslist.getNext();
+				measTime=Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
+			}
+			while(measTime<filterTime && measTime>=0 && obs!=null){ 
+				obs = obslist.getNext(); 
+				measTime=Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
+			}			
 			while(measTime<simTime && measTime>=0){
 				
 				/*If necessary move to  a new time*/
@@ -531,14 +545,17 @@ public class EKF {
 				xprev = xref.longarray();
 				
 				obs = obslist.getNext();
-				measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
+				if(obs!=null)
+					measTime = Math.round(TimeUtils.days2sec*(obs.time_mjd()-sim_Time.get_epoch_mjd_utc()));
+				else
+					measTime = -1;
 			}
 		}
 		
 		//* Propagate to simTime
-//		while(filterTime < simTime){
+		while(filterTime < simTime){
 			propagate(simTime);
-//		}
+		}
 		
 		VectorN out = new VectorN(xref.get(0,n));
 		

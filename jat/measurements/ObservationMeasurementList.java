@@ -26,6 +26,7 @@ import jat.gps.GPS_Measurement;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
+import jat.sim.initializer;
 import jat.spacetime.CalDate;
 import jat.spacetime.EarthRef;
 import jat.spacetime.FitIERS;
@@ -81,11 +82,19 @@ public class ObservationMeasurementList
 	
 	public ObservationMeasurementList(HashMap hm){
 		this.input = hm;
-		model_gps = new GPSmeasurementModel(hm);
-		model_gpsstate = new GPSStateMeasurementModel(hm);
-		model_range = new rangeMeasurementModel(hm);
-		model_state = new stateMeasurementModel(hm);
-		model_stateupdate = new stateUpdateMeasurementModel(hm);
+		for(int i=0; i<initializer.parseInt(input, "MEAS.types"); i++){
+			if(initializer.parseString(input, "MEAS."+i+".desc").equalsIgnoreCase("GPS")){
+				model_gps = new GPSmeasurementModel(hm);
+			}else if(initializer.parseString(input, "MEAS."+i+".desc").equalsIgnoreCase("pseudoGPS")){
+				model_gpsstate = new GPSStateMeasurementModel(hm);
+			}else if(initializer.parseString(input, "MEAS."+i+".desc").equalsIgnoreCase("range")){
+				model_range = new rangeMeasurementModel(hm);
+			}else if(initializer.parseString(input, "MEAS."+i+".desc").equalsIgnoreCase("stateUpdate")){
+				model_state = new stateMeasurementModel(hm);
+			}else{
+				model_stateupdate = new stateUpdateMeasurementModel(hm);
+			}
+		}
 	}
 	
 	public static void main(String[] args) // Main Method
@@ -308,12 +317,14 @@ public class ObservationMeasurementList
 		File inputFile = new File(fileName);
 		FileReader fr = new FileReader(inputFile);
 		BufferedReader in = new BufferedReader(fr);
+		double MJDF = initializer.parseDouble(input, "init.MJDF")+initializer.parseDouble(input, "init.TF")/86400.0;
 		
 		while (notDone) //Reading the Header information in this While loop
 		{
 			count++;
 			line = in.readLine();
 			StringTokenizer tok = new StringTokenizer(line, " ");
+			try{
 			if (count == 1)
 			{
 				version = Double.parseDouble(tok.nextToken());
@@ -328,6 +339,10 @@ public class ObservationMeasurementList
 			}
 			else 
 			{
+				ObservationMeasurementList headerFinished = new ObservationMeasurementList();
+				notDone = headerFinished.setHeaderReader(tok, count); //Returns false if header has been read
+			}
+			}catch(Exception e){
 				ObservationMeasurementList headerFinished = new ObservationMeasurementList();
 				notDone = headerFinished.setHeaderReader(tok, count); //Returns false if header has been read
 			}
@@ -346,7 +361,9 @@ public class ObservationMeasurementList
 				GPSTimeFormat newDate =  ObservationMeasurementList.setDateStuff(lineNew);
 				//timeMjd =newDate.mjd();
 				//* TODO Watch this
-				timeMjd =newDate.mjd()-13.0/86400.0;
+				timeMjd =newDate.mjd_utc();//-13.0/86400.0;
+				if(timeMjd > MJDF) 
+					break;
 				//if(timeMjd > 52189.06403935186){
 					//int stop_to_debug = 0;
 				//}
@@ -408,7 +425,9 @@ public class ObservationMeasurementList
 							EarthRef earth = new EarthRef(new Time(timeMjd));
 							RotationMatrix R = new RotationMatrix(earth.ECI2ECEF());
 							info.set_ECF2ECI(R);
-							this.add(info);
+							if(!(info.prn.equals("G17") || info.prn.equals("G24") || info.prn.equals("G30"))){
+								this.add(info);
+							}							
 							meas = info.toString();
 							System.out.println(meas);
 						}
@@ -472,9 +491,10 @@ public class ObservationMeasurementList
 		return om;
 	}
 	public ObservationMeasurement getNext(){
-		if(currentIndex>=(list.size()-1))
-			currentIndex=(list.size()-1);
-		else
+		if(currentIndex>=(list.size()-1)){
+			//currentIndex=(list.size()-1);
+			return null;
+		}else
 			currentIndex++;
 		ObservationMeasurement om = (ObservationMeasurement)list.get(currentIndex);
 		return om;

@@ -54,15 +54,7 @@ public class Moon extends GravitationalBody {
     public Moon() {
         super();
         this.mu = Constants.GM_Moon; 
-        String filesep = FileUtil.file_separator();
-        String directory;
-        try{
-            directory = FileUtil.getClassFilePath("jat.eph","DE405");
-        }catch(Exception e){
-            directory = "C:/Code/Jat/jat/eph";
-        }
-        directory = directory+filesep+"DE405data"+filesep;
-        jpl_ephemeris = new DE405(directory);
+        jpl_ephemeris = new DE405();
     }
     
     /**
@@ -72,15 +64,7 @@ public class Moon extends GravitationalBody {
     public Moon(double mjd_utc){
     	super();
         this.mu = Constants.GM_Moon; 
-        String filesep = FileUtil.file_separator();
-        String directory;
-        try{
-            directory = FileUtil.getClassFilePath("jat.eph","DE405");
-        }catch(Exception e){
-            directory = "C:/Code/Jat/jat/eph";
-        }
-        directory = directory+filesep+"DE405data"+filesep;
-        jpl_ephemeris = new DE405(directory);
+        jpl_ephemeris = new DE405();
         double jd_tdb = Time.TTtoTDB(Time.UTC2TT(mjd_utc))+2400000.5;
         this.r_body = jpl_ephemeris.get_Geocentric_Moon_pos(jd_tdb);
         this.v_body = jpl_ephemeris.get_Geocentric_Moon_vel(jd_tdb);
@@ -92,12 +76,8 @@ public class Moon extends GravitationalBody {
      */
     public Moon(boolean usematlab) {
         super();
-        this.mu = Constants.GM_Moon; 
-        String filesep = FileUtil.file_separator();
-        String directory;
-        directory = "C:/Code/Jat/jat/eph";
-        directory = directory+filesep+"DE405data"+filesep;
-        jpl_ephemeris = new DE405(directory);
+        this.mu = Constants.GM_Moon;      
+        jpl_ephemeris = new DE405();
     }
 
     /**
@@ -107,30 +87,22 @@ public class Moon extends GravitationalBody {
      * @param v velocity [m/s]
      */
     public Moon(double grav_mass, VectorN r, VectorN v) {
-        super(grav_mass, r, v);
-        String filesep = FileUtil.file_separator();
-        String directory;
-        try{
-            directory = FileUtil.getClassFilePath("jat.eph","DE405");
-        }catch(Exception e){
-            directory = "C:/Code/Jat/jat/eph";
-        }
-        directory = directory+filesep+"DE405data"+filesep;
-        //jpl_ephemeris = new DE405(directory);
+        super(grav_mass, r, v);        
+        jpl_ephemeris = new DE405();
     }
     /**
      * Compute the acceleration.
      * @param eRef Earth Reference
      * @param sc Spacecraft parameters and state
      */
-    public VectorN acceleration(EarthRef eRef, Spacecraft sc) {
+    public VectorN acceleration(jat.spacetime.EarthRef eRef, Spacecraft sc) {
 
-      ReferenceFrameTranslater xlater = 
-        new ReferenceFrameTranslater(eRef, moonRef, new Time(eRef.mjd_utc()));
+      //ReferenceFrameTranslater xlater = 
+        //new ReferenceFrameTranslater(eRef, moonRef, new Time(eRef.mjd_utc()));
 
       // Get a vector (in the passed in reference frame) to the
       // spacecraft and to the moon.
-      VectorN r_moon = xlater.translatePointBack(new VectorN(3));
+      VectorN r_moon = eRef.get_JPL_Moon_Vector();//xlater.translatePointBack(new VectorN(3));
       VectorN r = sc.r();
       VectorN d = r.minus(r_moon);
       
@@ -160,12 +132,13 @@ public class Moon extends GravitationalBody {
      * @return the acceleration [m/s^s]
      */
     public VectorN acceleration(Time t, BodyRef bRef, Spacecraft sc){
-        ReferenceFrameTranslater xlater = 
-          new ReferenceFrameTranslater(bRef, moonRef, t);
+        //ReferenceFrameTranslater xlater = 
+          //new ReferenceFrameTranslater(bRef, moonRef, t);
         
         // Get a vector (in the passed in reference frame) to the
-        // spacecraft and to the moon.
-        VectorN r_moon = xlater.translatePointBack(new VectorN(3));
+        // spacecraft and to the moon.        
+        VectorN r_moon = jpl_ephemeris.get_Geocentric_Moon_pos(t.jd_tdb()).times(1000);
+        //VectorN r_moon = xlater.translatePointBack(new VectorN(3));
         VectorN r = sc.r();
         VectorN d = r.minus(r_moon);
         

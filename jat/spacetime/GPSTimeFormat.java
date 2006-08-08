@@ -51,14 +51,14 @@ public class GPSTimeFormat {
     public static final double TAI_TT = 32.184;  // constant
 
     public static final int TAI_GPS = 19;  // constant
-
+        
     /** Create a GPSTimeFormat object using GPS Week and Seconds of the Week.
      * @param gps_week Long GPS Week number.
      * @param gps_sow Double GPS seconds of the week.
      */
     public GPSTimeFormat(long gps_week, double gps_sow){
         this.GPS_Week = gps_week;
-        this.GPS_SOW = gps_sow;
+        this.GPS_SOW = gps_sow;        
     }
 
     /** Create a clone of a GPSTimeFormat object.
@@ -115,7 +115,11 @@ public class GPSTimeFormat {
         this.GPS_Week = (lmjd - JAN61980)/7;
         this.GPS_SOW = ( (lmjd - JAN61980) - GPS_Week*7 + fmjd )*SEC_PER_DAY;
     }
-
+    
+    public double mjd_utc(){
+    	return TimeUtils.gps2utc(mjd());
+    }
+    
     /** Returns the modified Julian date.
      * @return modified Julian date.
      */

@@ -214,8 +214,8 @@ public class GPS_SV {
     public VectorN rECEF(double mjd){
 
         // compute time since Ephemeris Epoch
-        double ephemTime = this.toe.mjd();
-        double dt = (mjd - ephemTime)*86400.0;
+        double ephemTime = this.toe.mjd_utc();
+        double dt = (mjd - ephemTime)*86400.0;//-biasCorrection(new GPSTimeFormat(mjd).gps_sow());
         double t0 = (double) this.toe.gps_week();
 //        double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
         double toe_sow = this.toe.gps_sow();
@@ -275,7 +275,7 @@ public class GPS_SV {
     public VectorN rECI(double mjd){
 
         // compute time since Ephemeris Epoch
-        double ephemTime = this.toe.mjd();
+        double ephemTime = this.toe.mjd_utc();
         double dt = (mjd - ephemTime)*86400.0;
         double t0 = (double) this.toe.gps_week();
         double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
@@ -314,7 +314,9 @@ public class GPS_SV {
         double r = sma*(1.0 - this.ecc*cosE) + dr;
         double u = phi + du;
         double i = this.inc + this.idot*dt + di;
-        double L = this.omega + this.omegadot*dt;
+        //double L = this.omega + this.omegadot*dt;
+        double toe_sow = this.toe.gps_sow();
+        double L = this.omega + (this.omegadot - Constants.WE_WGS84)*dt - Constants.WE_WGS84*toe_sow;
 
         VectorN rvec = new VectorN(r*Math.cos(u), r*Math.sin(u), 0.0);
 
@@ -330,8 +332,8 @@ public class GPS_SV {
     public VectorN rWGS84(double mjd){
 
         // compute time since Ephemeris Epoch
-        double ephemTime = this.toe.mjd();
-        double dt = (mjd - ephemTime)*86400.0;
+        double ephemTime = this.toe.mjd_utc();
+        double dt = (mjd - ephemTime)*86400.0;//-biasCorrection(new GPSTimeFormat(mjd).gps_sow());
         double t0 = (double) this.toe.gps_week();
         double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
 
@@ -388,8 +390,8 @@ public class GPS_SV {
     public VectorN rvECI(double mjd){
 
         // compute time since Ephemeris Epoch
-        double ephemTime = this.toe.mjd();
-        double dt = (mjd - ephemTime)*86400.0;
+        double ephemTime = this.toe.mjd_utc();
+        double dt = (mjd - ephemTime)*86400.0;//-biasCorrection(new GPSTimeFormat(mjd).gps_sow());
         double t0 = (double) this.toe.gps_week();
         double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
 
@@ -532,10 +534,10 @@ public class GPS_SV {
      */
     public VectorN rvECI (double mjd, Matrix poleMatrix, Matrix ghaMatrix, Matrix todMatrix){
         // compute time since Ephemeris Epoch
-        double ephemTime = this.toe.mjd();
-        double dt = (mjd - ephemTime)*86400.0;
-        double t0 = (double) this.toe.gps_week();
-        double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
+        double ephemTime = this.toe.mjd_utc();
+        double dt = (mjd - ephemTime)*86400.0;//-biasCorrection(new GPSTimeFormat(mjd).gps_sow());
+        //double t0 = (double) this.toe.gps_week();
+        //double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
         double toe_sow = this.toe.gps_sow();
 
         // compute mean anomaly at current time
@@ -581,17 +583,16 @@ public class GPS_SV {
 
         // Rotation from orbit frame to ECEF
         RotationMatrix M = new RotationMatrix(1,-i, 3,-L);
-
         // Compute ECEF position
         VectorN recef = M.times(rpqw);
-
+        
         // Transform ECEF position to ECI
         Matrix temp = poleMatrix.times(ghaMatrix);
         Matrix eci2ecef = temp.times(todMatrix);
     	VectorN reci = eci2ecef.transpose().times(recef);
 
     	// compute the velocity vector
-        double denom = 1.0 - ecc*Math.cos(E);
+        double denom = 1.0 - ecc*Math.cos(E); 
         double Edot = n / denom;
         double num = 1.0 + ecc*Math.cos(f);
         double fdot = (n * num) / (sqrome2 * denom);
@@ -679,8 +680,8 @@ public class GPS_SV {
      */
     public VectorN rvECEF (double mjd){
         // compute time since Ephemeris Epoch
-        double ephemTime = this.toe.mjd();
-        double dt = (mjd - ephemTime)*86400.0;
+        double ephemTime = this.toe.mjd_utc();
+        double dt = (mjd - ephemTime)*86400.0;//-biasCorrection(new GPSTimeFormat(mjd).gps_sow());
         double t0 = (double) this.toe.gps_week();
         double dt0 = (mjd - (44244.0 + 7.0*t0))*86400.0;
         double toe_sow = this.toe.gps_sow();
@@ -762,4 +763,15 @@ public class GPS_SV {
         VectorN out = new VectorN(recef, vecef);
         return out;
     }
+
+    /**
+     * Accounts for the biasCorrection term in the GPS broadcast navigation file.
+     * @param ts_SOW (transmit time seconds of the GPS week
+     * @return biasCorrection [sec]
+     */
+	public double biasCorrection(double ts_SOW) {
+		double ttoc = ts_SOW - this.toc.gps_sow();
+		double dtsv = this.clockBias + this.clockDrift*(ttoc)+this.clockDriftRate*(ttoc*ttoc);						
+		return dtsv;
+	}
 }

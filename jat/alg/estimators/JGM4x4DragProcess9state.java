@@ -94,7 +94,7 @@ public class JGM4x4DragProcess9state implements ProcessModel {
 				
 		sigmas[6] = initializer.parseDouble(hm,"P0.0.clockBias");
 		sigmas[7] = initializer.parseDouble(hm,"P0.0.clockDrift");
-		sigmas[8] = initializer.parseDouble(hm,"P0.0.Cr");
+		//sigmas[8] = initializer.parseDouble(hm,"P0.0.Cr");
 
 		
 		// square the sigmas
@@ -135,7 +135,7 @@ public class JGM4x4DragProcess9state implements ProcessModel {
 				
 		Q.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		Q.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
-		Q.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
+		//Q.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
 		
 		return Q;
 	}
@@ -160,7 +160,7 @@ public class JGM4x4DragProcess9state implements ProcessModel {
 				
 		QXYZ.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		QXYZ.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
-		QXYZ.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
+		//QXYZ.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
 		return QXYZ;
 	}
 	/**
@@ -251,8 +251,8 @@ public class JGM4x4DragProcess9state implements ProcessModel {
 			out.x[6] = initializer.parseDouble(hm, tmp);
 			tmp = ref+"0.clockDrift";
 			out.x[7] = initializer.parseDouble(hm, tmp);
-			tmp = ref+"0.Cr";
-			out.x[8] = initializer.parseDouble(hm, tmp);
+			//tmp = ref+"0.Cr";
+			//out.x[8] = initializer.parseDouble(hm, tmp);
 		}
 		
 		return out;

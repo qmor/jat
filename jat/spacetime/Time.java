@@ -141,8 +141,17 @@ public class Time {
      */
     public double mjd_ut1(){
     	//* TODO watch this
-    	//if(this.MJD_UT1==this.MJD_UTC)
-    		this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
+//    	if(this.MJD_UT1==this.MJD_UTC || this.UT1_UTC==0){
+    		//System.err.println("Warning: UT1-UTC has not been initialized");
+    		FitIERS fit = new FitIERS();
+    		try{
+    			UT1_UTC = fit.search(MJD_UTC)[2];
+    		}catch(Exception e){
+    			UT1_UTC = 0;
+    		}
+//    	}
+    	//this.UT1_UTC = 0;
+    	this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
     	if(debugGEONS){
     		double UTC_UT1_Constant_Bias = -0.094168580338191;
     		double UTC_UT1_Linear_Coefficient = -0.00071620920607623;
@@ -218,6 +227,14 @@ public class Time {
     public void update(double t){
         sim_time = t;
         this.MJD_UTC = this.MJD_UTC_START+t*TimeUtils.sec2days;
+        this.MJD_TT = UTC2TT(this.MJD_UTC);
+        this.MJD_TDB = TTtoTDB(this.MJD_TT);
+        this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
+    }
+    
+    public void updateTo(double mjd){
+    	sim_time = (mjd-this.MJD_UTC_START)*86400.0;
+    	this.MJD_UTC = mjd;//this.MJD_UTC_START+sim_time*TimeUtils.sec2days;
         this.MJD_TT = UTC2TT(this.MJD_UTC);
         this.MJD_TDB = TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;

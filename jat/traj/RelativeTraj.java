@@ -269,7 +269,7 @@ public class RelativeTraj {
 		double units = 1;
 		double mjd0 = 0;
 		if(this.target.getTimeAt(0)!=0){
-			units = 24.0; //hours
+			units = 24.0*3600; //hours
 			mjd0 = this.target.getTimeAt(0);
 		}
 		if(verbose)
@@ -331,7 +331,7 @@ public class RelativeTraj {
 		double units = 1;
 		double mjd0 = 0;
 		if(this.target.getTimeAt(0)!=0){
-			units = 24.0; //hours
+			units = 24.0*3600; //hours
 			mjd0 = this.target.getTimeAt(0);
 		}
 		if(verbose)
@@ -471,6 +471,12 @@ public class RelativeTraj {
 		} else {
 			n = ntgt;
 		}
+		double units = 1;
+		double mjd0 = 0;
+		if(this.target.getTimeAt(0)!=0){
+			units = 24.0*3600; //hours
+			mjd0 = this.target.getTimeAt(0);
+		}
 		if(verbose)
 		    System.out.println("number of points = "+n+" "+nchaser+" "+ntgt);
 		int i=0, j=0;
@@ -493,7 +499,7 @@ public class RelativeTraj {
 				VectorN dv_eci = v.minus(vtgt);
 				
 				//VectorN x_rsw = rsw.transform(dr_eci, dv_eci);
-				
+				t = (t - mjd0)*units;
 				this.printRSS(t, dr_eci.mag(),dv_eci.mag());
 				i++;
 				j++;

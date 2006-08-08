@@ -88,7 +88,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		//mass1 = initializer.parseDouble(hm,"jat.1.mass");
 		//area1 = initializer.parseDouble(hm,"jat.1.area");
 		//Cr1 = initializer.parseDouble(hm,"jat.1.Cr");
-		mjd0 = initializer.parseDouble(hm,"init.MJD0");
+		mjd0 = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm, "init.T0")/86400.0;
 
 		
 		hc = -2.87956633585E-10 * GPS_Utils.c;
@@ -128,7 +128,8 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		
 		//Obtain thet the correct time
 		int ctr = 0;
-		Time tt = new Time(t/86400 + mjd0);
+		Time tt = new Time(mjd0);
+		tt.update(t);
 		double newttt = Time.UTC2TT(t/86400 + mjd0);
 		
 		
@@ -172,7 +173,6 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 
 		
 		//Get the acceleration directly from the model
-		tt.update(t);
 		universe.update(t);
 		Matrix M = universe.earthRef.eci2ecef(universe.time.mjd_ut1(),universe.time.mjd_tt());
 		VectorN acc0 = earth_grav.gravity(r0,M);
@@ -273,9 +273,17 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 	
 		//Clock model
 		double w_f = (Math.random()-0.5)*2*.036;
+		//* TODO guassian - keep 0.036 = sigma
 		out[6] = w_f + hc;
 		double w_g = (Math.random()-0.5)*2*7.106E-05;
 		out[7] = w_g;
+		
+		//* TODO watch this - set clock terms to zero
+		//out[6] = 0;
+		//out[7] = 0;
+//		if(Math.abs(w_f) > 1e3 || Math.abs(w_g) > 1e3){
+//			out[6] = out[6];
+//		}
 	
 		//Solar radiation Pressure states
 		out[8] = 0;
@@ -362,7 +370,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		a.A[3][3] = 0;
 		a.A[3][4] = 0;
 		a.A[3][5] = 0;
-		a.A[3][8] = 1.0 *(Xsun/magSun3)*AU_sqrd*SRPscale0;
+		//a.A[3][8] = 1.0 *(Xsun/magSun3)*AU_sqrd*SRPscale0;
 
 		
 		a.A[4][0] = dmdx0;
@@ -371,7 +379,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		a.A[4][3] = 0;
 		a.A[4][4] = 0;
 		a.A[4][5] = 0;
-		a.A[4][8] = 1.0 *(Ysun/magSun3)*AU_sqrd*SRPscale0;
+		//a.A[4][8] = 1.0 *(Ysun/magSun3)*AU_sqrd*SRPscale0;
 
 		a.A[5][0] = dndx0;
 		a.A[5][1] = dndy0;
@@ -379,7 +387,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		a.A[5][3] = 0;
 		a.A[5][4] = 0;
 		a.A[5][5] = 0;
-		a.A[5][8] = 1.0 *(Zsun/magSun3)*AU_sqrd*SRPscale0;
+		//a.A[5][8] = 1.0 *(Zsun/magSun3)*AU_sqrd*SRPscale0;
 		
 
 		

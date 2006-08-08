@@ -107,7 +107,11 @@ public class RINEXnav {
         String hrs = tok.nextToken();
         String mins = tok.nextToken();
         String secs = tok.nextToken();
-        int year = Integer.parseInt(yrs) + 2000;
+        int year = Integer.parseInt(yrs);
+        //* The following line is a "fix" for the Y2K bug
+        //* The code will break again after 2079
+        if(year>80) year = year + 1900;
+        else year = year + 2000;
         int month = Integer.parseInt(mons);
         int day = Integer.parseInt(days);
         int hour = Integer.parseInt(hrs);

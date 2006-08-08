@@ -64,26 +64,29 @@ public class Simulation {
         String fs = FileUtil.file_separator();
         String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
         
-        String[] tests = {"ISS","GEO","ISS","GEO","GEO"};
+        String[] tests = {"ISS","GEO","ISS","GEO","GEO","ISS","Molniya"};
         //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
         boolean[][] force_flag = {{false,true,true,true,true},
         		{false,true,true,true,true},
         		{true,false,false,true,false},
         		{true,false,false,false,true},
-        		{false,false,false,false,false}};					//JGM3		0
+        		{false,false,false,false,false},
+        		{true,false,false,false,false},
+        		{false,true,true,true,true}};					//JGM3		0
         String[] test_nums = 
-        		{"7_HP","35_HP","4_HP","33","34"};  							//JGM3		
+        		{"7_HP","35_HP","4_HP","33","34","1","28_NRL"};  							//JGM3		
         
         boolean plot_traj = true;
-        int i=4;
+        int i=6;
         //*ISS
         //VectorN r = new VectorN(-4453.783586,-5038.203756,-426.384456);
         //VectorN v = new VectorN(3.831888,-2.887221,-6.018232);
-        //*Molniya VectorN r = new VectorN(-1529.894287,-2672.877357,-6150.115340);
-        //*Molniya VectorN v = new VectorN(8.717518,-4.989709,0);
+        //*Molniya 
+        VectorN r = new VectorN(-1529.894287,-2672.877357,-6150.115340);
+        VectorN v = new VectorN(8.717518,-4.989709,0);
         //*GEO
-        VectorN r = new VectorN(36607.358256,-20921.723703,0.000000);
-        VectorN v = new VectorN(1.525636,2.669451,0);
+        //VectorN r = new VectorN(36607.358256,-20921.723703,0.000000);
+        //VectorN v = new VectorN(1.525636,2.669451,0);
         //*GPS VectorN r = new VectorN(5525.33668,-15871.18494,-20998.992446);
         //*GPS VectorN v = new VectorN(2.750341,2.434198,-1.068884);
         //*SunSync VectorN r = new VectorN(-2290.301063,-6379.471940,0);
@@ -103,6 +106,7 @@ public class Simulation {
           //  for(i=0; i<2; i++){
                 sim.initialize(sm,t0,tf,mjd_utc, stepsize, 1, out);
                 sim.set_showtimestep(true);
+                sim.set_doPrint(true);
                 boolean use_JGM2 = false;
                 String test = tests[i]+test_nums[i];
                 sim.initializeForces(force_flag[i], use_JGM2, test);
@@ -113,15 +117,15 @@ public class Simulation {
         System.out.println("Elapsed time [min]: "+elapsed);
         plot_traj=false;
         if(plot_traj){
-            	        jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+            	        jat.util.Celestia celestia = new jat.util.Celestia("C:/Code/Celestia/");
             	        try{
-            	            i--;
+            	            //i--;
             	            celestia.set_trajectory(sim.get_traj());
             	            String name = tests[i]+test_nums[i];
             	            celestia.write_trajectory(name,name,sim.mjd_utc_start+2400000.5);
             	            System.out.println("Wrote to Celestia");
             	        }catch(java.io.IOException ioe){}
-            LinePrinter lp2 = new LinePrinter();
+            //LinePrinter lp2 = new LinePrinter();
 //            RelativeTraj rel = sim.get_rel_traj(lp2);
 //            rel.setVerbose(false);
 //            double err = rel.get_max_error()*1000;
@@ -294,7 +298,88 @@ public class Simulation {
         }
         System.out.println("Finished");            
     }
-    
+    public void runSimBatch(){
+        SimModel sim = new SimModel();
+        double start = System.currentTimeMillis();
+        String fs = FileUtil.file_separator();
+        String dir = FileUtil.getClassFilePath("jat.sim", "SimModel");
+        
+        String[] tests = {"ISS","Sun-Sync","GPS","Molniya","GEO"};
+        //* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation}
+        boolean[][] force_flag = 
+        {{false,false,false,false,false},								//JGM3		0
+                {true,  true,  false,     false,          false},		//Sun		1
+                {true,  false,  true,     false,          false},		//Moon		2
+                {true,  false, false,     true,           false},		//HP		3
+                {true,  false, false,     true,           false},		//NRL		4
+                {true,  false, false,     false,          true},		//SRP		5
+                {false, true, true, true, true},						//ALL HP	6
+                {false, true, true, true, true},						//ALL NRL	7
+                {true, false, false, false, false}};					//two body  8
+        String[][] test_nums = 
+        {{"6","13","20","27","34"},  									//JGM3		
+                {"3","10","17","24","31"},  							//Sun		
+                {"2","9","16","23","30"},   							//Moon		
+                {"4_HP","11_HP","18_HP","25_HP","32_HP"}, 				//HP
+                {"4_NRL","11_NRL","18_NRL","25_NRL","32_NRL"},  		//NRL
+                {"5","12","19","26","33"},								//SRP 
+                {"7_HP","14_HP","21_HP","28_HP","35_HP"},				//All HP
+                {"7_NRL","14_NRL","21_NRL","28_NRL","35_NRL"},			//All NRL
+                {"1","8","15","22","29"}};								//two body
+        
+        boolean plot_traj = true;
+        int i=0,j=8;
+        VectorN r[] = new VectorN[5];
+        VectorN v[] = new VectorN[5];
+//      *ISS
+        r[0] = new VectorN(-4453.783586,-5038.203756,-426.384456).times(1000);
+        v[0] = new VectorN(3.831888,-2.887221,-6.018232).times(1000);
+        //* SunSync
+        r[1] = new VectorN(-2290.301063,-6379.471940,0).times(1000);
+        v[1] = new VectorN(-0.883923,0.317338,7.610832).times(1000);
+        //* GPS
+        r[2] = new VectorN(5525.33668,-15871.18494,-20998.992446).times(1000);
+        v[2] = new VectorN(2.750341,2.434198,-1.068884).times(1000);
+        //* Molniya
+        r[3] = new VectorN(-1529.894287,-2672.877357,-6150.115340).times(1000);
+        v[3] = new VectorN(8.717518,-4.989709,0).times(1000);
+        //* GEO
+        r[4] = new VectorN(36607.358256,-20921.723703,0.000000).times(1000);
+        v[4] = new VectorN(1.525636,2.669451,0).times(1000);
+        
+        
+        double acr = 1.2;
+        double acd = 2.2;
+        double aa = 20;
+        double am = 1000;
+        
+        double t0 = 0;
+        double[] tf = {.01*86400,.01*86400,0.02*86400,.03*86400,.07*86400}; //604800;
+        double[] stepsize = {5,5,60,5,60};
+        double mjd_utc = 53157.5;
+        //double mjd_utc = 53683;
+        //String out = dir+"output"+fs+tests[i]+test_nums[j][i]+".txt";        
+        for(j=6; j<8; j++){
+            for(i=0; i<5; i++){
+            	String out = "C:/Code/Jat/jat/test/propagator/output/"+tests[i]+test_nums[j][i]+"_jat.txt";
+        		SpacecraftModel sm = new SpacecraftModel(new VectorN(r[i]),new VectorN(v[i]),acr,acd,aa,am);
+                sim.initialize(sm,t0,tf[i],mjd_utc, stepsize[i], 1, out);
+                sim.set_showtimestep(true);
+                boolean use_JGM2 = false;
+                String test = tests[i]+test_nums[j][i];
+                sim.initializeForces(force_flag[j], use_JGM2, test);
+                sim.runloop();
+              String sjat = tests[i]+test_nums[j][i]+"_jat.txt";
+              String sstk = tests[i]+test_nums[j][i]+".txt";
+              PlotTrajectory.plot(sjat,sstk);
+            }	        
+        }
+        double elapsed = (System.currentTimeMillis()-start)*0.001/60;
+        System.out.println("Elapsed time [min]: "+elapsed);
+        
+        System.out.println("Finished");    	
+    }
+
     public void test(){
         jat.matlabInterface.MatlabControl test = new MatlabControl();
         test.eval("disp('testing')");
@@ -338,7 +423,7 @@ public class Simulation {
         	boolean use_JGM2 = false;
         	String test = tests[j]+test_nums[j][i];
         	sim.initializeForces(force_flag[i], use_JGM2, test);
-        	sim.set_doPrint(false);
+        	//sim.set_doPrint(false);
         	if(i>0){
         		sim.runloop();
         		Trajectory traj = sim.get_traj();
@@ -477,6 +562,7 @@ public class Simulation {
         Simulation sim = new Simulation();
         //sim.runSim4Datsim();
         sim.runSimTwo();
+        //sim.runSimBatch();
         //sim.runSimMatlab();
         //sim.runSimFormation();
     }

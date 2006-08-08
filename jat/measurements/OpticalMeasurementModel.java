@@ -118,7 +118,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		}
 		int jat_case = CEVSim.JAT_case;
 		if(CEVSim.JAT_case == 0) jat_case = CEVLunarSim.JAT_case;
-		runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+		try{
+			runMonteCarlo = initializer.parseBool(hm, "init.runMonteCarlo");
+		}catch(NullPointerException ne){runMonteCarlo = false;}
 		if(!runMonteCarlo){
 			fobs = new LinePrinter(dir_in+"obs_"+jat_case+".txt");
 			fpred = new LinePrinter(dir_in+"pred_"+jat_case+".txt");
@@ -288,10 +290,10 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		VectorN v = new VectorN(3);
 		//% Determine unit vector observation 1 (Either Earth or Moon)
 		switch(p){
-		case 1: //% Earth obs
+		case BODY_EARTH: //% Earth obs
 			v=r.times(-1.0);
 			break;
-		case 2: //% Moon obs
+		case BODY_MOON: //% Moon obs
 			//% Get lunar position relative to the Earth
 			//* TODO watch units
 			VectorN xm=ephem.get_Geocentric_Moon_pos(
@@ -329,7 +331,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		//%     y=y+x(7);
 		//%     dydx=[dydx 1 0];
 		//% end
-		double[] out = new double[7];
+		double[] out = new double[x.length+1];
 		out[0] = y;
 		for(int i=1; i<7; i++) out[i] = dydx[i-1];
 		return out;
@@ -376,9 +378,9 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		//VectorN mrange = new VectorN(mrange_tmp);
 		
 		double[] rv = new double[5];
-		if (ibody == 1) //% Earth
+		if (ibody == BODY_EARTH) //% Earth
 			rv=erange;
-		else if (ibody ==2) // % Moon
+		else if (ibody == BODY_MOON) // % Moon
 			rv=mrange;
 		else
 			System.err.println("Invalid body flag");
@@ -985,9 +987,12 @@ public class OpticalMeasurementModel implements MeasurementModel{
 				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+Math.asin(obs)*MathUtils.RAD2DEG+"   "+typestring);
 				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+Math.asin(pred)*MathUtils.RAD2DEG+"   "+typestring);
 			}else if(type== TYPE_LANDMARK){
+//				typestring = "landmark";
+//				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+obs+"   "+typestring+" L"+current_landmark+"-"+whichMeas);
+//				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+pred+"   "+typestring+" L"+current_landmark+"-"+whichMeas);
 				typestring = "landmark";
-				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+obs+"   "+typestring+" L"+current_landmark+"-"+whichMeas);
-				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+pred+"   "+typestring+" L"+current_landmark+"-"+whichMeas);
+				OpticalMeasurementModel.fobs.println(""+t_sim+"  "+obs+"    L: "+current_landmark+" S:"+whichMeas);
+				OpticalMeasurementModel.fpred.println(""+t_sim+"  "+pred+"    L: "+current_landmark+" S:"+whichMeas);
 			}
 			}
 		}else{
@@ -995,8 +1000,8 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			this.H = new VectorN(state.length);
 			String typestring = "landmark";
 			if(!runMonteCarlo){
-				OpticalMeasurementModel.fobs.println("time: "+t_sim+"  obs: "+0+"   "+typestring+" "+whichMeas+"  dark");
-				OpticalMeasurementModel.fpred.println("time: "+t_sim+"  obs: "+0+"   "+typestring+" "+whichMeas+"  dark");
+				OpticalMeasurementModel.fobs.println(""+t_sim+"  "+0+"    L: "+current_landmark+" S:"+whichMeas);
+				OpticalMeasurementModel.fpred.println(""+t_sim+"  "+0+"    L: "+current_landmark+" S:"+whichMeas);
 			}
 		}
 		return out;

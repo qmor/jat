@@ -127,6 +127,7 @@ public class CEVLunarSim {
 	public static String JAT_name;
 	private static boolean PlotBoeing;
 	private static boolean PlotCov;
+	private static boolean MONTE_Plot_override = false;
 
 	public CEVLunarSim(boolean useFilter) {
 		//super(useFilter);
@@ -311,8 +312,80 @@ public class CEVLunarSim {
 			dt = initializer.parseInt(this.input,"init.dt");
 			//ref[i].set_sc_dt(dt);
 			//truth[i].set_sc_dt(dt);
+			int numSats = i;
+			VectorN newState = new VectorN(filter.xref.state().get(0, 6));
+			double tmpState[] = new double[newState.length];
+				//Extract the state of the current satellite
+				for(int k = 0;k < newState.length; k++)
+				{
+					tmpState[k]=newState.x[numSats*6 + k];
+				}
+				ref[numSats].get_spacecraft().updateMotion(tmpState);	
+				ref[numSats].update(simTime.get_sim_time());
+//				Write out the current True States
+				double [] true_state = truth[numSats].get_spacecraft().toStateVector();
 
-		}		
+				//Print out simStep + 1 because we didn't output the initial state
+				VectorN vecTime =  new VectorN(1,(simStep)*dt);
+				VectorN trueState = new VectorN(true_state);
+				VectorN truthOut = new VectorN(vecTime,trueState);
+				if(!runMonteCarlo)
+					new PrintStream(truths[numSats]).println (truthOut.toString());
+
+				//Write out the current State estimates
+				double [] ref_state  = tmpState;//ref[numSats].get_spacecraft().toStateVector();
+				VectorN vecState = new VectorN(ref_state);
+				VectorN stateOut = new VectorN(vecTime,vecState);
+				if(!runMonteCarlo)
+					new PrintStream(trajectories[numSats]).println (stateOut.toString());
+
+				//Output the current ECI error
+				VectorN error_out = new VectorN(6);
+				for(int k = 0; k < 6; k++)
+				{
+					error_out.x[k] = true_state[k] - ref_state[k];
+				}
+				VectorN ErrState = new VectorN(error_out);
+				stateOut = new VectorN(vecTime,ErrState);
+				new PrintStream(ECIError[numSats]).println (stateOut.toString());
+
+//				Output the current Covariances
+//				Matrix Covariance = EKF.pold;
+				Matrix Covariance = filter.get_pold();
+				VectorN var = new VectorN(6);
+				if(!runMonteCarlo || MONTE_Plot_override){
+					RSW_Frame rictrans = new RSW_Frame(trueState.get(0, 3),trueState.get(3, 3));
+					Matrix covtrans = rictrans.ECI2RSW();
+					Matrix covr =   covtrans.times((Covariance.getMatrix(0, 2, 0, 2)).times(covtrans.transpose()));
+					Matrix covv =   covtrans.times((Covariance.getMatrix(3, 5, 3, 5)).times(covtrans.transpose()));
+					var = new VectorN(covr.diagonal(),covv.diagonal());
+				}
+				int numStates = filter.get_numStates();
+				//double[] tmp = new double[numStates*numStates];
+				double[] tmp = new double[numStates];
+				double[] tmp2 = new double[numStates];
+				int m = 0;
+				for(int k = 0; k < numStates; k++)
+				{
+					//for(int j = 0; j < numStates; j++)
+					//{
+					tmp[m] = Covariance.get(k,k);
+					try{
+						if(!runMonteCarlo || MONTE_Plot_override)
+							tmp2[m] = Math.sqrt(var.get(k));
+					}catch(Exception e){
+						//out of range
+					}
+					m++;
+					//}
+				}			
+				if(!runMonteCarlo || MONTE_Plot_override)
+					sim_cov.add(simTime.get_sim_time()/3600.0, new VectorN(tmp2,6).x);
+				VectorN ErrCov = new VectorN(tmp);
+				stateOut = new VectorN(vecTime,ErrCov);
+				new PrintStream(covariance[numSats]).println (stateOut.toString());
+			}
+	
 	}
 
 	/**
@@ -469,7 +542,7 @@ public class CEVLunarSim {
 //			Matrix Covariance = EKF.pold;
 			Matrix Covariance = filter.get_pold();
 			VectorN var = new VectorN(6);
-			if(!runMonteCarlo){
+			if(!runMonteCarlo || MONTE_Plot_override){
 				RSW_Frame trans = new RSW_Frame(trueState.get(0, 3),trueState.get(3, 3));
 				Matrix covtrans = trans.ECI2RSW();
 				Matrix covr =   covtrans.times((Covariance.getMatrix(0, 2, 0, 2)).times(covtrans.transpose()));
@@ -487,7 +560,7 @@ public class CEVLunarSim {
 				//{
 				tmp[k] = Covariance.get(i,i);
 				try{
-					if(!runMonteCarlo)
+					if(!runMonteCarlo || MONTE_Plot_override)
 						tmp2[k] = Math.sqrt(var.get(i));
 				}catch(Exception e){
 					//out of range
@@ -495,7 +568,7 @@ public class CEVLunarSim {
 				k++;
 				//}
 			}			
-			if(!runMonteCarlo)
+			if(!runMonteCarlo || MONTE_Plot_override)
 				sim_cov.add(simTime.get_sim_time()/3600.0, new VectorN(tmp2,6).x);
 			VectorN ErrCov = new VectorN(tmp);
 			stateOut = new VectorN(vecTime,ErrCov);
@@ -741,7 +814,7 @@ public class CEVLunarSim {
 		System.out.println("Elapsed time [min]: "+elapsed);
 
 		/* Post Processing */
-		if(!runMonteCarlo ){
+		if(!runMonteCarlo || MONTE_Plot_override){
 			LinePrinter lp = new LinePrinter();
 			RelativeTraj[] reltraj = new RelativeTraj[3];
 			Trajectory[] boeing = new Trajectory[2];
@@ -850,76 +923,77 @@ public class CEVLunarSim {
 	public static void main(String[] args) {
 
 		boolean useFilter = true;
-
-		//* TODO Flag marker
-		CEVLunarSim.JAT_case = 82;
+		CEVLunarSim.MONTE_Plot_override  = true;
 		CEVLunarSim.PlotJAT = true;
 		CEVLunarSim.PlotBoeing = false;
 		CEVLunarSim.PlotCov = true;
-		
 		double mc_start = System.currentTimeMillis();
-        
-        switch(JAT_case){
-        case 90:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
-          break;
-        case 91:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_01.txt";
-          break;
-        case 92:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_1.txt";
-          break;
-        case 80:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_001.txt";
-          break;
-        case 81:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_01.txt";
-          break;
-        case 82:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_1.txt";
-          break;
-        default:
-          CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
-        break;
-        }
-        if (args.length > 0) {
-          CEVLunarSim.InputFile = args[0];
-        }
 
-        String fs, dir_in;
-        fs = FileUtil.file_separator();
-        try{
-            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
-        }catch(Exception e){
-            dir_in = "";
-        }
-        HashMap hm = initializer.parse_file(dir_in + CEVLunarSim.InputFile);
-        boolean runningMonteCarlo = initializer.parseBool(hm,"init.runMonteCarlo");
-        int num_runs = (runningMonteCarlo ? 
-            initializer.parseInt(hm,"MONTE.num_runs") : 1);
-        Integer startCase = initializer.parseInt(hm, "MONTE.start_case_num");
-        if (runningMonteCarlo && (startCase != null)) {
-          CEVLunarSim.JAT_case = startCase;
-        }
-		for(int c=0; c<num_runs; c++){
+		for(int mc = 3; mc< 4; mc++){
+			//* TODO Flag marker			
 
-			CEVLunarSim.JAT_name = "lowlunar";
-            
-              //CEVLunarSim.InputFile = "initialConditions_cev_llo.txt";
-                          
-			CEVLunarSim Sim = new CEVLunarSim(useFilter);
-			Sim.set_verbose(true);
-			Sim.runloop();
-
-			try{
-				OpticalMeasurementModel.fobs.close();
-				OpticalMeasurementModel.fpred.close();
-			}catch(NullPointerException ne){
-
+			switch(mc){
+			case 0:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
+				break;
+			case 1:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_01.txt";
+				break;
+			case 2:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_1.txt";
+				break;
+			case 3:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_001.txt";
+				break;
+			case 4:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_01.txt";
+				break;
+			case 5:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_1ULMwD_1.txt";
+				break;
+			default:
+				CEVLunarSim.InputFile = "initialConditions_cev_llo_3KLM_001.txt";
+			break;
 			}
-			JAT_case++;
+			if (args.length > 0) {
+				CEVLunarSim.InputFile = args[0];
+			}
+
+			String fs, dir_in;
+			fs = FileUtil.file_separator();
+			try{
+				dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"input"+fs;
+			}catch(Exception e){
+				dir_in = "";
+			}
+			HashMap hm = initializer.parse_file(dir_in + CEVLunarSim.InputFile);
+			boolean runningMonteCarlo = initializer.parseBool(hm,"init.runMonteCarlo");
+			int num_runs = (runningMonteCarlo ? 
+					initializer.parseInt(hm,"MONTE.num_runs") : 1);
+			Integer startCase = initializer.parseInt(hm, "MONTE.start_case_num");
+			if (runningMonteCarlo && (startCase != null)) {
+				CEVLunarSim.JAT_case = startCase;
+			}
+			for(int c=0; c<num_runs; c++){
+
+				CEVLunarSim.JAT_name = "lowlunar";
+
+				//CEVLunarSim.InputFile = "initialConditions_cev_llo.txt";
+
+				CEVLunarSim Sim = new CEVLunarSim(useFilter);
+				Sim.set_verbose(true);
+				Sim.runloop();
+
+				try{
+					OpticalMeasurementModel.fobs.close();
+					OpticalMeasurementModel.fpred.close();
+				}catch(NullPointerException ne){
+
+				}
+				JAT_case++;
+			}
 		}
-		
+
 		double mc_elapsed = (System.currentTimeMillis()-mc_start)*0.001/60;
 		System.out.println("MonteCarlo time [min]: "+mc_elapsed);
 		

@@ -113,6 +113,15 @@ public class LinePrinter implements Printable {
         }
 	}
 
+    /**
+     * This method overrides the call to finalize() in order to close the LinePrinter when
+     * the object dies.
+     */
+    protected void finalize() throws Throwable{
+    	close();
+    	super.finalize();
+    }
+    
 	/** Closes the LinePrinter, the PrintWriter and the output file. Always remember to call this method when you are done printing!
 	 */
 	public void close() {

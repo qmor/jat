@@ -1,5 +1,7 @@
 package jat.spacetime;
 
+import jat.math.MathUtils;
+
 public class TimeUtils {
     /**
      * Modified Julian Date of the J2000 Epoch.
@@ -150,6 +152,188 @@ public class TimeUtils {
 	       return 0;
 	   }
 	   
+		/** Return the corrected value of utc time from the given gps time in modified julian date.
+	    * Values from the USNO website: ftp://maia.usno.navy.mil/ser7/leapsec.dat
+	    * As of July 19, 2002, no leap second in Dec 2002 so next opportunity for
+	    * adding a leap second is July 2003. Check IERS Bulletin C.
+	    * @param mjd_gps Modified Julian Date
+	    * @return time in mjd utc
+	    */
+	   public static double gps2utc(double mjd_gps){
+		   double mjd = mjd_gps;
+		   double mjd0=0,mjd1=1000000;
+		   int tai=0;
+		   double offset = 0;
+		   if (mjd < 41317.0) {
+	           System.out.println("TimeUtils.gps2utc: MJD before the beginning of the leap sec table");
+	           return 0;
+	       }
+	       if ((mjd >=41317.0)&&(mjd < 41499.0)){
+	    	   offset = (TAI_GPS-10)/86400.0;
+	    	   tai = 10;
+	    	   mjd0 = 41317.0;
+	    	   mjd1 = 41499.0;
+	       }
+	       if ((mjd >=41499.0)&&(mjd < 41683.0)){
+	    	   tai = 11;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 41499.0;
+	    	   mjd1 = 41683.0;
+	       }
+	       if ((mjd >=41683.0)&&(mjd < 42048.0)){
+	    	   tai = 12;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 41683.0;
+	    	   mjd1 = 42049.0;
+	       }
+	       if ((mjd >=42048.0)&&(mjd < 42413.0)){
+	    	   tai = 13;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 42048.0;
+	    	   mjd1 = 42413.0;
+	       }
+	       if ((mjd >=42413.0)&&(mjd < 42778.0)){
+	    	   tai = 14;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 42413.0;
+	    	   mjd1 = 42778.0;
+	       }
+	       if ((mjd >=42778.0)&&(mjd < 43144.0)){
+	    	   tai = 15;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 42413.0;
+	    	   mjd1 = 42778.0;
+	       }
+	       if ((mjd >=43144.0)&&(mjd < 43509.0)){
+	    	   tai = 16;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 43144.0;
+	    	   mjd1 = 43509.0;
+	       }
+	       if ((mjd >=43509.0)&&(mjd < 43874.0)){
+	    	   tai = 17;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 43509.0;
+	    	   mjd1 = 43874.0;
+	       }
+	       if ((mjd >=43874.0)&&(mjd < 44239.0)){
+	    	   tai = 18;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 43874.0;
+	    	   mjd1 = 44239.0;
+	       }
+	       if ((mjd >=44239.0)&&(mjd < 44786.0)){
+	    	   tai = 19;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 44239.0;
+	    	   mjd1 = 44786.0;
+	       }
+	       if ((mjd >=44786.0)&&(mjd < 45151.0)){
+	    	   tai = 20;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 44786.0;
+	    	   mjd1 = 45151.0;
+	       }
+	       if ((mjd >=45151.0)&&(mjd < 45516.0)){
+	    	   tai = 21;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 45151.0;
+	    	   mjd1 = 45516.0;
+	       }
+	       if ((mjd >=45516.0)&&(mjd < 46247.0)){
+	    	   tai = 22;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 45516.0;
+	    	   mjd1 = 46247.0;
+	       }
+	       if ((mjd >=46247.0)&&(mjd < 47161.0)){
+	    	   tai = 23;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 46247.0;
+	    	   mjd1 = 47161.0;
+	       }
+	       if ((mjd >=47161.0)&&(mjd < 47892.0)){
+	    	   tai = 24;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 47161.0;
+	    	   mjd1 = 47892.0;
+	       }
+	       if ((mjd >=47892.0)&&(mjd < 48257.0)){
+	    	   tai = 25;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 47892.0;
+	    	   mjd1 = 48257.0;
+	       }
+	       if ((mjd >=48257.0)&&(mjd < 48804.0)){
+	    	   tai = 26;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 48257.0;
+	    	   mjd1 = 48804.0;
+	       }
+	       if ((mjd >=48804.0)&&(mjd < 49169.0)){
+	    	   tai = 27;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 48804.0;
+	    	   mjd1 = 49169.0;
+	       }
+	       if ((mjd >=49169.0)&&(mjd < 49534.0)){
+	    	   tai = 28;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 49169.0;
+	    	   mjd1 = 49534.0;
+	       }
+	       if ((mjd >=49534.0)&&(mjd < 50083.0)){
+	    	   tai = 29;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 49534.0;
+	    	   mjd1 = 50083.0;
+	       }
+	       if ((mjd >=50083.0)&&(mjd < 50630.0)){
+	    	   tai = 30;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 50083.0;
+	    	   mjd1 = 50630.0;
+	       }
+	       if ((mjd >=50630.0)&&(mjd < 51179.0)){
+	    	   tai = 31;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 50630.0;
+	    	   mjd1 = 51179.0;
+	       }
+	       if ((mjd >=51179.0)&&(mjd < 53736.0)){
+	    	   tai = 32;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 51179.0;
+	    	   mjd1 = 53736.0;
+	       }
+	       if  (mjd >= 53736.0){	    	   
+	    	   tai = 33;
+	    	   offset = (TAI_GPS-tai)/86400.0;	    	   
+	    	   mjd0 = 53736.0;
+	    	   mjd1 = 1000000.0;
+	       }
+
+//	       if(mjd0==0){
+//	       
+//	       }
+//	       if(mjd1==1000000.0){
+//	    	   System.out.println("TimeUtils.gps2utc: Input MJD out of bounds");
+//	    	   return 0;
+//	       }
+	       
+	       if(mjd+offset <mjd0){
+	    	   tai--;
+    		   offset = (TAI_GPS-tai)/86400.0;
+    		   return mjd_gps;
+    	   }else if(mjd+offset >mjd1){
+    		   tai++;
+    		   offset = (TAI_GPS-tai)/86400.0;
+    		   return mjd_gps + offset;
+    	   }else{
+    		   return mjd_gps + offset;
+    	   }
+	           	
+	   }
 	    /**
 	     * Converts modified julian date to julian date.
 	     * @param MJD Modified Julian Date

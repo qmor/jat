@@ -243,7 +243,7 @@ public class Trajectory implements Serializable, Printable {
 					String token = tok.nextToken();
 					//					System.out.println("token= "+token);
 					temp[i] = Double.parseDouble(token);
-					if(units.equalsIgnoreCase("km")){
+					if(units.equalsIgnoreCase("km") && i>0){
 						temp[i] = temp[i]*1000;
 					}
 					i = i + 1;

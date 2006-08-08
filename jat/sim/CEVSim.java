@@ -112,7 +112,7 @@ public class CEVSim extends EstimatorSimModel {
 		double[] tv = new double[3];  //variable for true trajectory
 		double cr,cd,area,mass,dt;
 		
-		double MJD0 =  initializer.parseDouble(input,"init.MJD0");
+		double MJD0 =  initializer.parseDouble(input,"init.MJD0")+initializer.parseDouble(input, "init.T0")/86400.0;
 		
 		//For each spacecraft extract the initial vector and force information
 		//Use this information to create a sim model
@@ -483,13 +483,13 @@ public class CEVSim extends EstimatorSimModel {
 		int filterMode = initializer.parseInt(this.input,"init.mode");
 		
 		//Compute the length of the simulation in seconds
-		double MJD0 =  initializer.parseDouble(this.input,"init.MJD0");
-		this.mjd_utc_start = MJD0;
+		double MJD0 =  initializer.parseDouble(this.input,"init.MJD0");		
 		double MJDF =  initializer.parseDouble(this.input,"init.MJDF");
 		double T0   =  initializer.parseDouble(this.input,"init.T0");
 		double TF   =  initializer.parseDouble(this.input,"init.TF");
 		//simTime = 0; //* this is done in call to "initialize()"
-		simTime = new Time(MJD0);
+		this.mjd_utc_start = MJD0+T0/86400.0;
+		simTime = new Time(MJD0+T0/86400.0);
 		double simLength = Math.round((MJDF - MJD0)*86400 + TF - T0);
 		this.tf = simLength;
 		set_verbose(this.verbose_estimation);
@@ -541,6 +541,7 @@ public class CEVSim extends EstimatorSimModel {
 				reltraj[i] = new RelativeTraj(ref_traj[i],truth_traj[i],lp,"Jat(Ref) v Jat(Truth)");
 				reltraj[i].setVerbose(false);
 				reltraj[i].process(mismatch_tol);
+				reltraj[i].process_RSS(mismatch_tol);
 				//reltraj[i].process_ECI(mismatch_tol);
 			}
 
@@ -572,11 +573,12 @@ public class CEVSim extends EstimatorSimModel {
 		//* TODO Flag marker
 		EstimatorSimModel.JAT_case = 44;
 		
-//		CEVSim.JAT_name = "moon2earth_";
-//		CEVSim.InputFile = "initialConditions_cev_m2e.txt";
+		CEVSim.JAT_name = "moon2earth_";
+		//CEVSim.InputFile = "initialConditions_cev_m2e.txt";
+		CEVSim.InputFile = "initialConditions_cev_m2e_HIGH.txt";
 		
-		CEVSim.JAT_name = "earth2moon";
-		CEVSim.InputFile = (args.length > 0 ? args[0] : "initialConditions_cev_e2m.txt");
+//		CEVSim.JAT_name = "earth2moon";
+//		CEVSim.InputFile = (args.length > 0 ? args[0] : "initialConditions_cev_e2m.txt");
 		
 //		CEVSim.JAT_name = "earth2moon";
 //		CEVSim.InputFile = "initialConditions_cev_e2m_bias.txt";

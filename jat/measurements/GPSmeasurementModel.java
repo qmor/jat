@@ -30,7 +30,10 @@ import jat.matvec.data.*;
 import jat.math.*;
 import jat.sim.*;
 import jat.spacetime.EarthRef;
+import jat.spacetime.FitIERS;
+import jat.spacetime.GPSTimeFormat;
 import jat.spacetime.Time;
+import jat.spacetime.TimeUtils;
 import jat.traj.*;
 import jat.util.FileUtil;
 import java.util.HashMap;
@@ -59,6 +62,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 
 
 	private boolean obsfromfile = false;
+	public static LinePrinter gps_rv;
 	
 	private ReceiverModel rcvr;
 	public GPS_Constellation constell;
@@ -128,7 +132,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		clockState = initializer.parseInt(hm,"FILTER.clock");
 		biasState  = initializer.parseInt(hm,"FILTER.bias");
 		
-		MJD0 = initializer.parseDouble(hm,"init.MJD0") + initializer.parseDouble(hm,"init.T0");
+		MJD0 = initializer.parseDouble(hm,"init.MJD0") + initializer.parseDouble(hm,"init.T0")/86400.0;
 		Cn0_out = new VectorN(33);
 		dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"output"+fs;
 		String fileName5 = dir_in+"Visible.txt";
@@ -149,6 +153,12 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			this.integerAmbiguity[j] = GPS_Utils.lambda*num;
 		}
 			
+		try{
+            dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"output"+fs;
+        }catch(Exception e){
+            dir_in = "";
+        }
+        gps_rv = new LinePrinter(dir_in+"gps_rv.txt");
 	}
 
 	
@@ -217,10 +227,10 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			obs  = observedMeasurement(isv, t_mjd, state);
 		}
 		//*TODO watch - the following line is a random attempt at hard-tweaking data
-		t_mjd = t_mjd+30*60/86400;
+		//t_mjd = t_mjd+30*60/86400;
 		//double pred = predictedMeasurement(isv, t_mjd, state, om.get_ECF2ECI());
 		double pred = predictedMeasurement(isv, t_mjd, state);
-	
+	    //if(Double.isNaN(pred)) return Double.NaN;
 		if(obs == 0)
 		    out = 0.0;
 		else
@@ -230,7 +240,6 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		//return Math.abs(out);
 		return out;
 	}
-	
 	public double observedMeasurement(int isv, double t, VectorN state)
 	{
 		double[] Cn0 = new double[33];
@@ -259,7 +268,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		}
 		//state= new VectorN (closedLoopSim.truth[0].sc.get_spacecraft().toStateVector());
 //* TODO Cheating - static reference to EstimatorSimModel		
-		state= new VectorN (EstimatorSimModel.truth[0].get_spacecraft().toStateVector());
+		state= new VectorN (EstimatorSimModel.sim_truth.getStateAt(currentTime));
 
 		// get the SVID and MJD time of measurement
 		GPS_SV sv = constell.getSV(isv);
@@ -389,6 +398,109 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		
 		// get the SVID of measurement
 		GPS_SV sv;
+		//int index = isv;//constell.getIndex(isv);
+		int index = constell.getIndex(isv);
+		sv = constell.getSV(index);
+		int prn = sv.prn();
+//		if(prn!=13)
+//			return Double.NaN;
+		int clockIndex = clockState;
+
+		// extract the current spacecraft position vector		
+		VectorN r = new VectorN(state.get(0,3));
+		VectorN v = new VectorN(state.get(3,3));
+			
+		//* The following is used when feeding in the sim_time
+		//* currently when using files, the mjd_utc time is fed in
+		//double t_mjd = t/(double)86400 + MJD0;
+		double t_mjd = t; 
+		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
+		
+		//* TODO watch this
+		// compute the GPS SV position vector at transmission time
+//		* TODO watch this - should this be transmit time?
+		//Time time = new Time(t_mjd);
+		Time time = new Time(ts_mjd);
+		FitIERS iers = new FitIERS();
+		double[] params = iers.search(time.mjd_utc());
+		time.set_UT1_UTC(params[2]);
+		EarthRef earth = new EarthRef(time);
+		earth.setIERS(params[0], params[1]);
+		
+		Matrix pole = earth.PoleMatrix();
+		Matrix gha = earth.GHAMatrix(time.mjd_ut1(),time.mjd_tt());
+		Matrix tod = earth.TOD();
+		VectorN rvGPS_ECEF = sv.rvECEF(ts_mjd);
+		VectorN rvGPS = sv.rvECI(ts_mjd,pole,gha,tod);
+		VectorN rvGPS_ECEF_meas = sv.rvECEF(t_mjd);
+		gps_rv.println("t:\t"+(new Time(ts_mjd).secOfDay())+"\t prn:\t"+sv.prn()+"\t rveci:\t"+rvGPS.toString()+"\t rvecef:\t"+rvGPS_ECEF.toString()+"\t rvecef_meas:\t"+rvGPS_ECEF_meas.toString());
+
+		VectorN rGPS = new VectorN(rvGPS.x[0], rvGPS.x[1], rvGPS.x[2]);
+		VectorN vGPS = new VectorN(rvGPS.x[3], rvGPS.x[4], rvGPS.x[5]);
+		
+		// compute the LOS vector
+		VectorN los = rGPS.minus(r);
+		VectorN losu = los.unitVector();
+		
+		// compute the expected range
+		double range = los.mag();
+				
+		// compute the range rate
+		double range_rate = GPS_Utils.rangeRate(los, v, vGPS);
+		
+		// add clock bias contribution to range
+		double bc = state.x[clockIndex];
+		double omrroc = 1.0 - (range_rate/GPS_Utils.c);
+		double bcpart = omrroc*bc;
+		range = range + bcpart - GPS_Utils.c*sv.biasCorrection(new GPSTimeFormat(ts_mjd).gps_sow());
+		//range = range - GPS_Utils.c*sv.biasCorrection(new GPSTimeFormat(ts_mjd).gps_sow());
+		
+		// add iono contribution to range
+		//int iono_index = 9;
+		//double diono = xref.x[iono_index];
+		//double iv = (1.0 + diono)*iono.Ivbar;
+		//double elev = GPS_Utils.elevation(r, rGPS);
+		//double ionopart = IonoModel.del_iono(iv, elev);
+		//Assume there is no Ionosphere Delay
+		//range = range + ionopart;
+		
+		// add ure contribution to range
+		//int ure_index = 9 + svindex;
+		//double dure = xref.x[ure_index];
+		//range = range + dure;
+		
+		//Create and zero out the H vector
+		int numStates = this.FILTER_states;//initializer.parseInt(hm,"FILTER.states");
+		H = new VectorN(numStates);
+		H.set(0.0);
+		
+		// compute the H vector
+		VectorN drrdr = drrdr(los, vGPS, range_rate);
+		double term1 = -1.0 * bc / GPS_Utils.c;
+		drrdr = drrdr.times(term1);
+		VectorN drrdv = this.drrdv(los, vGPS);
+		VectorN drhodv = drrdv.times(term1);
+		VectorN drhodr = drrdr.minus(losu);
+		H.set(0, drhodr);
+		H.set((3), drhodv);
+		double drdbc = 1.0 - range_rate/GPS_Utils.c;
+		
+		H.set(clockIndex, drdbc); 
+		
+		
+		
+		//double drdiono = IonoModel.del_iono(iono.Ivbar, elev);
+		//htilde.set(iono_index, drdiono);
+		//htilde.set(ure_index, 1.0);
+				
+		return range;
+	}
+	public double predictedMeasurement(int isv, Time t, VectorN state) 
+	{
+	//private double rangePred(double t_mjd, VectorN xref, int prn, int type ){
+		
+		// get the SVID of measurement
+		GPS_SV sv;
 		int index = constell.getIndex(isv);
 		sv = constell.getSV(index);
 		//int prn = sv.prn();
@@ -399,16 +511,16 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		VectorN r = new VectorN(state.get(0,3));
 		VectorN v = new VectorN(state.get(3,3));
 			
-		double t_mjd = t;//t/(double)86400 + MJD0; 
+		double t_mjd = t.mjd_utc(); 
 		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
+		t.updateTo(ts_mjd);
 		
 		//* TODO watch this
-		// compute the GPS SV position vector at transmission time
-		Time time = new Time(t_mjd);
-		EarthRef earth = new EarthRef(time);
+		// compute the GPS SV position vector at transmission time		
+		EarthRef earth = new EarthRef(t);
 		
 		Matrix pole = earth.PoleMatrix();
-		Matrix gha = earth.GHAMatrix(time.mjd_ut1(),time.mjd_tt());
+		Matrix gha = earth.GHAMatrix(t.mjd_ut1(),t.mjd_tt());
 		Matrix tod = earth.TOD();
 		VectorN rvGPS = sv.rvECI(ts_mjd,pole,gha,tod);
 //		VectorN rvGPSecef = sv.rvECI(ts_mjd);
@@ -476,7 +588,6 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 				
 		return range;
 	}
-
 	public double predictedMeasurement(int isv, double t, VectorN state, RotationMatrix ECF2ECI) 
 	{
 	//private double rangePred(double t_mjd, VectorN xref, int prn, int type ){

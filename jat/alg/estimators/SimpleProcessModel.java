@@ -31,6 +31,7 @@ import jat.eph.DE405;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 import jat.measurements.OpticalMeasurementModel;
+import jat.sim.CEVLunarSim;
 import jat.sim.initializer;
 import jat.spacetime.LunaFixedRef;
 import jat.spacetime.LunaRef;
@@ -43,6 +44,7 @@ import jat.traj.CoordinateSystem;
 import jat.traj.DistanceUnits;
 import jat.traj.TimeUnits;
 import jat.traj.Trajectory;
+import jat.util.FileUtil;
 
 public class SimpleProcessModel implements ProcessModel {
 
@@ -130,12 +132,14 @@ public class SimpleProcessModel implements ProcessModel {
 			tmp = "P0."+i+".VZ";
 			sigmas[6*i + 5] = initializer.parseDouble(hm,tmp);
 		}
-				
+
+		try{
 		if(n>6){
 			sigmas[6] = initializer.parseDouble(hm, "P0.0.LX");
 			sigmas[7] = initializer.parseDouble(hm, "P0.0.LY");
 			sigmas[8] = initializer.parseDouble(hm, "P0.0.LZ");
 		}
+		}catch(Exception e){}
 		//sigmas[6] = initializer.parseDouble(hm,"P0.0.clockBias");
 		//sigmas[7] = initializer.parseDouble(hm,"P0.0.clockDrift");
 		//sigmas[8] = initializer.parseDouble(hm,"P0.0.Cr");
@@ -177,6 +181,7 @@ public class SimpleProcessModel implements ProcessModel {
 			Q.set((6*i + 5),(6*i + 5), initializer.parseDouble(hm,tmp));
 		}
 				
+		try{
 		if(n>6){
 			String tmp;
 			tmp = "Q."+0+".LX";
@@ -186,6 +191,7 @@ public class SimpleProcessModel implements ProcessModel {
 			tmp = "Q."+0+".LZ";
 			Q.set(8,8, initializer.parseDouble(hm,tmp));
 		}
+		}catch(Exception e){}
 		
 		//Q.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		//Q.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
@@ -211,12 +217,14 @@ public class SimpleProcessModel implements ProcessModel {
 		QXYZ.set(3,3,1e-13);
 		QXYZ.set(4,4,1e-13);
 		QXYZ.set(5,5,1e-13);
-				
+			
+		try{
 		if(n>6){
 			QXYZ.set(6, 6, initializer.parseDouble(hm, "Q.0.LX"));
 			QXYZ.set(7, 7, initializer.parseDouble(hm, "Q.0.LY"));
 			QXYZ.set(7, 7, initializer.parseDouble(hm, "Q.0.LZ"));
 		}
+		}catch(Exception e){}
 		//QXYZ.set(6,6,initializer.parseDouble(hm,"Q.0.clockBias"));
 		//QXYZ.set(7,7,initializer.parseDouble(hm,"Q.0.clockDrift"));
 		//QXYZ.set(8,8, initializer.parseDouble(hm,"Q.0.Cr"));
@@ -334,25 +342,51 @@ public class SimpleProcessModel implements ProcessModel {
 					
 			}
 			
+			try{
 			if(n>6){
 				out.x[6] = initializer.parseDouble(hm, ref+i+".LX");
 				out.x[7] = initializer.parseDouble(hm, ref+i+".LY");
 				out.x[8] = initializer.parseDouble(hm, ref+i+".LZ");					
 			}
-			
-			
-			
-			if(initializer.parseBool(hm, "init.runMonteCarlo")){
-				double r_error = initializer.parseDouble(hm, "MONTE.r_error");
-				double v_error = initializer.parseDouble(hm, "MONTE.v_error");
-				double lm_error = 0;
-				if(n>6)	lm_error = initializer.parseDouble(hm, "MONTE.lm_error");
-				for(int k=0; k<3; k++){
-					out.x[k] = out.x[k] + rnd.nextGaussian()*r_error;
-					out.x[k+3] = out.x[k+3] + rnd.nextGaussian()*v_error;
-					if(n>6) out.x[k+6] = out.x[k+6] + rnd.nextGaussian()*lm_error;
+			}catch(Exception e){}
+
+			try{
+				if(initializer.parseBool(hm, "init.runMonteCarlo")){
+					String fs, dir_in;
+					fs = FileUtil.file_separator();
+					try{
+						dir_in = FileUtil.getClassFilePath("jat.sim","SimModel")+"output"+fs;
+					}catch(Exception e){
+						dir_in = "";
+					}
+					LinePrinter init = new LinePrinter();
+					try{
+						init = new LinePrinter(dir_in+"init"+CEVLunarSim.JAT_case+".txt");
+					}catch(Exception e){
+					}
+					double r_error = initializer.parseDouble(hm, "MONTE.r_error");
+					double v_error = initializer.parseDouble(hm, "MONTE.v_error");
+					double lm_error = 0;
+					if(n>6)	lm_error = initializer.parseDouble(hm, "MONTE.lm_error");
+					double r = 0;
+					for(int k=0; k<3; k++){
+						r = rnd.nextGaussian()*r_error;
+						out.x[k] = out.x[k] + r;
+						init.println("r"+k+"  "+r);
+						r = rnd.nextGaussian()*v_error;
+						out.x[k+3] = out.x[k+3] + r;
+						init.println("v"+(k+3)+"  "+r);
+						if(n>6){
+							r = rnd.nextGaussian()*lm_error;
+							out.x[k+6] = out.x[k+6] + r;
+							init.println("L"+(k+6)+"  "+r);
+						}					
+					}
+					init.close();
+
 				}
-			}
+
+			}catch(Exception e){}
 		}
 		
 		return out;

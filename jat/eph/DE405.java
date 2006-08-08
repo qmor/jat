@@ -151,8 +151,10 @@ public class DE405
       }
     }
     /** The cache.  Maps the file name to the cached data. */
+//    private static Map<String, CachedEphemeris> cachedEphemeris =
+//      Collections.synchronizedMap(new HashMap<String, CachedEphemeris>());
     private static Map<String, CachedEphemeris> cachedEphemeris =
-      Collections.synchronizedMap(new HashMap<String, CachedEphemeris>());
+        (new HashMap<String, CachedEphemeris>());
     
 	/*  DEFINE INSTANCE VARIABLES  */
 

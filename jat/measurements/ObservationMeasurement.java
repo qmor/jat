@@ -325,7 +325,7 @@ public class ObservationMeasurement implements Serializable{
 		}catch(NumberFormatException e){
 			char[] array = id.toCharArray();
 			int i=0;
-			while(array[i]==' ' || array[i]=='c') i++; 
+			while(array[i]==' ' || array[i]=='c' || array[i]=='G') i++; 
 			id = new String(array,i,array.length-i);
 			out= Integer.parseInt(id);
 		}

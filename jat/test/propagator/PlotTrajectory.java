@@ -43,10 +43,16 @@ public class PlotTrajectory {
 	    String file = "C:/Code/Jat/jat/test/propagator/output/"+sjat;
 	    jat.readFromFile(file,"\t","km");
 	    String stkfile = "C:/Code/Jat/jat/test/propagator/output/"+sstk;
-	    stk.readFromFile(stkfile," ","km");
+	    try{
+	    	stk.readFromFile(stkfile," ","km");
+	    }catch(NumberFormatException e){
+	    	stk = new Trajectory();
+	    	stk.readFromFile(stkfile, "\t", "km");
+	    }
 	    LinePrinter lp = new LinePrinter();
-	    RelativeTraj comp = new RelativeTraj(jat,stk,lp);
-	    comp.process(1e-5);
+	    RelativeTraj comp = new RelativeTraj(jat,stk,lp,sjat);
+	    //comp.process(1e-5);
+	    comp.process_RSS(1e-7);
     }
     
 	public static void main(String[] args) throws java.io.IOException {
@@ -61,5 +67,10 @@ public class PlotTrajectory {
 		//String sjat = "ISS4_HP_jat.txt";
 		//String sstk = "ISS4_HP_stk.txt";
 		PlotTrajectory.plot(sjat,sstk);
+		
+//		String s = "C:/Code/Jat/jat/sim/output/JAT_error_2.txt";
+//		Trajectory traj = new Trajectory();
+//		traj.readFromFile(s);
+		
 	}
 }

@@ -87,7 +87,7 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		mass1 = initializer.parseDouble(hm,"jat.1.mass");
 		area1 = initializer.parseDouble(hm,"jat.1.area");
 		Cr1 = initializer.parseDouble(hm,"jat.1.Cr");
-		mjd0 = initializer.parseDouble(hm,"init.MJD0");
+		mjd0 = initializer.parseDouble(hm,"init.MJD0")+initializer.parseDouble(hm, "init.T0")/86400.0;
 
 		
 		hc = -2.87956633585E-10 * GPS_Utils.c;
