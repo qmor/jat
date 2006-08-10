@@ -170,7 +170,7 @@ public class RSW_Frame {
 	 * @param v_eci velocity vector in ECI frame.
 	 * @return the velocity in the RSW frame
 	 */	
-	private VectorN transformVelocity(VectorN r_rsw, VectorN v_eci){
+	public VectorN transformVelocity(VectorN r_rsw, VectorN v_eci){
 		VectorN v = this.eci2rsw.times(v_eci);
 		VectorN cor = this.omega.crossProduct(r_rsw);
 		VectorN out = v.minus(cor);

@@ -105,6 +105,11 @@ public class EstimatorSimModel extends SimModel {
 	protected FileOutputStream[] truths;
 	protected FileOutputStream[] ECIError;
 	protected FileOutputStream[] covariance;
+	protected FileOutputStream[] RICError;
+	protected FileOutputStream[] RICCov;
+	protected FileOutputStream[] RRError;
+	protected FileOutputStream[] ECEFerr; 
+	
 	
 	protected int simStep;
 	public EKF filter;
@@ -118,6 +123,8 @@ public class EstimatorSimModel extends SimModel {
 	protected boolean verbose_estimation=false;
 	protected boolean useMeas=true;
 	private boolean obsFromFile=false;
+    // If this is set, it means don't do a lot of the outputs and plots
+    protected boolean runMonteCarlo = false;
 	
 	//** Constructors **//
 	
@@ -165,7 +172,10 @@ public class EstimatorSimModel extends SimModel {
 		this.mjd_utc_start = MJD0+T0/86400;
 		simTime = new Time(MJD0+T0/86400);
 		
-		sim_truth = parseTruth(simTime.get_epoch_mjd_utc(),MJDF+TF/86400.0);
+        runMonteCarlo = 
+          (initializer.parseInt(input, "MONTE.num_runs") != null);
+
+        sim_truth = parseTruth(simTime.get_epoch_mjd_utc(),MJDF+TF/86400.0);
 		
 		this.obsFromFile = initializer.parseBool(this.input,"init.fromfile");
 		if(obsFromFile){
@@ -925,13 +935,17 @@ public class EstimatorSimModel extends SimModel {
 			VectorN vecTime =  new VectorN(1,(simStep)*dt);
 			VectorN trueState = new VectorN(true_state);
 			VectorN truthOut = new VectorN(vecTime,trueState);
-			new PrintStream(truths[numSats]).println (truthOut.toString());
+            if (!runMonteCarlo) {
+              new PrintStream(truths[numSats]).println (truthOut.toString());
+            }
 			
 			//Write out the current State estimates
 			double [] ref_state  = ref[numSats].get_spacecraft().toStateVector();
 			VectorN vecState = new VectorN(ref_state);
 			VectorN stateOut = new VectorN(vecTime,vecState);
-			new PrintStream(trajectories[numSats]).println (stateOut.toString());
+            if (!runMonteCarlo) {
+              new PrintStream(trajectories[numSats]).println (stateOut.toString());
+            }
 			
 			//Output the current ECI error
 			VectorN error_out = new VectorN(6);
@@ -1077,7 +1091,7 @@ public class EstimatorSimModel extends SimModel {
 		System.out.println("Elapsed time [min]: "+elapsed);
 		
 		/* Post Processing */
-		
+	  if (!runMonteCarlo) {
 //		Trajectory geons_truth = new Trajectory(); 
 //		if(PlotGEONSTruth || PlotMeasurements) geons_truth = parseGEONSTruth(simTime.get_epoch_mjd_utc(),simTime.mjd_utc());
 		Trajectory geons_ref = new Trajectory();
@@ -1171,19 +1185,25 @@ public class EstimatorSimModel extends SimModel {
 				e.printStackTrace();
 			}
 		}
+      }
 	}
 	
 	protected void openFiles()
 	{
 		/*The number and types of files that are created are based
 		 * upon the number of spacecraft and the simulation mode*/
-		trajectories = new FileOutputStream [numSpacecraft];
-		if(JAT_runtruth){
-			truths       = new FileOutputStream [numSpacecraft]; 
-		}
+        if (!runMonteCarlo) {
+          trajectories = new FileOutputStream [numSpacecraft];
+          if(JAT_runtruth){
+            truths       = new FileOutputStream [numSpacecraft]; 
+          }
+        }
 		ECIError     = new FileOutputStream [numSpacecraft];
 		covariance   = new FileOutputStream [numSpacecraft];
-		
+		RICError     = new FileOutputStream [numSpacecraft];
+		RICCov       = new FileOutputStream [numSpacecraft];
+		RRError      = new FileOutputStream [numSpacecraft];
+		ECEFerr      = new FileOutputStream [numSpacecraft];
 		
 		String fs, dir_in;
 		fs = FileUtil.file_separator();
@@ -1211,13 +1231,24 @@ public class EstimatorSimModel extends SimModel {
 				String fileName = dir_in+"JAT_"+JAT_case+".eci";
 				String fileName3 = dir_in+"JAT_error_"+JAT_case+".txt";
 				String fileName4 = dir_in+"JAT_"+JAT_case+".cov";
-				trajectories[numSats] = new FileOutputStream (fileName);
-				if(JAT_runtruth){
-					String fileName2 = dir_in+"JAT_true_"+JAT_case+".txt";
-					truths[numSats]       = new FileOutputStream (fileName2);
-				}
+				String fileName5 = dir_in+"JAT"+JAT_case+"RIC.err";
+				String fileName6 = dir_in+"JAT"+JAT_case+"RIC.cov";
+				String fileName7 = dir_in+"JAT"+JAT_case+"RR.err";
+				String fileName8 = dir_in+"JAT"+JAT_case+"ECEF.err";
+				
+                if (!runMonteCarlo) {
+                  trajectories[numSats] = new FileOutputStream (fileName);
+                  if(JAT_runtruth){
+                    String fileName2 = dir_in+"JAT_true_"+JAT_case+".txt";
+                    truths[numSats]       = new FileOutputStream (fileName2);
+                  }
+                }
 				ECIError[numSats]     = new FileOutputStream(fileName3);
 				covariance[numSats]   = new FileOutputStream(fileName4);
+				RICError[numSats]     = new FileOutputStream(fileName5);
+				RICCov[numSats]     = new FileOutputStream(fileName6);
+				RRError[numSats]     = new FileOutputStream(fileName7);
+				ECEFerr[numSats]     = new FileOutputStream(fileName8);
 			}
 			catch (IOException e)
 			{
@@ -1237,12 +1268,18 @@ public class EstimatorSimModel extends SimModel {
 				// Close the files
 				try 
 				{
-					trajectories[numFiles].close();
-					if(JAT_runtruth){
-						truths[numFiles].close();
-					}
+                    if (!runMonteCarlo) {
+                      trajectories[numFiles].close();
+                      if(JAT_runtruth){
+                        truths[numFiles].close();
+                      }
+                    }
 					ECIError[numFiles].close();
 					covariance[numFiles].close();
+					RICError[numFiles].close();
+					RICCov[numFiles].close();
+					RRError[numFiles].close();
+					ECEFerr[numFiles].close();
 				} 
 				catch (IOException e) 
 				{
