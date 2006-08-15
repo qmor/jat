@@ -85,7 +85,9 @@ public class ForceModelTest extends TestCase {
       Time newTime = parse(rLine, position, velocity);
       if (time == null) {
         time = newTime;
-        ref = new EarthRef(time.mjd_ut1(), time.mjd_tt(), false, true);
+        ref = new EarthRef(time.mjd_ut1(), time.mjd_tt());
+        ref.initializeSunEphem(time.mjd_tt());
+        ref.set_use_sun(true);
       }
       else {
         double seconds = (newTime.mjd_utc() - time.mjd_utc()) * TimeUtils.sec2days;

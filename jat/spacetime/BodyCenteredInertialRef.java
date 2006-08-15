@@ -121,4 +121,37 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
       }
       return xlater;
     }
+    
+    /**
+     * Common method to determine difference and velocity between two bodies.
+     * @param body1 source body code or SOLAR_SYSTEM for the solar system barycenter
+     * @param body2 target body code or SOLAR_SYSTEM for the solar system barycenter
+     * @param t the time
+     * @return a 6 slot vector.  Slots 1-3 is position vector from body1 to body2.
+     * Slots 4-6 is the difference in velocity from body1 to body2
+     */
+    public static VectorN getPosVelDiff(int body1, int body2, Time t) {
+      DE405 jpl_ephemeris = new DE405();
+      VectorN posVelDiff = null;
+      
+      // We can always just difference the solar system barycenter 
+      // positions/velocities, but if we are doing Earth/Sun or Earth/Moon,
+      // we use specific DE405 Geocentric calls.
+      
+      if ((body1 == DE405.EARTH) && (body2 == DE405.MOON)) {
+        posVelDiff = jpl_ephemeris.get_Geocentric_Moon_posVel(t.jd_tdb());
+      }
+      else if ((body1 == DE405.MOON) && (body2 == DE405.EARTH)) {
+        posVelDiff = jpl_ephemeris.get_Geocentric_Moon_posVel(t.jd_tdb()).times(-1);
+      }
+      else {
+        VectorN state1 = new VectorN(body1 == SOLAR_SYSTEM ?
+            new double[6] : jpl_ephemeris.get_planet_posvel(body1, t.jd_tdb()));
+        VectorN state2 = new VectorN(body2 == SOLAR_SYSTEM ?
+            new double[6] : jpl_ephemeris.get_planet_posvel(body2, t.jd_tdb()));
+        // We difference and convert to meters (JPL reports kilometers)
+        posVelDiff = state2.minus(state1).times(1000);
+      }
+      return posVelDiff;
+    }
 }

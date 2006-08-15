@@ -680,33 +680,39 @@ public class DE405
 	 * @return position of the moon [km]
 	 */
 	public VectorN get_Geocentric_Moon_pos(double jultime){
-
-		double[] ephemeris_r = new double[4];
-		double[] ephemeris_rprime = new double[4];
-		get_planet_posvel(jultime, 10, ephemeris_r, ephemeris_rprime);
-		for (int j = 1; j <= 3; j++)
-		{
-			planet_r[10][j] = ephemeris_r[j];
-		}
-
-		return new VectorN(planet_r[10][1],planet_r[10][2],planet_r[10][3]);
+      return get_Geocentric_Moon_posVel(jultime).get(0, 3);
 	}
 	
-	/** the geocentric velocity of the moon at the given Julian date
-	 * @param jultime Julian Date (TDB)
-	 * @return velocity of the moon [km]
-	 */
-	public VectorN get_Geocentric_Moon_vel(double jultime){
-		double[] ephemeris_r = new double[4];
-		double[] ephemeris_rprime = new double[4];
-		get_planet_posvel(jultime, 10, ephemeris_r, ephemeris_rprime);
-		for (int j = 1; j <= 3; j++)
-		{
-			planet_rprime[10][j] = ephemeris_rprime[j];
-		}
-		return new VectorN(planet_rprime[10][1],planet_rprime[10][2],planet_rprime[10][3]);
-	}
-	
+    /** the geocentric velocity of the moon at the given Julian date
+     * @param jultime Julian Date (TDB)
+     * @return velocity of the moon [km]
+     */
+    public VectorN get_Geocentric_Moon_vel(double jultime){
+        return get_Geocentric_Moon_posVel(jultime).get(3, 3);
+    }
+    
+    /** the geocentric velocity of the moon at the given Julian date
+     * @param jultime Julian Date (TDB)
+     * @return position and velocity of the moon in one 6 coordinate vector [km]
+     */
+    public VectorN get_Geocentric_Moon_posVel(double jultime){
+        double[] ephemeris_r = new double[4];
+        double[] ephemeris_rprime = new double[4];
+        get_planet_posvel(jultime, 10, ephemeris_r, ephemeris_rprime);
+        VectorN posvel = new VectorN(6);
+        for (int j = 1; j <= 3; j++)
+        {
+            planet_r[10][j] = ephemeris_r[j];
+            posvel.set(j-1, ephemeris_r[j]);
+        }
+        for (int j = 1; j <= 3; j++)
+        {
+            planet_rprime[10][j] = ephemeris_rprime[j];
+            posvel.set(j+2, ephemeris_rprime[j]);
+        }
+        return posvel;
+    }
+    
 	/** the geocentric position of the sun at the given Julian date
 	 * @param jultime Julian Date (TDB)
 	 * @return position of the sun [km]
