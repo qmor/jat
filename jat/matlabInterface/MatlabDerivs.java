@@ -1,8 +1,21 @@
-/*
- * Created on Apr 8, 2005
+/* JAT: Java Astrodynamics Toolkit
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Copyright (c) 2006 Emergent Space Technologies, Inc. All rights reserved.
+ *
+ * This file is part of JAT. JAT is free software; you can
+ * redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
  */
 package jat.matlabInterface;
 
@@ -12,23 +25,39 @@ import jat.matvec.data.VectorN;
 import com.mathworks.jmi.Matlab;
 
 /**
- * @author dgaylor
+ * MatlabDerivs allows the user to pass a derivs function implemented in Matlab
+ * to JAT numerical integrators. 
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
+ * 
  */
-
 public class MatlabDerivs implements Derivatives {
 
 	private String cmd = null;
+
 	private Object[] inputArgs = null;
 
+	private boolean verbose = false;
+
+	/**
+	 * @param command String containing Matlab command for computing the derivatives
+	 */
 	public MatlabDerivs(String command) {
 		cmd = command;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Set to verbose output to screen 
+	 *
+	 */
+	public void verbose() {
+		verbose = true;
+	}
+
+	/**
+	 * Provide derivative equations to the numerical integrator
+	 * @param t independent variable
+	 * @param x dependent variables
 	 * 
 	 * @see jat.alg.integrators.Derivatives#derivs(double, double[])
 	 */
@@ -42,23 +71,37 @@ public class MatlabDerivs implements Derivatives {
 			temp[i] = new Double(x[i]);
 		}
 		inputArgs[1] = temp;
-		
+
 		// Get the return values from matlab
 		double[] returnVals = null;
-		try {
-			returnVals = (double[])Matlab.mtFevalConsoleOutput(cmd, inputArgs, 0);
-//			returnVals = (double[])Matlab.mtFeval(cmd, inputArgs, 0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+		if (cmd.equals("JatUniverseJGM2")) {
+			/* In here I want to access the EOMs for the JGM2 All Case 
+			 * and I want to assign the return from the EOMs to be the 
+			 * returnVals. */
+		} else if (cmd.equals("JatUniverseJGM3")) {
+			/* In here I want to access the EOMs for the JGM3 All Case
+			 * and I want to assign the return from the EOMs to be the 
+			 * returnVals. */
+		} else {
+			try {
+				if (verbose) {
+					returnVals = (double[]) Matlab.mtFevalConsoleOutput(cmd,
+							inputArgs, 0);
+				} else {
+					returnVals = (double[]) Matlab.mtFeval(cmd, inputArgs, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return returnVals;
-		
+
 	}
-	
+
 	public void test(String command) {
 		MatlabDerivs d = new MatlabDerivs(command);
 		System.out.println("entering test");
-		double t = 0.1;
+		double t = 60;
 		double[] x = new double[2];
 		x[0] = 1.0;
 		x[1] = 2.0;
@@ -67,6 +110,6 @@ public class MatlabDerivs implements Derivatives {
 		double[] out = d.derivs(t, x);
 		VectorN output = new VectorN(out);
 		output.print("final output vector");
-	}		
+	}
 
 }
