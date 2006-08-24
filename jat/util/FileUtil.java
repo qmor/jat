@@ -68,17 +68,20 @@ public class FileUtil {
 		// in a directory and not from a jar or from an applet
 		if (url.getProtocol().equals("file")) {
 		  try {
-			// get the path
-			out = url.toURI().getPath();
-			
-			// chop off the unneeded stuff
-			if (windoze) {
-				out = out.substring(1, out.length()
-						- (shortName + ".class").length());				
-			} else {
-				out = out.substring(0, out.length()
-						- (shortName + ".class").length());				
-			}
+			// Get the path
+            // Sometimes JDKs produce null for path and you have to
+            // get it from the scheme specific part (which in a 
+            // file URI should just be the path)
+            out = url.toURI().getPath();
+            if (out == null) {
+              out = url.toURI().getSchemeSpecificPart();
+            }
+
+            // chop off the unneeded stuff
+            out = out.substring(0, out.length() - (shortName + ".class").length());             
+            if (windoze && out.startsWith("/")) {
+                out = out.substring(1);
+            } 
 		  } catch (URISyntaxException e) {
             // Something has gone awry.  All valid URLs are URIs.
             throw new RuntimeException("Could not find " + fullyQualifiedName + 
