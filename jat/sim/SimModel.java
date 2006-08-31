@@ -391,18 +391,15 @@ public class SimModel implements Derivatives {
         //ForceModelList forces = new ForceModelList();
         VectorN zero = new VectorN(0,0,0);
 	    if(force_flag[0]){
-	        System.out.println("Earth");
 	        GravitationalBody earth =
 	            new GravitationalBody(398600.4415e+9);
 	        spacetime.addForce(earth);
 	    } else {
 	        if(use_JGM2){
-	            System.out.println("JGM2");
 	            GravityModel earth_grav = new GravityModel(2,2,GravityModelType.JGM2);
 	            spacetime.addForce(earth_grav);
 	            spacetime.set_use_iers(true);
 	        }else{
-	            System.out.println("JGM3");
 	            GravityModel earth_grav = new GravityModel(20,20,GravityModelType.JGM3);
 	            spacetime.addForce(earth_grav);
 	            spacetime.set_use_iers(true);
@@ -410,14 +407,12 @@ public class SimModel implements Derivatives {
 
 	    }
 	    if(force_flag[1]){
-	        System.out.println("Sun");
 	        spacetime.set_compute_sun(true);
 	        Sun sun =
 	            new Sun(Constants.GM_Sun,zero,zero);
 	        spacetime.addForce(sun);
 	    }
 	    if(force_flag[2]){
-	        System.out.println("Moon");
 	        spacetime.set_compute_moon(true);
 	        Moon moon =
 	            new Moon(Constants.GM_Moon,zero,zero);
@@ -429,7 +424,6 @@ public class SimModel implements Derivatives {
             double n_param_opt = 6;
             spacetime.set_compute_sun(true);
 	        if(drag_model.endsWith("NRL") || drag_model.endsWith("A") || drag_model.endsWith("C")){
-	            System.out.println("NRLMSISE");
 	            NRLMSISE_Drag drag = new NRLMSISE_Drag(sc.get_spacecraft());
 	            drag.ap_opt = ap_opt;
 	            drag.f107_opt = f107_opt;
@@ -437,7 +431,6 @@ public class SimModel implements Derivatives {
 	            spacetime.set_use_iers(true);
 	        }else{
 	            spacetime.set_compute_sun(true);
-	            System.out.println("HarrisPriester");
 	            HarrisPriester atmos = new HarrisPriester(sc.get_spacecraft(),150);//145.8480085177176);
 	            //atmos.setF107(145.8480085177176);//148.715);//99.5);
 	            atmos.setParameter(n_param_opt);
@@ -452,7 +445,6 @@ public class SimModel implements Derivatives {
 	    }
 	    if(force_flag[4]){
 	        spacetime.set_compute_sun(true);
-	        System.out.println("SolarRadiationPressure");
 	        SolarRadiationPressure srp = new SolarRadiationPressure(sc.get_spacecraft());
 	        spacetime.addForce(srp);
 	    }
