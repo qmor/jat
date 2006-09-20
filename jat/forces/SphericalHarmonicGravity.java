@@ -98,8 +98,8 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
     protected void initializeCS(int nmax, int mmax, double[][] cs){
         this.n_max = nmax;
         this.m_max = mmax;
-        this.CS = new double[nmax][mmax];
-        for (int i = 0; i < this.n_max; i++){
+        this.CS = new double[nmax+1][mmax+1];
+        for (int i = 0; i < this.n_max+1; i++){
             for (int j = 0; j < this.m_max; j++){
                 this.CS[i][j] = cs[i][j];
             }
