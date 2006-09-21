@@ -100,7 +100,7 @@ abstract public class SphericalHarmonicGravity implements EarthForceModel, Force
         this.m_max = mmax;
         this.CS = new double[nmax+1][mmax+1];
         for (int i = 0; i < this.n_max+1; i++){
-            for (int j = 0; j < this.m_max; j++){
+            for (int j = 0; j < this.m_max+1; j++){
                 this.CS[i][j] = cs[i][j];
             }
         }
