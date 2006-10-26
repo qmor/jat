@@ -394,25 +394,25 @@ public class DE405
 	  {
 	    ephemeris_dates[1] = 2414992.5;
 	    ephemeris_dates[2] = 2422320.5;
-	    filename = "ASCP1900.405";
+	    filename = path+"ASCP1900.405";
 	    records = 230;
 	  } else if ((jultime >= 2422320.5) && (jultime < 2429616.5))
 	  {
 	    ephemeris_dates[1] = 2422320.5;
 	    ephemeris_dates[2] = 2429616.5;
-	    filename = "ASCP1920.405";
+	    filename = path+"ASCP1920.405";
 	    records = 229;
 	  } else if ((jultime >= 2429616.5) && (jultime < 2436912.5))
 	  {
 	    ephemeris_dates[1] = 2429616.5;
 	    ephemeris_dates[2] = 2436912.5;
-	    filename = "ASCP1940.405";
+	    filename = path+"ASCP1940.405";
 	    records = 229;
 	  } else if ((jultime >= 2436912.5) && (jultime < 2444208.5))
 	  {
 	    ephemeris_dates[1] = 2436912.5;
 	    ephemeris_dates[2] = 2444208.5;
-	    filename = "ASCP1960.405";
+	    filename = path+"ASCP1960.405";
 	    records = 229;
 	  } else if ((jultime >= 2444208.5) && (jultime < 2451536.5))
 	  {
@@ -436,50 +436,50 @@ public class DE405
 	  {
 	    ephemeris_dates[1] = 2466128.5;
 	    ephemeris_dates[2] = 2473456.5;
-	    filename = "ASCP2040.405";
+	    filename = path+"ASCP2040.405";
 	    records = 230;
 	  } else if ((jultime >= 2473456.5) && (jultime < 2480752.5))
 	  {
 	    ephemeris_dates[1] = 2473456.5;
 	    ephemeris_dates[2] = 2480752.5;
-	    filename = "ASCP2060.405";
+	    filename = path+"ASCP2060.405";
 	    records = 229;
 	  } else if ((jultime >= 2480752.5) && (jultime < 2488048.5))
 	  {
 	    ephemeris_dates[1] = 2480752.5;
 	    ephemeris_dates[2] = 2488048.5;
-	    filename = "ASCP2080.405";
+	    filename = path+"ASCP2080.405";
 	    records = 229;
 	  } else if ((jultime >= 2488048.5) && (jultime < 2495344.5))
 	  {
 	    ephemeris_dates[1] = 2488048.5;
 	    ephemeris_dates[2] = 2495344.5;
-	    filename = "ASCP2100.405";
+	    filename = path+"ASCP2100.405";
 	    records = 229;
 	  } else if ((jultime >= 2495344.5) && (jultime < 2502672.5))
 	  {
 	    ephemeris_dates[1] = 2495344.5;
 	    ephemeris_dates[2] = 2502672.5;
-	    filename = "ASCP2120.405";
+	    filename = path+"ASCP2120.405";
 	    records = 230;
 	  } else if ((jultime >= 2502672.5) && (jultime < 2509968.5))
 	  {
 	    ephemeris_dates[1] = 2502672.5;
 	    ephemeris_dates[2] = 2509968.5;
-	    filename = "ASCP2140.405";
+	    filename = path+"ASCP2140.405";
 	    records = 229;
 	  } else if ((jultime >= 2509968.5) && (jultime < 2517264.5))
 	  {
 	    ephemeris_dates[1] = 2509968.5;
 	    ephemeris_dates[2] = 2517264.5;
-	    filename = "ASCP2160.405";
+	    filename = path+"ASCP2160.405";
 	    records = 229;
 	  } else if ((jultime >= 2517264.5)
 	      && (jultime < 2524624.5))
 	  {
 	    ephemeris_dates[1] = 2517264.5;
 	    ephemeris_dates[2] = 2524624.5;
-	    filename = "ASCP2180.405";
+	    filename = path+"ASCP2180.405";
 	    records = 230;
 	  }
       

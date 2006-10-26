@@ -156,11 +156,11 @@ abstract public class NLESolver
 			nxb.x[i] = nu.x[i];
 
 			nxfh.x[i] = nu.x[i] + 2.0*dnx;
-			VectorN cfh = evaluate(nxb);
+			VectorN cfh = evaluate(nxfh);
 			nxfh.x[i] = nu.x[i];
 
 			nxbh.x[i] = nu.x[i] - 2.0*dnx;
-			VectorN cbh = evaluate(nxb);
+			VectorN cbh = evaluate(nxbh);
 			nxbh.x[i] = nu.x[i];
 
 
@@ -341,7 +341,7 @@ abstract public class NLESolver
 		return xin;
 	}
 
-	public VectorN solveIt()
+	public VectorN solveIt(int max_iter, double usr_tol)
 	{
 		int iter = 0;
 
@@ -381,7 +381,7 @@ abstract public class NLESolver
 		int count = 0;
 		int stuck = 0;
 
-		while (fc > term)
+		while (fc > usr_tol && iter<max_iter)
 		{
 			iter++;
 			prt++;
@@ -452,9 +452,9 @@ abstract public class NLESolver
 
 
 			if (debug) {
-				jc.print("Jacobian");
-				double jcdet = jc.det();
-				System.out.println("jcdet = "+jcdet);
+//				jc.print("Jacobian");
+//				double jcdet = jc.det();
+//				System.out.println("jcdet = "+jcdet);
 			}
 //            jc = broydenUpdate(xc, xplus, fvc, fvplus, jc);
 
@@ -497,7 +497,8 @@ abstract public class NLESolver
 //			}
 
 			if(debug)
-                System.out.println(" iter = "+iter+" norm = "+norm+" eps = "+eps+" stuck = "+stuck);
+                //System.out.println(" iter = "+iter+" norm = "+norm+" eps = "+eps+" stuck = "+stuck);
+				System.out.println(" iter = "+iter+" f = "+fplus+" x0 = [ "+xplus.x[0]+" "+xplus.x[1]+" "+xplus.x[2]+" "+xplus.x[3]);
 
 			// store for the next iteration
 			xc = xplus.copy();
@@ -523,5 +524,8 @@ abstract public class NLESolver
 		return xc;
 	}
 
+	public VectorN solveIt(){
+		return solveIt(Integer.MAX_VALUE,term);
+	}
 }
 
