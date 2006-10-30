@@ -30,6 +30,8 @@ import jat.alg.integrators.*;
 * The Trajectory.java Class provides the means for storing and accessing trajectory data.
 * Trajectory data includes at least time, position and velocity and may include other
 * variables such as mass, thrust, specific force, etc.
+* 
+* Note: time can be in sim time or mjd, user needs to be consistent.
 *
 * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
 * @version 1.0
@@ -401,8 +403,14 @@ public class Trajectory implements Serializable, Printable {
 	 * @return The time (first element of the row at index i)
 	 */
 	public double getTimeAt(int i){
-		double[] tmp = traj.get(i);
-		return tmp[0];
+		double out = 0.0;
+		if ((i >= 0)&&(i < this.size())) {
+			double[] tmp = traj.get(i);
+			out = tmp[0];
+		} else {
+			System.err.println("Trajectory.getTimeAt: i out of bounds");
+		}
+		return out;
 	}
 	
 	/** Return the title of the trajectory
@@ -481,7 +489,7 @@ public class Trajectory implements Serializable, Printable {
 		lp.println("DistanceUnits = " + this.du);
 		lp.println("TimeUnits = " + this.tu);
 		if(this.labels==null){
-			String[] tmp = {"t [mjd]","x [m]","y [m]","z [m]","xdot [m]","ydot [m]","zdot [m]"};
+			String[] tmp = {"t ","x [m]","y [m]","z [m]","xdot [m]","ydot [m]","zdot [m]"};
 			labels = tmp;
 		}
 		lp.println(this.labels);
@@ -564,31 +572,31 @@ public class Trajectory implements Serializable, Printable {
 	}
 
 	/**
-	 * Returns the position at the given modified julian date
-	 * @param mjd 
+	 * Returns the position at the given modified julian date or sim time
+	 * @param time 
 	 * @return VectorN position 
 	 */
-	public VectorN getPositionAt(double mjd) {
+	public VectorN getPositionAt(double time) {
 		int i=0;
-		while(i<this.size() && this.getTimeAt(i)<=(mjd+1e-5)){
-			if(Math.abs(this.getTimeAt(i)-mjd)<1e-5){
+		while(i<this.size() && this.getTimeAt(i)<=(time+1e-5)){
+			if(Math.abs(this.getTimeAt(i)-time)<1e-5){
 				double[] data = this.traj.get(i);
 				return new VectorN(data[1],data[2],data[3]);
 			}
 			i++;
 		}
-		System.err.println("unable to find position data at: "+mjd+"  nearest: "+this.getTimeAt(i));
+		System.err.println("Trajectory.getStateAt: unable to find position data at: "+time+"  nearest: "+this.getTimeAt(i));
 		return new VectorN(3);
 	}
 	/**
-	 * Returns the full state at the given modified julian date
-	 * @param mjd
+	 * Returns the full state at the given modified julian date or sim time
+	 * @param time
 	 * @return VectorN state
 	 */
-	public VectorN getStateAt(double mjd){
+	public VectorN getStateAt(double time){
 		int i=0;
-		while(i<this.size() && this.getTimeAt(i)<=mjd){
-			if(Math.abs(this.getTimeAt(i)-mjd)<1e-5){
+		while(i<this.size() && this.getTimeAt(i)<=time){
+			if(Math.abs(this.getTimeAt(i)-time)<1e-5){
 				double[] data = this.traj.get(i);
 				double[] out = new double[ncol-1];
 				for(int j=1; j<this.ncol; j++) out[j-1] = data[j];
@@ -596,7 +604,7 @@ public class Trajectory implements Serializable, Printable {
 			}
 			i++;
 		}
-		//System.err.println("unable to find position data at: "+mjd+"  nearest: "+this.getTimeAt(i));
+		System.err.println("Trajectory.getStateAt: unable to find position data at: "+time+"  nearest: "+this.getTimeAt(i));
 		return new VectorN(this.ncol-1);
 	}
 }
