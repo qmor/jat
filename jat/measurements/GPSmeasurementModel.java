@@ -164,8 +164,10 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 	
 	private double[] initClock() {
 		double[] out = new double[2];
-		out[0] = (Math.random() - 0.5)*1e5;
-		out[1] = 4;
+		out[0] = (Math.random() - 0.5)*10;
+		out[1] = .1;
+			
+		
 		firstTime = true;
 		return out;
 	}
@@ -208,8 +210,11 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 	
 	public double zPred(int isv, double t_mjd, VectorN state){
 		double out,obs;
+		
+		
+		
 		obs = observedMeasurement(isv,t_mjd,state);
-		double pred = predictedMeasurement(isv, t_mjd, state); 
+		double pred = predictedMeasurement(isv, t_mjd, state);
 		
 		if(obs == 0)
 		    out = 0.0;
@@ -266,10 +271,14 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			oldclock = tmpClock;
 			lastTime = currentTime;
 		}
+		
 		//state= new VectorN (closedLoopSim.truth[0].sc.get_spacecraft().toStateVector());
 //* TODO Cheating - static reference to EstimatorSimModel		
-		state= new VectorN (EstimatorSimModel.sim_truth.getStateAt(currentTime));
-
+		//state= new VectorN (CEVSim.truth_traj[0].getState(0));
+		state = new VectorN(EstimatorSimModel.truth[0].get_spacecraft().toStateVector());
+		
+		
+		
 		// get the SVID and MJD time of measurement
 		GPS_SV sv = constell.getSV(isv);
 		int prn = sv.prn();
@@ -283,8 +292,18 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		
 		
 //		compute the GPS position vector
-		Time time = new Time(t_mjd);
+		
+		/*Follow the method used in the Predicted Measurement method*/
+	    Time time = new Time(ts_mjd);
+		FitIERS iers = new FitIERS();
+		double[] params = iers.search(time.mjd_utc());
+		time.set_UT1_UTC(params[2]);
 		EarthRef earth = new EarthRef(time);
+		earth.setIERS(params[0], params[1]);
+		
+		//Previous Implimentation
+		//Time time = new Time(ts_mjd);
+		//EarthRef earth = new EarthRef(time);
 		
 		Matrix pole = earth.PoleMatrix();
 		Matrix gha = earth.GHAMatrix(time.mjd_ut1(),time.mjd_tt());
@@ -317,8 +336,14 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			double uree = ure.ure(isv, los, rGPS, vGPS);
 			
 			//Use 2 meters of random noise for URE
-			double rho = truerho + clock_err + 4*(Math.random()-0.5);//+ code_noise;// + 4*(Math.random()-0.5);
-			//double rho = truerho + clock_err + uree + code_noise;
+			
+			/*Added in the bias correction from the ephemeris here, because it is in the 
+			 * predicted measurement method.  Not sure why it was omitted here*/
+		    double rho = truerho + clock_err + code_noise + 4*(Math.random()-0.5) - GPS_Utils.c*sv.biasCorrection(new GPSTimeFormat(ts_mjd).gps_sow());//+ code_noise;// + 4*(Math.random()-0.5);
+			
+		    //double rho = truerho + 4*(Math.random()-0.5) - GPS_Utils.c*sv.biasCorrection(new GPSTimeFormat(ts_mjd).gps_sow());
+		    
+		    //double rho = truerho + clock_err + uree + code_noise;
 			//double rho = truerho + clock_err + ionoDelay + uree + code_noise;
 			
 			double ia = integerAmbiguity[isv];					
@@ -399,8 +424,8 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		// get the SVID of measurement
 		GPS_SV sv;
 		//int index = isv;//constell.getIndex(isv);
-		int index = constell.getIndex(isv);
-		sv = constell.getSV(index);
+		//int index = constell.getIndex(isv);
+		sv = constell.getSV(isv);
 		int prn = sv.prn();
 //		if(prn!=13)
 //			return Double.NaN;
@@ -412,8 +437,8 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 			
 		//* The following is used when feeding in the sim_time
 		//* currently when using files, the mjd_utc time is fed in
-		//double t_mjd = t/(double)86400 + MJD0;
-		double t_mjd = t; 
+		double t_mjd = t/(double)86400 + MJD0;
+		//double t_mjd = t; 
 		double ts_mjd = GPS_Utils.transmitTime(t_mjd, sv, r);
 		
 		//* TODO watch this
@@ -506,7 +531,8 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		//int prn = sv.prn();
 		
 		int clockIndex = clockState;
-
+		
+		
 		// extract the current spacecraft position vector		
 		VectorN r = new VectorN(state.get(0,3));
 		VectorN v = new VectorN(state.get(3,3));
@@ -546,6 +572,7 @@ public class GPSmeasurementModel implements MeasurementFileModel,MeasurementMode
 		double bc = state.x[clockIndex];
 		double omrroc = 1.0 - (range_rate/GPS_Utils.c);
 		double bcpart = omrroc*bc;
+		
 		range = range + bcpart;
 		
 		// add iono contribution to range

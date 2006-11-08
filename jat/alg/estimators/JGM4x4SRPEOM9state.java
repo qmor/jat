@@ -33,6 +33,7 @@ import jat.alg.integrators.Derivatives;
 import jat.matvec.data.*;
 import jat.spacetime.*;
 import jat.util.FileUtil;
+import java.util.Random;
 
 
 
@@ -63,8 +64,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 	double mu = Constants.mu*1e9;
 	boolean firsttime;
 	UniverseModel universe;
-
-
+    private Random rn;
 	GravityModel earth_grav;
 	
 	SolarRadiationPressure srp0; 
@@ -109,6 +109,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 
 		universe = new UniverseModel(mjd0);
 		n = initializer.parseInt(hm,"FILTER.states");
+		rn = new Random();
 	}
 	
 	
@@ -267,15 +268,17 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		out[2] = y[5];
 		
 		//acceleration for spacecraft 0
+		
 		out[3] = ax0   - solarAcceleration0.get(0) + srpacc0.get(0) - lunarAcceleration0.get(0);
 		out[4] = ay0    - solarAcceleration0.get(1) + srpacc0.get(1) - lunarAcceleration0.get(1);
 		out[5] = az0     - solarAcceleration0.get(2) + srpacc0.get(2) - lunarAcceleration0.get(2);
 	
+	
+		
 		//Clock model
-		double w_f = (Math.random()-0.5)*2*.036;
-		//* TODO guassian - keep 0.036 = sigma
+		double w_f = rn.nextGaussian()*.036;
 		out[6] = w_f + hc;
-		double w_g = (Math.random()-0.5)*2*7.106E-05;
+		double w_g = rn.nextGaussian()*7.106E-05;
 		out[7] = w_g;
 		
 		//* TODO watch this - set clock terms to zero

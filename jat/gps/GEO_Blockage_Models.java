@@ -72,8 +72,8 @@ public class GEO_Blockage_Models implements ExpandedVisible {
 	double TrackingThreshold    = 22;// (dB-Hz)
 	static boolean [] AcquisitionFlag = new boolean[33];
 	
-	static double [] receiverAntennaDeg = new double[14];
-	static double [] receiverAntennaGain = new double[14];
+	static double [] receiverAntennaDeg = new double[15];
+	static double [] receiverAntennaGain = new double[15];
 	static double [] GPSAntennaDeg = new double[66];
 	static double [] GPSAntennaGain = new double[66];
 	public static double Cn0;
@@ -107,8 +107,8 @@ public class GEO_Blockage_Models implements ExpandedVisible {
             }	
 //          
 			//readFromFile("C:\\GOESR\\omni_antenna.txt",receiverAntennaDeg,receiverAntennaGain);
-			//readFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
-			readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
+			readFromFile(dir_in+"ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
+			//readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
 			readFromFile(dir_in+"GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
 			//readFromFile("C:\\GOESR\\LMantenna.txt",receiverAntennaDeg,receiverAntennaGain);
 			firsttime = false;

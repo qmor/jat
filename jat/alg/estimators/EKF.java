@@ -641,8 +641,8 @@ public class EKF {
 			double y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
 			
 			/*Catch the case where the measurement doesn't occur*/
-			//if( Math.abs(y) > 0)
-			//{
+			if( Math.abs(y) > 0)
+			{
 			//* TODO watch this 
 				//VectorN moon = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(mjd_epoch+filterTime/86400.0)))).times(1000);
 				//VectorN r_eci = xref.get(0,3);
@@ -687,12 +687,16 @@ public class EKF {
 //					s++;
 //				}
 				// update state and covariance
+				
+				
 				xref.update(xhat); 
-				//y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
+				
+				
+				y = measurements.mm[measNum].zPred(whichMeas,simTime,xref.get(0,n));
 
 				pold = this.updateCov(k, H, pnew);
 				}
-			//} //else visible = false;
+			} //else visible = false;
 		}
 		
 		// check the update
