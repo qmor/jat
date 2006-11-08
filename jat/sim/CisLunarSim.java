@@ -52,7 +52,7 @@ import jat.util.FileUtil;
 import java.io.IOException;
 import java.io.PrintStream;
 
-public class CEVSim extends EstimatorSimModel {
+public class CisLunarSim extends EstimatorSimModel {
 
 //** Static Variables **//
 	
@@ -60,11 +60,11 @@ public class CEVSim extends EstimatorSimModel {
 	//** Object Variables **//
 	private int numStates;
 	
-	public CEVSim(){
+	public CisLunarSim(){
 		super();
 	}
 	
-	public CEVSim(boolean useFilter) {
+	public CisLunarSim(boolean useFilter) {
 		super(useFilter);
 	}
 	
@@ -388,11 +388,11 @@ public class CEVSim extends EstimatorSimModel {
 						processedMeasurements ++;
 						//System.out.println("Processing Measurement at time: " + simTime.get_sim_time());
 					} 
-					else if(created_meas.measurementTypes[i].equals("GPS"))
+/*					else if(created_meas.measurementTypes[i].equals("GPS"))
 						{
-							/*this loop spins through all the GPS satellites.
+							this loop spins through all the GPS satellites.
 							 *Ranges near zero will be skipped in the filter
-							 */
+							 
 							numVis = 0;
 			
 							for(int j = 1; j<24;j++ )
@@ -400,7 +400,7 @@ public class CEVSim extends EstimatorSimModel {
 								newState = filter.estimate(simTime.get_sim_time(),i,j,true);
 								processedMeasurements ++;
 							}
-						}
+						}*/
 					else
 					{
 						newState = filter.estimate(simTime.get_sim_time(),i,0,this.useMeas);
@@ -631,14 +631,14 @@ public class CEVSim extends EstimatorSimModel {
 //		CEVSim.JAT_name = "earth2moon";
 //		CEVSim.InputFile = (args.length > 0 ? args[0] : "initialConditions_cev_e2m.txt");
 		
-		CEVSim.JAT_name = "earth2moon";
-		CEVSim.InputFile = "initialConditions_cev_gps_e2m_30Sec_WFOV.txt";
+		CisLunarSim.JAT_name = "earth2moon";
+		CisLunarSim.InputFile = "initialConditions_cev_gps_e2m_30Sec_WFOV.txt";
 		//CEVSim.InputFile = "initialConditions_cev_e2m_30Sec_WFOV.txt";
 //		CEVSim.InputFile = "initialConditions_cev_e2m_bias.txt";
 		
-		CEVSim.PlotJAT = true;
+		CisLunarSim.PlotJAT = true;
 		
-		CEVSim Sim = new CEVSim(useFilter);
+		CisLunarSim Sim = new CisLunarSim(useFilter);
 		Sim.set_verbose(true);
 		Sim.runloop();
         if (OpticalMeasurementModel.fobs != null) {
