@@ -120,6 +120,16 @@ public class Constants {
     public final static double eps = 23.43929111;
 
 
+    
+    // Constants in various distance and time units
+    
+    public final static double GM_Earth_km_day    =    2.97553635177984E15;// [km^3/day^2]; JGM3
+    public final static double GM_Sun_km_s        =    1.3271220e+11;    // [km^3/s^2]; STK
+    public final static double GM_Sun_km_day      =    9.90691264512E20;    // [km^3/day^2]; STK
+    
+    
+   
+    
     /** Default constructor.
      */
     public Constants() {
