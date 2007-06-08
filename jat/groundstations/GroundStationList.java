@@ -1,7 +1,7 @@
 
 /* JAT: Java Astrodynamics Toolkit
  *
- * Copyright (c) 2003 The JAT Project. All rights reserved.
+ * Copyright (c) 2007 The JAT Project. All rights reserved.
  *
  * This file is part of JAT. JAT is free software; you can 
  * redistribute it and/or modify it under the terms of the 
@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * 
- * File Created on Aug 28, 2003
+ * File Created on May 20, 2007
  */
  
 package jat.groundstations;
@@ -32,7 +32,7 @@ import java.util.*;
 
 /**
 * The GroundStationList.java Class provides a way to deal with
-* a list of finite burns read from a file.
+* a list of ground stations read from a file.
 *
 * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
 * @version 1.0
@@ -75,7 +75,7 @@ public class GroundStationList {
 	}
 
 	/** Return the size of the list
-	 * @return the number of burns in the list
+	 * @return the number of ground stations in the list
 	 */
 	public int size() {
 		return list.size();
@@ -95,7 +95,7 @@ public class GroundStationList {
 		return out;
 	}
 
-	/** Read the burn data from a tab-delimited ASCII text file.
+	/** Read the ground station data from a tab-delimited ASCII text file.
 	 * @param file filename and directory
 	 */
 	public void readFromFile(String file) {
@@ -137,7 +137,7 @@ public class GroundStationList {
 			return;
 		}
 	}
-	/** Read the burn data from a NASA NDOSL ASCII text file.
+	/** Read the ground station data from a NASA NDOSL ASCII text file.
 	 * @param file filename and directory
 	 */
 	public void readFromNDOSLFile(String file) {
@@ -168,22 +168,10 @@ public class GroundStationList {
 						String alt_str = tok.nextToken().trim();
 						double alt = Double.parseDouble(alt_str);
 						System.out.println(stdn+"\t"+loc+"\t"+nasa+"\t"+lat+"\t"+lon+"\t"+alt);
+						GroundStation gs = new GroundStation(stdn, loc, nasa, lat, lon, alt);
+						this.add(gs);
 					}
 				}
-				// String stdn = tok.nextToken();
-				// if (!stdn.contains("%")) {
-				// String loc = tok.nextToken();
-				// String nasa = tok.nextToken();
-				//
-				// // get lat, lon, alt
-				// double[] temp = new double[3];
-				// for (int i = 0; i < 3; i++) {
-				// String token = tok.nextToken();
-				// temp[i] = Double.parseDouble(token)* MathUtils.DEG2RAD;
-				// }
-				// GroundStation gs = new GroundStation(stdn, loc, nasa,
-				// temp[0], temp[1], temp[2]);
-				// this.add(gs);
 			}
 			in.close();
 			fr.close();
