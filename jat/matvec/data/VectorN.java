@@ -972,6 +972,18 @@ public class VectorN implements Cloneable, Serializable {
 		}
 		return out;
 	}
+	/** Conversion to double array for use in Matlab
+	 *  @param none
+	 *  @return array of doubles
+	 *  @author DMS
+	 */  
+	public double[] toDouble(){
+		double[] out = new double[this.length];
+		for (int j = 0; j < this.length; j++){
+			out[j] = this.x[j];
+		}
+		return out;
+	}
 
 	/////////////////////////////////////
 	//Vector Test and checking methods.//

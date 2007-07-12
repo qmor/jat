@@ -103,11 +103,16 @@ public class PropagatorAdaptor {
 	 * @param cArea -- Cross sectional area
 	 * @param mjd_utc -- Mean Julian Date in UTC time
 	 * @param path -- Path to JAT
+	 * @param matOrder -- added by DMS on 5/18/07
+	 * @param matDegree -- added by DMS on 5/18/07
 	 * @return -- Return the states based on times to Matlab
 	 */
-	 public static double[][] RK8(String DerivativesName, double [] initialTime, double [] x0, double stepSize, double cd, double cr, double mass, double cArea, double mjd_utc, String path)
+	 public static double[][] RK8(String DerivativesName, double [] initialTime, double [] x0, double stepSize, double cd, double cr, double mass, double cArea, double mjd_utc, String path, double matOrder, double matDegree)
 	    {
-		 	double mod =  ((initialTime[initialTime.length-1]-initialTime[0])%stepSize);
+	     	int degree = (int) matDegree;  	// added by DMS 5/18/07
+	     	int order = (int) matOrder;		// added by DMS 5/18/07
+
+	     	double mod =  ((initialTime[initialTime.length-1]-initialTime[0])%stepSize);
 		 	int timeLength;
 		 	if (mod !=0.0 && mod>=1.0)
 		 	{
@@ -139,7 +144,8 @@ public class PropagatorAdaptor {
 	        if (DerivativesName.equals("JatUniverseJGM2"))
 	        {
 	        	boolean use_JGM2 = true;
-	        	output = runJGMSimulation(x0,stepTime, mjd_utc, stepSize, cd, cr, mass, cArea, use_JGM2,neqns, path);	
+	        	// add order,degree to runJGMSimulation call (DMS 5/18/07)
+	        	output = runJGMSimulation(x0,stepTime, mjd_utc, stepSize, cd, cr, mass, cArea, use_JGM2,neqns, path, order, degree);	
 	        	oldState = checkOutput(output, initialTime, neqns);
 	        	
 	        }
@@ -147,7 +153,8 @@ public class PropagatorAdaptor {
 	        else
 	        {
 	        	boolean use_JGM2 = false;
-	        	output = runJGMSimulation(x0,stepTime, mjd_utc, stepSize, cd, cr, mass, cArea, use_JGM2, neqns, path);  
+	        	// add order,degree to runJGMSimulation call (DMS 5/18/07)
+	        	output = runJGMSimulation(x0,stepTime, mjd_utc, stepSize, cd, cr, mass, cArea, use_JGM2, neqns, path, order, degree);  
 	        	oldState = checkOutput(output,initialTime, neqns);
 	        }
 
@@ -209,12 +216,14 @@ public class PropagatorAdaptor {
 		 return output;
 	 }
 
-	 private static double[][] runJGMSimulation(double[] x0,double[] time, double mjd_utc, double stepSize, double cd, double cr, double mass, double cArea, boolean use_JGM2, int neqns, String path)
+	 // add order, degree DMS 5/18/07
+	 private static double[][] runJGMSimulation(double[] x0,double[] time, double mjd_utc, double stepSize, double cd, double cr, double mass, double cArea, boolean use_JGM2, int neqns, String path, int order, int degree)
 	 {
 		//double start = System.currentTimeMillis();
 		double[][] output = new double[neqns][];
 //		* force_flag = {2-Body, Sun,   Moon, Harris Priester, Solar Radiation
-     	boolean[] force_flag = {true,false,false,false,false};
+//     	boolean[] force_flag = {true,false,false,false,false};  removed DMS 5/18/07
+     	boolean[] force_flag = {false,false,false,false,false};  // DMS 5/18/07 for JGM testing
      	
      	VectorN r = new VectorN(x0[0], x0[1], x0[2]);
      	VectorN v = new VectorN(x0[3], x0[4], x0[5]);
@@ -225,16 +234,18 @@ public class PropagatorAdaptor {
      	// either NRL or HarrisPriester
      	String drag_model = "NRL";
      	SimModel JGM2All = new SimModel();
+        SpacecraftModel sm = new SpacecraftModel(r,v,cr,cd,cArea,mass);
      	
      	//JGM2All.initialize(sm,t0,tf,mjd_utc, stepsize, 1, out);
-     	JGM2All.initializeForces(force_flag, use_JGM2, drag_model);
-        SpacecraftModel sm = new SpacecraftModel(r,v,cr,cd,cArea,mass);
+//     	JGM2All.initialize(sm,t0,tf,mjd_utc, stepSize);  // added DMS 5/18/07
+//     	JGM2All.initializeForces(force_flag, use_JGM2, drag_model, order, degree);  // order, degree added DMS 5/18/07
+ 
         
         for(int i=0; i<1; i++)
         {
         	sim.initialize(sm,t0,tf,mjd_utc, stepSize);
             String test = drag_model;
-            sim.initializeForces(force_flag, use_JGM2, test);
+            sim.initializeForces(force_flag, use_JGM2, test, order, degree);  // order, degree added DMS 5/18/07
             output = sim.runloopMatlabAdaptor(x0, time);
         }	 
              

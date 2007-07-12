@@ -44,4 +44,6 @@ public class GravityModelType {
 	  public final static GravityModelType[] index =  {
 	  		EGM96, GEMT1, JGM2, JGM3, WGS84, WGS84_EGM96
 	  };
+	  
+	  public final static int num_models = 6;
 }

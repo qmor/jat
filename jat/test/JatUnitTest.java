@@ -14,7 +14,7 @@ public final class JatUnitTest {
      * @param args
      */
   public static void main(final String[] args) {
-        junit.swingui.TestRunner.run(JatUnitTest.class);
+   //     junit.textui.TestRunner.run(JatUnitTest.class);
     }
 
   ///////////////////////////////////////////////////////////////////////

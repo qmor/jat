@@ -463,6 +463,93 @@ public class SimModel implements Derivatives {
     }
 
     /**
+     * Initialize the forces present in the universe model during the Simulation.
+     * @param force_flag An array of boolean values indicating the forces in order:
+     *  [0] true: two-body gravity false: nonspherical gravity
+     *  [1] true: Solar gravity [2] true: Lunar gravity [3] true: Atmospheric drag
+     *  [4] true: Solar Radiation Pressure
+     * @param use_JGM2 If using nonspherical gravity true selects JGM2 instead of JGM3
+     * @param drag_model "NRL" for NRLMSISE2000 or "HP" for Harris Priester
+     * @param order DMS 5/18/07
+     * @param degree DMS 5/18/07
+     */
+    public void initializeForces(boolean[] force_flag, boolean use_JGM2, String drag_model, int order, int degree){
+
+        //ForceModelList forces = new ForceModelList();
+        VectorN zero = new VectorN(0,0,0);
+	    if(force_flag[0]){
+	        GravitationalBody earth =
+	            new GravitationalBody(398600.4415e+9);
+	        spacetime.addForce(earth);
+	    } else {
+	        if(use_JGM2){
+	            GravityModel earth_grav = new GravityModel(degree,order,GravityModelType.JGM2);
+	            spacetime.addForce(earth_grav);
+	            spacetime.set_use_iers(true);
+	        }else{
+	            GravityModel earth_grav = new GravityModel(degree,order,GravityModelType.JGM3);
+	            spacetime.addForce(earth_grav);
+	            spacetime.set_use_iers(true);
+	        }
+
+	    }
+	    if(force_flag[1]){
+	        spacetime.set_compute_sun(true);
+	        Sun sun =
+	            new Sun(Constants.GM_Sun,zero,zero);
+	        spacetime.addForce(sun);
+	    }
+	    if(force_flag[2]){
+	        spacetime.set_compute_moon(true);
+	        Moon moon =
+	            new Moon(Constants.GM_Moon,zero,zero);
+	        spacetime.addForce(moon);
+	    }
+	    if(force_flag[3]){
+	        double ap_opt = 14.918648166;
+            double f107_opt = 150;
+            double n_param_opt = 6;
+            spacetime.set_compute_sun(true);
+	        if(drag_model.endsWith("NRL") || drag_model.endsWith("A") || drag_model.endsWith("C")){
+	            NRLMSISE_Drag drag = new NRLMSISE_Drag(sc.get_spacecraft());
+	            drag.ap_opt = ap_opt;
+	            drag.f107_opt = f107_opt;
+	            spacetime.addForce(drag);
+	            spacetime.set_use_iers(true);
+	        }else{
+	            spacetime.set_compute_sun(true);
+	            HarrisPriester atmos = new HarrisPriester(sc.get_spacecraft(),150);//145.8480085177176);
+	            //atmos.setF107(145.8480085177176);//148.715);//99.5);
+	            atmos.setParameter(n_param_opt);
+//	            if(drag_model.equalsIgnoreCase("Sun-Sync"))
+//	                atmos.setParameter(6);
+//	            else if(drag_model.equalsIgnoreCase("ISS"))
+//	                atmos.setParameter(4);
+	            spacetime.addForce(atmos);
+	            spacetime.set_use_iers(true);
+
+	        }
+	    }
+	    if(force_flag[4]){
+	        spacetime.set_compute_sun(true);
+	        SolarRadiationPressure srp = new SolarRadiationPressure(sc.get_spacecraft());
+	        spacetime.addForce(srp);
+	    }
+    }
+
+    public void initializeForcesMatlab(int[] flags,String drag, int degree, int order){
+        boolean[] case_flags = new boolean[flags.length-1];
+        for(int i=0; i<flags.length-1; i++){
+            if(flags[i]==0) case_flags[i] = false;
+            else case_flags[i] = true;
+        }
+        boolean use_JGM2;
+        if(flags[flags.length-1]==0) use_JGM2 = false;
+        else use_JGM2 = true;
+        initializeForces(case_flags, use_JGM2, drag, order, degree);
+    }
+
+    /**
      * Add a force model to the simulation.
      * @param f Force Model
      */

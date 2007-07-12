@@ -181,6 +181,15 @@ public class GroundStation {
         r.x[2] =  ((1.0-e2)*Nh)*SinLat;
         return r;
     }
+    /** computes the ECEF velocity vector.
+     * @return ECEF velocity in m/s.
+     */
+    public VectorN getECEFVelocity () { 
+    	VectorN  r = this.getECEFPosition();
+        VectorN  w = new VectorN(0,0,Constants.omega_e);
+       	VectorN  v = w.crossProduct(r);
+        return v;
+    }
     /** computes the ECI position vector.
      * @param eci2ecef transformation matrix between ECI and ECEF
      * @return ECI position in m.
