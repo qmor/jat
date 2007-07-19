@@ -24,10 +24,10 @@ import jat.math.*;
 import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
-import jat.spacetime.Time;
+import jat.spacetime.*;
 import jat.util.FileUtil;
 import jat.cm.*;
-import jat.eph.DE405;
+import jat.eph.*;
 
 /**
  * <P>
@@ -108,13 +108,13 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef( double mjd_UTC ){
-        super(DE405.EARTH);
+        super(DE405_Body.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.MJD_UTC = mjd_UTC;
         this.MJD_UTC_START = mjd_UTC;
         this.MJD_TT = CalDate.UTC2TT(mjd_UTC);
-        this.MJD_TDB = Time.TTtoTDB(this.MJD_TT);
+        this.MJD_TDB = TimeUtils.TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
         this.T = trueOfDate();
         this.E = eci2ecef();
@@ -136,7 +136,7 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
      * @param date CalDate object containing UTC time.
      */
     public EarthRef(CalDate date){
-        super(DE405.EARTH);
+        super(DE405_Body.EARTH);
         this.MJD_UTC = date.mjd();
         this.MJD_UTC_START = date.mjd();
         this.MJD_TT = CalDate.UTC2TT(this.MJD_UTC);
@@ -154,19 +154,19 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
 
     // For use with matlab
     public EarthRef( double mjd_UTC , boolean usingmatlab){
-        super(DE405.EARTH);
+        super(DE405_Body.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.MJD_UTC = mjd_UTC;
         this.MJD_UTC_START = mjd_UTC;
         this.MJD_TT = CalDate.UTC2TT(mjd_UTC);
-        this.MJD_TDB = Time.TTtoTDB(this.MJD_TT);
+        this.MJD_TDB = TimeUtils.TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
         this.T = trueOfDate();
         this.E = eci2ecef();
         if(this.use_moon || this.use_sun){
-            String fs, dir_in;
-            fs = FileUtil.file_separator();
+            String dir_in;
+//            String fs = FileUtil.file_separator();
             dir_in = "C:/Code/Jat/jat/eph/DE405data/";
             jpl_ephem = new DE405(dir_in);
         }
@@ -741,7 +741,7 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
     public void incrementTime(double sec){
         double frac = sec/86400.0;
         this.MJD_TT = this.MJD_TT + frac;
-        this.MJD_TDB = Time.TTtoTDB(this.MJD_TT);
+        this.MJD_TDB = TimeUtils.TTtoTDB(this.MJD_TT);
         this.MJD_UTC = this.MJD_UTC + frac;
         this.MJD_UT1 = this.MJD_UT1 + frac;
         this.T = trueOfDate();
@@ -760,7 +760,7 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
         this.sim_time = sec;
         this.MJD_UTC = this.MJD_UTC_START+sec/86400;
         this.MJD_TT = CalDate.UTC2TT(this.MJD_UTC);
-        this.MJD_TDB = Time.TTtoTDB(this.MJD_TT);
+        this.MJD_TDB = TimeUtils.TTtoTDB(this.MJD_TT);
         this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC/86400.0;
         this.T = trueOfDate();
         this.E = eci2ecef();
@@ -842,10 +842,8 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
         
         //* June 24 2005 - Works
         if(this.use_sun){
-            double jd = this.mjd_utc()+2400000.5;
-            double jd_tdb = Time.TTtoTDB(this.mjd_tt())+2400000.5;
             //jpl_ephem.planetary_ephemeris(jd_tdb);
-            r_sun = jpl_ephem.get_Geocentric_Sun_pos(jd_tdb);
+            r_sun = new VectorN(jpl_ephem.get_planet_posvel(DE405_Body.GEOCENTRIC_SUN, this.MJD_TT));
         //	r_sun = r_sun.times(1000);
         }
     }
@@ -853,10 +851,7 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.spacetime.B
 //  [km]
     private void compute_JPL_Moon_Vector(){
         if(this.use_moon){
-            double jd = this.mjd_utc()+2400000.5;
-            double jd_tdb = Time.TTtoTDB(this.mjd_tt())+2400000.5;
-            //jpl_ephem.planetary_ephemeris(jd_tdb);
-            r_moon = jpl_ephem.get_Geocentric_Moon_pos(jd_tdb);
+            r_moon = new VectorN(jpl_ephem.get_planet_posvel(DE405_Body.GEOCENTRIC_MOON, this.MJD_TT));
         }
     }
     
