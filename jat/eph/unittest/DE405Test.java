@@ -28,8 +28,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import jat.eph.DE405;
+import jat.matvec.data.*;
+import jat.eph.*;
 import jat.spacetime.CalDate;
 import jat.spacetime.Time;
 import junit.framework.TestCase;
@@ -52,16 +52,16 @@ public class DE405Test extends TestCase {
     if (createNew) {
       targetPosVels = new double[NUM_PLANETS][6];
     }
-    
+	DE405_Body[] bod = DE405_Body.values();
     for (int planet = 0; planet < NUM_PLANETS; ++planet) {
-      double[] posVel = ephem.get_planet_posvel(planet+1, time.jd_tdb());
+      VectorN posVel = ephem.get_planet_posvel(bod[planet], time.mjd_tt());
       for(int index=0; index<6; ++index) {
         if (createNew) {
-          targetPosVels[planet][index] = posVel[index];
+          targetPosVels[planet][index] = posVel.get(index);
         }
         else {
           assertEquals(label(index) + " failed for planet " + String.valueOf(planet+1),
-              targetPosVels[planet][index], posVel[index]);
+              targetPosVels[planet][index], posVel.get(index));
         }
       }
     }

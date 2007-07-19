@@ -63,77 +63,85 @@ similar.
 package jat.eph;
 
 import java.io.*;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import jat.matvec.data.VectorN;
 import jat.util.FileUtil;
+import jat.spacetime.*;
+import jat.matvec.data.*;
 
-/** compute planet positions and velocities from JPL DE405 Ephemerides
+/** Compute planet positions and velocities from JPL DE405 Ephemerides.
+ * Except for GEOCENTRIC_MOON and GEOCENTRIC_SUN, all planet positions 
+ * and velocities are relative to the Solar System Barycenter.
+ * Positions are in km. Velocities are in km/s. All data is relative to
+ * Earth Mean Equator and Equinox of J2000.
  */
 public class DE405
 {
 	/*  DECLARE CLASS CONSTANTS  */
-
-	/*	  Length of an A.U., in km	*/
-	static final double au = 149597870.691;
+	
+	// DE405 Body Indices
+	private int earth = DE405_Body.EARTH.ordinal();
+	private int em_bary = DE405_Body.EM_BARY.ordinal();
+	private int geo_moon = DE405_Body.GEOCENTRIC_MOON.ordinal();
+	private int geo_sun = DE405_Body.GEOCENTRIC_SUN.ordinal();
+	private int sun = DE405_Body.SUN.ordinal();
+	private int moon = DE405_Body.MOON.ordinal();
 
 	/*  Declare Class Variables  */
 
 	/*	  Ratio of mass of Earth to mass of Moon	*/
-	static double emrat = 81.3005600000000044;
+	private static final double emrat = 81.3005600000000044;
 
 	/*	  Chebyshev coefficients for the DE405 ephemeris are contained in the files
 	"ASCPxxxx.txt".  These files are broken into intervals of length "interval_duration",
 	in days.	*/
-	static int interval_duration = 32;
+	private static final int interval_duration = 32;
 
 	/*	  Each interval contains an interval number, length, start and end 
      * jultimes, and Chebyshev coefficients for the planets, nutation and
      * libration.  We keep only the coefficients for planets and libration. */
-    static int numbers_per_file_interval = 1018;
-	static int numbers_per_kept_interval = 936;
+    private static final int numbers_per_file_interval = 1018;
+	private static final int numbers_per_kept_interval = 936;
     
     /*  Number planets we track the ephemeris of (including the Sun and Moon).
      * Moon's libration gets its own slot and is treated like a planet, too.
      */
-    static int num_planets = 12;
+    private static final int num_planets = 12;
 
 	/*	  For each planet (and the Moon makes 10, and the Sun makes 11, and the
      * Moon's libration makes 12), each interval contains several complete 
      * sets of coefficients, each covering a fraction of the interval 
      * duration	*/
-	static int number_of_coef_sets_1 = 4;
-	static int number_of_coef_sets_2 = 2;
-	static int number_of_coef_sets_3 = 2;
-	static int number_of_coef_sets_4 = 1;
-	static int number_of_coef_sets_5 = 1;
-	static int number_of_coef_sets_6 = 1;
-	static int number_of_coef_sets_7 = 1;
-	static int number_of_coef_sets_8 = 1;
-	static int number_of_coef_sets_9 = 1;
-	static int number_of_coef_sets_10 = 8;
-	static int number_of_coef_sets_11 = 2;
-	static int number_of_coef_sets_12 = 4; // For Moon libration
+	private static final int number_of_coef_sets_1 = 4;
+	private static final int number_of_coef_sets_2 = 2;
+	private static final int number_of_coef_sets_3 = 2;
+	private static final int number_of_coef_sets_4 = 1;
+	private static final int number_of_coef_sets_5 = 1;
+	private static final int number_of_coef_sets_6 = 1;
+	private static final int number_of_coef_sets_7 = 1;
+	private static final int number_of_coef_sets_8 = 1;
+	private static final int number_of_coef_sets_9 = 1;
+	private static final int number_of_coef_sets_10 = 8;
+	private static final int number_of_coef_sets_11 = 2;
+	private static final int number_of_coef_sets_12 = 4; // For Moon libration
     
 	/*	  Each planet (and the Moon makes 10, and the Sun makes 11, and the
      * Moon's libration makes 12) has a different number of Chebyshev 
      * coefficients used to calculate each component of position
 	 * and velocity.	*/
-	static int number_of_coefs_1 = 14;
-	static int number_of_coefs_2 = 10;
-	static int number_of_coefs_3 = 13;
-	static int number_of_coefs_4 = 11;
-	static int number_of_coefs_5 = 8;
-	static int number_of_coefs_6 = 7;
-	static int number_of_coefs_7 = 6;
-	static int number_of_coefs_8 = 6;
-	static int number_of_coefs_9 = 6;
-	static int number_of_coefs_10 = 13;
-	static int number_of_coefs_11 = 11;
-	static int number_of_coefs_12 = 10; // For Moon libration
+	private static final int number_of_coefs_1 = 14;
+	private static final int number_of_coefs_2 = 10;
+	private static final int number_of_coefs_3 = 13;
+	private static final int number_of_coefs_4 = 11;
+	private static final int number_of_coefs_5 = 8;
+	private static final int number_of_coefs_6 = 7;
+	private static final int number_of_coefs_7 = 6;
+	private static final int number_of_coefs_8 = 6;
+	private static final int number_of_coefs_9 = 6;
+	private static final int number_of_coefs_10 = 13;
+	private static final int number_of_coefs_11 = 11;
+	private static final int number_of_coefs_12 = 10; // For Moon libration
 
     /** We statically cache the ephemeris files we read in so
      * that lots of instances can use the same data without
@@ -151,8 +159,6 @@ public class DE405
       }
     }
     /** The cache.  Maps the file name to the cached data. */
-//    private static Map<String, CachedEphemeris> cachedEphemeris =
-//      Collections.synchronizedMap(new HashMap<String, CachedEphemeris>());
     private static Map<String, CachedEphemeris> cachedEphemeris =
         (new HashMap<String, CachedEphemeris>());
     
@@ -166,24 +172,10 @@ public class DE405
 	/* Define the positions and velocities of the major planets as instance variables.
 	Note that the first subscript is the planet number, while the second subscript
 	specifies x, y, or z component.  	*/
-	public double[][] planet_r = new double[num_planets+1][4];
-	public double[][] planet_rprime = new double[num_planets+1][4];
+	private double[][] planet_r = new double[num_planets+4][4];
+	private double[][] planet_rprime = new double[num_planets+4][4];
 
 	String path;
-
-	public final static int MERCURY = 1;
-	public final static int VENUS = 2;
-	public final static int EARTH = 3;
-	public final static int MARS = 4;
-	public final static int JUPITER = 5;
-	public final static int SATURN = 6;
-	public final static int PLUTO = 9;
-	public final static int MOON = 10;
-	public final static int SUN = 11;
-    private final static int LIBRATION = 12;
-
-	protected VectorN r_moon_geo;
-	protected VectorN r_sun_geo;
 	
 	public DE405(){
 		String filesep = FileUtil.file_separator();
@@ -202,7 +194,7 @@ public class DE405
 		this.path = DE405_path;
 	}
 
-	public void planetary_ephemeris(double jultime)
+	private void planetary_ephemeris(double jultime)
 	{
 		/* Procedure to calculate the position and velocity at jultime of the major
 		planets. Note that the planets are enumerated as follows:  Mercury = 1,
@@ -224,29 +216,29 @@ public class DE405
 				planet_rprime[i][j] = ephemeris_rprime[j];
 			}
 		}
-
-		r_moon_geo = new VectorN(planet_r[10][1],planet_r[10][2],planet_r[10][3]);
 		
 		/*  The positions and velocities of the Earth and Moon are found indirectly.
 		We already have the pos/vel of the Earth-Moon barycenter (i = 3).  We have
 		also calculated planet_r(10,j), a geocentric vector from the Earth to the Moon.
-		Using the ratio of masses, we get vectors from the Earth-Moon barycenter to the
-		Moon and to the Earth.  */
+		Using the ratio of masses, we get vectors from the Earth-Moon barycenter to the Earth.  */
+		
 		for (j = 1; j <= 3; j++)
 		{
-			planet_r[3][j] = planet_r[3][j] - planet_r[10][j] / (1 + emrat);
-			planet_r[10][j] = planet_r[3][j] + planet_r[10][j];
-			planet_rprime[3][j] = planet_rprime[3][j] - planet_rprime[10][j] / (1 + emrat);
-			planet_rprime[10][j] = planet_rprime[3][j] + planet_rprime[10][j];
+			planet_r[earth][j] = planet_r[em_bary][j] - planet_r[geo_moon][j] / (1 + emrat);
+			planet_rprime[earth][j] = planet_rprime[em_bary][j] - planet_rprime[geo_moon][j] / (1 + emrat);
+			
+			// moon position, velocity
+			planet_r[moon][j] = planet_r[earth][j] + planet_r[geo_moon][j];
+			planet_rprime[moon][j] = planet_rprime[earth][j] + planet_rprime[geo_moon][j];
+			
+			// geocentric sun position, velocity
+			planet_r[geo_sun][j] = planet_r[sun][j] - planet_r[earth][j];
+			planet_rprime[geo_sun][j] = planet_rprime[sun][j] - planet_rprime[earth][j];
 		}
 		
-		r_sun_geo = new VectorN(3);
-		r_sun_geo.x[0] = planet_r[SUN][1]-planet_r[EARTH][1];
-		r_sun_geo.x[1] = planet_r[SUN][2]-planet_r[EARTH][2];
-		r_sun_geo.x[2] = planet_r[SUN][3]-planet_r[EARTH][3];
 	}
 
-	void get_planet_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[])
+	private void get_planet_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[])
 	{
 		/*
 		  Procedure to calculate the position and velocity of planet i, subject to the
@@ -373,7 +365,7 @@ public class DE405
 		}
 	}
 
-	void get_ephemeris_coefficients(double jultime)
+	private void get_ephemeris_coefficients(double jultime)
 	{
 	  /*
 	   Procedure to read the DE405 ephemeris file corresponding to jultime.
@@ -589,211 +581,7 @@ public class DE405
         }
         return result;
     }
-    
-	/** the position and velocity of the planet at the given Julian date
-	 * @param testBody
-	 * @param planet Planet number
-	 * @param jultime Julian date
-	 * @return position and velocity of the planet
-	 */
-	public double[] get_planet_posvel(DE405 testBody, int planet, double jultime)
-	{
-		double[] posvel = new double[6];
-		double daysec = 3600. * 24.;
-
-		testBody.planetary_ephemeris(jultime);
-		posvel[0] = testBody.planet_r[planet][1];
-		posvel[1] = testBody.planet_r[planet][2];
-		posvel[2] = testBody.planet_r[planet][3];
-		posvel[3] = testBody.planet_rprime[planet][1] / daysec;
-		posvel[4] = testBody.planet_rprime[planet][2] / daysec;
-		posvel[5] = testBody.planet_rprime[planet][3] / daysec;
-
-		return posvel;
-	}
-
-	/** the position and velocity of the planet at the given Julian date
-	 * @param planet Planet number
-	 * @param jultime Julian date
-	 * @return position and velocity of the planet
-	 */
-	public double[] get_planet_posvel(int planet, double jultime)
-	{
-		double[] posvel = new double[6];
-		double daysec = 3600. * 24.;
-
-		planetary_ephemeris(jultime);
-		posvel[0] = planet_r[planet][1];
-		posvel[1] = planet_r[planet][2];
-		posvel[2] = planet_r[planet][3];
-		posvel[3] = planet_rprime[planet][1] / daysec;
-		posvel[4] = planet_rprime[planet][2] / daysec;
-		posvel[5] = planet_rprime[planet][3] / daysec;
-
-		return posvel;
-	}
-
-	/** the position of the planet at the given Julian date
-	 * @param planet Planet number
-	 * @param jultime Julian date
-	 * @return position of the planet
-	 */
-	public double[] get_planet_pos(int planet, double jultime)
-	{
-		double[] pos = new double[3];
-
-		planetary_ephemeris(jultime);
-		pos[0] = planet_r[planet][1];
-		pos[1] = planet_r[planet][2];
-		pos[2] = planet_r[planet][3];
-
-		return pos;
-	}
-
-	/** the position and velocity of the planet at the given Julian date
-	 * @param planet Planet number
-	 * @param jultime Julian date
-	 * @return position and velocity of the planet
-	 */
-	public VectorN get_pos_vel(int planet, double jultime)
-	{
-		return new VectorN(get_planet_posvel(planet, jultime));
-	}
-
-	/** the position of the planet at the given Julian date
-	 * @param planet Planet number
-	 * @param jultime Julian date
-	 * Julian date
-	 * @return position of the planet
-	 */
-	public VectorN get_pos(int planet, double jultime)
-	{
-		return new VectorN(get_planet_pos(planet, jultime));
-	}
-
-	public VectorN get_Geocentric_Moon_pos(){
-	    return this.r_moon_geo;
-	}
-	
-	/** the geocentric position of the moon at the given Julian date
-	 * @param jultime Julian Date (TDB)
-	 * @return position of the moon [km]
-	 */
-	public VectorN get_Geocentric_Moon_pos(double jultime){
-      return get_Geocentric_Moon_posVel(jultime).get(0, 3);
-	}
-	
-    /** the geocentric velocity of the moon at the given Julian date
-     * @param jultime Julian Date (TDB)
-     * @return velocity of the moon [km]
-     */
-    public VectorN get_Geocentric_Moon_vel(double jultime){
-        return get_Geocentric_Moon_posVel(jultime).get(3, 3);
-    }
-    
-    /** the geocentric velocity of the moon at the given Julian date
-     * @param jultime Julian Date (TDB)
-     * @return position and velocity of the moon in one 6 coordinate vector [km]
-     */
-    public VectorN get_Geocentric_Moon_posVel(double jultime){
-        double[] ephemeris_r = new double[4];
-        double[] ephemeris_rprime = new double[4];
-        get_planet_posvel(jultime, 10, ephemeris_r, ephemeris_rprime);
-        VectorN posvel = new VectorN(6);
-        for (int j = 1; j <= 3; j++)
-        {
-            planet_r[10][j] = ephemeris_r[j];
-            posvel.set(j-1, ephemeris_r[j]);
-        }
-        for (int j = 1; j <= 3; j++)
-        {
-            planet_rprime[10][j] = ephemeris_rprime[j];
-            posvel.set(j+2, ephemeris_rprime[j]);
-        }
-        return posvel;
-    }
-    
-	/** the geocentric position of the sun at the given Julian date
-	 * @param jultime Julian Date (TDB)
-	 * @return position of the sun [km]
-	 */
-	public VectorN get_Geocentric_Sun_pos(double jultime){
-		/* Procedure to calculate the position and velocity at jultime of the major
-		planets. Note that the planets are enumerated as follows:  Mercury = 1,
-		Venus = 2, Earth-Moon barycenter = 3, Mars = 4, ... , Pluto = 9,
-		Geocentric Moon = 10, Sun = 11.  		*/
-
-		int i = 0, j = 0;
-
-		double[] ephemeris_r = new double[4];
-		double[] ephemeris_rprime = new double[4];
-
-		/*  Get the ephemeris positions and velocities of each major planet  */
-		i = 10;
-		get_planet_posvel(jultime, i, ephemeris_r, ephemeris_rprime);
-		for (j = 1; j <= 3; j++)
-		{
-			planet_r[i][j] = ephemeris_r[j];
-			planet_rprime[i][j] = ephemeris_rprime[j];
-		}
-		i = 11;
-			get_planet_posvel(jultime, i, ephemeris_r, ephemeris_rprime);
-			for (j = 1; j <= 3; j++)
-			{
-				planet_r[i][j] = ephemeris_r[j];
-				planet_rprime[i][j] = ephemeris_rprime[j];
-			}
-		i = 3;
-			get_planet_posvel(jultime, i, ephemeris_r, ephemeris_rprime);
-			for (j = 1; j <= 3; j++)
-			{
-				planet_r[i][j] = ephemeris_r[j];
-				planet_rprime[i][j] = ephemeris_rprime[j];
-			}
-		
-			/*  The positions and velocities of the Earth and Moon are found indirectly.
-			We already have the pos/vel of the Earth-Moon barycenter (i = 3).  We have
-			also calculated planet_r(10,j), a geocentric vector from the Earth to the Moon.
-			Using the ratio of masses, we get vectors from the Earth-Moon barycenter to the
-			Moon and to the Earth.  */
-			for (j = 1; j <= 3; j++)
-			{
-				planet_r[3][j] = planet_r[3][j] - planet_r[10][j] / (1 + emrat);
-				planet_r[10][j] = planet_r[3][j] + planet_r[10][j];
-				planet_rprime[3][j] = planet_rprime[3][j] - planet_rprime[10][j] / (1 + emrat);
-				planet_rprime[10][j] = planet_rprime[3][j] + planet_rprime[10][j];
-			}
-			
-			r_sun_geo = new VectorN(3);
-			r_sun_geo.x[0] = planet_r[SUN][1]-planet_r[EARTH][1];
-			r_sun_geo.x[1] = planet_r[SUN][2]-planet_r[EARTH][2];
-			r_sun_geo.x[2] = planet_r[SUN][3]-planet_r[EARTH][3];
-			return r_sun_geo;
-	}
-	
-    /**
-     * The libration angles of the moon at a given time
-     * @param jultime the time
-     * @return an array of three angles (phi, theta, psi) all in radians
-     */
-    public double[] get_Moon_Libration(double jultime)
-    {
-      return get_planet_pos(LIBRATION, jultime);
-    }
-    
-    /**
-     * The libration angles and angular velocity at a given time
-     * @param jultime the time
-     * @return an array of six doubles.  The first three are the
-     * libration angles (phi, theta, psi) in radians.  The second
-     * three are angular velocity (phi dot, theta dot, psi dot) in
-     * radians/second
-     */
-    public double[] get_Moon_LibrationVelocity(double jultime)
-    {
-      return get_planet_posvel(LIBRATION, jultime);
-    }
-    
+       
     private void useEphemeris(String filename, int records) {
       
       CachedEphemeris oldCached = cached;
@@ -853,57 +641,124 @@ public class DE405
         if (next.getValue().numUsers == 0) {
           iter.remove();
         }
-      }
-    }
-
-    /**
-     * Test program.  Outputs the computed position and velocity of
-     * a planet or the moon's libration.
-     * @param args first element should indicate a planet (1-12).
-     * Second element should indicate a Julian date.  If neither is
-     * supplied it will prompt the user for it.
-     */
-    public static void main(String[] args) throws IOException
-    {
-      boolean done = false;
-      DE405 ephemeris = new DE405();
-      while (!done) 
-      {
-        BufferedReader input = (args.length >= 2 ? null :
-          new BufferedReader(new InputStreamReader(System.in)));
-        String planetStr = null;;
-        if (args.length == 0)
-        {
-          System.out.print("Enter a planet (1-9, 10=Moon, 11=Sun, " +
-          "12=Moon Libration): ");
-          planetStr = input.readLine();
-        }
-        else 
-        {
-          planetStr = args[0];
-        }
-        int planet = Integer.parseInt(planetStr);
-        
-        String dateStr = null;
-        if (args.length < 2) 
-        {
-          System.out.print("Enter date of interest (Julian format): ");
-          dateStr = input.readLine();
-        }
-        else
-        {
-          dateStr = args[1];
-        }
-        int juldate = Integer.parseInt(dateStr);
-        
-        double[] result = ephemeris.get_planet_posvel(planet, juldate);
-        System.out.println("Position: x=" + result[0] + " y=" + result[1] +
-            " z=" + result[2]);
-        System.out.println("Velocity: vx=" + result[3] + " vy=" + result[4] +
-            " vz=" + result[5]);
-        
-        done = (args.length >= 2);
-      }
+      } 
     }
     
+//----------PUBLIC INTERFACE
+    
+	/** the position and velocity of the planet at the given Julian date
+	 * @param DE405_Body body
+     * @param mjd_tt Terrestrial Time MJD
+   	 * @return position and velocity of the planet
+	 */
+	public VectorN get_planet_posvel(DE405_Body body, double mjd_tt)
+	{
+		double[] posvel = new double[6];
+		double daysec = 3600. * 24.;
+		int planet = body.ordinal();
+		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(mjd_tt));
+
+		planetary_ephemeris(jultime);
+		posvel[0] = planet_r[planet][1];
+		posvel[1] = planet_r[planet][2];
+		posvel[2] = planet_r[planet][3];
+		posvel[3] = planet_rprime[planet][1] / daysec;
+		posvel[4] = planet_rprime[planet][2] / daysec;
+		posvel[5] = planet_rprime[planet][3] / daysec;
+		
+		VectorN out = new VectorN(posvel);
+
+		return out;
+	}
+	
+	/** the position and velocity of the planet at the given Julian date
+	 * @param DE405_Body body
+     * @param t Time object
+   	 * @return position and velocity of the planet
+	 */
+	public VectorN get_planet_posvel(DE405_Body body, Time t){
+		return get_planet_posvel(body, t.mjd_tt());
+	}
+
+	/** the position of the planet at the given Julian date
+	 * @param DE405_Body body
+     * @param mjd_tt Terrestrial Time MJD
+   	 * @return position of the planet
+	 */
+	public VectorN get_planet_pos(DE405_Body body, double mjd_tt)
+	{
+		double[] pos = new double[3];
+		int planet = body.ordinal();
+		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(mjd_tt));
+
+
+		planetary_ephemeris(jultime);
+		pos[0] = planet_r[planet][1];
+		pos[1] = planet_r[planet][2];
+		pos[2] = planet_r[planet][3];
+		
+		VectorN out = new VectorN(pos);
+
+		return out;
+	}
+	
+	/** the position of the planet at the given Julian date
+	 * @param DE405_Body body
+     * @param t Time object
+   	 * @return position of the planet
+	 */
+	public VectorN get_planet_pos(DE405_Body body, Time t){
+		return get_planet_pos(body, t.mjd_tt());
+	}
+	
+    /**
+     * The libration angles of the moon at a given time
+     * @param mjd_tt Terrestrial Time MJD
+     * @return an array of three angles (phi, theta, psi) all in radians
+     */
+    public VectorN get_Moon_Libration(double mjd_tt)
+    {
+    	return get_planet_pos(DE405_Body.MOON_LIB, mjd_tt);
+    }
+    
+    /**
+     * The libration angles and angular velocity at a given time
+     * @param mjd_tt Terrestrial Time MJD
+     * @return an array of six doubles.  The first three are the
+     * libration angles (phi, theta, psi) in radians.  The second
+     * three are angular velocity (phi dot, theta dot, psi dot) in
+     * radians/second
+     */
+    public VectorN get_Moon_LibrationPosVel(double mjd_tt)
+    {
+		return get_planet_posvel(DE405_Body.MOON_LIB, mjd_tt);
+    }	
+
+    /**
+     * Test program.  Outputs the computed position and velocity of all DE405 Bodies
+     * @param args first element should indicate a Julian date. If JD is not
+     * supplied program will prompt the user for it.
+     */
+    public static void main(String[] args) throws IOException {
+		DE405 ephemeris = new DE405();
+		BufferedReader input = (args.length >= 1 ? null : new BufferedReader(
+				new InputStreamReader(System.in)));
+		String dateStr = null;
+		;
+		if (args.length == 0) {
+			System.out.print("Enter date of interest (MJD_TT): ");
+			dateStr = input.readLine();
+		} else {
+			dateStr = args[1];
+		}
+		double mjd_tt = Double.parseDouble(dateStr);
+
+		for (DE405_Body body : DE405_Body.values()) {
+			String out = body.toString();
+			System.out.println(out);
+			VectorN result = ephemeris.get_planet_posvel(body, mjd_tt);
+			result.print(body.toString());
+
+		}
+	}    
 }
