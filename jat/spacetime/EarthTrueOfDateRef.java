@@ -21,7 +21,7 @@
  **/
 package jat.spacetime;
 
-import jat.eph.DE405;
+import jat.eph.*;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 
@@ -89,10 +89,11 @@ public class EarthTrueOfDateRef implements ReferenceFrame {
       // Determine the position of the other body relative to the Earth.
       // Then transform it to the ECF reference frame.
       DE405 jpl_ephem = new DE405();
-      VectorN origin1 = jpl_ephem.get_pos(DE405.EARTH, t.jd_tdb());
-      VectorN origin2 = 
-        (inertialRef.getBody() == BodyCenteredInertialRef.SOLAR_SYSTEM ?
-            new VectorN(3) : jpl_ephem.get_pos(inertialRef.getBody(), t.jd_tdb()));
+      VectorN origin1 = new VectorN(jpl_ephem.get_planet_pos(DE405_Body.EARTH, t.mjd_tt()));
+      VectorN origin2 = new VectorN(3);
+      if (!inertialRef.getBody().equals(DE405_Body.SOLAR_SYSTEM_BARY)){
+    	  origin2 = jpl_ephem.get_planet_pos(inertialRef.getBody(), t.mjd_tt());
+      }
       // We difference and convert to meters (JPL reports kilometers)
       VectorN diff = origin2.minus(origin1).times(1000);
       VectorN bodyPos = eci2tod.times(diff);

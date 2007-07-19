@@ -21,7 +21,7 @@
  **/
 package jat.spacetime.unittest;
 
-import jat.eph.DE405;
+import jat.eph.*;
 import jat.matvec.data.VectorN;
 import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.EarthRef;
@@ -108,7 +108,7 @@ public class LunaFixedRefTest extends TestCase {
       int startLine) throws IOException
   {
     final double MARGIN = 0.01;
-    BodyCenteredInertialRef inertial = new BodyCenteredInertialRef(DE405.MOON);
+    BodyCenteredInertialRef inertial = new BodyCenteredInertialRef(DE405_Body.GEOCENTRIC_MOON);
     LunaFixedRef fixed = new LunaFixedRef();
     int numEntriesRead = 0;
     int lineCtr = startLine;

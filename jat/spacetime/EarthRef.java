@@ -24,7 +24,7 @@ import jat.math.*;
 import jat.spacetime.Time;
 import jat.util.FileUtil;
 import jat.cm.*;
-import jat.eph.DE405;
+import jat.eph.*;
 
 /**
  * <P>
@@ -102,7 +102,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef(Time t0){
-      super(DE405.EARTH);
+      super(DE405_Body.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.T = trueOfDate(t0.mjd_tt());
@@ -125,7 +125,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef(double MJD_UT1, double MJD_TT){
-      super(DE405.EARTH);
+      super(DE405_Body.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.T = trueOfDate(MJD_TT);
@@ -148,7 +148,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      * @param mjd_UTC UTC time in MJD format.
      */
     public EarthRef(double MJD_UT1, double MJD_TT, boolean use_moon, boolean use_sun){
-      super(DE405.EARTH);
+      super(DE405_Body.EARTH);
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.T = trueOfDate(MJD_TT);
@@ -1063,9 +1063,8 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      */
     //[km]
     private void compute_JPL_Sun_Vector(double MJD_TT){
-        double jd_tdb = Time.TTtoTDB(MJD_TT)+2400000.5;
         if(this.use_sun){
-            r_sun = jpl_ephem.get_Geocentric_Sun_pos(jd_tdb);
+            r_sun = new VectorN(jpl_ephem.get_planet_pos(DE405_Body.GEOCENTRIC_SUN, MJD_TT));
         }
     }
     
@@ -1075,9 +1074,8 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      */
 //  [km]
     private void compute_JPL_Moon_Vector(double MJD_TT){
-        double jd_tdb = Time.TTtoTDB(MJD_TT)+2400000.5;
         if(this.use_moon){
-            r_moon = jpl_ephem.get_Geocentric_Moon_pos(jd_tdb);
+            r_moon = new VectorN(jpl_ephem.get_planet_pos(DE405_Body.GEOCENTRIC_MOON, MJD_TT));
         }
     }
     /**
@@ -1260,7 +1258,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
   
     	
     	EarthRef eRef = new EarthRef(new Time(TimeUtils.MJD_J2000));
-    	Time t = new Time(Time.TT2UTC(TimeUtils.MJD_J2000));    	
+    	Time t = new Time(TimeUtils.TTtoUTC(TimeUtils.MJD_J2000));    	
     	Matrix E = eRef.eci2ecef(t.mjd_ut1(),t.mjd_tt());
     	System.out.println(""+E.toString());
 //        int year = 1992;

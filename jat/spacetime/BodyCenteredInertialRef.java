@@ -19,7 +19,7 @@
  */
 package jat.spacetime;
 
-import jat.eph.DE405;
+import jat.eph.*;
 import jat.matvec.data.VectorN;
 
 /**
@@ -31,17 +31,13 @@ import jat.matvec.data.VectorN;
  */
 public class BodyCenteredInertialRef implements ReferenceFrame {
   
-    /** Constant to indicate the reference is centered at
-     * the barycenter of the solar system.
-     */
-    public static final int SOLAR_SYSTEM = 0;
     
     /** A code indentifying a body in the JPL ephemeris files.
      * (e.g. Mercury=1, Earth=3, Sun=10, Moon=11).
      * SOLAR_SYSTEM is a special case indicating the origin of
      * all the JPL ephemeris readings. 
      */
-    private final int body;
+    private DE405_Body body;
     
     /**
      * Creates a reference frame centered on a central body and
@@ -53,12 +49,12 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
      * originate) but it still uses the orientation used by ECI
      * and LCI.
      */
-    public BodyCenteredInertialRef(int bodyNum)
+    public BodyCenteredInertialRef(DE405_Body bod)
     {
-      body = bodyNum;
+      body = bod;
     }
     
-    public int getBody() {
+    public DE405_Body getBody() {
       return body;
     }
     
@@ -78,7 +74,7 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
       }
       else if (other instanceof EarthRef) {
         // EarthRef is just a BodyCenteredInertialRef centered on Earth
-        xlater = getTranslater(new BodyCenteredInertialRef(DE405.EARTH), t);
+        xlater = getTranslater(new BodyCenteredInertialRef(DE405_Body.EARTH), t);
       }
       return xlater;
     }
@@ -110,10 +106,14 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
         // To determine the distance between origins, we check the JPL
         // ephemeris of the two bodies and difference their positions.
         DE405 jpl_ephemeris = new DE405();
-        VectorN state1 = new VectorN(this.body == SOLAR_SYSTEM ?
-            new double[6] : jpl_ephemeris.get_planet_posvel(this.body, t.jd_tdb()));
-        VectorN state2 = new VectorN(other.body == SOLAR_SYSTEM ?
-            new double[6] : jpl_ephemeris.get_planet_posvel(other.body, t.jd_tdb()));
+        VectorN state1 = new VectorN(6);
+        VectorN state2 = new VectorN(6);
+        if (!this.body.equals(DE405_Body.SOLAR_SYSTEM_BARY)){
+        	state1 =  jpl_ephemeris.get_planet_posvel(this.body, t.mjd_tt());
+        }
+        if(!other.body.equals(DE405_Body.SOLAR_SYSTEM_BARY)) {
+        	state2 = jpl_ephemeris.get_planet_posvel(other.body, t.mjd_tt());
+        }
         // We difference and convert to meters (JPL reports kilometers)
         VectorN originDiff = state2.get(0, 3).minus(state1.get(0,3)).times(1000);
         VectorN originVel = state2.get(3, 3).minus(state1.get(3, 3)).times(1000);
@@ -130,25 +130,29 @@ public class BodyCenteredInertialRef implements ReferenceFrame {
      * @return a 6 slot vector.  Slots 1-3 is position vector from body1 to body2.
      * Slots 4-6 is the difference in velocity from body1 to body2
      */
-    public static VectorN getPosVelDiff(int body1, int body2, Time t) {
+    public static VectorN getPosVelDiff(DE405_Body body1, DE405_Body body2, Time t) {
       DE405 jpl_ephemeris = new DE405();
       VectorN posVelDiff = null;
+      VectorN state1 = new VectorN(6);
+      VectorN state2 = new VectorN(6);
       
       // We can always just difference the solar system barycenter 
       // positions/velocities, but if we are doing Earth/Sun or Earth/Moon,
       // we use specific DE405 Geocentric calls.
       
-      if ((body1 == DE405.EARTH) && (body2 == DE405.MOON)) {
-        posVelDiff = jpl_ephemeris.get_Geocentric_Moon_posVel(t.jd_tdb());
+      if (body1.equals(DE405_Body.EARTH)&&body2.equals(DE405_Body.GEOCENTRIC_MOON)){
+        posVelDiff = new VectorN(jpl_ephemeris.get_planet_posvel(DE405_Body.GEOCENTRIC_MOON, t.mjd_tt()));
       }
-      else if ((body1 == DE405.MOON) && (body2 == DE405.EARTH)) {
-        posVelDiff = jpl_ephemeris.get_Geocentric_Moon_posVel(t.jd_tdb()).times(-1);
+      else if (body1.equals(DE405_Body.GEOCENTRIC_MOON)&&body2.equals(DE405_Body.EARTH)) {
+        posVelDiff = new VectorN(jpl_ephemeris.get_planet_posvel(DE405_Body.GEOCENTRIC_MOON, t.mjd_tt())).times(-1);
       }
       else {
-        VectorN state1 = new VectorN(body1 == SOLAR_SYSTEM ?
-            new double[6] : jpl_ephemeris.get_planet_posvel(body1, t.jd_tdb()));
-        VectorN state2 = new VectorN(body2 == SOLAR_SYSTEM ?
-            new double[6] : jpl_ephemeris.get_planet_posvel(body2, t.jd_tdb()));
+          if (!body1.equals(DE405_Body.SOLAR_SYSTEM_BARY)){
+          	state1 =  jpl_ephemeris.get_planet_posvel(body1, t.mjd_tt());
+          }
+          if( !body2.equals(DE405_Body.SOLAR_SYSTEM_BARY)) {
+          	state2 = jpl_ephemeris.get_planet_posvel(body2, t.mjd_tt());
+          }
         // We difference and convert to meters (JPL reports kilometers)
         posVelDiff = state2.minus(state1).times(1000);
       }

@@ -21,7 +21,7 @@
  **/
 package jat.spacetime;
 
-import jat.eph.DE405;
+import jat.eph.*;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 
@@ -47,16 +47,16 @@ public class LunaFixedRef implements ReferenceFrame {
       
       // First compute the Euler angles
       DE405 jpl_ephem = new DE405();
-      double[] angles = jpl_ephem.get_Moon_Libration(t.jd_tdb());
+      VectorN angles = jpl_ephem.get_Moon_Libration(t.mjd_tt());
 
       // Then compute the transformation matrix
-      double alpha = angles[0] - Math.PI/2;
+      double alpha = angles.get(0) - Math.PI/2;
       double sina = Math.sin(alpha);
       double cosa = Math.cos(alpha);
-      double delta = Math.PI/2 - angles[1];
+      double delta = Math.PI/2 - angles.get(1);
       double sind = Math.sin(delta);
       double cosd = Math.cos(delta);
-      double lambda = angles[2];
+      double lambda = angles.get(2);
       double sinl = Math.sin(lambda);
       double cosl = Math.cos(lambda);
       Matrix xform = new Matrix(3, 3);
@@ -93,7 +93,7 @@ public class LunaFixedRef implements ReferenceFrame {
       }
       else if (other instanceof EarthRef) {
         // EarthRef is just a BodyCenteredInertialRef centered on Earth
-        xlater = getTranslater(new BodyCenteredInertialRef(DE405.EARTH), t);
+        xlater = getTranslater(new BodyCenteredInertialRef(DE405_Body.EARTH), t);
       }
       return xlater;
     }
@@ -117,10 +117,11 @@ public class LunaFixedRef implements ReferenceFrame {
       // Determine the position of the other body relative to the Earth.
       // Then transform it to the ECF reference frame.
       DE405 jpl_ephem = new DE405();
-      VectorN state1 = new VectorN(jpl_ephem.get_planet_posvel(DE405.MOON, t.jd_tdb()));
-      VectorN state2 = new 
-        VectorN(inertialRef.getBody() == BodyCenteredInertialRef.SOLAR_SYSTEM ?
-          new double[6] : jpl_ephem.get_planet_posvel(inertialRef.getBody(), t.jd_tdb()));
+      VectorN state1 = new VectorN(jpl_ephem.get_planet_posvel(DE405_Body.MOON, t.mjd_tt()));
+      VectorN state2 = new VectorN(6);
+      if (!inertialRef.getBody().equals(DE405_Body.MOON)) {
+    	  state2 = jpl_ephem.get_planet_posvel(inertialRef.getBody(), t.mjd_tt());
+      }
       // We difference and convert to meters (JPL reports kilometers)
       VectorN originDiff = state2.get(0, 3).minus(state1.get(0, 3)).times(1000);
       VectorN bodyPos = lci2lcf.times(originDiff);

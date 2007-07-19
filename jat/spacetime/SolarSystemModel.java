@@ -61,6 +61,8 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
 	public static int NEPTUNE = 8;
 	public static int MOON = 9;
 	
+	private int[] bodies = {DE405_Body.SUN.ordinal(), DE405_Body.MERCURY.ordinal(), DE405_Body.VENUS.ordinal(), DE405_Body.EARTH.ordinal(), DE405_Body.MARS.ordinal(), DE405_Body.JUPITER.ordinal(), DE405_Body.SATURN.ordinal(), DE405_Body.URANUS.ordinal(), DE405_Body.NEPTUNE.ordinal(), DE405_Body.PLUTO.ordinal(), DE405_Body.MOON.ordinal()};
+	
 	/**
 	 * Gravitational mass for the planets.  Source: JPL HORIZONS
 	 * NOTE: Units [km^3 / s^2] 
@@ -116,7 +118,6 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
 		//* TEMP
 		lam = new Lambert(this.convert_GM_SI(SolarSystemModel.GM_body[SolarSystemModel.SUN]));
 		ephem2 = new DE405();
-		ephem2.planetary_ephemeris(Time.TTtoTDB(Time.UTC2TT(this.time.jd_utc()+travel_time)));
     	rot0 = earth.EclMatrix(this.time.mjd_tdb());
     	time.update(travel_time*86400);
     	rotf = earth.EclMatrix(this.time.mjd_tdb());
@@ -138,25 +139,31 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
 	
 	public void update(Time t){
 		this.time = t;
-		ephem.planetary_ephemeris(t.jd_tdb());
-		VectorN r_tmp,v_tmp;
-		r_tmp = new VectorN(ephem.planet_r[DE405.SUN]).times(1000).get(1,3);
-		v_tmp = new VectorN(ephem.planet_rprime[DE405.SUN]).times(1000).get(1,3);
+//		ephem.planetary_ephemeris(t.jd_tdb());
+		VectorN r_tmp,v_tmp, tmp;
+
+		tmp = ephem.get_planet_posvel(DE405_Body.SUN, t.mjd_tt()).times(1000);
+		r_tmp = tmp.get(0,3);
+		v_tmp = tmp.get(3,3);
 		//earth.update(time.mjd_ut1(),time.mjd_tt());
 		RotationMatrix rot = earth.EclMatrix(t.mjd_tt());
 		r_tmp = rot.transform(r_tmp);
 		v_tmp = rot.transform(v_tmp);
 		body[SUN].updatePosition(r_tmp);
 		body[SUN].updateVelocity(v_tmp);
-		r_tmp = new VectorN(ephem.planet_r[DE405.MOON]).times(1000).get(1,3);
-		v_tmp = new VectorN(ephem.planet_rprime[DE405.MOON]).times(1000).get(1,3);
+		tmp = ephem.get_planet_posvel(DE405_Body.MOON, t.mjd_tt()).times(1000);
+		r_tmp = tmp.get(0,3);
+		v_tmp = tmp.get(3,3);
 		r_tmp = rot.transform(r_tmp);
 		v_tmp = rot.transform(v_tmp);
 		body[MOON].updatePosition(r_tmp);
 		body[MOON].updateVelocity(v_tmp);
+		DE405_Body[] bod = DE405_Body.values();
 		for(int i=1; i<8; i++){
-			r_tmp = new VectorN(ephem.planet_r[i]).times(1000).get(1,3);
-			v_tmp = new VectorN(ephem.planet_r[i]).times(1000).get(1,3);
+			int j = bodies[i];        // DE405 index
+			tmp = ephem.get_planet_posvel(bod[j], t.mjd_tt()).times(1000);
+			r_tmp = tmp.get(0, 3);
+			v_tmp = tmp.get(3, 3);
 			r_tmp = rot.transform(r_tmp);
 			v_tmp = rot.transform(v_tmp);
 			body[i].updatePosition(r_tmp);
@@ -273,9 +280,10 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     	Lambert lam = new Lambert(test.convert_GM_SI(SolarSystemModel.GM_body[SolarSystemModel.SUN]));
     	DE405 ephem2 = new DE405();
     	double travel_time = 7*29; //days
-    	ephem2.planetary_ephemeris(Time.TTtoTDB(Time.UTC2TT(test.time.jd_utc()+travel_time)));
-    	double[] xrf = ephem2.planet_r[DE405.MARS];
-    	double[] xvf = ephem2.planet_rprime[DE405.MARS];
+    	double mjd_tt = test.time.mjd_tt()+travel_time;
+    	VectorN tempvec = ephem2.get_planet_posvel(DE405_Body.MARS, mjd_tt);
+    	double[] xrf = tempvec.get(0, 3).x;
+    	double[] xvf = tempvec.get(3, 3).x;
     	EarthRef earth = new EarthRef(new Time(test.time.mjd_utc()+travel_time));
     	
 		RotationMatrix rot = earth.EclMatrix(test.time.mjd_tdb());
@@ -339,7 +347,7 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     	}
     	
     	double mjd3 = test.time.mjd_utc()+100;
-    	VectorN tmp = test.ephem.get_pos_vel(DE405.MARS, TimeUtils.MJDtoJD(mjd3));
+    	VectorN tmp = test.ephem.get_planet_posvel(DE405_Body.MARS, mjd3);
     	rot = earth.EclMatrix(test.time.mjd_tdb());
     	rf = tmp.get(0, 3).times(1000);
     	vf = tmp.get(3, 3).times(1000);
@@ -404,12 +412,14 @@ public class SolarSystemModel implements Derivatives, ScalarfromArrayFunction {
     	Trajectory traj = new Trajectory();
     	double mjd_utc = 53602; //53571;//53745.672118;
     	this.epoch = mjd_utc;
-		this.update(new Time(mjd_utc));
+    	Time time = new Time(mjd_utc);
+		this.update(time);
 //		VectorN r = this.body[SolarSystemModel.EARTH].getPosition().plus(new VectorN(100000,100000,100000));
     	VectorN v = this.body[SolarSystemModel.EARTH].getVelocity();
-    	//Spacecraft sc = new Spacecraft(r,v, 20, 1, 20, 1000);    	
-    	double[] xrf = ephem2.planet_r[DE405.MARS];
-    	double[] xvf = ephem2.planet_rprime[DE405.MARS];
+    	//Spacecraft sc = new Spacecraft(r,v, 20, 1, 20, 1000); 
+    	VectorN tempvec = ephem2.get_planet_posvel(DE405_Body.MARS, time.mjd_tt());
+    	double[] xrf = tempvec.get(0, 3).x;
+    	double[] xvf = tempvec.get(3, 3).x;
     	
 		VectorN rf = new VectorN(xrf[1]*1000,xrf[2]*1000,xrf[3]*1000);
     	VectorN vf = new VectorN(xvf[1]*1000,xvf[2]*1000,xvf[3]*1000);		

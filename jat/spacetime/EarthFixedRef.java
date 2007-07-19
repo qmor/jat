@@ -21,7 +21,7 @@
  **/
 package jat.spacetime;
 
-import jat.eph.DE405;
+import jat.eph.*;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 
@@ -89,10 +89,12 @@ public class EarthFixedRef implements ReferenceFrame {
       // Determine the position of the other body relative to the Earth.
       // Then transform it to the ECF reference frame.
       DE405 jpl_ephem = new DE405();
-      VectorN state1 = new VectorN(jpl_ephem.get_planet_posvel(DE405.EARTH, t.jd_tdb()));
-      VectorN state2 = new 
-        VectorN(inertialRef.getBody() == BodyCenteredInertialRef.SOLAR_SYSTEM ?
-          new double[6] : jpl_ephem.get_planet_posvel(inertialRef.getBody(), t.jd_tdb()));
+      VectorN state1 = new VectorN(jpl_ephem.get_planet_posvel(DE405_Body.EARTH, t.mjd_tt()));
+      VectorN state2 = new VectorN(6);
+      if (!inertialRef.getBody().equals(DE405_Body.EARTH)){
+    	  state2 = jpl_ephem.get_planet_posvel(inertialRef.getBody(), t.mjd_tt());
+      }
+
       // We difference and convert to meters (JPL reports kilometers)
       VectorN originDiff = state2.get(0, 3).minus(state1.get(0, 3)).times(1000);
       VectorN bodyPos = eci2ecf.times(originDiff);

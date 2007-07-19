@@ -21,7 +21,7 @@
  **/
 package jat.spacetime;
 
-import jat.eph.DE405;
+import jat.eph.*;
 //import jat.math.MathUtils;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
@@ -75,11 +75,9 @@ public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
     private Matrix LCI2LCF;
     
     protected DE405 jpl_ephem;
-    private VectorN r_sun;
-    private VectorN r_earth;
     
     public LunaRef(){
-        super(DE405.MOON);
+        super(DE405_Body.MOON);
     	jpl_ephem = new DE405();
     }
     
@@ -111,8 +109,8 @@ public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
      */
     public VectorN get_JPL_Sun_Vector(Time t) {
       DE405 jpl_ephemeris = new DE405();
-      VectorN moon = jpl_ephemeris.get_pos(DE405.MOON, t.jd_tdb());
-      VectorN sun = jpl_ephemeris.get_pos(DE405.SUN, t.jd_tdb());
+      VectorN moon = new VectorN(jpl_ephemeris.get_planet_pos(DE405_Body.MOON, t.mjd_tt()));
+      VectorN sun = new VectorN(jpl_ephemeris.get_planet_pos(DE405_Body.SUN, t.mjd_tt()));
       return sun.minus(moon);
     }
 
