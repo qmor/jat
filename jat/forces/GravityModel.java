@@ -23,6 +23,7 @@ import jat.math.MathUtils;
 import jat.matvec.data.Matrix;
 import jat.spacetime.*;
 import jat.util.FileUtil;
+import jat.eph.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -420,7 +421,7 @@ public class GravityModel extends SphericalHarmonicGravity {
 	}
 
 	public static void main(String args[]) {
-		BodyCenteredInertialRef ref = new BodyCenteredInertialRef(11);
+		BodyCenteredInertialRef ref = new BodyCenteredInertialRef(DE405_Body.GEOCENTRIC_MOON);
 		GravityModel x = new GravityModel(165, 165, ref, "jat/forces/moonGravity/LP165P-Cov.grv", true);
 		x.printParameters();
 	}

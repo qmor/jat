@@ -20,7 +20,7 @@
 package jat.forces;
 
 //import jat.cm.Constants;
-import jat.eph.DE405;
+import jat.eph.*;
 //import jat.math.MathUtils;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.Spacecraft;
@@ -28,7 +28,7 @@ import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.BodyRef;
 import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
-import jat.spacetime.Time;
+import jat.spacetime.*;
 import jat.timeRef.*;
 import jat.util.FileUtil;
 import jat.cm.Constants;
@@ -46,7 +46,7 @@ public class Moon extends GravitationalBody {
     
     /** The reference frame of this force.  It is a moon-centered
      * J2000 inertial reference frame. */
-    private ReferenceFrame moonRef = new BodyCenteredInertialRef(DE405.MOON);
+    private ReferenceFrame moonRef = new BodyCenteredInertialRef(DE405_Body.GEOCENTRIC_MOON);
     
     /**
      * Default constructor
@@ -65,9 +65,10 @@ public class Moon extends GravitationalBody {
     	super();
         this.mu = Constants.GM_Moon; 
         jpl_ephemeris = new DE405();
-        double jd_tdb = Time.TTtoTDB(Time.UTC2TT(mjd_utc))+2400000.5;
-        this.r_body = jpl_ephemeris.get_Geocentric_Moon_pos(jd_tdb);
-        this.v_body = jpl_ephemeris.get_Geocentric_Moon_vel(jd_tdb);
+        double mjd_tt = TimeUtils.UTCtoTT(mjd_utc);
+        VectorN temp = jpl_ephemeris.get_planet_posvel(DE405_Body.GEOCENTRIC_MOON, mjd_tt);
+        this.r_body = temp.get(0, 3);
+        this.v_body = temp.get(3, 3);
     }
     
     /**
@@ -137,7 +138,7 @@ public class Moon extends GravitationalBody {
         
         // Get a vector (in the passed in reference frame) to the
         // spacecraft and to the moon.        
-        VectorN r_moon = jpl_ephemeris.get_Geocentric_Moon_pos(t.jd_tdb()).times(1000);
+        VectorN r_moon = new VectorN(jpl_ephemeris.get_planet_pos(DE405_Body.GEOCENTRIC_MOON, t.mjd_tt()));
         //VectorN r_moon = xlater.translatePointBack(new VectorN(3));
         VectorN r = sc.r();
         VectorN d = r.minus(r_moon);
@@ -160,49 +161,8 @@ public class Moon extends GravitationalBody {
         
         return  accel;
     }
-    public void print(EarthRef ref){
-        jpl_ephemeris.planetary_ephemeris(ref.mjd_tt()+2400000.5);
-        VectorN r = jpl_ephemeris.get_Geocentric_Moon_pos();
-        r.print("JPL Moon  "+ref.mjd_utc());
-    }
-    
-	public static void main(String[] args) throws java.io.IOException {
-        String filesep = FileUtil.file_separator();
-        String directory = FileUtil.getClassFilePath("jat.eph","DE405");
-        directory = directory+filesep+"DE405data"+filesep;
-        DE405 jpl_ephemeris = new DE405(directory);
-        EarthRef eRef = new EarthRef(53157.5);
-        //double jd = eRef.mjd_tt()+2400000.5;
-        double mjd = 2453159.00000000-2400000.5;
-        EarthRef mjd_to_tt = new EarthRef(mjd);
-        double jd = mjd_to_tt.mjd_tt()+2400000.5;
-        //jd = 2453523;
-        jpl_ephemeris.planetary_ephemeris(jd);
-        VectorN r_moon2 = jpl_ephemeris.get_Geocentric_Moon_pos();
-        r_moon2 = r_moon2.times(1000);
-        r_moon2.print("r_moon2 - get_Geocentric_Moon_pos()");
-        
-        VectorN r_moon = jpl_ephemeris.get_pos(DE405.MOON,jd);
-        VectorN r_earth = jpl_ephemeris.get_pos(DE405.EARTH,jd);
-        //VectorN r_body = r_moon.minus(r_earth);
-        //double eps = Constants.eps*MathUtils.DEG2RAD;             // Obliquity of J2000 ecliptic
-        //RotationMatrix R = new RotationMatrix(1, -eps);
-        //VectorN r_new;
-        //r_new = R.times(r_body);
-        
-        System.out.println("jd : "+jd);
-        //r_body.print("r_body_bary");
-        r_moon = r_moon.times(1000);
-        r_moon.print("r_moon - get_pos(jd)");
-        
-        VectorN r_eci = new VectorN(36607358.256,  -20921.723703,  0);
-        //VectorN r_eci = new VectorN(-4453783.586,  -5038203.756,  -426384.456);
-        VectorN r_to_moon2 = r_eci.minus(r_moon2);
-        VectorN r_to_moon = r_eci.minus(r_moon);
-        r_to_moon.print("r_to_moon_from_sc");
-        r_to_moon2.print("r_to_moon(2)_from_sc");
+
       
-        
-	}
+   
     
 }

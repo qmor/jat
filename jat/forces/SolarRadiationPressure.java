@@ -28,7 +28,7 @@ import jat.spacetime.BodyRef;
 import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
-import jat.eph.DE405;
+import jat.eph.*;
 
 /**
  * <P>
@@ -54,7 +54,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
     
     /** All solar pressure radiation forces are determined based on
      * position relative to the sun. */
-    private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405.SUN);
+    private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405_Body.SUN);
     
     /** A reference frame relative to a planet casting a shadow.  Will be used
      * to determine the spacecraft's position relative to the planet to determine
@@ -70,7 +70,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
      * @param coeff Coefficient of reflectivity
 	 */
 	public SolarRadiationPressure(double m, double A, double coeff){
-      this(m, A, coeff, new BodyCenteredInertialRef(DE405.EARTH), Constants.R_Earth);
+      this(m, A, coeff, new BodyCenteredInertialRef(DE405_Body.EARTH), Constants.R_Earth);
 	}
 	
     /** Constructor

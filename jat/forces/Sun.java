@@ -33,7 +33,7 @@ import jat.timeRef.EarthRef;
 //import jat.timeRef.Time;
 import jat.util.FileUtil;
 import jat.cm.Constants;
-import jat.eph.DE405;
+import jat.eph.*;
 
 /**
  * Simple class to obtain the gravitational effect of the Sun.
@@ -47,7 +47,7 @@ public class Sun extends GravitationalBody {
     
     /** The reference frame in which the Sun computes its forces.
      * It is a sun-centered J2000 inertial reference frame. */
-    private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405.SUN);
+    private ReferenceFrame sunRef = new BodyCenteredInertialRef(DE405_Body.SUN);
     
     /**
      * Default constructor. 
@@ -138,29 +138,15 @@ public class Sun extends GravitationalBody {
         String directory = FileUtil.getClassFilePath("jat.eph","DE405");
         directory = directory+filesep+"DE405data"+filesep;
         DE405 jpl_ephemeris = new DE405(directory);
-        EarthRef eRef = new EarthRef(53157.5);
-        double jd = eRef.mjd_utc()+2400000.5;
-        jpl_ephemeris.planetary_ephemeris(jd);
-        VectorN r_sun = jpl_ephemeris.get_pos(DE405.SUN,jd);
-        VectorN r_earth = jpl_ephemeris.get_pos(DE405.EARTH,jd);
+        double mjd_tt = 53157.5;
+        VectorN r_sun = new VectorN(jpl_ephemeris.get_planet_pos(DE405_Body.SUN,mjd_tt));
+        VectorN r_earth = new VectorN(jpl_ephemeris.get_planet_pos(DE405_Body.EARTH,mjd_tt));
         VectorN r_body = r_sun.minus(r_earth);
-        double eps = Constants.eps*MathUtils.DEG2RAD;             // Obliquity of J2000 ecliptic
-        RotationMatrix R = new RotationMatrix(1, -eps);
-        VectorN r_new;
-        r_new = R.times(r_body);
+
 	    r_body.print("r");
 	    r_sun.print("r_sun ");
         
-	    jd = eRef.mjd_utc()+2400000.5;
-        jpl_ephemeris.planetary_ephemeris(jd);
-//        VectorN r_sunb = jpl_ephemeris.get_pos(DE405.SUN,jd);
-//        VectorN r_earth = jpl_ephemeris.get_pos(DE405.EARTH,jd);
-//        VectorN r_moon = jpl_ephemeris.get_pos(DE405.MOON,jd);
-//        VectorN r_sun = r_sunb.minus(r_earth);
-        VectorN r_sun3 = jpl_ephemeris.get_Geocentric_Sun_pos(jd);
-        r_sun3 = r_sun3.times(1000);
-        r_sun3.print("r_sun3");
-        
+
 	}
     
 }
