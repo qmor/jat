@@ -30,7 +30,7 @@ import java.io.*;
 import java.util.*;
 
 /**
-* The FiniteBurnList.java Class provides a way to deal with
+* The GroundStationList.java Class provides a way to deal with
 * a list of finite burns read from a file.
 *
 * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
@@ -181,7 +181,7 @@ public class FiniteBurnList implements Serializable {
 		lp.close();
 	}
 
-	/** Recover a serialized FiniteBurnList File
+	/** Recover a serialized GroundStationList File
 	 * @param filename string containing the directory and filename.
 	 * @return the trajectory
 	 */
