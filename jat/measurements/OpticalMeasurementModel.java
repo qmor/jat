@@ -29,7 +29,7 @@ import java.util.Random;
 import jat.alg.estimators.MeasurementModel;
 import jat.alg.integrators.LinePrinter;
 import jat.cm.Constants;
-import jat.eph.DE405;
+import jat.eph.*;
 import jat.math.Interpolator;
 import jat.math.MathUtils;
 import jat.matvec.data.Quaternion;
@@ -296,8 +296,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		case BODY_MOON: //% Moon obs
 			//% Get lunar position relative to the Earth
 			//* TODO watch units
-			VectorN xm=ephem.get_Geocentric_Moon_pos(
-					TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(mjd0+t/86400)))).times(1000); 
+			VectorN xm=new VectorN(ephem.get_planet_pos(DE405_Body.GEOCENTRIC_MOON, TimeUtils.UTCtoTT(mjd0+t/86400)));
 			//getmoon(jd0+t/86400);  
 			v=xm.minus(r);
 			break;
@@ -516,7 +515,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
         // reference frame.
         Time t = new Time(TimeUtils.JDtoMJD(jd));
         BodyCenteredInertialRef sunRef = 
-          new BodyCenteredInertialRef(DE405.SUN);
+          new BodyCenteredInertialRef(DE405_Body.SUN);
         ReferenceFrameTranslater xlater =
           new ReferenceFrameTranslater(sunRef, cbody.inertialRef, t);
         VectorN xs = xlater.translatePoint(new VectorN(3));
@@ -614,7 +613,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 		VectorN xsvhat=xsv.unitVector(); 
 
 		BodyCenteredInertialRef sunRef = 
-			new BodyCenteredInertialRef(DE405.SUN);
+			new BodyCenteredInertialRef(DE405_Body.GEOCENTRIC_SUN);
 		xlater =  new ReferenceFrameTranslater(sunRef, originBody.inertialRef, t);
 		VectorN xs = xlater.translatePoint(new VectorN(3));
 		VectorN shat=xs.unitVector();
@@ -814,14 +813,14 @@ public class OpticalMeasurementModel implements MeasurementModel{
 			xce = new VectorN(3);
 		}else if(cbody == BODY_MOON){
 			//* TODO watch units
-			xce = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(TimeUtils.JDtoMJD(jd))))).times(1000);
+			xce = new VectorN(ephem.get_planet_pos(DE405_Body.GEOCENTRIC_MOON, TimeUtils.TTtoTDB(TimeUtils.UTCtoTT(TimeUtils.JDtoMJD(jd))))).times(1000);
 		}
 		//% Second get vbody relative to earth
 		//xve=feval(vbody.fn,jd);
 		if(vbody==BODY_EARTH){
 			xve = new VectorN(3);
 		}else if(vbody == BODY_MOON){
-			xve = ephem.get_Geocentric_Moon_pos(TimeUtils.MJDtoJD(Time.TTtoTDB(Time.UTC2TT(TimeUtils.JDtoMJD(jd))))).times(1000);
+			xve = new VectorN(ephem.get_planet_pos(DE405_Body.GEOCENTRIC_MOON, TimeUtils.TTtoTDB(TimeUtils.UTCtoTT(TimeUtils.JDtoMJD(jd))))).times(1000);
 		}
 		
 		//% Finally spacecraft relative to vbody
@@ -1096,7 +1095,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 //          new BodyCenteredInertialRef(DE405.EARTH),
 //          new EarthFixedRef());
       CentralBody earth = new CentralBody("earth", EarthRef.GM_Earth, EarthRef.R_Earth, 
-              new BodyCenteredInertialRef(DE405.EARTH),
+              new BodyCenteredInertialRef(DE405_Body.EARTH),
               new EarthFixedRef());
       // Add earth landmark
       // TODO: Read these landmarks from a file somewhere?
@@ -1108,7 +1107,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 //          new BodyCenteredInertialRef(DE405.MOON),
 //          new LunaFixedRef());
       CentralBody moon = new CentralBody("moon", LunaRef.GM_Luna, LunaRef.R_Luna,
-              new BodyCenteredInertialRef(DE405.MOON),
+              new BodyCenteredInertialRef(DE405_Body.GEOCENTRIC_MOON),
               new LunaFixedRef());
       // Add moon landmarks
       //moon.addLandmark(20, -50.7, 127.4, 0);
@@ -1120,7 +1119,7 @@ public class OpticalMeasurementModel implements MeasurementModel{
 //      CentralBody sun = new CentralBody("sun", 1.32712440018e11, 0,
 //          new BodyCenteredInertialRef(DE405.SUN), null);
       CentralBody sun = new CentralBody("sun", Constants.GM_Sun, Constants.R_Sun,
-              new BodyCenteredInertialRef(DE405.SUN), null);
+              new BodyCenteredInertialRef(DE405_Body.SUN), null);
       bodies.add(sun);
       return bodies;
     }

@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import jat.alg.integrators.LinePrinter;
 import jat.matvec.data.*;
 import jat.timeRef.RSW_Frame;
-import jat.spacetime.Time;
+import jat.spacetime.*;
 
 
 public class generateYaw{
@@ -79,7 +79,7 @@ public class generateYaw{
 		T = new Matrix(YawRotationMatrix(r,v));
 		
 		//Determine the Sun Vector
-		double MJD_TT = Time.UTC2TT(MJD);
+		double MJD_TT = TimeUtils.UTCtoTT(MJD);
 		VectorN uSun = unitSun(MJD_TT,r);
 	 
 		//Rotate the Sun Vector into the Orbit Frame for 
