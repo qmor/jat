@@ -25,6 +25,7 @@ import jat.vr.*;
 import jat.cm.*;
 import jat.eph.*;
 import jat.util.*;
+import jat.spacetime.*;
 import jat.matvec.data.*;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
@@ -108,10 +109,10 @@ public class Copernicus1 extends Applet implements ActionListener
 		TG_scene.addChild(spacecraft = new ThreeDStudioObject(this, "carrier.3DS", 50000.f));
 		spacecraft.thrusters_on();
 		//		TG_scene.addChild(spacecraft = new ColorCube3D(1.e7));
-		BG_root.addChild(ephemeris_mercury = new Ephemeris3D(DE405.MERCURY, jd, 100));
-		BG_root.addChild(ephemeris_venus = new Ephemeris3D(DE405.VENUS, jd, 300));
-		BG_root.addChild(ephemeris_earth = new Ephemeris3D(DE405.EARTH, jd, 365));
-		BG_root.addChild(ephemeris_mars = new Ephemeris3D(DE405.MARS, jd, 600));
+		BG_root.addChild(ephemeris_mercury = new Ephemeris3D(DE405_Body.MERCURY, jd, 100));
+		BG_root.addChild(ephemeris_venus = new Ephemeris3D(DE405_Body.VENUS, jd, 300));
+		BG_root.addChild(ephemeris_earth = new Ephemeris3D(DE405_Body.EARTH, jd, 365));
+		BG_root.addChild(ephemeris_mars = new Ephemeris3D(DE405_Body.MARS, jd, 600));
 		BG_root.addChild(TG_scene);
 		// Copernicus Trajectory
 		//ct1=new Copernicus_Trajectory(b+"Mission.txt",steps);
@@ -189,10 +190,11 @@ public class Copernicus1 extends Applet implements ActionListener
 			
 		
 			// Planet positions
-			mercury.set_position(MRot.times(my_eph.get_pos(DE405.MERCURY, jd)));
-			venus.set_position(MRot.times(my_eph.get_pos(DE405.VENUS, jd)));
-			earth.set_position(MRot.times(my_eph.get_pos(DE405.EARTH, jd)));
-			mars.set_position(MRot.times(my_eph.get_pos(DE405.MARS, jd)));
+			double mjd_tt = TimeUtils.JDtoMJD(jd);
+			mercury.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.MERCURY, mjd_tt)));
+			venus.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.VENUS, mjd_tt)));
+			earth.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.EARTH, mjd_tt)));
+			mars.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.MARS, mjd_tt)));
 
 			// Take frame screenshot
 			try

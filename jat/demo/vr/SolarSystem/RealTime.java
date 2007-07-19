@@ -26,7 +26,7 @@ import jat.cm.*;
 import jat.matvec.data.*;
 import jat.util.*;
 import jat.eph.*;
-
+import jat.spacetime.*;
 import java.awt.*;
 import java.util.Date;
 import java.util.Calendar;
@@ -108,10 +108,10 @@ public class RealTime extends Applet implements ActionListener
 		TG_scene.addChild(venus = new Planet3D(this, Planet3D.VENUS, scale_factor));
 		TG_scene.addChild(earth = new Planet3D(this, Planet3D.EARTH, scale_factor));
 		TG_scene.addChild(mars = new Planet3D(this, Planet3D.MARS, scale_factor));
-		BG_root.addChild(ephemeris_mercury = new Ephemeris3D(DE405.MERCURY, jd, 100));
-		BG_root.addChild(ephemeris_venus = new Ephemeris3D(DE405.VENUS, jd, 300));
-		BG_root.addChild(ephemeris_earth = new Ephemeris3D(DE405.EARTH, jd, 365));
-		BG_root.addChild(ephemeris_mars = new Ephemeris3D(DE405.MARS, jd, 600));
+		BG_root.addChild(ephemeris_mercury = new Ephemeris3D(DE405_Body.MERCURY, jd, 100));
+		BG_root.addChild(ephemeris_venus = new Ephemeris3D(DE405_Body.VENUS, jd, 300));
+		BG_root.addChild(ephemeris_earth = new Ephemeris3D(DE405_Body.EARTH, jd, 365));
+		BG_root.addChild(ephemeris_mars = new Ephemeris3D(DE405_Body.MARS, jd, 600));
 		//TG_scene.addChild(moon = new Planet3D(this, Planet3D.MOON));
 		//moon.set_position(20000, 0, 0);
 		BG_root.addChild(TG_scene);
@@ -160,10 +160,11 @@ public class RealTime extends Applet implements ActionListener
 		//earth.set_attitude(Math.PI / 2., alpha, 0);
 		//moon.set_position(alpha * 1000, 10000, 0);
 		//moon.set_attitude(alpha, 0, 0);
-		mercury.set_position(MRot.times(my_eph.get_planet_pos(DE405.MERCURY, jd)));
-		venus.set_position(MRot.times(my_eph.get_planet_pos(DE405.VENUS, jd)));
-		earth.set_position(MRot.times(my_eph.get_planet_pos(DE405.EARTH, jd)));
-		mars.set_position(MRot.times(my_eph.get_planet_pos(DE405.MARS, jd)));
+		double mjd_tt = TimeUtils.JDtoMJD(jd);
+		mercury.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.MERCURY, mjd_tt)));
+		venus.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.VENUS, mjd_tt)));
+		earth.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.EARTH, mjd_tt)));
+		mars.set_position(MRot.times(my_eph.get_planet_pos(DE405_Body.MARS, mjd_tt)));
 	}
 
 	private CapturingCanvas3D createCanvas(String frames_path)

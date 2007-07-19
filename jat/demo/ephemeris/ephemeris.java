@@ -31,6 +31,7 @@ package jat.demo.ephemeris;
 import jat.cm.*;
 import jat.util.*;
 import jat.eph.*;
+import jat.matvec.data.*;
 
 /**
  * @author Tobias Berthold
@@ -43,12 +44,12 @@ public class ephemeris
         double jd=cm.juliandate(2002, 2, 17, 12, 0, 0);
 		String fs = FileUtil.file_separator();
 		DE405 my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs);
-        double[] rv=my_eph.get_planet_posvel(DE405.MARS, jd);
+        VectorN rv=my_eph.get_planet_posvel(DE405_Body.MARS, jd);
 
         System.out.println("The position of Mars on 10-17-2002 at 12:00pm is ");
-        System.out.println("x= "+rv[0]+" km");
-        System.out.println("y= "+rv[1]+" km");
-        System.out.println("z= "+rv[2]+" km");
+        System.out.println("x= "+rv.get(0)+" km");
+        System.out.println("y= "+rv.get(1)+" km");
+        System.out.println("z= "+rv.get(2)+" km");
 
 
     }
