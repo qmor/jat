@@ -31,7 +31,6 @@ import jat.gps.GPS_Utils;
 import jat.alg.integrators.Derivatives;
 import jat.matvec.data.*;
 import jat.spacetime.*;
-import jat.util.FileUtil;
 
 
 
@@ -123,7 +122,7 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		//Obtain thet the correct time
 		//int ctr = 0;
 		Time tt = new Time(t/86400 + mjd0);
-		double newttt = Time.UTC2TT(t/86400 + mjd0);
+		double newttt = TimeUtils.UTCtoTT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
@@ -211,7 +210,7 @@ public class JGM4x4SRPEOM15state implements Derivatives {
 		double AU_sqrd = Constants.AU*Constants.AU;
 				
 		//compute acceleration due to lunar gravity
-		double ttt = Time.TTtoTDB(newttt) + 2400000.5;
+		double ttt = TimeUtils.TTtoTDB(newttt) + 2400000.5;
         VectorN r_moon = universe.earthRef.moonVector(newttt);
         
         VectorN d0 = r0.minus(r_moon);

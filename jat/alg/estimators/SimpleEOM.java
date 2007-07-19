@@ -26,6 +26,7 @@ import java.util.HashMap;
 import jat.alg.integrators.Derivatives;
 import jat.cm.Constants;
 import jat.eph.DE405;
+import jat.eph.DE405_Body;
 import jat.forces.GravityModel;
 import jat.forces.GravityModelType;
 import jat.forces.SolarRadiationPressure;
@@ -184,7 +185,8 @@ public class SimpleEOM implements Derivatives {
 		//compute acceleration due to lunar gravity
 		//double ttt = tt.TTtoTDB(newttt) + 2400000.5;
         //VectorN r_moon = universe.earthRef.moonVector(newttt);
-		VectorN r_moon = jpl_ephem.get_Geocentric_Moon_pos(tt.jd_tdb()).times(1000.0);
+		VectorN r_moon = new VectorN(jpl_ephem.get_planet_pos(DE405_Body.GEOCENTRIC_MOON, tt.mjd_tt())).times(1000.0);
+
         
         VectorN d0 = r0.minus(r_moon);
         
@@ -207,7 +209,7 @@ public class SimpleEOM implements Derivatives {
     
         //Compute the acceleration due to the solar gravity
         //VectorN r_sun = universe.earthRef.get_JPL_Sun_Vector();
-        VectorN r_sun = jpl_ephem.get_Geocentric_Sun_pos(tt.jd_tdb()).times(1000.0);
+		VectorN r_sun = new VectorN(jpl_ephem.get_planet_pos(DE405_Body.GEOCENTRIC_SUN, tt.mjd_tt())).times(1000.0);
         d0 = r0.minus(r_sun);
         
         dmag0 = d0.mag();

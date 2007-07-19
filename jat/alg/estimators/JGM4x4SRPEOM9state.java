@@ -131,7 +131,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		int ctr = 0;
 		Time tt = new Time(mjd0);
 		tt.update(t);
-		double newttt = Time.UTC2TT(t/86400 + mjd0);
+		double newttt = TimeUtils.UTCtoTT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
@@ -195,7 +195,7 @@ public class JGM4x4SRPEOM9state implements Derivatives {
 		double AU_sqrd = Constants.AU*Constants.AU;
 				
 		//compute acceleration due to lunar gravity
-		double ttt = tt.TTtoTDB(newttt) + 2400000.5;
+		double ttt = TimeUtils.TTtoTDB(newttt) + 2400000.5;
         VectorN r_moon = universe.earthRef.moonVector(newttt);
         
         VectorN d0 = r0.minus(r_moon);

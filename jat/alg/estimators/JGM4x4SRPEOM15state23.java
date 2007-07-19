@@ -127,7 +127,7 @@ public class JGM4x4SRPEOM15state23 implements Derivatives {
 		//Obtain thet the correct time
 		//int ctr = 0;
 		Time tt = new Time(t/86400 + mjd0);
-		double newttt = Time.UTC2TT(t/86400 + mjd0);
+		double newttt = TimeUtils.UTCtoTT(t/86400 + mjd0);
 		
 		
 		if(firsttime == false)
