@@ -27,7 +27,7 @@ import javax.vecmath.*;
 import jat.util.*;
 import jat.matvec.data.*;
 
-/** Base class for 3D objects. Planets, moons, and spacecraft extend this class.
+/** Base class for 3D objects. Planet, moons, and spacecraft extend this class.
  * To be extended by specific object
  * @author Tobias Berthold
  */

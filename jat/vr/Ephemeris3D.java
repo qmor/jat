@@ -27,6 +27,7 @@ import jat.matvec.data.*;
 import jat.cm.*;
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
+import jat.spacetime.*;
 
 /**
  * @author Tobias Berthold
@@ -35,7 +36,7 @@ import javax.vecmath.Color3f;
 public class Ephemeris3D extends Shape3D
 {
 	float size;
-	int body;
+	DE405_Body body;
 	int steps=100;
 	//Shape3D s;
 	public double[] coords;
@@ -44,10 +45,10 @@ public class Ephemeris3D extends Shape3D
 	double jd;
 	Matrix MRot;
 
-	public Ephemeris3D(int body, double jd_start, double jd_end)
+	public Ephemeris3D(DE405_Body bod, double jd_start, double jd_end)
 	{
 		//super(myapplet);
-		this.body = body;
+		this.body = bod;
 		this.jd=jd_start;
 		String fs = FileUtil.file_separator();
 		my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs);
@@ -55,10 +56,10 @@ public class Ephemeris3D extends Shape3D
 		draw();
 	}
 	
-	public Ephemeris3D(int body, double jd_start, int days)
+	public Ephemeris3D(DE405_Body bod, double jd_start, int days)
 	{
 		//super(myapplet);
-		this.body = body;
+		this.body = bod;
 		this.jd=jd_start;
 		this.steps=days;
 		String fs = FileUtil.file_separator();
@@ -75,7 +76,8 @@ public class Ephemeris3D extends Shape3D
 		coords = new double[steps * 3];
 		for (int k = 0; k < steps; k++)
 		{
-			rv = MRot.times(my_eph.get_pos(body, jd+k));
+			double mjd_tt = TimeUtils.JDtoMJD(jd);
+			rv = MRot.times(new VectorN(my_eph.get_planet_pos(body, mjd_tt+k)));
 //			System.out.println("The position is");
 //			System.out.println("x= " + rv[0] + " km");
 //			System.out.println("y= " + rv[1] + " km");
