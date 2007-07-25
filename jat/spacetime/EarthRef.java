@@ -808,7 +808,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
 		double xp = a1 + a2 *Math.cos(A) + a3* Math.sin(A) + a4*Math.cos(C) + a5*Math.sin(C);
 		double yp = a6 + a7 *Math.cos(A) + a8* Math.sin(A) + a9*Math.cos(C) + a10*Math.sin(C);
 		xp = xp*Constants.arcsec2rad;
-		yp = xp*Constants.arcsec2rad;
+		yp = yp*Constants.arcsec2rad;
 		this.x_pole = xp;
 		this.y_pole = yp;
 		//Matrix out = new Matrix(3);
