@@ -324,7 +324,15 @@ public class TimeUtils {
     	   }
 	           	
 	   }
-	    /**
+	   /**
+	    * Return Julian centuries since J2000 (Terrestrial Time)
+	    * @param mjd_tt double containing TT in MJD format
+	    * @return Julian centuries since J2000 (Terrestrial Time)
+		*/
+		public static double centuriesSinceJ2000(double mjd_tt){
+			return (mjd_tt - TimeUtils.MJD_J2000)/36525.0;
+		}
+		/**
 	     * Converts modified julian date to julian date.
 	     * @param MJD Modified Julian Date
 	     * @return JD Julian Date
