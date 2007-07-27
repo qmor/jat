@@ -35,6 +35,9 @@ public class MathUtils implements Serializable {
 	/** PI.
 	 */
 	public final static double PI = Math.acos(-1.0);
+	/** 2*PI.
+	 */
+	public final static double TWOPI = 2.0*Math.acos(-1.0);
 
 	/** Conversion factor for degrees to radians.
 	 */
@@ -213,4 +216,24 @@ public class MathUtils implements Serializable {
 	    }
 	    return out;
 	}
+	/** Returns an angle between 0 and 2 pi
+	 * @param x double containing angle in radians
+	 * @return an angle between 0 and 2 pi
+	 */
+	
+	public static double radiancheck(double x){
+		x = Modulo(x, TWOPI);
+		if (x < 0.0) x = x + TWOPI;
+		return x;
+	}
+	/** Returns an angle between 0 and 360
+	 * @param x double containing angle in degrees
+	 * @return an angle between 0 and 360
+	 */
+	
+	public static double degreecheck(double x){
+		x = Modulo(x, 360.0);
+		if (x < 0.0) x = x + 360.0;
+		return x;
+	}	
 }
