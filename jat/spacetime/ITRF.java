@@ -1,8 +1,32 @@
 package jat.spacetime;
+/* JAT: Java Astrodynamics Toolkit
+*
+* Copyright (c) 2007 The JAT Project. All rights reserved.
+*
+* This file is part of JAT. JAT is free software; you can
+* redistribute it and/or modify it under the terms of the
+* GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*
+*/
 
 import jat.math.*;
 import jat.matvec.data.*;
-
+/**
+ * ITRF provides a representation of the Internation Terrestrial Reference Frame.
+ * It is used to compute the transformation between ECI and ECEF frames.
+ * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
+ * @version 1.0
+ */
 public class ITRF {
 	private double omega = 0.0;
 	private double dpsi = 0.0;
@@ -22,9 +46,18 @@ public class ITRF {
 	private double t4;
 	private double eps;
 	
+	/**
+	 * Create an instance of ITRF
+	 * @param time a Time Object
+	 * @param xp double containing the x-pole location in arcsec (from IERS Bulletin B)
+	 * @param yp double containing the y-pole location in arcsec (from IERS Bulletin B)
+	 * @param ut1_utc double containing the difference between UT1 and UTC in seconds (from IERS Bulletin B)
+	 */
 	public ITRF(Time time, double xp, double yp, double ut1_utc){
+		// convert polar motion data to radians
 		_xp = xp * MathUtils.ARCSEC2RAD;
 		_yp = yp * MathUtils.ARCSEC2RAD;
+		// get the Terrestrial Time
 		mjd_tt = time.mjd_tt();
 		t = centuriesSinceJ2000(mjd_tt);
 		t2 = t*t;
@@ -32,17 +65,15 @@ public class ITRF {
 		t4 = t3*t;
 		_ut1_utc = ut1_utc;
 		
+		// make the computations
     	this.precession();
     	this.nutation();
     	this.sidereal();
-    	this.polarMotion();
-		
+    	this.polarMotion();		
 	}
-
 	
 	/**
 	 * Return Julian centuries since J2000 (Terrestrial Time)
-	 * 
 	 * @param mjd_tt double containing TT in MJD format
 	 * @return Julian centuries since J2000 (Terrestrial Time)
 	 */
@@ -52,17 +83,14 @@ public class ITRF {
 	
 	/**
 	 * Return Greenwich Mean Sidereal Time in radians
-	 * 
-	 * @param mjd_ut1 double containing UT1 in MJD format
 	 * @return GMST in radians
 	 */
-	private double GMST(double mjd_ut1){
-
+	private double GMST(){
+		// compute UT1 time
+    	double mjd_ut1 = TimeUtils.TTtoUTC(mjd_tt)+ _ut1_utc/86400.0; 
+    	// compute time since J2000 in days
 		double T = mjd_ut1 - TimeUtils.MJD_J2000;
-		// compute GMST in seconds
-//		double gmst = -6.2e-6* T*T*T + 0.093104 * T*T + (876600.0*3600.0 + 8640184.812866)*T + 67310.54841;
-		// convert from seconds to radians (1 rev/day)
-//		gmst = gmst * MathUtils.TWOPI/86400.0;
+		// compute GMST in radians (CSR-02-01, p.21, MSODP Implementation)
 		double gmst = 4.894961212823058751375704430 + T*(6.30038809898489355227651372 + T*(5.075209994113591478053805523E-15 - 9.25309756819433560067190688E-24*T));
 		// quadrant check (return a value between 0 and 2PI)
 		double out = MathUtils.Modulo(gmst, MathUtils.TWOPI);
@@ -70,6 +98,10 @@ public class ITRF {
 		return out;
 	}
 	
+	/**
+	 * Return mean obliquity in radians
+	 * @return GMST in radians
+	 */
 	private void meanObliquity (){
 		// compute meanObliquity in arcsec
 		eps = 84381.448 - 46.8150*t - 0.00059*t2 + 0.001813*t3;
@@ -79,11 +111,6 @@ public class ITRF {
 	}
 	
     /** Computes Nutation in longitude and obliquity using the IAU 1980 nutation theory.
-     * @param eps double containing mean obliquity
-     * @return double[3] containing nutation angles in radians as follows:
-	 * [0] Omega: mean long of asc node of lunar orbit
-	 * [1] dpsi: nutation in longitude
-	 * [2] deps: nutation in obliquity
      */
     private void nutation() {
         meanObliquity();
@@ -260,15 +287,12 @@ public class ITRF {
         
         precMatrix = r1.times(r2.times(r3)); 	
     }
-    
 	/**
-	 * Return Greenwich Sidereal Time in radians
+	 * Computes Greenwich Sidereal Time in radians
 	 * Note: nutation must be called before this is called
-	 * @return GMST in radians
 	 */    
     private double GST(){
-    	double mjd_ut1 = TimeUtils.TTtoUTC(mjd_tt)+ _ut1_utc/86400.0; 
-    	double gmst = GMST(mjd_ut1);
+    	double gmst = GMST();
     	meanObliquity();
     	double eqnEquinoxes = dpsi * Math.cos(eps);
     	double gst = gmst + eqnEquinoxes;
@@ -282,28 +306,39 @@ public class ITRF {
     	gst = MathUtils.radiancheck(gst);
     	return gst;
     }
-    
+    /**
+     * Computes the Polar Motion Matrix
+     */
     private void polarMotion(){
     	RotationMatrix r1 = new RotationMatrix(1, _yp);
     	RotationMatrix r2 = new RotationMatrix(2, _xp);
     	poleMatrix = r1.times(r2);
     }
-    
+    /**
+     * Computes the Matrix to account for Sidereal Time 
+     */
     private void sidereal(){
     	double gst = this.GST();
     	gstMatrix = new RotationMatrix(3, -gst);
     }
-    
+    /**
+     * Computes the ECEF to ECI Transformation Matrix
+     * @return Matrix containing the ECEF to ECI transformation
+     */
     public Matrix ECEF2ECI(){
     	return precMatrix.times(nutMatrix.times(gstMatrix.times(poleMatrix)));
     }
-    
+    /**
+     * Computes the ECI to ECEF Transformation Matrix
+     * @return Matrix containing the ECI to ECEF transformation
+     */   
     public Matrix ECI2ECEF() {
     	return ECEF2ECI().transpose();
     }
 	 
 
 	/**
+	 * Runs the CSR-02-01 Test Case
 	 * @param args
 	 */
 	public static void main(String[] args) {
