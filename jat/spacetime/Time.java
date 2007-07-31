@@ -211,6 +211,7 @@ public class Time {
      */
     public void set_UT1_UTC(double d){
         this.UT1_UTC = d;
+        this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC*TimeUtils.sec2days;
     }
 
     /**

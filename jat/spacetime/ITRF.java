@@ -36,9 +36,9 @@ public class ITRF {
 	private Matrix poleMatrix;
 	private Matrix gstMatrix;
 	private double mjd_tt;
+	private double mjd_ut1;
 	private double _xp;
 	private double _yp;
-	private double _ut1_utc;
 	private static final double JAN11997 = TimeUtils.JDtoMJD(2450449.5);
 	private double t;
 	private double t2;
@@ -57,13 +57,15 @@ public class ITRF {
 		// convert polar motion data to radians
 		_xp = xp * MathUtils.ARCSEC2RAD;
 		_yp = yp * MathUtils.ARCSEC2RAD;
+		System.out.println("xp = "+_xp+" yp = "+_yp);
 		// get the Terrestrial Time
 		mjd_tt = time.mjd_tt();
+		time.set_UT1_UTC(ut1_utc);
 		t = centuriesSinceJ2000(mjd_tt);
 		t2 = t*t;
 		t3 = t2*t;
 		t4 = t3*t;
-		_ut1_utc = ut1_utc;
+		mjd_ut1 = time.mjd_ut1();
 		
 		// make the computations
     	this.precession();
@@ -86,16 +88,14 @@ public class ITRF {
 	 * @return GMST in radians
 	 */
 	private double GMST(){
-		// compute UT1 time
-    	double mjd_ut1 = TimeUtils.TTtoUTC(mjd_tt)+ _ut1_utc/86400.0; 
     	// compute time since J2000 in days
 		double T = mjd_ut1 - TimeUtils.MJD_J2000;
 		// compute GMST in radians (CSR-02-01, p.21, MSODP Implementation)
 		double gmst = 4.894961212823058751375704430 + T*(6.30038809898489355227651372 + T*(5.075209994113591478053805523E-15 - 9.25309756819433560067190688E-24*T));
 		// quadrant check (return a value between 0 and 2PI)
-		double out = MathUtils.Modulo(gmst, MathUtils.TWOPI);
-		if (out < 0.0) out = out + MathUtils.TWOPI;
-		return out;
+		gmst = MathUtils.radiancheck(gmst);
+		System.out.println("gmst = "+gmst);
+		return gmst;
 	}
 	
 	/**
@@ -108,6 +108,7 @@ public class ITRF {
 		// convert to radians
 		eps = eps*MathUtils.ARCSEC2RAD;
 		eps = MathUtils.radiancheck(eps);
+		System.out.println("eps = "+eps);
 	}
 	
     /** Computes Nutation in longitude and obliquity using the IAU 1980 nutation theory.
@@ -261,13 +262,14 @@ public class ITRF {
         // convert to arcsec (1.0E-05) then to radians        
         dpsi = 1.0E-5 * dpsi * MathUtils.ARCSEC2RAD;
         deps = 1.0E-5 * deps * MathUtils.ARCSEC2RAD;
+        System.out.println("dpsi = "+dpsi+" deps = "+deps);
         
         // compute nutation matrix
         RotationMatrix r1 = new RotationMatrix(1, -eps);
         RotationMatrix r2 = new RotationMatrix(3, dpsi);
         RotationMatrix r3 = new RotationMatrix(1, eps+deps);        
-        nutMatrix = r1.times(r2.times(r3));
-        
+        nutMatrix = r1.times(r2).times(r3);
+        nutMatrix.print("nut");
     }
     /** Computes precession matrix
      *
@@ -281,11 +283,14 @@ public class ITRF {
     	zeta = MathUtils.radiancheck(zeta);
     	theta = MathUtils.radiancheck(theta);
     	z = MathUtils.radiancheck(z);
+    	
+    	System.out.println("zeta = "+zeta+" theta = "+theta+" z = "+z);
         RotationMatrix r1 = new RotationMatrix(3, zeta);
         RotationMatrix r2 = new RotationMatrix(2, -theta);
         RotationMatrix r3 = new RotationMatrix(3, z);
         
-        precMatrix = r1.times(r2.times(r3)); 	
+        precMatrix = r1.times(r2.times(r3));
+        precMatrix.print("prec");
     }
 	/**
 	 * Computes Greenwich Sidereal Time in radians
@@ -304,6 +309,7 @@ public class ITRF {
     	}
     	// quadrant check
     	gst = MathUtils.radiancheck(gst);
+    	System.out.println("gst = "+gst);
     	return gst;
     }
     /**
@@ -313,6 +319,7 @@ public class ITRF {
     	RotationMatrix r1 = new RotationMatrix(1, _yp);
     	RotationMatrix r2 = new RotationMatrix(2, _xp);
     	poleMatrix = r1.times(r2);
+    	poleMatrix.print("pole");
     }
     /**
      * Computes the Matrix to account for Sidereal Time 
@@ -320,6 +327,7 @@ public class ITRF {
     private void sidereal(){
     	double gst = this.GST();
     	gstMatrix = new RotationMatrix(3, -gst);
+    	gstMatrix.print("gstMatrix");
     }
     /**
      * Computes the ECEF to ECI Transformation Matrix
@@ -344,11 +352,32 @@ public class ITRF {
 	public static void main(String[] args) {
 		Time t = new Time(2001, 11, 26, 18, 30, 24.50);
 		t.set_UT1_UTC(-0.088405058232);
-		ITRF x = new ITRF(t, -.10972, .17949, -0.088405058232);
+		double xpole = -5.299915237216626E-07 * MathUtils.RAD2DEG * 3600.0;
+		double ypole = 8.9015513447899459E-07 * MathUtils.RAD2DEG * 3600.0;
+		ITRF x = new ITRF(t, xpole, ypole, -0.088405058232);
 		Matrix ecef2eci = x.ECEF2ECI();
 		ecef2eci.print("ecef2eci");
 		Matrix eci2ecef = x.ECI2ECEF();
 		eci2ecef.print("eci2ecef");
+		
+//		Time t2 = new Time(2004, 6, 1, 12, 0, 0.0);
+//		ITRF test = new ITRF(t2, 0.2251760, 0.3927010, -0.0256666);
+//		eci2ecef = test.ECI2ECEF();
+//		VectorN iss_eci = new VectorN(-4453.783586, -5038.203756, -426.384456);
+//		VectorN iss_ecef = eci2ecef.times(iss_eci);
+//		iss_ecef.print("iss_ecef");
+//		VectorN ss_eci = new VectorN(-2290.301063, -6379.471940, 0.0);
+//		VectorN ss_ecef = eci2ecef.times(ss_eci);
+//		ss_ecef.print("ss_ecef");
+//		VectorN gps_eci = new VectorN(5525.33668, -15871.18494, -20998.992446);
+//		VectorN gps_ecef = eci2ecef.times(gps_eci);
+//		gps_ecef.print("gps_ecef");
+//		VectorN mol_eci = new VectorN(-1529.894287, -2672.877357, -6150.115340);
+//		VectorN mol_ecef = eci2ecef.times(mol_eci);
+//		mol_ecef.print("mol_ecef");
+//		VectorN geo_eci = new VectorN(36607.358256, -20921.723703, 0.0);
+//		VectorN geo_ecef = eci2ecef.times(geo_eci);
+//		geo_ecef.print("geo_ecef");	
 	}
 
 }
