@@ -136,7 +136,6 @@ public class RungeKutta8 {
      * will be done by the calling function.
      * @param x     time or independent variable
      * @param y     double[] containing needed inputs (usually the state)
-     * @param neqns number of equations to integrate
      * @param derivs   Object containing the Equations of Motion
      * @return      double[] containing the new state
      */
