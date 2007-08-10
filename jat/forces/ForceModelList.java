@@ -94,6 +94,13 @@ public class ForceModelList {
 	    return (ForceModel)forces.get(i);
 	}
 	/**
+	 * Return the number of forces
+	 * @return Number of forces
+	 */
+	public int getForceSize(){
+	    return forces.size();
+	}
+	/**
 	 * Set whether to update within each timestep;
 	 * @param b boolean flag
 	 */

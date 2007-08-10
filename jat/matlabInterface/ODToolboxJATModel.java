@@ -21,14 +21,10 @@ package jat.matlabInterface;
 
 import jat.spacecraft.*;
 import jat.spacetime.UniverseModel;
-//import jat.traj.*;
-//import jat.math.MathUtils;
-//import jat.matlabInterface.MatlabControl;
-//import jat.matlabInterface.MatlabFunc;
 import jat.matvec.data.VectorN;
 import jat.alg.integrators.*;
 import jat.cm.Constants;
-//import jat.forces.ForceModelList;
+import jat.forces.AtmosphericDrag;
 import jat.forces.ForceModel;
 import jat.forces.GravitationalBody;
 import jat.forces.GravityModel;
@@ -38,9 +34,6 @@ import jat.forces.Moon;
 import jat.forces.NRLMSISE_Drag;
 import jat.forces.SolarRadiationPressure;
 import jat.forces.Sun;
-//import jat.util.*;
-//import jat.sim.*;
-import java.io.PrintWriter;
 
 /**
  * This is the primary class for the OD Toolbox interface. Each instantiation
@@ -61,97 +54,47 @@ public class ODToolboxJATModel implements Derivatives {
      * The starting epoch in Modified Julian Date Universal Coordinated Time (UTC)
      */
     public double mjd_utc_start;
-   
+    
     /**
-     * Default Constructor initializes the universe model
+     * Flag for computing 2-body gravity partials
      */
-    public ODToolboxJATModel(){
-        spacetime 	= new UniverseModel();
-    }
-    /**
-     * Constructor initializes a single spacecraft simulation given relevant parameters
-     * @param r Position vector [m]
-     * @param v Velocity vector [m/s]
-     * @param cr Coefficient of Reflectivity used for Solar Radiation Pressure
-     * @param cd Coefficient of Drag used for Atmospheric Drag calculations
-     * @param area Cross sectional area used both for drag and Solar Radiation Pressure
-     * @param mass Mass of the spacecraft
-     */
-    public ODToolboxJATModel(double[] r, double[] v, double cr, double cd, double area, double mass){
-        VectorN rr = new VectorN(r);
-        VectorN vv = new VectorN(v);
-        sc = new Spacecraft(rr,vv,cr,cd,area,mass);
-        sc.set_use_params_in_state(false);
-        spacetime = new UniverseModel();
-    }
+    private boolean use_j2_gravity 		= false;
 
-    
     /**
-     * Constructor initializes a single spacecraft simulation given relevant parameters
-     * @param r Position vector [m]
-     * @param v Velocity vector [m/s]
-     * @param cr Coefficient of Reflectivity used for Solar Radiation Pressure
-     * @param cd Coefficient of Drag used for Atmospheric Drag calculations
-     * @param area Cross sectional area used both for drag and Solar Radiation Pressure
-     * @param mass Mass of the spacecraft
-     * @param utc Epoch of the input state
+     * Flag for computing J2 gravity partials
      */
-    public ODToolboxJATModel(double[] r, double[] v, double cr, double cd, double area, double mass, double utc){
-        VectorN rr = new VectorN(r);
-        VectorN vv = new VectorN(v);
-        sc = new Spacecraft(rr,vv,cr,cd,area,mass);
-        sc.set_use_params_in_state(false);
-        spacetime = new UniverseModel(utc);
-    }
-            
+    private boolean use_2body_gravity 	= false;
+
     /**
-     * Constructor initializes a single spacecraft simulation given relevant parameters
-     * @param cr Coefficient of Reflectivity used for Solar Radiation Pressure
-     * @param cd Coefficient of Drag used for Atmospheric Drag calculations
-     * @param area Cross sectional area used both for drag and Solar Radiation Pressure
-     * @param mass Mass of the spacecraft
+     * Flag for computing drag partials
      */
-    public ODToolboxJATModel(double cr, double cd, double area, double mass){
-        sc = new Spacecraft();
-        sc.set_area(area);
-        sc.set_cd(cd);
-        sc.set_cr(cr);
-        sc.set_mass(mass);
-        sc.set_use_params_in_state(false);
-        spacetime = new UniverseModel();
-    }
-    
+    private boolean use_drag 			= false;
+       
+    /**
+     * Index of drag atmosphere model for computing drag partials
+     */
+    private int drag_index;
+       
     /**
      * Constructor initializes a single spacecraft simulation given relevant parameters
      * @param cr Coefficient of Reflectivity used for Solar Radiation Pressure
      * @param cd Coefficient of Drag used for Atmospheric Drag calculations
-     * @param area Cross sectional area used both for drag and Solar Radiation Pressure
+     * @param dragArea Cross sectional area used for drag
+     * @param srpArea  Cross sectional area used for Solar Radiation Pressure
      * @param mass Mass of the spacecraft
      * @param utc Starting epoch
      */
-    public ODToolboxJATModel(double cr, double cd, double area, double mass, double utc){
+    public ODToolboxJATModel(double cr, double cd, double dragArea, double srpArea, double mass, double utc){
         sc = new Spacecraft();
-        sc.set_area(area);
+        sc.set_dragArea(dragArea);
+        sc.set_srpArea(srpArea);
         sc.set_cd(cd);
         sc.set_cr(cr);
         sc.set_mass(mass);
         sc.set_use_params_in_state(false);
         spacetime = new UniverseModel(utc);
     }
-    
-    /**
-     * Initialize the forces present in the universe model during the Simulation.
-     * @param force_flag An array of boolean values indicating the forces in order:
-     *  [0] true: two-body gravity false: nonspherical gravity
-     *  [1] true: Solar gravity [2] true: Lunar gravity [3] true: Atmospheric drag
-     *  [4] true: Solar Radiation Pressure
-     * @param use_JGM2 If using nonspherical gravity true selects JGM2 instead of JGM3
-     * @param drag_model "NRL" for NRLMSISE2000 or "HP" for Harris Priester
-     */
-    public void initializeForces(boolean[] force_flag, boolean use_JGM2, String drag_model){
-    }
-
- 
+     
     /**
      * Initialize the forces present in the universe model during the Simulation.
      * @param force_flag An array of boolean values indicating the forces in order:
@@ -246,22 +189,12 @@ public class ODToolboxJATModel implements Derivatives {
     }
 
     /**
-     * Add a force model to the simulation.
-     * DMS is this necessary?
-     * @param f Force Model
-     */
-    public void add_ForceModel(ForceModel f){
-        spacetime.addForce(f);
-    }
-
-
-    /**
      * Implements the Derivatives interface for use with the RungeKutta integrator.
      * Given a time in seconds since epoch and a state vector, return the derivatives
      * of the state vector.
      *
      * @param t Time since epoch [sec]
-     * @param X State vector. [x y z xdot ydot zdot ... other parameters optional]
+     * @param X State vector. [x y z xdot ydot zdot]
      */
     public double[] derivs(double t, double[] x) {
         //* Update spacecraft
@@ -272,6 +205,14 @@ public class ODToolboxJATModel implements Derivatives {
         return xdot;
     }
 
+    public double[][] gravityPartials(double[] r){
+    	return new double[3][3];
+    }
+    
+    public double[][] dragPartials(){
+    	return new double[3][3];
+    }
+    
     /**
      * Set the starting epoch.
      * @param mjd_utc UTC Epoch in MJD
@@ -280,19 +221,28 @@ public class ODToolboxJATModel implements Derivatives {
         spacetime.set_time(mjd_utc);
     }
 
-//    /**
-//     * Initialize the DE405 Ephemerides for use with the Moon.
-//     *
-//     */
-//    public void initializeMoonEphem(){
-//    	this.spacetime.initializeMoonEphem();
-//    }
-//
-//    /**
-//     * Initialize the DE405 Ephemerides for use with the Sun.
-//     *
-//     */
-//    public void initializeSunEphem(){
-//    	this.spacetime.initializeSunEphem();
-//    }
+    /**
+     * Get the 2-body partials flag
+     * @return 2-body partials flag
+     */
+    public boolean get_2body_gravity_flag(){
+    	return use_2body_gravity;
+    }
+
+    /**
+     * Get the J2 partials flag
+     * @return J2 partials flag
+     */
+    public boolean get_j2_gravity_flag(){
+    	return use_j2_gravity;
+    }
+
+    /**
+     * Get the drag partials flag
+     * @return drag partials flag
+     */
+    public boolean get_drag_flag(){
+    	return use_drag;
+    }
+
 }

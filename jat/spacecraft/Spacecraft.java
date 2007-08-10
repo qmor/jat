@@ -66,9 +66,17 @@ public class Spacecraft {
 	 */
 	protected double cd;
 	/**
-	 * area: Surface area [m^2]
+	 * area: Surface area [m^2]  Should be deprecated because separated drag and SRP areas
 	 */
 	protected double area;
+	/**
+	 * area: Surface area [m^2] for drag computation
+	 */
+	protected double dragArea;
+	/**
+	 * area: Surface area [m^2] for solar radiation pressure computation
+	 */
+	protected double srpArea;
 	/**
 	 * mass: mass [kg]
 	 */
@@ -98,6 +106,8 @@ public class Spacecraft {
 		CR = 0;
 		cd = 0;
 		area = 0;
+	    dragArea = area;
+	    srpArea  = area;
 		mass = 0;
 		RIC = new RSW_Frame(r,v);
 	}
@@ -118,6 +128,8 @@ public class Spacecraft {
 		CR = acr;
 		cd = acd;
 		area = aa;
+	    dragArea = area;
+	    srpArea  = area;
 		mass = am;
 		RIC = new RSW_Frame(r,v);
 	}
@@ -139,6 +151,8 @@ public class Spacecraft {
 		CR = acr;
 		cd = acd;
 		area = aa;
+	    dragArea = area;
+	    srpArea  = area;
 		mass = am;
 		RIC = new RSW_Frame(r,v);
 	}
@@ -156,6 +170,8 @@ public class Spacecraft {
 	    CR = X[6];
 	    cd = X[7];
 	    area = X[8];
+	    dragArea = area;
+	    srpArea  = area;
 	    mass = X[9];
 	    RIC = new RSW_Frame(r,v);
 	}
@@ -208,9 +224,17 @@ public class Spacecraft {
 	 */
 	public double mass(){ return mass;}
 	/**
-	 * Get spacecraft cross section.
+	 * Get spacecraft cross section. Should be deprecated
 	 */
 	public double area(){ return area;}
+	/**
+	 * Get spacecraft cross section for drag computation
+	 */
+	public double dragArea(){ return dragArea;}
+	/**
+	 * Get spacecraft cross section for solar radiation pressure computation
+	 */
+	public double srpArea(){ return srpArea;}
 	
 	/**
 	 * Set Coefficient of Reflectivity.
@@ -221,9 +245,21 @@ public class Spacecraft {
 	 */
 	public void set_cd(double x){ cd=x;}
 	/**
-	 * Set spacecraft cross section.
+	 * Set spacecraft cross section. Should be deprecated
 	 */
-	public void set_area(double x){ area=x;}
+	public void set_area(double x){ 
+		area=x;
+	    dragArea = area;
+	    srpArea  = area;
+		}
+	/**
+	 * Set spacecraft drag area
+	 */
+	public void set_dragArea(double x){ dragArea=x;}
+	/**
+	 * Set spacecraft srp area
+	 */
+	public void set_srpArea(double x){ srpArea=x;}
 	/**
 	 * Set spacecraft mass.
 	 */
@@ -327,7 +363,8 @@ public class Spacecraft {
 
 	
 	/**
-	 * Convert spacecraft into a state vector.
+	 * Convert spacecraft into a state vector. 
+	 * This does not include new drag and srp areas
 	 * @param use_params Flag indicating whether to append parameters.
 	 * @return The state vector.
 	 */
@@ -362,6 +399,7 @@ public class Spacecraft {
 	}
 	/**
 	 * Update the state given a state vector of the same format as "toStateVector()".
+	 * This sets the drag and srp areas equal to area - they are not updated indpendently
 	 * @param Xnew new state vector
 	 */
 	public void updateState(double[] Xnew, boolean use_params){
@@ -375,6 +413,8 @@ public class Spacecraft {
 	        CR = Xnew[6];
 	        cd = Xnew[7];
 	        area = Xnew[8];
+		    dragArea = area;
+		    srpArea  = area;	        
 	        mass = Xnew[9];        
 	    }else{
 	    	r.set(0,Xnew[0]);

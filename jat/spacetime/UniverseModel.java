@@ -200,8 +200,8 @@ public class UniverseModel {
     public double[] derivs(double t, Spacecraft sc) {
         double[] X = sc.toStateVector();
         double[] out = new double[X.length];
-        time.update(t);
-        double[] accel = forces.acceleration(time,earthRef,sc);
+        time.update(t); //DMS this may not be necessary since done earlier in update; just doing this here does not update earthRef
+        double[] accel = forces.acceleration(time,earthRef,sc);  // DMS this hardcodes earth-based computation
         out[0] = X[3];
         out[1] = X[4];
         out[2] = X[5];
@@ -211,5 +211,22 @@ public class UniverseModel {
         for(int i=6; i<X.length; i++) out[i] = 0;
         return out;
     }
+
+	/**
+	 * Return the given force (in order as they were added)
+	 * @param i integer index
+	 * @return ForceModel (to be cast to the relevant force object)
+	 */
+	public ForceModel getForce(int i){
+	    return forces.get_Force(i);
+	}
+	
+	/**
+	 * Return the number of forces
+	 * @return int
+	 */
+	public int getForceSize(){
+	    return forces.getForceSize();
+	}
 
 }

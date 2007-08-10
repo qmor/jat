@@ -84,7 +84,7 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
 	 */
 	public AtmosphericDrag(Spacecraft sc){
 		this.cd = sc.cd();
-		this.area = sc.area();
+		this.area = sc.dragArea();
 		this.mass = sc.mass();
 	}
 	

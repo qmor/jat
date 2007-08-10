@@ -95,7 +95,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
 	 * @param sc Spacecraft Parameters
 	 */
 	public SolarRadiationPressure(Spacecraft sc){
-	    this(sc.mass(), sc.area(), sc.cr());
+	    this(sc.mass(), sc.srpArea(), sc.cr());
 	}
 	
     /** Compute the acceleration due to a solar radiation pressure.
@@ -135,7 +135,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
      * @param sc Spacecraft parameters
      */
     public VectorN acceleration(EarthRef eRef, Spacecraft sc){
-    	area = sc.area();
+    	area = sc.srpArea();
     	mass = sc.mass();
     	CR = sc.cr();
 
@@ -166,7 +166,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
      * @param sc Spacecraft parameters
      */
     public VectorN acceleration(Time t, BodyRef bRef, Spacecraft sc) {        
-        area = sc.area();
+        area = sc.srpArea();
     	mass = sc.mass();
     	CR = sc.cr();
         
