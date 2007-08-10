@@ -87,7 +87,7 @@ public class SolarRadiationPressure implements EarthForceModel, ForceModel {
         area = A;
         CR = coeff;
         shadowRef = bodyRef;
-        shadowR = bodyRadius;
+        shadowR = bodyRadius;        
     }
     
 	/**

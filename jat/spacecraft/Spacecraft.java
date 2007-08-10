@@ -19,10 +19,7 @@
  */
 package jat.spacecraft;
 
-import java.io.IOException;
-
 import jat.matvec.data.*;
-import jat.spacetime.Time;
 import jat.timeRef.RSW_Frame;
 
 /**
@@ -259,7 +256,9 @@ public class Spacecraft {
 	/**
 	 * Set spacecraft srp area
 	 */
-	public void set_srpArea(double x){ srpArea=x;}
+	public void set_srpArea(double x){ 
+		srpArea=x;
+		}
 	/**
 	 * Set spacecraft mass.
 	 */
