@@ -22,10 +22,10 @@ package jat.matlabInterface;
 import jat.spacecraft.*;
 import jat.spacetime.UniverseModel;
 import jat.matvec.data.VectorN;
+import jat.matvec.data.Matrix;
 import jat.alg.integrators.*;
 import jat.cm.Constants;
 import jat.forces.AtmosphericDrag;
-import jat.forces.ForceModel;
 import jat.forces.GravitationalBody;
 import jat.forces.GravityModel;
 import jat.forces.GravityModelType;
@@ -222,12 +222,127 @@ public class ODToolboxJATModel implements Derivatives {
         return xdot;
     }
 
+    /**
+     * Get the gravity gradient partials that are computed here for convenience.
+     * 2-body gradient is from r2bp.m
+     * J2 gradient is from jat.forces.J2Gravity
+     * These should be computed in gravity files.
+     * @param r Spacecraft position vector
+     * @return 3x3 array of gravity partials
+     */
     public double[][] gravityPartials(double[] r){
-    	return new double[3][3];
+    	double j2 = 0.00108263;
+        double mu = Constants.GM_Earth;  // [m^3/s^2]; JGM3
+        double re = Constants.rEarth_STKJGM3;  // Radius Earth [m]; JGM3;
+
+		// strip out components of r
+		double xx = r[0];
+		double yy = r[1];
+		double zz = r[2];
+		
+		// compute some intermediate values
+		double rmag 	= Math.sqrt(xx*xx + yy*yy + zz*zz);
+		double rsq 		= rmag * rmag;
+		double rcubed 	= rsq * rmag;
+		double r5 		= rsq * rcubed;
+		
+		double mur5 = mu / r5;
+		double mur3 = mu / rcubed;
+
+		double re_r = re / rmag;
+		re_r = re_r * re_r;
+
+		// Initialize partials to 0
+		double dldx = 0;
+		double dldy = 0;
+		double dldz = 0;
+		double dmdx = 0;
+		double dmdy = 0;
+		double dmdz = 0;
+		double dndx = 0;
+		double dndy = 0;
+		double dndz = 0;
+        
+        if( use_2body_gravity ){
+    		dldx = (3.0 * xx * xx / rsq - 1) * mur3;
+    		dldy = 3.0 * xx * yy * mur5;
+    		dldz = 3.0 * xx * zz * mur5;
+    		
+    		dmdx = dldy;
+    		dmdy = (3.0 * yy * yy / rsq - 1) * mur3;
+    		dmdz = 3.0 * yy * zz * mur5;
+    		
+    		dndx = dldz;
+    		dndy = dmdz;
+    		dndz = (3.0 * zz * zz / rsq - 1) * mur3;    		
+    	}
+    	else {     		
+    		// compute some intermediate values
+       		double zsq_rsq = (5.0 * zz * zz / rsq) - 1.0;		
+       		double sz2r2 = 7.0 * zz * zz / rsq;
+    		double muxyr5 = mu * xx * yy / r5;
+    		double muxzr5 = mu * xx * zz / r5;
+    		double muyzr5 = mu * yy * zz / r5;
+    		double bracket1 = 3.0 - 7.5 * re_r * j2 * (sz2r2 - 1.0);
+    		double bracket3 = 3.0 - 7.5 * re_r * j2 * (sz2r2 - 3.0);
+    		double bracket5 = 3.0 - 7.5 * re_r * j2 * (sz2r2 - 5.0);
+
+    		// compute "accelerations" due to gravity (these would be multiplied by r[i]
+    		double ll = -1.0 * mur3 * (1.0 - 1.5 * re_r * j2 * zsq_rsq);
+    		double mm = -1.0 * mur3 * (1.0 - 1.5 * re_r * j2 * zsq_rsq);
+    		double nn = -1.0 * mur3 * (1.0 - 1.5 * re_r * j2 * (zsq_rsq - 2.0));
+    		
+    		// partials of ll wrt r
+    		dldx = ll + mur5 * xx * xx * bracket1;
+    		dldy = muxyr5 * bracket1;
+    		dldz = muxzr5 * bracket3;
+    		
+    		// partials of mm wrt r
+    		dmdx = dldy;
+    		dmdy = mm + mur5 * yy * yy * bracket1;
+    		dmdz = muyzr5 * bracket3;
+
+    		// partials of nn wrt r
+    		dndx = dldz;
+    		dndy = dmdz;
+    		dndz = nn + mur5 * zz * zz * bracket5;   		
+    	}
+        
+		// set the gravity gradient matrix
+    	double[][] partials = new double[3][3];
+     	partials[0][0] = dldx;
+     	partials[0][1] = dldy;
+     	partials[0][2] = dldz;
+     	partials[1][0] = dmdx;
+     	partials[1][1] = dmdy;
+     	partials[1][2] = dmdz;
+     	partials[2][0] = dndx;
+     	partials[2][1] = dndy;
+     	partials[2][2] = dndz;
+     	
+    	return partials;
     }
     
+    /**
+     * Get the atmospheric drag partials wrt v
+     * @return 3x3 array of drag partials
+     */
     public double[][] dragPartials(){
-    	return new double[3][3];
+    	AtmosphericDrag atmModel = (AtmosphericDrag)spacetime.getForce(drag_index); 
+    	Matrix dadv = atmModel.partialV();
+    	
+    	double[][] partials = new double[3][3];
+     	partials[0][0] = dadv.get(0,0);
+     	partials[0][1] = dadv.get(0,1);
+     	partials[0][2] = dadv.get(0,2);
+     	partials[1][0] = dadv.get(1,0);
+     	partials[1][1] = dadv.get(1,1);
+     	partials[1][2] = dadv.get(1,2);
+     	partials[2][0] = dadv.get(2,0);
+     	partials[2][1] = dadv.get(2,1);
+     	partials[2][2] = dadv.get(2,2);
+     	
+    	return partials;
     }
     
     /**

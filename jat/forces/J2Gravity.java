@@ -24,6 +24,7 @@ package jat.forces;
 import jat.matvec.data.*;
 import jat.spacecraft.Spacecraft;
 import jat.timeRef.EarthRef;
+import jat.cm.Constants;
 
 /**
 * The J2Gravity.java Class computes the gravitational acceleration and
@@ -39,10 +40,10 @@ public class J2Gravity implements EarthForceModel {
 	private final static double j2 = 0.00108263;
     /** GM in m^3/s^2.
      */
-    private static final double mu = 398600.4415e+9;  // [m^3/s^2]; JGM3
+    private static final double mu = Constants.GM_Earth;  // [m^3/s^2]; JGM3
     /** Radius of planet in m.
      */
-    private static final double re = 6378.1363e3;  // Radius Earth [m]; JGM3;
+    private static final double re = Constants.rEarth_STKJGM3;  // Radius Earth [m]; JGM3;
     
     private VectorN grav;
     
