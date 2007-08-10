@@ -425,8 +425,9 @@ public class SimModel implements Derivatives {
             spacetime.set_compute_sun(true);
 	        if(drag_model.endsWith("NRL") || drag_model.endsWith("A") || drag_model.endsWith("C")){
 	            NRLMSISE_Drag drag = new NRLMSISE_Drag(sc.get_spacecraft());
-	            drag.ap_opt = ap_opt;
-	            drag.f107_opt = f107_opt;
+				drag.setAP(ap_opt);
+				drag.setF107Daily(f107_opt);
+				drag.setF107Average(f107_opt);
 	            spacetime.addForce(drag);
 	            spacetime.set_use_iers(true);
 	        }else{
@@ -512,8 +513,9 @@ public class SimModel implements Derivatives {
             spacetime.set_compute_sun(true);
 	        if(drag_model.endsWith("NRL") || drag_model.endsWith("A") || drag_model.endsWith("C")){
 	            NRLMSISE_Drag drag = new NRLMSISE_Drag(sc.get_spacecraft());
-	            drag.ap_opt = ap_opt;
-	            drag.f107_opt = f107_opt;
+				drag.setAP(ap_opt);
+				drag.setF107Daily(f107_opt);
+				drag.setF107Average(f107_opt);
 	            spacetime.addForce(drag);
 	            spacetime.set_use_iers(true);
 	        }else{

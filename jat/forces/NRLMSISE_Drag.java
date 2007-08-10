@@ -55,8 +55,9 @@ import jat.cm.Constants;
  */
 public class NRLMSISE_Drag extends AtmosphericDrag { 
     
-    public double ap_opt = 15;
-    public double f107_opt = 150;
+    private double ap = 15;
+    private double f107Daily   = 150;
+    private double f107Average = 150;
     
     private final double dgtr = Constants.deg2rad;
 
@@ -323,27 +324,28 @@ public class NRLMSISE_Drag extends AtmosphericDrag {
      */
     public double computeDensity(Time t, BodyRef ref, VectorN r){
      	struct_nrlmsise_output output = new struct_nrlmsise_output();
-    	struct_nrlmsise_input input = new struct_nrlmsise_input();
-      	struct_nrlmsise_flags flags = new struct_nrlmsise_flags();
-    	struct_ap_array aph = new struct_ap_array();
+    	struct_nrlmsise_input input   = new struct_nrlmsise_input();
+      	struct_nrlmsise_flags flags   = new struct_nrlmsise_flags();
+    	struct_ap_array aph           = new struct_ap_array();
 
-        // Translate from J2000 to TOD
-        ReferenceFrameTranslater xlater =
-          new ReferenceFrameTranslater(ref, new EarthTrueOfDateRef(), t);
-        VectorN r_tod = xlater.translatePoint(r);
         //* Satellite true altitude
         Matrix eci2ecef = ref.inertial_to_body(t);     //*debug
-        VectorN r_ecef = eci2ecef.times(r);   //*debug
-        Geodetic geod = new Geodetic(r_ecef); //*debug
-        //Geodetic geod = new Geodetic(r_tod);
+        VectorN r_ecef  = eci2ecef.times(r);   //*debug
+        Geodetic geod   = new Geodetic(r_ecef); //*debug
+
         double alt = geod.getHAE()/1000.0;	 //* [km]
         if (alt > 1000) return 0; 			 //* Valid from 0 to 1000 km
-        double dist2sun = ref.get_JPL_Sun_Vector(t).mag()*1000;
-        //double f107_in = this.f107_opt*Math.pow(dist2sun/Constants.AU,2);
-        //double f107_in = this.f107_opt*Math.pow(Constants.AU/dist2sun,2);
-        double f107_in = this.f107_opt;
+
+        // Outputs that were never used are commented out
+// 		Translate from J2000 to TOD
+//        ReferenceFrameTranslater xlater =
+//          new ReferenceFrameTranslater(ref, new EarthTrueOfDateRef(), t);
+//        VectorN r_tod = xlater.translatePoint(r);
+//        Geodetic geod = new Geodetic(r_tod);
+//        double dist2sun = ref.get_JPL_Sun_Vector(t).mag()*1000;
+        
         int i;
-    	int j;
+        
     	/* input values */
       	//for (i=0;i<7;i++)
     	//	aph.a[i]=13.853964381;//100;
@@ -351,17 +353,17 @@ public class NRLMSISE_Drag extends AtmosphericDrag {
     	flags.switches[0]=0;
       	for (i=1;i<24;i++)
       		flags.switches[i]=1;
-   		input.doy= t.dayOfYear();
-   		input.year=2004; /* without effect */
-  		input.sec= t.secOfDay();
-   		input.alt= alt;
-   		input.g_lat= geod.getLatitude()*MathUtils.RAD2DEG;
-   		input.g_long=geod.getLongitude()*MathUtils.RAD2DEG;
-   		input.lst=input.sec/3600 + input.g_long/15;
-   		input.f107A=f107_in;
-   		input.f107=f107_in;
-   		input.ap=this.ap_opt;//14.924291;//13.853964381; //???
-   		//input.ap_a = aph;
+   		input.doy	= t.dayOfYear();
+   		input.year	= 2004; /* without effect */
+  		input.sec	= t.secOfDay();
+   		input.alt	= alt;
+   		input.g_lat	= geod.getLatitude()*MathUtils.RAD2DEG;
+   		input.g_long= geod.getLongitude()*MathUtils.RAD2DEG;
+   		input.lst	= input.sec/3600 + input.g_long/15;
+   		input.f107A = this.f107Average;
+   		input.f107	= this.f107Daily;
+   		input.ap	= this.ap;
+
     	/* evaluate */
    		if(alt > 500){
    		    gtd7d(input, flags, output);
@@ -369,6 +371,30 @@ public class NRLMSISE_Drag extends AtmosphericDrag {
    		    gtd7(input, flags, output);
    		}
       	return output.d[5]*1000; //[kg/m^3]  
+    }
+    
+    /**
+     * Set the Daily value of the 10.7cm solar flux
+     * @param x
+     */
+    public void setF107Daily(double x){
+    	f107Daily = x;
+    }
+    
+    /**
+     * Set the 81-day average value of the 10.7cm solar flux
+     * @param x
+     */
+    public void setF107Average(double x){
+    	f107Average = x;
+    }
+    
+    /**
+     * Set the daily magnetic index
+     * @param x
+     */
+    public void setAP(double x){
+    	ap = x;
     }
     
     /* ------------------------------------------------------------------- */

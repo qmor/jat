@@ -274,8 +274,9 @@ public class CEVSim extends EstimatorSimModel {
 			if(drag_model.endsWith("NRL") || drag_model.endsWith("A") || drag_model.endsWith("C")){
 				System.out.println("NRLMSISE");
 				NRLMSISE_Drag drag = new NRLMSISE_Drag(sc);
-				drag.ap_opt = ap_opt;
-				drag.f107_opt = f107_opt;
+				drag.setAP(ap_opt);
+				drag.setF107Daily(f107_opt);
+				drag.setF107Average(f107_opt);
 				umodel.addForce(drag);
 			}else{
 				umodel.set_compute_sun(true);

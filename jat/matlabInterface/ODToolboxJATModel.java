@@ -103,20 +103,26 @@ public class ODToolboxJATModel implements Derivatives {
      *  [2] true: Atmospheric drag
      *  [3] true: Solar Radiation Pressure
      * @param grav_model String specifiying the gravity model to use
-     * @param drag_model "NRL" for NRLMSISE2000 or "HP" for Harris Priester
      * @param degree of the gravity model
      * @param order of the gravity model
+     * @param atm_model "NRL" for NRLMSISE2000 or "HP" for Harris Priester
+     * @param atm_params Array of doubles containing parameters for atmosphere models
+     *  [0] n:         HP inclincation parameter ranging from 2(low inclination) to 6(high)
+     *  [1] f107Daily: Daily value of 10.7cm solar flux
+     *  [2] f107Avg:   81-day aveage of 10.7cm solar flux
+     *  [3] ap:		   Geomagnetic flux index
      */
-    public void initializeForces(boolean[] force_flag, String grav_model,
-			String drag_model, int degree, int order) {
+    public void initializeForces(boolean[] force_flag, String grav_model, int degree, int order,
+			String atm_model, double[] atm_params) {
 
 		VectorN zero = new VectorN(0, 0, 0);
 
 		if (grav_model.equalsIgnoreCase("2Body")) {
 			GravitationalBody earth = new GravitationalBody(Constants.GM_Earth);
 			spacetime.addForce(earth);
-		} else { // DMS Is there a better way to find the appropriate gravity
-					// type?
+			use_2body_gravity = true;
+			
+		} else { // DMS Is there a better way to find the gravity type?
 			Boolean foundModel = false;
 			GravityModelType[] index = GravityModelType.index;
 			for (int i = 0; i < GravityModelType.num_models; i++) {
@@ -126,6 +132,7 @@ public class ODToolboxJATModel implements Derivatives {
 					spacetime.addForce(earth_grav);
 					spacetime.set_use_iers(true);
 					foundModel = true;
+					use_j2_gravity = true;
 					break;
 				}
 			}
@@ -151,31 +158,41 @@ public class ODToolboxJATModel implements Derivatives {
 	        spacetime.addForce(moon);
 	    }
 	    if (force_flag[2]) {
-			double ap_opt = 14.918648166;  // these should be set by user
-			double f107_opt = 150;		// these should be set by user
-			double n_param_opt = 6;  // HP parameter
+			double n_param 		= atm_params[0];  
+			double f107Daily 	= atm_params[1];
+			double f107Average 	= atm_params[2];
+			double ap 			= atm_params[3];
+			
 			spacetime.set_compute_sun(true);
-			if (drag_model.equalsIgnoreCase("NRL")) {
+			
+			if (atm_model.equalsIgnoreCase("NRL")) {
 				NRLMSISE_Drag drag = new NRLMSISE_Drag(sc);
-				drag.ap_opt = ap_opt;  //DMS can these be set some other way?
-				drag.f107_opt = f107_opt;
+				
+				drag.setF107Daily(f107Daily);
+				drag.setF107Average(f107Average);
+				drag.setAP(ap);
+				
 				spacetime.addForce(drag);
 				spacetime.set_use_iers(true);
-			} else if (drag_model.equalsIgnoreCase("HP")) {
-				HarrisPriester atmos = new HarrisPriester(sc, 150);// 145.8480085177176);
-				// atmos.setF107(145.8480085177176);//148.715);//99.5);
-				atmos.setParameter(n_param_opt);
-				// if(drag_model.equalsIgnoreCase("Sun-Sync"))
-				// atmos.setParameter(6);
-				// else if(drag_model.equalsIgnoreCase("ISS"))
-				// atmos.setParameter(4);
+
+				use_drag 	= true;
+				drag_index 	= spacetime.getForceSize() - 1;
+				
+			} else if (atm_model.equalsIgnoreCase("HP")) {
+				HarrisPriester atmos = new HarrisPriester(sc, 150);
+				atmos.setParameter(n_param);
+				atmos.setF107(f107Daily);
+
 				spacetime.addForce(atmos);
 				spacetime.set_use_iers(true);
 
+				use_drag 	= true;
+				drag_index 	= spacetime.getForceSize() - 1;
+				
 			} else {
 				System.out
 						.println("Warning: AtmosphereModel "
-								+ drag_model
+								+ atm_model
 								+ " type not found. No atmospheric drag forces will be used.");
 	        	
 	        }
