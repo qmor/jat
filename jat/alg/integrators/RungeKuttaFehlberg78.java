@@ -20,6 +20,8 @@
 
 package jat.alg.integrators;
 
+import java.util.ArrayList;
+
 /** Implements a Runge-Kutta-Fehlberg adaptive step size integrator
  * from Numerical Recipes. Modified to RK78 from the original RK45 in NR.
  * RK78 values from Erwin Fehlberg, NASA TR R-287
@@ -37,7 +39,13 @@ public class RungeKuttaFehlberg78 implements Printable{
     private double currentStepSize_;
     private boolean verbose;
     private boolean adaptive_;
-
+    
+	private double     dxsav = 0.001; 	// Minimum difference between indep. var. values to store steps
+    private double[][] simStates;		// intermediate state values
+    private int        nSteps;			// number of intermediate steps
+    private int		   nEqns;			// number of equations
+	private boolean    saveSteps = false;
+	
     /** Default constructor.
      */
     public RungeKuttaFehlberg78() {
@@ -254,43 +262,39 @@ public class RungeKuttaFehlberg78 implements Printable{
     private static final int MAXSTP = 1000000;
     private static final double TINY = 1.0e-30;
 
-    private int kmax;
-    private int kount;
-    private double[] xp;
-    private double[][] yp;
-    private double dxsav;
-
     private void odeint(double[] ystart, double x1, double x2,
     double eps, double h1, double hmin, int[] nok,
     int[] nbad, Derivatives dv, Printable pr, boolean print_switch) {
-        int nvar = ystart.length;
-        double[] x = new double[1];
-        double[] hnext = new double[1];
-        double[] hdid = new double[1];
-        double[] yscal = new double[nvar];
-        double[] y = new double[nvar];
-        double[] dydx = new double[nvar];
+        int nvar 		= ystart.length;
+        double[] x 		= new double[1];
+        double[] hnext 	= new double[1];
+        double[] hdid 	= new double[1];
+        double[] yscal 	= new double[nvar];
+        double[] y 		= new double[nvar];
+        double[] dydx 	= new double[nvar];
+        double h 		= Math.abs(h1);
+        double xsav 	= 0;  		// last time stored
+		ArrayList steps = new ArrayList();
+        
         x[0] = x1;
-        double h = Math.abs(h1);
         if (x2 < x1)
             h = -h;
-        nok[0] = nbad[0] = kount = 0;
+        nok[0] = nbad[0] = 0;
         for (int i = 0; i < nvar; i++)
             y[i] = ystart[i];
-        double xsav = 0;
-        if (kmax > 0)
+        
+        // save initial values
+        if (saveSteps){
             xsav = x[0] - dxsav * 2.0;
+            store_step(steps, nvar, x[0], y);
+            nEqns = nvar;
+        }
+        
         for (int nstp = 1; nstp <= MAXSTP; nstp++) {
             dydx = dv.derivs(x[0], y);
             for (int i = 0; i < nvar; i++)
                 yscal[i] = Math.abs(y[i]) + Math.abs(dydx[i] * h) + TINY;
-            if (kmax > 0 && kount < kmax - 1 &&
-            Math.abs(x[0] - xsav) > Math.abs(dxsav)) {
-                xp[++kount] = x[0];
-                for (int i = 0; i < nvar; i++)
-                    yp[i][kount] = y[i];
-                xsav = x[0];
-            }
+            
             if ( (x[0] + h - x2) * (x[0] + h - x1) > 0.0)
                 h = x2 - x[0];
             rkqs(y, dydx, x, h, eps, yscal, hdid, hnext, dv);
@@ -304,15 +308,19 @@ public class RungeKuttaFehlberg78 implements Printable{
                 pr.print(x[0], y);
             }
 
+            // save intermediate values
+            if (saveSteps && Math.abs(x[0] - xsav) > Math.abs(dxsav) ){
+                store_step(steps, nvar, x[0], y);
+                xsav = x[0];
+            }
+            
             if ( (x[0] - x2) * (x2 - x1) >= 0.0 ) {   // are we done?
                 // save off the data
                 for (int i = 0; i < nvar; i++){
                     ystart[i] = y[i];
                 }
-                if (kmax != 0) {
-                    xp[++kount] = x[0];
-                    for (int i = 0; i < nvar; i++)
-                        yp[i][kount] = y[i];
+                if (saveSteps) {
+                    simStates = convertIntermediateValues(steps, nvar);
                 }
                 return;
             }
@@ -342,23 +350,23 @@ public class RungeKuttaFehlberg78 implements Printable{
         double h = Math.abs(h1);
         if (x2 < x1)
             h = -h;
-        nok[0] = nbad[0] = kount = 0;
+        nok[0] = nbad[0] = 0;
         for (int i = 0; i < nvar; i++)
             y[i] = ystart[i];
-        double xsav = 0;
-        if (kmax > 0)
-            xsav = x[0] - dxsav * 2.0;
+//        double xsav = 0;
+//        if (kmax > 0)
+//            xsav = x[0] - dxsav * 2.0;
         for (int nstp = 1; nstp <= MAXSTP; nstp++) {
             dydx = eom.derivs(x[0], y);
             for (int i = 0; i < nvar; i++)
                 yscal[i] = Math.abs(y[i]) + Math.abs(dydx[i] * h) + TINY;
-            if (kmax > 0 && kount < kmax - 1 &&
-            Math.abs(x[0] - xsav) > Math.abs(dxsav)) {
-                xp[++kount] = x[0];
-                for (int i = 0; i < nvar; i++)
-                    yp[i][kount] = y[i];
-                xsav = x[0];
-            }
+//            if (kmax > 0 && kount < kmax - 1 &&
+//            Math.abs(x[0] - xsav) > Math.abs(dxsav)) {
+//                simTimes[++kount] = x[0];
+//                for (int i = 0; i < nvar; i++)
+//                    simStates[i][kount] = y[i];
+//                xsav = x[0];
+//            }
             if ( (x[0] + h - x2) * (x[0] + h - x1) > 0.0)
                 h = x2 - x[0];
             rkqs(y, dydx, x, h, eps, yscal, hdid, hnext, eom);
@@ -377,11 +385,11 @@ public class RungeKuttaFehlberg78 implements Printable{
                 for (int i = 0; i < nvar; i++){
                     ystart[i] = y[i];
                 }
-                if (kmax != 0) {
-                    xp[++kount] = x[0];
-                    for (int i = 0; i < nvar; i++)
-                        yp[i][kount] = y[i];
-                }
+//                if (kmax != 0) {
+//                    simTimes[++kount] = x[0];
+//                    for (int i = 0; i < nvar; i++)
+//                        simStates[i][kount] = y[i];
+//                }
                 return;
             }
             if (Math.abs(hnext[0]) <= hmin) {
@@ -603,6 +611,44 @@ public class RungeKuttaFehlberg78 implements Printable{
         }
     }
 
+	/**
+	 * Store one integration step in an ArrayList
+	 * @param steps The ArrayList to store the step into
+	 * @param nvar dimension of state vector
+	 * @param x independent variable 
+	 * @param y state vector
+	 * @param ntry number of steps to achieve requested accuracy
+	 */
+	private void store_step(ArrayList steps, int nvar, double x, double[] y)
+	{
+		double[] step = new double[nvar + 1];
+		step[0] = x;
+		for (int i = 0; i < nvar; i++)
+			step[i + 1] = y[i];
+		steps.add(step);
+	}
+
+	/**
+	 * Convert an ArrayList to a two-dimensional double array and time vector
+	 * @param steps the ArrayList
+	 * @param nvar dimension of state vector
+	 * @return
+	 */
+	private double[][] convertIntermediateValues(ArrayList steps, int nvar)
+	{
+		nSteps = steps.size();
+		double[][] steps_array = new double[nSteps][nvar + 1];
+		for (int i = 0; i < nSteps; i++)
+		{
+			double[] step = (double[]) steps.get(i);
+			for (int j = 0; j < step.length; j++)
+			{
+				steps_array[i][j] = step[j];
+			}
+		}
+		return steps_array;
+	}
+
     public void print(double t, double [] y){
         // do nothing
     }
@@ -610,6 +656,30 @@ public class RungeKuttaFehlberg78 implements Printable{
     private void error(String msg) {
         System.err.println("RungeKuttaFehlberg78: " + msg);
     }
+    
+    public double[] getIntermediateTimes(){
+    	double[] simTimes = new double[nSteps];
+    	for(int i=0; i<nSteps; i++)
+    		simTimes[i] = simStates[i][0];
+    	return simTimes;
+    }
 
+    public double[][] getIntermediateStates(){
+    	double[][] onlyStates = new double[nSteps][nEqns];
+    	for(int i=0; i<nSteps; i++){
+    		for( int j=0; j<nEqns; j++ ){
+    			onlyStates[i][j] = simStates[i][j+1];
+    		}
+    	}
+    	return onlyStates;
+    }
+    
+    public double[][] getIntermediateValues(){
+    	return simStates;
+    }
+    
+    public void setSaveSteps(boolean value){
+    	saveSteps = value;
+    }
 }
 
