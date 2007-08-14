@@ -146,13 +146,15 @@ public class Time {
     	//this.UT1_UTC = 0;
     	this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC*TimeUtils.sec2days;
 //    	if(debugGEONS){
-//    		double UTC_UT1_Constant_Bias = -0.094168580338191;
-//    		double UTC_UT1_Linear_Coefficient = -0.00071620920607623;
-//    		double UTC_UT1_Quadratic_Coefficient = 0.83318836914884E-05;
-//    		this.MJD_UT1 = MJD_UTC + UTC_UT1_Constant_Bias;// + UTC_UT1_Linear_Coefficient*sim_time/86400.0 + UTC_UT1_Quadratic_Coefficient*sim_time*sim_time/(86400*86400);
-//    		//this.MJD_UT1 = this.MJD_UTC;
-//    		
+//    		double UTC_UT1_Constant_Bias = -0.11046918435961;
+//    		double UTC_UT1_Linear_Coefficient = -0.62804835480612E-03;
+//    		double UTC_UT1_Quadratic_Coefficient = 0.31180866068779E-05;
+//    		double mjdepoch = 51024;
+//    		double dt = this.MJD_UTC - mjdepoch;
+//    		this.MJD_UT1 = MJD_UTC + (UTC_UT1_Constant_Bias/86400) + (UTC_UT1_Linear_Coefficient*dt /(86400*86400))+ 
+//    			UTC_UT1_Quadratic_Coefficient*dt*dt/(86400*86400*86400);
 //    	}
+    	
         return this.MJD_UT1;
     }
     /**
