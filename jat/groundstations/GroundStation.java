@@ -190,6 +190,7 @@ public class GroundStation {
        	VectorN  v = w.crossProduct(r);
         return v;
     }
+    
     /** computes the ECI position vector.
      * @param eci2ecef transformation matrix between ECI and ECEF
      * @return ECI position in m.
@@ -197,6 +198,30 @@ public class GroundStation {
     public VectorN getECIPosition(Matrix eci2ecef) {
     	VectorN ecef = this.getECEFPosition();
     	VectorN out = eci2ecef.transpose().times(ecef);
+    	return out;
+    }
+    
+    /** computes the ECI velocity vector.
+     * @param eci2ecef transformation matrix between ECI and ECEF
+     * @return ECI position in m.
+     */    
+    public VectorN getECIVelocity(Matrix eci2ecef) {
+    	Matrix ecef2eci = eci2ecef.transpose();
+    	
+    	VectorN recef = this.getECEFPosition();
+    	VectorN vecef = this.getECEFVelocity();
+    	
+    	double w = Constants.omega_e;
+    	
+    	Matrix wCross = new Matrix(3,3);
+    	wCross.set(0, 1,-w);
+    	wCross.set(1, 0, w);
+    	
+    	VectorN x1 = wCross.times( ecef2eci.times(recef) );
+    	VectorN x2 = ecef2eci.times(vecef);
+    	
+    	VectorN out =  x1.plus(x2);  // this gives same answer as rotransf
+    	
     	return out;
     }
     

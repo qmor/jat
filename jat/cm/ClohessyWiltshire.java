@@ -67,6 +67,28 @@ public class ClohessyWiltshire implements Derivatives, Printable {
 		return out;
 	}
 
+	/** Derivatives interface for OD Toolbox
+	 * 
+	 * @param t - time
+	 * @param y - input state in CW frame
+	 * @param n - mean orbit rate
+	 * @return
+	 */
+	public static double[] derivs(double t, double[] y, double n) {
+		double out[] = new double[6];
+
+		double nsq = n * n;
+
+		out[0] = y[3];
+		out[1] = y[4];
+		out[2] = y[5];
+		out[3] = 3.0 * nsq * y[0] + 2.0 * n * y[4];
+		out[4] = -2.0 * n * y[3];
+		out[5] = -1.0 * nsq * y[2];
+
+		return out;
+	}
+
 	/** Implements the Printable interface to get the data out of the propagator and pass it to the plot.
 	 *  This method is executed by the propagator at each integration step.
 	 * @param t Time.
@@ -213,6 +235,93 @@ public class ClohessyWiltshire implements Derivatives, Printable {
 		out.setMatrix(0, 3, N);
 		out.setMatrix(3, 0, S);
 		out.setMatrix(3, 3, T);
+		return out;
+		
+	}
+	
+	/**
+	 * Return the state transition matrix for OD Toolbox
+	 * @param tof time of flight
+	 * @param n  mean orbit rate
+	 * @return the state transition matrix
+	 */	
+	public static double[][] phiMatrix (double tof, double n){
+		double nt = n * tof;
+		double cosnt = Math.cos(nt);
+		double sinnt = Math.sin(nt);
+		double oon = 1.0 / n;
+		double omcosnt = 1.0 - cosnt;
+
+		Matrix M = new Matrix(3, 3);
+		Matrix N = new Matrix(3, 3);
+		Matrix S = new Matrix(3, 3);
+		Matrix T = new Matrix(3, 3);
+
+		M.set(0, 0, 4.0 - 3.0 * cosnt);
+		M.set(1, 0, 6.0 * (sinnt - nt));
+		M.set(1, 1, 1.0);
+		M.set(2, 2, cosnt);
+
+		N.set(0, 0, oon * sinnt);
+		N.set(0, 1, 2.0 * oon * omcosnt);
+		N.set(1, 0, -2.0 * oon * omcosnt);
+		N.set(1, 1, oon * (4.0 * sinnt - 3.0 * nt));
+		N.set(2, 2, oon * sinnt);
+
+		S.set(0, 0, 3.0 * n * sinnt);
+		S.set(1, 0, -6.0 * n * omcosnt);
+		S.set(2, 2, -1.0 * n * sinnt);
+
+		T.set(0, 0, cosnt);
+		T.set(0, 1, 2.0 * sinnt);
+		T.set(1, 0, -2.0 * sinnt);
+		T.set(1, 1, 4.0 * cosnt - 3.0);
+		T.set(2, 2, cosnt);
+		
+		double[][] out = new double[6][6];
+		
+		out[0][0] = M.get(0,0);
+		out[0][1] = M.get(0,1);
+		out[0][2] = M.get(0,2);
+		out[0][3] = N.get(0,0);
+		out[0][4] = N.get(0,1);
+		out[0][5] = N.get(0,2);
+		
+		out[1][0] = M.get(1,0);
+		out[1][1] = M.get(1,1);
+		out[1][2] = M.get(1,2);
+		out[1][3] = N.get(1,0);
+		out[1][4] = N.get(1,1);
+		out[1][5] = N.get(1,2);
+		
+		out[2][0] = M.get(2,0);
+		out[2][1] = M.get(2,1);
+		out[2][2] = M.get(2,2);
+		out[2][3] = N.get(2,0);
+		out[2][4] = N.get(2,1);
+		out[2][5] = N.get(2,2);
+
+		out[3][0] = S.get(0,0);
+		out[3][1] = S.get(0,1);
+		out[3][2] = S.get(0,2);
+		out[3][3] = T.get(0,0);
+		out[3][4] = T.get(0,1);
+		out[3][5] = T.get(0,2);
+		
+		out[4][0] = S.get(1,0);
+		out[4][1] = S.get(1,1);
+		out[4][2] = S.get(1,2);
+		out[4][3] = T.get(1,0);
+		out[4][4] = T.get(1,1);
+		out[4][5] = T.get(1,2);
+		
+		out[5][0] = S.get(2,0);
+		out[5][1] = S.get(2,1);
+		out[5][2] = S.get(2,2);
+		out[5][3] = T.get(2,0);
+		out[5][4] = T.get(2,1);
+		out[5][5] = T.get(2,2);
+
 		return out;
 		
 	}

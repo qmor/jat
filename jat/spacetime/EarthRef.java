@@ -97,7 +97,9 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
     protected DE405 jpl_ephem;
     private VectorN r_sun;
     private VectorN r_moon;
-       
+    
+    private Time time_odtbx;  // OD Toolbox initialization time
+    
     /** Construct an EarthRef object using UTC Time in Modified Julian Date format.
      * @param mjd_UTC UTC time in MJD format.
      */
@@ -119,6 +121,17 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
         }
         this.use_moon = false;
         this.use_sun = false;
+    }
+    
+    /** OD Toolbox interface for EarthRef constructor
+     * @param mjd_utc Universal coordinated time in modified julian date
+     */
+    public EarthRef(double mjd_utc){
+        super(DE405_Body.EARTH);
+    	Time t0 = new Time(mjd_utc);
+        this.T = trueOfDate(t0.mjd_tt());
+        this.E = eci2ecef(t0);
+        this.time_odtbx = t0;
     }
     
     /** Construct an EarthRef object using UTC Time in Modified Julian Date format.
@@ -563,7 +576,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
      *   @return  Nutation matrix
      */
     public Matrix NutMatrix(double MJD_TT) {
-        double Mjd_TT = MJD_TT;
+//        double Mjd_TT = MJD_TT;
         //double Mjd_TT = this.MJD_TDB; //* used prior to IERS1996 convention
         
         // Mean obliquity of the ecliptic
@@ -865,6 +878,8 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
         }
         Matrix A = Pole.times(G);
         Matrix E = A.times(T);
+        
+        System.out.println("eci2ecef TT = "+t.mjd_tt()+" UT1 = "+t.mjd_ut1());
         
 //        double omega = Constants.WE_WGS84;
 //    	Matrix C = trueOfDate(t.mjd_tt());
@@ -1210,6 +1225,36 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
         return trueOfDate(t.mjd_tt());
     }
   
+    /** OD Toolbox interface to Precession transformation of equatorial coordinates.
+     *  @return  Precession transformation matrix
+     */
+    public Matrix PrecMatrix() {
+    	return PrecMatrix(time_odtbx.mjd_tt());    
+    }
+    
+    /** OD Toolbox interface to Transformation from mean to true equator and equinox.
+     *  @return  Nutation transformation matrix
+     */
+    public Matrix NutMatrix() {
+    	return NutMatrix(time_odtbx.mjd_tt());    
+    }
+    
+    /** OD Toolbox interface to Transformation from true equator and equinox to 
+     * Earth equator and Greenwich meridian system.
+     *  @return  Greenwich Hour Angle transformation matrix
+     */
+    public Matrix GHAMatrix() {
+    	return GHAMatrix(time_odtbx.mjd_ut1(),time_odtbx.mjd_tt());    
+    }
+    
+    
+    /** OD Toolbox interface to Transformation of equatorial to ecliptical coordinates
+     *  @return  transformation matrix
+     */
+    public Matrix EclMatrix() {
+    	return EclMatrix(time_odtbx.mjd_tt());    
+    }
+
     /**
      * Test method.  See Vallado example 3-14.
      * @param args
