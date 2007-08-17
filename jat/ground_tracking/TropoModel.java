@@ -1,4 +1,3 @@
-package jat.ground_tracking;
 /* JAT: Java Astrodynamics Toolkit
 *
 * Copyright (c) 2007 The JAT Project. All rights reserved.
@@ -19,6 +18,7 @@ package jat.ground_tracking;
 *
 * 
 */
+package jat.ground_tracking;
 import jat.constants.*;
 import jat.gps.*;
 import jat.math.*;
@@ -31,7 +31,7 @@ import jat.matvec.data.*;
  * Hopfield model, modified by Goad to use the Saastamoinen zenith
  * range correction. It is applicable both to radar data as well as
  * to optical observations."
- * @author Dave Gaylor
+ * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
  *
  */
 public class TropoModel {
