@@ -1,4 +1,24 @@
 package jat.ground_tracking;
+/* JAT: Java Astrodynamics Toolkit
+*
+* Copyright (c) 2007 The JAT Project. All rights reserved.
+*
+* This file is part of JAT. JAT is free software; you can 
+* redistribute it and/or modify it under the terms of the 
+* GNU General Public License as published by the Free Software 
+* Foundation; either version 2 of the License, or any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*
+* 
+*/
 import jat.constants.*;
 import jat.gps.*;
 import jat.math.*;
@@ -23,6 +43,10 @@ public class TropoModel {
 	private static final double term2 = 78.8828 / 77.624;
 	private static final double Re = IERS_1996.R_Earth;
 	
+/**
+ * Constructor
+ * @param lambda double containing wavelength in meters
+ */
 	public TropoModel(double lambda){
 		double lp2_inv = 1.0 / ((lambda * 1.0E+06)*(lambda * 1.0E+06));
 		double denom = (173.3 - lp2_inv);
@@ -31,7 +55,17 @@ public class TropoModel {
 		double term3 = (173.3 + lp2_inv)/denom;
 		Crho = Ce * term3;		
 	}
-	
+
+	/**
+	 * Compute refraction corrections.
+	 * @param p double containing pressure in hPa
+	 * @param T double containing temperature in deg K
+	 * @param fh double containing relative humidity (0 <= fh <= 1)
+	 * @param E double containing elevation angle in radians
+	 * @param rho double containing range in m
+	 * @return double[] containing tropospheric refraction corrections for range (m)
+	 * and elevation (arcsec) measurements
+	 */
 	public double [] corrections(double p, double T, double fh, double E, double rho){
 		// refractivities
 		double[] N = new double[2];
@@ -102,10 +136,6 @@ public class TropoModel {
 		out[1] = dE;
 		return out;
 	}
-	
-
-	
-
 
 	/**
 	 * @param args
