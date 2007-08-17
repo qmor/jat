@@ -235,5 +235,16 @@ public class MathUtils implements Serializable {
 		x = Modulo(x, 360.0);
 		if (x < 0.0) x = x + 360.0;
 		return x;
-	}	
+	}
+
+	/** Returns a quadrant-checked angle between 0 and 2PI
+	 * @param x double containing length of opposite side
+	 * @param r double containing length of hypotenuse
+	 * @return an angle between 0 and 2 pi in radians
+	 */	
+	public static double arcsin(double x, double r){
+		double phi = Math.asin(x/r);
+		if (x < 0.0) phi = MathUtils.TWOPI - phi;
+		return phi;		
+	}
 }
