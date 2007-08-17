@@ -878,9 +878,7 @@ public class EarthRef extends BodyCenteredInertialRef implements BodyRef {
         }
         Matrix A = Pole.times(G);
         Matrix E = A.times(T);
-        
-        System.out.println("eci2ecef TT = "+t.mjd_tt()+" UT1 = "+t.mjd_ut1());
-        
+                
 //        double omega = Constants.WE_WGS84;
 //    	Matrix C = trueOfDate(t.mjd_tt());
 //        Matrix Rg = GHAMatrix(t.mjd_ut1(), t.mjd_tt());
