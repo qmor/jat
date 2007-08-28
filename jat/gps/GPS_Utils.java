@@ -101,8 +101,24 @@ public class GPS_Utils {
 		double timeCorrection = rho.dotProduct(vGPS)/c;
 		double denom = rho.mag() + timeCorrection;
 		
-		double range_rate = num / rho.mag();
+//		double range_rate = num / rho.mag();  //DMS this was original
+		double range_rate = num / denom;
+			
 		return range_rate;
+	}
+	
+	/** OD Toolbox interface to compute the range rate
+	 * @param rho the range vector
+	 * @param v the spacecraft ECI velocity vector at reception time
+	 * @param vGPS the transmitting SV ECI velocity vector at transmission time
+	 */	
+	public static double rangeRate(double[] range, double[] vR, double[] vT) {
+		
+		VectorN rho  = new VectorN(range);
+		VectorN v    = new VectorN(vR);
+		VectorN vGPS = new VectorN(vT);
+		
+		return rangeRate(rho,v,vGPS);
 	}
 	
 	/** Compute the line of sight declination angle (angle from zenith).
