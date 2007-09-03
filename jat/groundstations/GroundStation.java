@@ -237,5 +237,53 @@ public class GroundStation {
         Matrix out = new Matrix(M);
         return  out;
     }
+    
+    /**
+     * Computes the elevation angle in radians of a spacecraft relative to a groundstation
+     * @param satPos VectorN containing the ECEF ground station to spacecraft vector
+     * @return elevation angle in radians (-pi/2 to +pi/2)
+     */
+    public double getElevation(VectorN satPos)
+    {
+    	Matrix T = ECEF2SEZ();
+    	VectorN Rho = T.times(satPos);
+    	double el = elevation(Rho);
+    	return el;
+    }
+    
+    
+	/**
+	 * Returns the azimuth angle in radians of a spacecraft relative to a ground station
+	 * @param rho VectorN containing the ground station to spacecraft vector in ECEF frame 
+	 * @return elevation angle in radians (0 to 2pi)
+	 */
+    public double getAzimuth(VectorN satPos)
+    {
+    	Matrix T = ECEF2SEZ();
+    	VectorN Rho = T.times(satPos);
+    	double ez = azimuth(Rho);
+    	return ez;
+    }
+    
+	/**
+	 * Returns the elevation angle in radians of a spacecraft relative to a ground station
+	 * @param rho VectorN containing the ground station to spacecraft vector in SEZ frame 
+	 * @return elevation angle in radians (-pi/2 to +pi/2)
+	 */
+	public static double elevation(VectorN rho){
+		return Math.asin(rho.get(2)/rho.mag());
+	}
+
+	/**
+	 * Returns the azimuth angle in radians of a spacecraft relative to a ground station
+	 * @param rho VectorN containing the ground station to spacecraft vector in SEZ frame 
+	 * @return elevation angle in radians (0 to 2pi)
+	 */
+	public static double azimuth(VectorN rho){
+		double x = rho.get(0);
+		double y = rho.get(1);
+		double rxy = Math.sqrt(x*x + y*y);
+		return MathUtils.arcsin(x, rxy);
+	}
 
 }
