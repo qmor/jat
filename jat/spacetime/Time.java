@@ -29,6 +29,14 @@ package jat.spacetime;
  * @author Richard C. Page III
  *
  */
+/**
+ * @author dgaylor
+ *
+ */
+/**
+ * @author dgaylor
+ *
+ */
 public class Time {
 
 //	private boolean debugGEONS = false;
@@ -267,7 +275,16 @@ public class Time {
         return date.sec_of_day();
     }
 
-
+    /**
+     * Create a new Time object by taking the current one and adding s seconds
+     * @param s number of seconds to add to the current time
+     * @return new Time object that is s seconds later than the current time
+     */
+    public Time plus(double s){
+    	double mjd_utc = this.mjd_utc() + s/86400.0;
+    	Time out = new Time(mjd_utc);
+    	return out;
+    }
 
 
 
