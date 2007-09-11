@@ -145,5 +145,17 @@ public class GPS_Utils {
 		double el = pi2 - dec;
 		return el;
 	}
-		 
+	/** ODToolbox interface to elevation 
+	 * Compute the line of sight elevation angle (angle from local horizontal).
+	 * @param r spacecraft position vector
+	 * @param rGPS GPS SV position vector
+	 * @return the angle between the GPS line of sight and horizon in radians.
+	 */ 		
+	public static double elevation(double[] r, double[] rGPS) {
+		VectorN r1 = new VectorN(r);
+		VectorN r2 = new VectorN(rGPS);
+		double  el = elevation(r1,r2);
+	return el;
+	}
+	
 }

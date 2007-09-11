@@ -78,7 +78,20 @@ public class SimpleGroundStation {
 		
 	}
 	
-  
+	   /** ODToolbox interface 
+	    * create a Ground Station from ECEF Position Vector.
+     * @param name String containing the name.
+     * @param staPos VectorN containing ECEF position
+     */
+	public SimpleGroundStation(String name, double[] staPos){
+		_name = name;
+		
+		//Set the Latitude, Longitude and Height
+		ECEF2LLH(new VectorN(staPos));
+		
+	}
+	
+ 
     /** Return the name.
      * @return name.
      */
@@ -177,6 +190,16 @@ public class SimpleGroundStation {
     	VectorN Rho = T.times(satPos);
     	double el = elevation(Rho);
     	return el;
+    }
+    
+    /** OD Toolbox Interface
+     * Computes the elevation angle in radians of a spacecraft relative to a groundstation
+     * @param satPos VectorN containing the ECEF ground station to spacecraft vector
+     * @return elevation angle in radians (-pi/2 to +pi/2)
+     */
+    public double getElevation(double[] satPos)
+    {
+    	return getElevation(new VectorN(satPos));
     }
     
     
@@ -326,8 +349,8 @@ public class SimpleGroundStation {
 		double rho_up = 0.0;
 		diff = Math.abs(tau_u_new - tau_u_old);
 		while ((diff > eps)&&(i < maxit)) {
-			Time ttt = tt.plus(-1.0*tau_u_old);
-			ITRF itrf = new ITRF(ttt, 0.0, 0.0, 0.0);
+			Time ttt = tt.plus(-1.0*tau_u_old);  
+			ITRF itrf = new ITRF(ttt, 0.0, 0.0, 0.0);  
 			VectorN R = this.getECIPosition(itrf);
 			VectorN los = r_trans.minus(R);
 			double rho = los.mag();
