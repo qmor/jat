@@ -57,7 +57,7 @@ public class ITRF {
 		// convert polar motion data to radians
 		_xp = xp * MathUtils.ARCSEC2RAD;
 		_yp = yp * MathUtils.ARCSEC2RAD;
-		System.out.println("xp = "+_xp+" yp = "+_yp);
+//		System.out.println("xp = "+_xp+" yp = "+_yp);
 		// get the Terrestrial Time
 		mjd_tt = time.mjd_tt();
 		time.set_UT1_UTC(ut1_utc);
@@ -94,7 +94,7 @@ public class ITRF {
 		double gmst = 4.894961212823058751375704430 + T*(6.30038809898489355227651372 + T*(5.075209994113591478053805523E-15 - 9.25309756819433560067190688E-24*T));
 		// quadrant check (return a value between 0 and 2PI)
 		gmst = MathUtils.radiancheck(gmst);
-		System.out.println("gmst = "+gmst);
+//		System.out.println("gmst = "+gmst);
 		return gmst;
 	}
 	
@@ -108,7 +108,7 @@ public class ITRF {
 		// convert to radians
 		eps = eps*MathUtils.ARCSEC2RAD;
 		eps = MathUtils.radiancheck(eps);
-		System.out.println("eps = "+eps);
+//		System.out.println("eps = "+eps);
 	}
 	
     /** Computes Nutation in longitude and obliquity using the IAU 1980 nutation theory.
@@ -262,14 +262,14 @@ public class ITRF {
         // convert to arcsec (1.0E-05) then to radians        
         dpsi = 1.0E-5 * dpsi * MathUtils.ARCSEC2RAD;
         deps = 1.0E-5 * deps * MathUtils.ARCSEC2RAD;
-        System.out.println("dpsi = "+dpsi+" deps = "+deps);
+//        System.out.println("dpsi = "+dpsi+" deps = "+deps);
         
         // compute nutation matrix
         RotationMatrix r1 = new RotationMatrix(1, -eps);
         RotationMatrix r2 = new RotationMatrix(3, dpsi);
         RotationMatrix r3 = new RotationMatrix(1, eps+deps);        
         nutMatrix = r1.times(r2).times(r3);
-        nutMatrix.print("nut");
+//        nutMatrix.print("nut");
     }
     /** Computes precession matrix
      *
@@ -284,13 +284,13 @@ public class ITRF {
     	theta = MathUtils.radiancheck(theta);
     	z = MathUtils.radiancheck(z);
     	
-    	System.out.println("zeta = "+zeta+" theta = "+theta+" z = "+z);
+//    	System.out.println("zeta = "+zeta+" theta = "+theta+" z = "+z);
         RotationMatrix r1 = new RotationMatrix(3, zeta);
         RotationMatrix r2 = new RotationMatrix(2, -theta);
         RotationMatrix r3 = new RotationMatrix(3, z);
         
         precMatrix = r1.times(r2.times(r3));
-        precMatrix.print("prec");
+//        precMatrix.print("prec");
     }
 	/**
 	 * Computes Greenwich Sidereal Time in radians
@@ -309,7 +309,7 @@ public class ITRF {
     	}
     	// quadrant check
     	gst = MathUtils.radiancheck(gst);
-    	System.out.println("gst = "+gst);
+//    	System.out.println("gst = "+gst);
     	return gst;
     }
     /**
@@ -319,7 +319,7 @@ public class ITRF {
     	RotationMatrix r1 = new RotationMatrix(1, _yp);
     	RotationMatrix r2 = new RotationMatrix(2, _xp);
     	poleMatrix = r1.times(r2);
-    	poleMatrix.print("pole");
+//    	poleMatrix.print("pole");
     }
     /**
      * Computes the Matrix to account for Sidereal Time 
@@ -327,7 +327,7 @@ public class ITRF {
     private void sidereal(){
     	double gst = this.GST();
     	gstMatrix = new RotationMatrix(3, -gst);
-    	gstMatrix.print("gstMatrix");
+//    	gstMatrix.print("gstMatrix");
     }
     /**
      * Computes the ECEF to ECI Transformation Matrix
