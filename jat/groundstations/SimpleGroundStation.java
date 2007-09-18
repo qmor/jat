@@ -49,10 +49,12 @@ public class SimpleGroundStation {
 	
 	// WGS-84
     private double R_equ = 6378.137e3;
+    private static double R_static = 6378.137e3;
 
     // WGS-84
     private double f = 1.0/298.257223563;	
-	
+	private static double f_static = 1.0/298.257223563;
+    
     /** create a Ground Station from latitude, longitude, HAE using WGS-84 Geoid.
      * @param name String containing the name.
      * @param lat  double containing latitude in radians.
@@ -290,7 +292,52 @@ public class SimpleGroundStation {
 		this._alt = Math.sqrt(x*x + y*y + (z+deltaZ)*(z+deltaZ)) - N;
 		
 	}
+
+	/**
+	 * Compute the Geodetic Latitude, Longitude and Height usint the algorithm
+	 * from Montebruck's book "Satellite Oribts".
+	 * @param rho double containing the ground station to spacecraft vector in ENU frame 
+	 * @return double - [lat;lon;alt]
+	 */
+	public static double[] ECEF2LLH(double[] rho)
+	{
+		double theta,newRange;
+		double N = 0.0;
+		
+		double x = rho[0];
+		double y = rho[1];
+		double z = rho[2];
+		
+		double[] out = new double[3];
+		
+		//Set the initial conditions for the iteration
+		double e = Math.sqrt(1-(1-f_static)*(1-f_static));
+		double deltaZ = 1000; //Set high to force into loop
+		double deltaZNew = e*e*z;
+		
+		//Iterate until the error is small
+		while( Math.abs(deltaZNew - deltaZ) > 1e-16)
+		{
+			deltaZ = deltaZNew;
+			
+			newRange = Math.sqrt(x*x + y*y + (z+deltaZ)*(z+deltaZ));
+			theta = Math.asin(( z + deltaZ)/newRange);
+			
+			N = R_static/Math.sqrt(1-e*e*Math.sin(theta)*Math.sin(theta));
+			
+			deltaZNew = N*e*e*Math.sin(theta);
+			
+		}
+
+		//Compute the Latitude, Longitude and Heigth
+		out[0] = Math.atan2(y, x);
+		out[1] = Math.atan2( (z+deltaZNew),Math.sqrt(x*x + y*y));
+		out[2] = Math.sqrt(x*x + y*y + (z+deltaZ)*(z+deltaZ)) - N;
+		
+		return out;
+	}
 	
+
 	
 	/**
 	 * Returns inertial satellite position at time of signal transmission, r(t-tau)
