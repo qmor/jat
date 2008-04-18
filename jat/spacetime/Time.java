@@ -69,6 +69,11 @@ public class Time {
      */
     private double UT1_UTC=0;          // UT1-UTC time difference [s]. From IERS Bulletin A.
 
+     /**
+     * local International Earth Rotation and Reference Service object to avoid multiple instances.
+     */
+    private FitIERS fit = null;    
+
     /**
      * Default constructor initializes to current system time to nearest millisecond
      */
@@ -140,19 +145,22 @@ public class Time {
      * Returns Universal Time in modified julian date
      * @return MJD_UT1
      */
-    public double mjd_ut1(){
-    	//* TODO watch this
+    public double mjd_ut1() {
+        //* TODO watch this
 //    	if(this.MJD_UT1==this.MJD_UTC || this.UT1_UTC==0){
-    		//System.err.println("Warning: UT1-UTC has not been initialized");
-    		FitIERS fit = new FitIERS();
-    		try{
-    			UT1_UTC = fit.search(MJD_UTC)[2];
-    		}catch(Exception e){
-    			UT1_UTC = 0;
-    		}
+        //System.err.println("Warning: UT1-UTC has not been initialized");
+        if (fit == null) {
+            fit = new FitIERS();
+        }
+
+        try {
+            UT1_UTC = fit.search(MJD_UTC)[2];
+        } catch (Exception e) {
+            UT1_UTC = 0;
+        }
 //    	}
-    	//this.UT1_UTC = 0;
-    	this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC*TimeUtils.sec2days;
+        //this.UT1_UTC = 0;
+        this.MJD_UT1 = this.MJD_UTC + this.UT1_UTC * TimeUtils.sec2days;
 //    	if(debugGEONS){
 //    		double UTC_UT1_Constant_Bias = -0.11046918435961;
 //    		double UTC_UT1_Linear_Coefficient = -0.62804835480612E-03;
@@ -162,7 +170,7 @@ public class Time {
 //    		this.MJD_UT1 = MJD_UTC + (UTC_UT1_Constant_Bias/86400) + (UTC_UT1_Linear_Coefficient*dt /(86400*86400))+ 
 //    			UTC_UT1_Quadratic_Coefficient*dt*dt/(86400*86400*86400);
 //    	}
-    	
+
         return this.MJD_UT1;
     }
     /**
