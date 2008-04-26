@@ -19,11 +19,11 @@
  * Emergent Space Technologies
  * File created by Richard C. Page III 
  **/
-package jat.spacetime;
+package jatcore.spacetime;
 
-import jat.eph.*;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jatcore.eph.*;
+import jatcore.matvec.data.Matrix;
+import jatcore.matvec.data.VectorN;
 
 /**
  * Represents the Earth-Centered Body-Fixed Reference Frame.

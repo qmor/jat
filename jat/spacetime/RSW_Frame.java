@@ -1,4 +1,4 @@
-package jat.spacetime;
+package jatcore.spacetime;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -22,7 +22,7 @@ package jat.spacetime;
  * File Created on Aug 4, 2003
  */
  
-import jat.matvec.data.*;
+import jatcore.matvec.data.*;
 /**
  * <P>
  * The RSW_Frame Class provides methods of converting between the ECI and RSW frame,

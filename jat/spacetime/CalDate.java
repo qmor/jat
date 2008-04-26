@@ -18,8 +18,8 @@
  *
  */
 
-package jat.spacetime;
-import jat.math.*;
+package jatcore.spacetime;
+import jatcore.math.*;
 import java.io.*;
 
 /**

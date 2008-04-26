@@ -18,13 +18,13 @@
  *
  */
 
-package jat.spacetime;
-import jat.matvec.data.*;
-import jat.math.*;
-import jat.spacetime.Time;
-import jat.util.FileUtil;
-import jat.cm.*;
-import jat.eph.*;
+package jatcore.spacetime;
+import jatcore.matvec.data.*;
+import jatcore.math.*;
+import jatcore.spacetime.Time;
+import jatcore.util.FileUtil;
+import jatcore.cm.*;
+import jatcore.eph.*;
 
 /**
  * <P>

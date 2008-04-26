@@ -17,18 +17,21 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 * 
 */
-package jat.spacetime;
+package jatcore.spacetime;
 
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.StringTokenizer;
-import jat.matvec.data.*;
-import jat.math.*;
-import jat.util.FileUtil;
-import jat.cm.Constants;
+import jatcore.matvec.data.*;
+import jatcore.math.*;
+import jatcore.util.FileUtil;
+import jatcore.cm.Constants;
 
 /**
  * International Earth Rotation and Reference Service parameters.  Parses and calculates
@@ -81,12 +84,16 @@ public class FitIERS {
         String fs = FileUtil.file_separator();
 		String directory;
 		try{
-		    directory = FileUtil.getClassFilePath("jat.spacetime","FitIERS")+fs;
+		    directory = FileUtil.getClassFilePath("jatcore.","spacetime");
+		    if(directory==null)directory = "jatcore/spacetime"; 
+		  
+		    System.out.println("dir = "+  directory );  
 		}catch(Exception ne){
-		    directory = "C:/Code/Jat/jat/spacetime/";
+		  directory = "jatcore/spacetime";  
 		}
 		//filename = directory+"iers.dat";
-		filename = directory+"EOP.dat";
+		
+		filename = directory+"/"+"EOP.dat";
 		prev_filename = filename;
 		process();		
     }
@@ -110,9 +117,24 @@ public class FitIERS {
 			FileReader fr;
 			BufferedReader in = null;
 			try {
-				fr = new FileReader(filename);
-				in = new BufferedReader(fr);			
-			} catch (FileNotFoundException e) {
+			  
+	       InputStream is=null; 
+         InputStreamReader isr;
+       ClassLoader cl = this.getClass().getClassLoader();
+       System.out.println("filename = "+  filename ); 
+       URL ut= cl.getResource(filename);
+          try
+          {
+           is =    ut.openConnection().getInputStream();
+          }catch(Exception ne)
+          {
+            System.out.println("Can not get inputstream for = "+  ut );  
+          }
+			  
+          isr = new InputStreamReader(is);
+			//	fr = new FileReader(is);
+				in = new BufferedReader(isr);			
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			ArrayList lineCollection = new ArrayList();

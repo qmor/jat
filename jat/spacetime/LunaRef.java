@@ -19,12 +19,12 @@
  * Emergent Space Technologies
  * File created by Richard C. Page III 
  **/
-package jat.spacetime;
+package jatcore.spacetime;
 
-import jat.eph.*;
+import jatcore.eph.*;
 //import jat.math.MathUtils;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jatcore.matvec.data.Matrix;
+import jatcore.matvec.data.VectorN;
 
 public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
   

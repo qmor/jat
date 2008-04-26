@@ -1,4 +1,4 @@
-package jat.spacetime;
+package jatcore.spacetime;
 /* JAT: Java Astrodynamics Toolkit
 *
 * Copyright (c) 2007 The JAT Project. All rights reserved.
@@ -19,8 +19,8 @@ package jat.spacetime;
 *
 */
 
-import jat.math.*;
-import jat.matvec.data.*;
+import jatcore.math.*;
+import jatcore.matvec.data.*;
 /**
  * ITRF provides a representation of the Internation Terrestrial Reference Frame.
  * It is used to compute the transformation between ECI and ECEF frames.
