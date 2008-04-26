@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jatcore.spacetime;
+package jat.spacetime;
 
-import jatcore.eph.*;
-import jatcore.matvec.data.VectorN;
+import jat.eph.*;
+import jat.matvec.data.VectorN;
 
 /**
  * Used to represent the inertial reference frame centered at any one

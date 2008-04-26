@@ -17,7 +17,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 * 
 */
-package jatcore.spacetime;
+package jat.spacetime;
 
 import java.util.*;
 import java.io.BufferedReader;
@@ -28,10 +28,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.StringTokenizer;
-import jatcore.matvec.data.*;
-import jatcore.math.*;
-import jatcore.util.FileUtil;
-import jatcore.cm.Constants;
+import jat.matvec.data.*;
+import jat.math.*;
+import jat.util.FileUtil;
+import jat.cm.Constants;
 
 /**
  * International Earth Rotation and Reference Service parameters.  Parses and calculates

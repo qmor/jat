@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jatcore.spacetime;
+package jat.spacetime;
 
-import jatcore.matvec.data.Matrix;
-import jatcore.matvec.data.VectorN;
+import jat.matvec.data.Matrix;
+import jat.matvec.data.VectorN;
 
 /**
  * Interface used as a standard for central body reference frame objects.  Classes
