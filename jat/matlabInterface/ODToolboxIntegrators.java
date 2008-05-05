@@ -1,6 +1,6 @@
 /* JAT: Java Astrodynamics Toolkit
  *
- * Copyright (c) 2006 Emergent Space Technologies, Inc. All rights reserved.
+ * Copyright (c) 2006 National Aeronautics and Space Administration. All rights reserved.
  *
  * This file is part of JAT. JAT is free software; you can
  * redistribute it and/or modify it under the terms of the
@@ -33,7 +33,7 @@ import java.io.*;
  * The ODToolboxIntegrators.java Class is an adaptor for Matlab to call the JAT Integrators in the same 
  * way that Matlab calls it's own integrators. These integrators will only work with JAT force models.
  *
- * @author Derek Surka, Emergent Space Technologies
+ * @author Derek Surka, National Aeronautics and Space Administration
  * date: 10 August 2007
  * @version 1.0
  */

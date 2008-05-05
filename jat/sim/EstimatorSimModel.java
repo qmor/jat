@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * 
- * Emergent Space Technologies
+ * National Aeronautics and Space Administration
  * Created by Richard C. Page III
  * */
 package jat.sim;

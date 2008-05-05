@@ -18,7 +18,7 @@
  *
  * 
  * File Created on 3 October 2005
- * Created by Kathryn Bradley, Emergent Space Technologies
+ * Created by Kathryn Bradley, National Aeronautics and Space Administration
  * */
 package jat.measurements;
 

@@ -1,6 +1,6 @@
  /* JAT: Java Astrodynamics Toolkit
  *
- * Copyright (c) 2005 Emergent Space Technologies Inc. All rights reserved.
+ * Copyright (c) 2005 National Aeronautics and Space Administration. All rights reserved.
  *
  * This file is part of JAT. JAT is free software; you can
  * redistribute it and/or modify it under the terms of the
