@@ -11,7 +11,7 @@ import jat.matvec.data.*;
 import jat.math.*;
 
 /**
- * @author David Gaylor
+ * @author
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates

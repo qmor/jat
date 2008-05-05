@@ -9,7 +9,7 @@ import jat.cm.*;
 import jat.alg.integrators.*;
 
 /**
- * @author David Gaylor
+ * @author
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
@@ -19,7 +19,7 @@ public class TwoBodyTest {
 	public static void main(String[] args) {
 		TwoBody tb = new TwoBody(398600.4415);
 		RungeKutta8 rk8 = new RungeKutta8(5.0);
-		LinePrinter lp = new LinePrinter("C:\\Documents and Settings\\David Gaylor\\My Documents\\workspace\\Jat\\jat\\test\\propagator\\25544.txt");
+		LinePrinter lp = new LinePrinter("");
 		lp.setThinning(600.0);
         // initialize the variables
         double [] x0 = new double[6];
