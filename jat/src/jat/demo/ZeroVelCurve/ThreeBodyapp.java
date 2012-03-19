@@ -19,7 +19,7 @@
  *
  */
 
-package jat.demo.ZeroVelCurve;
+package jat.examples.ZeroVelCurve;
 
 import jat.matvec.data.*;
 import jat.plot.*;
