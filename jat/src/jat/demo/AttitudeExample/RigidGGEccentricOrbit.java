@@ -19,7 +19,7 @@
  *
  */
 
-package jat.demo.AttitudeExample;
+package jat.examples.AttitudeExample;
 
 import jat.plot.*;
 import jat.alg.integrators.*;
