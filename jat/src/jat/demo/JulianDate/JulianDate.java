@@ -19,7 +19,7 @@
  *
  */
 
-package jat.demo.JulianDate;
+package jat.examples.JulianDate;
 
 import jat.cm.*;
 
