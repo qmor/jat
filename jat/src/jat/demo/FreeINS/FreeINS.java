@@ -18,7 +18,7 @@
  *
  */
 
-package jat.demo.FreeINS;
+package jat.examples.FreeINS;
 
 import java.io.*;
 import jat.alg.integrators.*;
