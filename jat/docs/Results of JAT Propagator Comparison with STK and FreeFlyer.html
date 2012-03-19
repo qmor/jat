@@ -1,0 +1,655 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+           "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<meta name="GENERATOR" content="TtH 3.74">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+ <style type="text/css"> div.p { margin-top: 7pt;}</style>
+ <style type="text/css"><!--
+ td div.comp { margin-top: -0.6ex; margin-bottom: -1ex;}
+ td div.comb { margin-top: -0.6ex; margin-bottom: -.6ex;}
+ td div.hrcomp { line-height: 0.9; margin-top: -0.8ex; margin-bottom: -1ex;}
+ td div.norm {line-height:normal;}
+ span.roman {font-family: serif; font-style: normal; font-weight: normal;}
+ span.overacc2 {position: relative;  left: .8em; top: -1.2ex;}
+ span.overacc1 {position: relative;  left: .6em; top: -1.2ex;} --></style>
+
+
+<title> Testing of the Java Astrodynamics Toolkit Propagator</title>
+
+<h1 align="center">Testing of the Java Astrodynamics Toolkit Propagator </h1>
+
+<h3 align="center">Dr. David E. Gaylor<a href="#tthFtNtAAB" name="tthFrefAAB"><sup>1</sup></a>
+&nbsp;, Richard C. Page III<a href="#tthFtNtAAC" name="tthFrefAAC"><sup>2</sup></a><br />
+  &nbsp;and Kathryn V. Bradley<a href="#tthFtNtAAD" name="tthFrefAAD"><sup>3</sup></a><br />
+  <font size="+0"><i>
+   Emergent Space Technologies, Greenbelt, MD, 20770, USA</i></font><br />
+  </h3>
+
+<h3 align="center">7 August 2006 </h3>
+
+<h2> Abstract</h2>
+The Java Astrodynamics Toolkit (JAT) is an open source software
+library of reusable software components for mission design,
+trajectory optimization, and simulation of navigation, guidance and
+control systems. This paper provides results of comparing various
+Earth orbit ephemerides created with JAT with those created using
+Analytical Graphics Inc.'s Satellite Tool Kit/High Precision Orbit
+Propagator (STK/HPOP) and a.i. solutions, Inc.'s FreeFlyer.
+Ephemerides produced using STK and FreeFlyer are also compared to
+each other. With careful attention to parameters and models, results
+show agreement of millimeter to meter level over several days.
+Differences are discussed including potential sources of error.
+
+<div class="p"><!----></div>
+
+ <h2><a name="tth_sEc1">
+1</a>&nbsp;&nbsp;Introduction</h2>
+The Java Astrodynamics Toolkit (JAT) is an open source library of
+reusable software components written in the Java programming
+language to support rapid development of spacecraft simulations
+including 2-D and 3-D visualization capabilities. JAT is distributed
+under the GNU General Public License and is available at
+http://jat.sourceforge.net. Potential applications of JAT include:
+
+<ul>
+<li> Simulations of autonomous spacecraft navigation, guidance and
+control
+<div class="p"><!----></div>
+</li>
+
+<li> Space mission design and analysis including trajectory
+optimization
+<div class="p"><!----></div>
+</li>
+
+<li> Operational orbit determination and orbital events
+generation
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+This paper provides results of comparing ephemerides created by
+propagating various Earth orbits using JAT with those created using
+Satellite Tool Kit/High Precision Orbit Propagator (STK/HPOP) from
+Analytical Graphics, Inc. (AGI) and FreeFlyer (FF) from a.i.
+solutions, Inc. Ephemerides produced using STK and FreeFlyer are
+also compared to each other. FreeFlyer is a spacecraft simulation
+package currently in use at the NASA Goddard Space Flight Center.
+Version 5.5, build 5.5.0.25 of FreeFlyer and STK version 6.1 were
+used for comparison in the propagator validation.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc2">
+2</a>&nbsp;&nbsp;Initial State Vectors</h2> The following orbits were selected for testing: Sun-Synchronous, Geostationary (GEO), Molniya, International Space Station
+(ISS) and the Global Positioning Satellite System (GPS) orbit. The
+initial epoch was chosen to be June 1, 2004, 12:00:00. The initial
+conditions which were used for the test case orbits are presented in
+Table&nbsp;<a href="#Tab:Initial">1</a>. The corresponding osculating orbital elements
+at the initial epoch are presented in Table&nbsp;<a href="#Tab:OrbitalElements">2</a>.
+The orbit naming convention is based on the approximate altitude of
+the orbit and does not follow the exact path of any particular
+orbiting body. For example, ISS refers to an orbit which
+approximates that of the International Space Station, but does not
+refer to the actual location of the International Space Station.
+
+<div class="p"><!----></div>
+<a name="tth_tAb1">
+</a> <center> <center>Table 1: Initial Conditions</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Category </td><td align="center">Orbit </td><td align="center">X </td><td align="center">Y </td><td align="center">Z </td><td align="center">Vx </td><td align="center">Vy </td><td align="center">Vz </td></tr>
+<tr><td></td><td align="center">Type </td><td align="center">(km)</td><td align="center">(km)</td><td align="center">(km)</td><td align="center">(km/s)</td><td align="center">(km/s) </td><td align="center">(km/s) </td></tr>
+<tr><td>LEO </td><td align="center">ISS </td><td align="center">-4453.783586 </td><td align="center">-5038.203756 </td><td align="center">-426.384456 </td><td align="center">3.831888 </td><td align="center">-2.887221 </td><td align="center">-6.018232 </td></tr>
+<tr><td>LEO </td><td align="center">Sun-Sync </td><td align="center">-2290.301063 </td><td align="center">-6379.471940 </td><td align="center">0 </td><td align="center">-0.883923 </td><td align="center">0.317338 </td><td align="center">7.610832 </td></tr>
+<tr><td>MEO </td><td align="center">GPS </td><td align="center">5525.33668 </td><td align="center">-15871.18494 </td><td align="center">-20998.992446 </td><td align="center">2.750341 </td><td align="center">2.434198 </td><td align="center">-1.068884 </td></tr>
+<tr><td>HEO </td><td align="center">Molniya </td><td align="center">-1529.894287 </td><td align="center">-2672.877357 </td><td align="center">-6150.115340 </td><td align="center">8.717518 </td><td align="center">-4.989709 </td><td align="center">0 </td></tr>
+<tr><td>GEO </td><td align="center">GEO </td><td align="center">36607.358256 </td><td align="center">-20921.723703 </td><td align="center">0 </td><td align="center">1.525636 </td><td align="center">2.669451 </td><td align="center">0 </td></tr><tr><td></td></tr><a name="Tab:Initial">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a name="tth_tAb2">
+</a> <center> <center>Table 2:  Initial Osculating Orbital Elements</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Orbit </td><td align="center">a </td><td align="center">e </td><td align="center">i </td><td align="center">Arg of Perigee </td><td align="center">RAAN </td><td align="center">True Anomaly </td></tr>
+<tr><td>Type  </td><td align="center">km </td><td align="center"></td><td align="center">Deg </td><td align="center">Deg </td><td align="center">Deg </td><td align="center">Deg </td></tr>
+<tr><td>ISS </td><td align="center">6747.414767 </td><td align="center">.001646462 </td><td align="center">51.667871 </td><td align="center">151.908712 </td><td align="center">45.649594 </td><td align="center">32.718375  </td></tr>
+<tr><td>Sun-Sync </td><td align="center">6778.137291 </td><td align="center">.000000046 </td><td align="center">97.034619 </td><td align="center">337.556006 </td><td align="center">250.251300 </td><td align="center">22.443994  </td></tr>
+<tr><td>GPS </td><td align="center">26558.859022 </td><td align="center">.015930402 </td><td align="center">56.286490 </td><td align="center">33.142451 </td><td align="center">52.707850 </td><td align="center">216.676430  </td></tr>
+<tr><td>Molniya </td><td align="center">26553.376213 </td><td align="center">.740969399 </td><td align="center">63.4 </td><td align="center">270.000001 </td><td align="center">330.214160 </td><td align="center">359.999998 </td></tr>
+<tr><td>GEO </td><td align="center">42164.165718 </td><td align="center">.000000135 </td><td align="center">0 </td><td align="center">103.882708 </td><td align="center">0 </td><td align="center">226.368596 </td></tr><tr><td></td></tr><a name="Tab:OrbitalElements">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+The integrator step size, propagation length and output frequency
+were varied for the different test cases as shown in
+Table&nbsp;<a href="#Tab:Frequency">3</a>. The propagation length and output frequency
+were chosen based on a previous study performed by The Aerospace
+Corporation to validate STK/HPOP[<a href="#Chao:2000" name="CITEChao:2000">1</a>].
+
+<div class="p"><!----></div>
+<a name="tth_tAb3">
+</a> <center> <center>Table 3: Step Size, Propagation Length and Output
+Frequency</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Orbit Type </td><td align="center">Integrator </td><td align="center">Propagation </td><td align="center">Output </td></tr>
+<tr><td>Type </td><td align="center">Step Size </td><td align="center">Length </td><td align="center">Frequency </td></tr>
+<tr><td></td><td align="center">(s) </td><td align="center">(days) </td><td align="center">(mins) </td></tr>
+<tr><td>ISS </td><td align="center">5 </td><td align="center">1 </td><td align="center">1 </td></tr>
+<tr><td>Sun-Sync </td><td align="center">5 </td><td align="center">1 </td><td align="center">1 </td></tr>
+<tr><td>GPS </td><td align="center">60 </td><td align="center">2 </td><td align="center">2 </td></tr>
+<tr><td>Molniya </td><td align="center">5 </td><td align="center">3 </td><td align="center">5 </td></tr>
+<tr><td>GEO </td><td align="center">60 </td><td align="center">7 </td><td align="center">10 </td></tr><tr><td></td></tr><a name="Tab:Frequency">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+Twelve test cases were performed for each orbit type. Test cases
+were run to verify JAT's ability to perform accurate propagation of
+Earth orbits using various force models. The force models considered
+in this study were two-body Earth gravity, JGM2 and JGM3 spherical
+harmonic gravity models; Solar/Lunar third-body perturbation
+effects; atmospheric drag using the Harris-Priester density model,
+and the Naval Research Laboratory Mass Spectrometer and Incoherent
+Scatter Radar Exosphere (NRLMSISE 2000) atmospheric density model;
+and solar radiation pressure (SRP). Each of the force models was run
+independently to test their individual accuracy, using two-body
+Earth except for spherical harmonic cases. A final test case was run
+for each satellite orbit which included an atmospheric drag model,
+the SRP model, a spherical harmonic gravity model and third-body
+perturbations from both the Sun and the Moon. These last test cases
+were performed to validate the capability of JAT to accurately
+propagate satellite orbits with multiple models.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc3">
+3</a>&nbsp;&nbsp;Earth Orientation Parameters</h2>
+The use of spherical harmonic gravity
+models requires precise calculation of the Earth's orientation.
+Earth orientation involves parameters for the following
+transformations: Nutation, Precession, Pole Wander, and Sidereal
+Time, including the exact UT1 time obtained from the UT1-UTC
+correction in the International Earth Rotation Service (IERS)
+Bulletin A&nbsp;[<a href="#IERS:2004" name="CITEIERS:2004">4</a>]. It is important to understand how the
+numerical integrators handle the rotation. FreeFlyer does not appear
+to update the perturbations in the Earth's orientation during a
+propagation run. Our testing seemed to indicate that STK/HPOP is
+updating some information less frequently than every time step.
+Currently, JAT updates the Earth orientation every time the
+integrator calls for the derivatives. This was done to ensure that
+JAT was at its highest accuracy.
+
+<div class="p"><!----></div>
+JAT implements the conventions established by the International
+Astronomical Union (IAU), in the Explanatory Supplement to the
+Astronomical Almanac&nbsp;[<a href="#Seidelmann:1992" name="CITESeidelmann:1992">6</a>] &nbsp;[<a href="#Hohenkerk:1992" name="CITEHohenkerk:1992">7</a>],
+and by the IERS 1996 conventions&nbsp;[<a href="#McCarthy:1996" name="CITEMcCarthy:1996">8</a>] . Exhaustive
+comparisons were conducted between the Almanac, and IERS 96
+conventions for Nutation, Precession, and Greenwhich Hour Angle.
+
+<div class="p"><!----></div>
+The Earth orientation computation in FreeFlyer, however, does not
+seem to implement pole wander, though it uses the UT1-UTC value from
+the IERS. Because of this discrepancy, pole wander was turned off
+for the purpose of validation between the three programs.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc4">
+4</a>&nbsp;&nbsp;Integrator</h2> The JAT fixed step-size, 8th order Runge-Kutta numerical integrator was used. The Runge-Kutta 8th order integrator within FreeFlyer was utilized in fixed step size mode for all of the
+propagation comparisons. The Runge-Kutta-Fehlberg 7th order
+integrator with 8th order error control within STK/HPOP was used as
+a fixed step integrator with error control turned off.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc5">
+5</a>&nbsp;&nbsp;Atmospheric Drag</h2> Currently, JAT contains two high
+fidelity atmospheric drag models: NRLMSISE2000 and Harris-Priester.
+The NRLMSISE2000 model was adapted from code developed by the Naval
+Research Laboratory&nbsp;[<a href="#NRLMSISE" name="CITENRLMSISE">13</a>]. The Harris Priester Model is
+based on the model in <em>Satellite Orbits</em>&nbsp;[<a href="#Montenbruck" name="CITEMontenbruck">14</a>].
+STK/HPOP also has both the NRLMSISE2000 and Harris-Priester models
+available in version 6.1 and later. FreeFlyer does not have the
+NRLMSISE2000 model, but it does have the Harris-Priester model. The
+value used for the F10.7 cm solar flux was 150 W/m<sup>2</sup>/Hz and
+a<sub>p</sub> was 14.918648166.
+
+<div class="p"><!----></div>
+     <h3><a name="tth_sEc5.1">
+5.1</a>&nbsp;&nbsp;Ap/Kp Indicies</h3>
+When using the NRLMSISE 2000 in STK, the geomagnetic index (k<sub>p</sub>),
+was set to 3 for this study. STK allows the user to input k<sub>p</sub> (the
+planetary index) and F10.7 values in the force model. However, STK
+does not allow the user to enter in an a<sub>p</sub> (planetary amplitude)
+value. The NRLMSISE 2000 model in JAT requires the a<sub>p</sub> value in
+order to calculate the density in the drag model. Therefore a
+correlation between the k<sub>p</sub> value and the a<sub>p</sub> value was needed.
+Wertz presents the equation for the correlation as:
+[<a href="#Wertz:1978" name="CITEWertz:1978">12</a>]
+<a name="Eqn:Vallado apkp">
+</a>
+<br clear="all" /><table border="0" width="100%"><tr><td>
+<table align="center" cellspacing="0"  cellpadding="2"><tr><td nowrap="nowrap" align="center">
+ a<sub>p</sub> = <span class="roman">e</span><sup>[(k<sub>p</sub>+1.6)/1.75]</sup> </td></tr></table>
+</td><td width="1%">(1)</td></tr></table>
+
+
+As previously mentioned, a k<sub>p</sub> value of 3 was used for the test
+cases, which according to Equation&nbsp;<a href="#Eqn:Vallado apkp">1</a> above
+results in an a<sub>p</sub> value of 13.85396. However, when this value is
+entered into JAT the error in position is approximately 500 meters
+for the LEO satellite orbits. Therefore, it was determined that the
+a<sub>p</sub> was incorrect. In order to validate the value of a<sub>p</sub> which
+should be used in the JAT, other sources were investigated.
+
+<div class="p"><!----></div>
+According to NOAA, for a k<sub>p</sub> value of 3, the corresponding value
+of a<sub>p</sub> is 15&nbsp;[<a href="#NOAA:2005" name="CITENOAA:2005">5</a>]. Since the nature of atmospheric
+density is empirical, there are several different analytical
+approaches which disagree slightly on the exact value which should
+be used in the calculation of density for atmospheric drag. When a
+value of 15 is used for the a<sub>p</sub> in JAT, the position error is
+approximately 51 meters for the ISS case and 28 meters for Sun-Sync.
+
+<div class="p"><!----></div>
+NOAA presents the following equation for the correlation:
+&nbsp;[<a href="#NOAA:2005" name="CITENOAA:2005">5</a>]
+<a name="Eqn:STK apkp">
+</a>
+<br clear="all" /><table border="0" width="100%"><tr><td>
+<table align="center" cellspacing="0"  cellpadding="2"><tr><td nowrap="nowrap" align="center">
+ 28*k<sub>p</sub>+0.03*<span class="roman">e</span><sup>k<sub>p</sub></sup> = a<sub>p</sub> + 100*1<font face="symbol">-</font
+><span class="roman">e</span><sup><font face="symbol">-</font
+>0.08*a<sub>p</sub></sup> </td></tr></table>
+</td><td width="1%">(2)</td></tr></table>
+
+
+
+<div class="p"><!----></div>
+When a k<sub>p</sub> value of 3 is used in Equation&nbsp;<a href="#Eqn:STK apkp">2</a> the
+a<sub>p</sub> value is 14.918648166. A position error of approximately 1
+meter over a day is found when this value of a<sub>p</sub> is used with the
+ISS orbit.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc6">
+6</a>&nbsp;&nbsp;Third Body Perturbations</h2> Models for Solar and
+Lunar perturbations have been created in JAT. These models use the
+JPL DE405 ephemerides for the Sun and Moon. FreeFlyer and STK/HPOP
+were also set to utilize Sun and Moon positions obtained from the
+DE405 ephemeris.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc7">
+7</a>&nbsp;&nbsp;Gravity Models</h2> JAT and STK/HPOP contain both JGM2 and
+JGM3 spherical harmonic gravity models. FreeFlyer only contains the
+JGM2 model. For all cases using the JGM2 and JGM3 models, the degree
+and order were both set to 20 for all three programs. STK/HPOP has
+the ability to model solid and ocean tides. JAT currently does not
+have this ability and so this was option turned off in STK/HPOP.
+STK/HPOP was also set to not include relativistic accelerations. In
+STK/HPOP, JGM2 and JGM3 gravity files were applied with a zero
+degree and order for the two-body cases.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc8">
+8</a>&nbsp;&nbsp;Solar Radiation Pressure</h2> A solar radiation pressure (SRP)
+model is also included in JAT. The SRP model assumes a uniform
+spherical spacecraft with a given cross-sectional area.  The SRP
+model has a discontinuity at the boundary between full illumination
+and entering the shadow of the Earth. To handle this, a cylindrical
+partial illumination model is implemented to provide some continuity
+in the derivatives as the radiation component becomes zero. The
+vector to the sun is computed using the JPL DE405 ephemeris. In
+FreeFlyer, a basic solar radiation pressure model is available,
+although documentation on this model is not very detailed. The
+settings for the altitude of the atmosphere for the Earth's shadow
+were set to zero in STK/HPOP and JAT.
+
+ <h2><a name="tth_sEc9">
+9</a>&nbsp;&nbsp;Ephemeris Comparison Results and Discussion</h2>
+The ephemerides produced by JAT, STK/HPOP and FreeFlyer were
+compared with each other. Table <a href="#Tab:ISS">4</a> presents the maximum
+position and velocity differences for the ISS orbit. In all cases,
+JAT agrees well with STK/HPOP. The largest differences in this set
+of tests was between JAT and FreeFlyer when using the
+Harris-Priester model, however, it is interesting to note that
+STK/HPOP and FreeFlyer also do not agree well in these cases.
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a name="tth_tAb4">
+</a> <center> <center>Table 4:  Position and Velocity Differences for ISS
+Orbit</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Description </td><td align="center">JAT-STK  </td><td align="center">JAT-STK  </td><td align="center">JAT-FF  </td><td align="center">JAT-FF  </td><td align="center">FF-STK </td><td align="center">FF-STK</td></tr>
+<tr><td></td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity</td></tr>
+<tr><td></td><td align="center">(m)     </td><td align="center">(m/s)    </td><td align="center">(m)      </td><td align="center">(m/s)    </td><td align="center">(m)     </td><td align="center">(m/s)</td></tr>
+<tr><td>2-body       </td><td align="center">0.000829 </td><td align="center">0.000808 </td><td align="center">0.000048 </td><td align="center">0.0000008 </td><td align="center">0.000838 </td><td align="center">0.000809 </td></tr>
+<tr><td>2-body+Moon  </td><td align="center">0.000830 </td><td align="center">0.000815 </td><td align="center">0.000329 </td><td align="center">0.000001 </td><td align="center">0.000996 </td><td align="center">0.000815 </td></tr>
+<tr><td>2-body+Sun   </td><td align="center">0.000827 </td><td align="center">0.000838 </td><td align="center">0.000037 </td><td align="center">0.0000008 </td><td align="center">0.000826 </td><td align="center">0.000838 </td></tr>
+<tr><td>2-body+NRL   </td><td align="center">0.269426 </td><td align="center">0.000995 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>2-body+HP    </td><td align="center">1.031710 </td><td align="center">0.001802 </td><td align="center">2.33001 </td><td align="center">0.002665 </td><td align="center">5.495820 </td><td align="center">0.006752 </td></tr>
+<tr><td>2-body+SRP   </td><td align="center">0.103515 </td><td align="center">0.000875 </td><td align="center">0.069386 </td><td align="center">0.000071 </td><td align="center">0.136046 </td><td align="center">0.000885 </td></tr>
+<tr><td>JGM2         </td><td align="center">0.368138 </td><td align="center">0.001085 </td><td align="center">0.500248 </td><td align="center">0.000552 </td><td align="center">0.836881 </td><td align="center">0.001576 </td></tr>
+<tr><td>JGM3         </td><td align="center">0.368124 </td><td align="center">0.001076 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+NRL </td><td align="center">0.857388 </td><td align="center">0.001496 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+HP  </td><td align="center">1.053890 </td><td align="center">0.001723 </td><td align="center">4.39748 </td><td align="center">0.005034 </td><td align="center">5.441040 </td><td align="center">0.006492 </td></tr>
+<tr><td>All+JGM3+NRL </td><td align="center">0.857146 </td><td align="center">0.001572 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM3+HP  </td><td align="center">1.053360 </td><td align="center">0.001730 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr><tr><td></td></tr><a name="Tab:ISS">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+Table <a href="#Tab:Sun-Sync">5</a> presents the maximum position and velocity
+differences for the Sun Synchronous orbit. JAT and STK/HPOP agree
+well for all cases except for the cases that include atmospheric
+drag as would be expected based on the previous discussion on the
+difficulties in matching atmospheric density models.
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a name="tth_tAb5">
+</a> <center> <center>Table 5:  Position and Velocity Differences for Sun-Sync
+Orbit</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Description </td><td align="center">JAT-STK  </td><td align="center">JAT-STK  </td><td align="center">JAT-FF  </td><td align="center">JAT-FF  </td><td align="center">FF-STK </td><td align="center">FF-STK</td></tr>
+<tr><td></td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity</td></tr>
+<tr><td></td><td align="center">(m)     </td><td align="center">(m/s)    </td><td align="center">(m)      </td><td align="center">(m/s)    </td><td align="center">(m)     </td><td align="center">(m/s)</td></tr>
+<tr><td>2-body  </td><td align="center">0.00081 </td><td align="center">0.00080 </td><td align="center">0.00003 </td><td align="center">0.0000008 </td><td align="center">0.00082 </td><td align="center">0.00080 </td></tr>
+<tr><td>2-body+Moon  </td><td align="center">0.00083 </td><td align="center">0.00083 </td><td align="center">0.00028 </td><td align="center">0.0000009 </td><td align="center">0.00093 </td><td align="center">0.00083 </td></tr>
+<tr><td>2-body+Sun  </td><td align="center">0.00082 </td><td align="center">0.00082 </td><td align="center">0.00003 </td><td align="center">0.0000008 </td><td align="center">0.00081 </td><td align="center">0.00082 </td></tr>
+<tr><td>2-body+NRL  </td><td align="center">8.66478 </td><td align="center">0.01035 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>2-body+HP  </td><td align="center">3.33383 </td><td align="center">0.00439 </td><td align="center">1.61195 </td><td align="center">0.00181 </td><td align="center">1.77066 </td><td align="center">0.00261 </td></tr>
+<tr><td>2-body+SRP  </td><td align="center">0.09203 </td><td align="center">0.00083 </td><td align="center">0.03162 </td><td align="center">0.00003 </td><td align="center">0.09110 </td><td align="center">0.00083 </td></tr>
+<tr><td>JGM2  </td><td align="center">0.17022 </td><td align="center">0.00096 </td><td align="center">0.27362 </td><td align="center">0.000296 </td><td align="center">0.37380 </td><td align="center">0.00111 </td></tr>
+<tr><td>JGM3  </td><td align="center">0.16998 </td><td align="center">0.00089 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+NRL  </td><td align="center">8.22196 </td><td align="center">0.00970 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+HP  </td><td align="center">3.53857 </td><td align="center">0.00461 </td><td align="center">1.8332 </td><td align="center">0.00209 </td><td align="center">1.70622 </td><td align="center">0.00258 </td></tr>
+<tr><td>All+JGM3+NRL  </td><td align="center">8.22146 </td><td align="center">0.00995 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM3+HP  </td><td align="center">3.53792 </td><td align="center">0.00455 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr><tr><td></td></tr><a name="Tab:Sun-Sync">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+Table <a href="#Tab:GPS">6</a> presents the maximum position and velocity
+differences for the GPS orbit. All three programs have close
+agreement in this case due to the nature of the GPS orbit, which was
+chosen to minimize the effects of perturbations.
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a name="tth_tAb6">
+</a> <center> <center>Table 6:  Position and Velocity Differences for GPS
+Orbit</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Description </td><td align="center">JAT-STK  </td><td align="center">JAT-STK  </td><td align="center">JAT-FF  </td><td align="center">JAT-FF  </td><td align="center">FF-STK </td><td align="center">FF-STK</td></tr>
+<tr><td></td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity</td></tr>
+<tr><td></td><td align="center">(m)     </td><td align="center">(m/s)    </td><td align="center">(m)      </td><td align="center">(m/s)    </td><td align="center">(m)     </td><td align="center">(m/s)</td></tr>
+<tr><td>2-body  </td><td align="center">0.00080 </td><td align="center">0.00083 </td><td align="center">0.000008 </td><td align="center">0.0000008 </td><td align="center">0.00080 </td><td align="center">0.00083 </td></tr>
+<tr><td>2-body+Moon  </td><td align="center">0.00080 </td><td align="center">0.00085 </td><td align="center">0.03287 </td><td align="center">0.000005 </td><td align="center">0.03298 </td><td align="center">0.00085 </td></tr>
+<tr><td>2-body+Sun  </td><td align="center">0.00084 </td><td align="center">0.00080 </td><td align="center">0.00064 </td><td align="center">0.0000008 </td><td align="center">0.00122 </td><td align="center">0.00080 </td></tr>
+<tr><td>2-body+NRL  </td><td align="center">0.00782 </td><td align="center">0.00083 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>2-body+HP  </td><td align="center">0.00080 </td><td align="center">0.00083 </td><td align="center">0.000008 </td><td align="center">0.0000008 </td><td align="center">0.00080 </td><td align="center">0.00083 </td></tr>
+<tr><td>2-body+SRP  </td><td align="center">0.08960 </td><td align="center">0.00084 </td><td align="center">0.72128 </td><td align="center">0.00008 </td><td align="center">0.72511 </td><td align="center">0.00088 </td></tr>
+<tr><td>JGM2  </td><td align="center">0.01950 </td><td align="center">0.00081 </td><td align="center">0.01660 </td><td align="center">0.000002 </td><td align="center">0.02076 </td><td align="center">0.00081 </td></tr>
+<tr><td>JGM3  </td><td align="center">0.01940 </td><td align="center">0.00081 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+NRL  </td><td align="center">0.11936 </td><td align="center">0.00083 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+HP  </td><td align="center">0.12493 </td><td align="center">0.00083 </td><td align="center">0.61088 </td><td align="center">0.00006 </td><td align="center">0.52284 </td><td align="center">0.00086 </td></tr>
+<tr><td>All+JGM3+NRL  </td><td align="center">0.11951 </td><td align="center">0.00085 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM3+HP  </td><td align="center">0.12509 </td><td align="center">0.00085 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr><tr><td></td></tr><a name="Tab:GPS">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+Table <a href="#Tab:Molniya">7</a> presents the maximum position and velocity
+differences for the Molniya orbit. The Molniya orbit is the most
+challenging for a number of reasons. JAT and STK/HPOP agree well for
+the cases that did not include atmospheric drag or a spherical
+harmonic gravity model. It is interesting to note that JAT and
+FreeFlyer did agree well in the cases with atmospheric drag.
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a name="tth_tAb7">
+</a> <center> <center>Table 7:  Position and Velocity Differences for Molniya
+Orbit</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Description </td><td align="center">JAT-STK  </td><td align="center">JAT-STK  </td><td align="center">JAT-FF  </td><td align="center">JAT-FF  </td><td align="center">FF-STK </td><td align="center">FF-STK</td></tr>
+<tr><td></td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity</td></tr>
+<tr><td></td><td align="center">(m)     </td><td align="center">(m/s)    </td><td align="center">(m)      </td><td align="center">(m/s)    </td><td align="center">(m)     </td><td align="center">(m/s)</td></tr>
+<tr><td>2-body  </td><td align="center">0.00090 </td><td align="center">0.00084 </td><td align="center">0.00047 </td><td align="center">0.0000008 </td><td align="center">0.00082 </td><td align="center">0.00084 </td></tr>
+<tr><td>2-body+Moon  </td><td align="center">0.00082 </td><td align="center">0.00080 </td><td align="center">0.08194 </td><td align="center">0.000068 </td><td align="center">0.08180 </td><td align="center">0.00080 </td></tr>
+<tr><td>2-body+Sun  </td><td align="center">0.00085 </td><td align="center">0.00082 </td><td align="center">0.03110 </td><td align="center">0.000025 </td><td align="center">0.03129 </td><td align="center">0.00082 </td></tr>
+<tr><td>2-body+NRL  </td><td align="center">28.39440 </td><td align="center">0.02389 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>2-body+HP  </td><td align="center">15.16700 </td><td align="center">0.01287 </td><td align="center">0.02214 </td><td align="center">0.000018 </td><td align="center">15.18920 </td><td align="center">0.01289 </td></tr>
+<tr><td>2-body+SRP  </td><td align="center">0.63727 </td><td align="center">0.00092 </td><td align="center">2.77142 </td><td align="center">0.00229 </td><td align="center">2.13422 </td><td align="center">0.00190 </td></tr>
+<tr><td>JGM2  </td><td align="center">5.57807 </td><td align="center">0.00456 </td><td align="center">7.72931 </td><td align="center">.006160 </td><td align="center">2.30217 </td><td align="center">0.00184 </td></tr>
+<tr><td>JGM3  </td><td align="center">5.57807 </td><td align="center">0.00481 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+NRL  </td><td align="center">27.86270 </td><td align="center">0.02052 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM2+HP  </td><td align="center">7.57025 </td><td align="center">0.00460 </td><td align="center">5.43094 </td><td align="center">0.00417 </td><td align="center">12.97950 </td><td align="center">0.00862 </td></tr>
+<tr><td>All+JGM3+NRL  </td><td align="center">27.86160 </td><td align="center">0.02082 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr>
+<tr><td>All+JGM3+HP  </td><td align="center">7.57107 </td><td align="center">0.00493 </td><td align="center">-    </td><td align="center">-    </td><td align="center">-     </td><td align="center">- </td></tr><tr><td></td></tr><a name="Tab:Molniya">
+</a></table>
+
+</center>
+<div class="p"><!----></div>
+Table <a href="#Tab:GEO">8</a> presents the maximum position and velocity
+differences for the GEO orbit. In all cases, JAT agrees well with
+STK/HPOP. The largest differences in this set of tests was between
+JAT and FreeFlyer when including SRP, however, it is interesting to
+note that STK/HPOP and FreeFlyer also do not agree well in these
+cases.
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a name="tth_tAb8">
+</a> <center> <center>Table 8:  Position and Velocity Differences for GEO
+Orbit</center>
+
+<table border="1"><tr><td></td></tr>
+<tr><td>Description </td><td align="center">JAT-STK  </td><td align="center">JAT-STK  </td><td align="center">JAT-FF  </td><td align="center">JAT-FF  </td><td align="center">FF-STK </td><td align="center">FF-STK</td></tr>
+<tr><td></td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity </td><td align="center">Position </td><td align="center">Velocity</td></tr>
+<tr><td></td><td align="center">(m)     </td><td align="center">(m/s)    </td><td align="center">(m)      </td><td align="center">(m/s)    </td><td align="center">(m)     </td><td align="center">(m/s)</td></tr>
+<tr><td>2-body  </td><td align="center">0.00070 </td><td align="center">0.00070 </td><td align="center">0.00009 </td><td align="center">0.0000007 </td><td align="center">0.00070 </td><td align="center">0.00070 </td></tr>
+<tr><td>2-body+Moon  </td><td align="center">0.00090 </td><td align="center">0.00081 </td><td align="center">0.07980 </td><td align="center">0.00005 </td><td align="center">0.07989 </td><td align="center">0.00081 </td></tr>
+<tr><td>2-body+Sun  </td><td align="center">0.00087 </td><td align="center">0.00081 </td><td align="center">0.05206 </td><td align="center">0.000004 </td><td align="center">0.05230 </td><td align="center">0.00081 </td></tr>
+<tr><td>2-body+NRL  </td><td align="center">0.00070 </td><td align="center">0.00070 </td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td></tr>
+<tr><td>2-body+HP  </td><td align="center">0.00070 </td><td align="center">0.00070 </td><td align="center">0.00009 </td><td align="center">0.0000007 </td><td align="center">0.00070 </td><td align="center">0.00070 </td></tr>
+<tr><td>2-body+SRP  </td><td align="center">0.00080 </td><td align="center">0.00082 </td><td align="center">2.73497 </td><td align="center">0.00012 </td><td align="center">2.89851 </td><td align="center">0.00087 </td></tr>
+<tr><td>JGM2  </td><td align="center">0.07287 </td><td align="center">0.00081 </td><td align="center">1.58727 </td><td align="center">0.000116 </td><td align="center">1.65447 </td><td align="center">0.00083 </td></tr>
+<tr><td>JGM3  </td><td align="center">0.07276 </td><td align="center">0.00081 </td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td></tr>
+<tr><td>All+JGM2+NRL  </td><td align="center">0.72280 </td><td align="center">0.00084 </td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td></tr>
+<tr><td>All+JGM2+HP  </td><td align="center">0.72280 </td><td align="center">0.00084 </td><td align="center">2.99845 </td><td align="center">0.00014 </td><td align="center">3.41299 </td><td align="center">0.00090 </td></tr>
+<tr><td>All+JGM3+NRL  </td><td align="center">0.72298 </td><td align="center">0.00082 </td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td></tr>
+<tr><td>All+JGM3+HP  </td><td align="center">0.72298 </td><td align="center">0.00082 </td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center"></td></tr><tr><td></td></tr><a name="Tab:GEO">
+</a></table>
+
+</center>
+
+ <h2><a name="tth_sEc10">
+10</a>&nbsp;&nbsp;Conclusions</h2>
+JAT achieves agreement below meter levels for all cases except those
+with atmospheric drag. The sensitivity to differences in the density
+calculation make an exact match difficult. Atmospheric drag depends
+on proper modeling of geomagnetic and molecular behavior influencing
+atmospheric density. Care must be taken to model the geomagnetic
+index correctly. However, given that the range of modeling error can
+be on the order of kilometers or more for low Earth orbits, meters
+or tens of meters in the Molniya case is expected.
+
+<div class="p"><!----></div>
+The verification of the spherical harmonic gravity models revealed
+ambiguities in which IERS convention and update procedure is used in
+the rotation from the Earth Centered Inertial frame to the Earth
+Centered Earth Fixed frame. Ultimately, due to the complexity of the
+IAU and IERS conventions and their subsequent corrections, it is
+extremely difficult to match algorithms exactly without knowledge of
+all equations and values used or access to the source code.
+
+<div class="p"><!----></div>
+This study shows that JAT has the capability to closely match the
+ability of commercial packages. However, the uncertainty of the
+models for both spherical harmonic and atmospheric drag indicates
+that exact agreement does not necessarily correspond to accurate
+propagation. It is recommended that propagators seek to ensure the
+current, correct algorithms for Earth rotation from the IAU and IERS
+as well as the correct atmospheric data from NOAA in addition to
+validation against existing codes. Commercial packages such as
+STK/HPOP and FreeFlyer often implement different conventions and
+data sets in different versions, so care should be taken in
+determining the standards used.
+
+<div class="p"><!----></div>
+ <h2><a name="tth_sEc11">
+11</a>&nbsp;&nbsp;Future Work</h2>
+The goal of JAT is to provide high-fidelity models for simulation of
+guidance, navigation, and control of spacecraft. As an open source
+project, the Java Astrodynamics Toolkit will continue to be updated
+with new conventions and updated data from the IERS, IAU, and NOAA.
+It will grow in both accuracy and functionality as the project
+progresses.
+
+<div class="p"><!----></div>
+
+<h2>References</h2>
+
+<dl compact="compact">
+ <dt><a href="#CITEChao:2000" name="Chao:2000">[1]</a></dt><dd>
+C.&nbsp;C.&nbsp;Chao and J.&nbsp;W.&nbsp;Cook et al.
+ <i>Independent Verification and Validation for Analytical Graphics,
+Inc. of Three Astrodynamic Functions of the Satellite Tool Kit:
+Version 4.1.0.</i>
+ Aerospace Corporation. El Segundo, CA. ATR-2000(7605)-1. 15 February 2000.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITECarpenter:2003" name="Carpenter:2003">[2]</a></dt><dd>
+J.&nbsp;R.&nbsp;Carpenter, editor.
+ <i>Global Positioning Service Enhanced Onboard Navigation System,
+Mathematical Specifications.</i>
+ Version 2, Release 2.1 December 2003.
+ Goddard Space Flight Center, Mission Engineering and Systems
+Analysis Division/Code 595.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEGaylor:2005" name="Gaylor:2005">[3]</a></dt><dd>
+D.&nbsp;Gaylor, R. Page, T. Berthold.
+ Java Astrodynamics Toolkit.
+ URL: <a href="http://jat.sourceforge.net"><tt>http://jat.sourceforge.net</tt></a>, Accessed July 2006.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEIERS:2004" name="IERS:2004">[4]</a></dt><dd>
+International Earth Rotation and Reference Systems Service.
+ <i>IERS Bulletin A Reports</i>, 2004.
+ URL: <a href="ftp://cddisa.gsfc.nasa.gov/pub/reports/iers/bulletin_a/volume_xvii/iers_bulletina.xvii_021"><tt>ftp://cddisa.gsfc.nasa.gov/pub/reports/iers/bulletin_a/volume_xvii/iers_bulletina.xvii_021</tt></a>, Accessed July 2005.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITENOAA:2005" name="NOAA:2005">[5]</a></dt><dd>
+NOAA.
+  Geomagnetic k<sub>p</sub> and a<sub>p</sub> Indices.
+ URL: <a href="http://www.ngdc.noaa.gov/stp/GEOMAG/kp_ap.html"><tt>http://www.ngdc.noaa.gov/stp/GEOMAG/kp_ap.html</tt></a>
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITESeidelmann:1992" name="Seidelmann:1992">[6]</a></dt><dd>
+P.K.&nbsp;Seidelmann, B. Guinot and L.E. Doggett.
+ "Time". <i>Explanatory Supplement to the Astronomical
+Almanac.</i>
+ University Science Books. Mill Valley, CA, 1992:[48-53]
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEHohenkerk:1992" name="Hohenkerk:1992">[7]</a></dt><dd>
+C.Y.&nbsp;Hohenkerk, B.D. Yallop, C.A. Smith, and A.T. Sinclair.
+ "Celestial Reference Systems". <i>Explanatory Supplement to the
+Astronomical Almanac.</i>
+ University Science Books. Mill Valley, CA, 1992:[95-120]
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEMcCarthy:1996" name="McCarthy:1996">[8]</a></dt><dd>
+D.D.&nbsp;McCarthy.
+ IERS Standards. IERS Technical Note 21.
+ U.S. Naval Observatory. 1996.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEIERSB" name="IERSB">[9]</a></dt><dd>
+International Earth Rotation and Reference Systems Service.
+ <i>IERS Bulletin B Reports</i>, 2004.
+ URL: <a href="http://www.iers.org/iers/publications/bulletins/"><tt>http://www.iers.org/iers/publications/bulletins/</tt></a>, Accessed July 2005.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEVallado:2001" name="Vallado:2001">[10]</a></dt><dd>
+D.&nbsp;A.&nbsp;Vallado.
+ <i>Fundamentals of Astrodynamics and Applications, 2nd Edition.</i>
+  Microcosm Press. El Segundo, CA. 2001:[528]
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEVallado:2005" name="Vallado:2005">[11]</a></dt><dd>
+D.&nbsp;A.&nbsp;Vallado. 2005.
+ “An Analysis of State Vector Propagation using Differing Flight Dynamics
+Programs.”
+ Paper AAS 05-199 presented at the AAS/AIAA
+Space Flight Mechanics Conference. Copper Mountain, CO.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEWertz:1978" name="Wertz:1978">[12]</a></dt><dd>
+J.&nbsp;R.&nbsp;Wertz.
+ <i>Spacecraft Attitude Determination and Control.</i>
+ D.&nbsp;Reidel Publishing Company. Dordrecht, Holland. 1978:[3,8,9]
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITENRLMSISE" name="NRLMSISE">[13]</a></dt><dd>
+M.&nbsp;Picone, A.E. Hedin, and D. Drob.
+ <i>NRLMSISE-00 Model 2001.</i>
+ URL:
+<a href="http://modelweb.gsfc.nasa.gov/atmos/nrlmsise00.html"><tt>http://modelweb.gsfc.nasa.gov/atmos/nrlmsise00.html</tt></a>, Accessed
+July 2006.
+
+<div class="p"><!----></div>
+</dd>
+ <dt><a href="#CITEMontenbruck" name="Montenbruck">[14]</a></dt><dd>
+O.&nbsp;Montenbruck, E. Gill.
+ <i>Satellite Orbits.</i>
+ Springer-Verlag Berlin Heidelberg. The Netherlands.
+2000:[88]</dd>
+</dl>
+
+<div class="p"><!----></div>
+<hr /><h3>Footnotes:</h3>
+
+<div class="p"><!----></div>
+<a name="tthFtNtAAB"></a><a href="#tthFrefAAB"><sup>1</sup></a>VP Aerospace Systems, dave.gaylor@emergentspace.com
+<div class="p"><!----></div>
+<a name="tthFtNtAAC"></a><a href="#tthFrefAAC"><sup>2</sup></a>Aerospace Engineer, richard.page@emergentspace.com
+<div class="p"><!----></div>
+<a name="tthFtNtAAD"></a><a href="#tthFrefAAD"><sup>3</sup></a>Aerospace Engineer, kate.bradley@emergentspace.com
+<br /><br /><hr /><small>File translated from
+T<sub><font size="-1">E</font></sub>X
+by <a href="http://hutchinson.belmont.ma.us/tth/">
+T<sub><font size="-1">T</font></sub>H</a>,
+version 3.74.<br />On 30 Aug 2006, 11:44.</small>
+</html>
