@@ -212,4 +212,30 @@ public class UniverseModel {
         return out;
     }
 
+	public AtmosphericDrag getForce(int drag_index) {
+		// TODO restore previous source code!!!
+		
+		System.out.println("This method is missing from the current repository,");
+		System.out.println("due to problems with code consistency.");
+		System.out.println("If your code is using this method, it is not valid.");
+		System.out.println("Restore the necessary code before proceeding");
+		System.out.println("Now exiting");
+		System.exit(0);
+		
+		return null;
+	}
+
+	public int getForceSize() {
+		// TODO restore previous source code!!!
+		
+		System.out.println("This method is missing from the current repository,");
+		System.out.println("due to problems with code consistency.");
+		System.out.println("If your code is using this method, it is not valid.");
+		System.out.println("Restore the necessary code before proceeding");
+		System.out.println("Now exiting");
+		System.exit(0);
+
+		return 0;
+	}
+
 }
