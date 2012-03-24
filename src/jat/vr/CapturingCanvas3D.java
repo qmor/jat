@@ -66,6 +66,10 @@ import javax.media.j3d.*;
 import javax.vecmath.Point3f;
 import com.sun.image.codec.jpeg.*;
 
+// TODO: change code to javax.imageio.ImageIO.write(image, format, stream) 
+// http://www.java.net/node/662849
+
+
 public class CapturingCanvas3D extends Canvas3D
 {
 	//static String frames_path="frames/";
@@ -120,11 +124,14 @@ public class CapturingCanvas3D extends Canvas3D
 			try
 			{
 				FileOutputStream out = new FileOutputStream(frames_path + "Capture00" + postSwapCount_ + ".jpg");
+				/*
+				 * deprecated code, replace
 				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 				JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
 				param.setQuality(1.0f, false); // x% quality JPEG
 				encoder.setJPEGEncodeParam(param);
 				encoder.encode(img);
+				*/
 				writeJPEG_ = false;
 				out.close();
 			} catch (IOException e)
@@ -169,12 +176,16 @@ public class CapturingCanvas3D extends Canvas3D
 			if(postSwapCount_<10) filename="Capture00";
 			if(postSwapCount_>=10&&postSwapCount_<100) filename="Capture0";
 			FileOutputStream out = new FileOutputStream(frames_path + filename + postSwapCount_ + ".jpg");
+/*
+ * 				 * deprecated code, replace
+ 
+
 			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 			JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
 			param.setQuality(1.0f, false); // x% quality JPEG
 			encoder.setJPEGEncodeParam(param);
 			encoder.encode(img);
-			out.close();
+*/			out.close();
 		} catch (IOException e)
 		{
 			System.out.println("I/O exception!Maybe path" + frames_path + "does not exist?");
