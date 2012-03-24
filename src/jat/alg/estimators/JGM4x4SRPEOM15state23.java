@@ -23,6 +23,8 @@ package jat.alg.estimators;
 
 import jat.sim.*;
 import jat.cm.Constants;
+import jat.core.math.MathUtils;
+
 import java.util.HashMap;
 
 import jat.eph.DE405;
@@ -31,7 +33,6 @@ import jat.gps.GPS_Utils;
 import jat.spacecraft.Spacecraft;
 
 import jat.alg.integrators.Derivatives;
-import jat.math.MathUtils;
 import jat.matvec.data.*;
 import jat.spacetime.*;
 import jat.timeRef.RSW_Frame;

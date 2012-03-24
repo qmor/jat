@@ -28,7 +28,7 @@ import jat.matvec.data.*;
 import jat.gps.*;
 import jat.gps.filters.*;
 import jat.cm.*;
-import jat.math.*;
+import jat.core.math.*;
 import jat.gps_ins.*;
 import jat.ins.*;
 import jat.timeRef.*;

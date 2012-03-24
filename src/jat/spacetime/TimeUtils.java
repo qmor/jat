@@ -1,6 +1,6 @@
 package jat.spacetime;
 
-import jat.math.MathUtils;
+import jat.core.math.MathUtils;
 
 public class TimeUtils {
     /**

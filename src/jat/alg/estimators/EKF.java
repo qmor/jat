@@ -655,12 +655,12 @@ public class EKF {
 				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
 					//String residualsOut = "Time:  " + simTime +
 					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist +
-					"  Residual:  " + (jat.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
+					"  Residual:  " + (jat.core.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
 				}else if(measurements.measurementTypes[measNum].equalsIgnoreCase("range")){
 					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist + 
-					"  Residual:  " + (jat.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
+					"  Residual:  " + (jat.core.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
 				}else{

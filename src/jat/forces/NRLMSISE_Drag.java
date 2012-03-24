@@ -20,7 +20,6 @@
 package jat.forces;
 
 import java.lang.Math;
-import jat.math.*;
 import jat.forces.nrlmsise.NRLMSISE_data;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
@@ -32,6 +31,7 @@ import jat.spacetime.EarthTrueOfDateRef;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.cm.Constants;
+import jat.core.math.*;
 
 /**
  * NRLMSISE drag model.  Translated from a code written in c, originally

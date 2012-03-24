@@ -19,7 +19,7 @@
  */
 
 package jat.spacetime;
-import jat.math.*;
+import jat.core.math.*;
 
 /**
  * <P>

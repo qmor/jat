@@ -19,7 +19,7 @@
  *
  */
 
-package jat.math;
+package jat.core.math;
 
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;

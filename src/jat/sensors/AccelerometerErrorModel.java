@@ -19,8 +19,8 @@
  */
 
 package jat.sensors;
+import jat.core.math.*;
 import jat.matvec.data.*;
-import jat.math.*;
 
 /**
  * <P>

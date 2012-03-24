@@ -20,7 +20,7 @@
 
 package jat.cm;
 
-import jat.math.MathUtils;
+import jat.core.math.MathUtils;
 
 /**
  * @author Tobias Berthold

@@ -24,7 +24,7 @@
 package jat.groundstations;
  
 import jat.alg.integrators.*;
-import jat.math.*;
+import jat.core.math.*;
 import jat.util.FileUtil;
 
 import java.io.*;

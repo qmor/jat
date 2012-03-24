@@ -22,7 +22,7 @@
 package jat.groundstations;
 
 import jat.cm.Constants;
-import jat.math.MathUtils;
+import jat.core.math.MathUtils;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;

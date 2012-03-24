@@ -21,7 +21,7 @@
 package jat.vr;
 
 import jat.cm.*;
-import jat.math.*;
+import jat.core.math.*;
 import jat.matvec.data.VectorN;
 import javax.media.j3d.*;
 import javax.vecmath.*;

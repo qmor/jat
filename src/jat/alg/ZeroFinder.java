@@ -19,7 +19,7 @@
  */
 
 package jat.alg;
-import jat.math.*;
+import jat.core.math.*;
 
 /**
  * <P>

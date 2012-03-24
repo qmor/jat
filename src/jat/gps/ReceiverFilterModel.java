@@ -19,8 +19,8 @@
  */
 
 package jat.gps;
+import jat.core.math.*;
 import jat.matvec.data.*;
-import jat.math.*;
 //import jat.cm.*;
 //import jat.matvec.data.matrixDecompositions.*;
 //import jat.gps.*;

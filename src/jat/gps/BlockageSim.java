@@ -22,9 +22,9 @@ package jat.gps;
 import jat.matvec.data.*;
 //import jat.matvec.data.arrayTools.*;
 import jat.alg.integrators.*;
+import jat.core.math.*;
 //import jat.alg.*;
 import java.io.*;
-import jat.math.*;
 
 /**
  * <P>

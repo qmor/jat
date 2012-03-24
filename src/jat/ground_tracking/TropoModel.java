@@ -20,8 +20,8 @@
 */
 package jat.ground_tracking;
 import jat.constants.*;
+import jat.core.math.*;
 import jat.gps.*;
-import jat.math.*;
 import jat.matvec.data.*;
 
 /**

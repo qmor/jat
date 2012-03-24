@@ -19,7 +19,7 @@
  *
  */
 
-package jat.math;
+package jat.core.math;
 
 import javax.vecmath.Vector3d;
 

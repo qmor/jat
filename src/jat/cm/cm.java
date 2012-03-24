@@ -20,7 +20,8 @@
 
 package jat.cm;
 
-import jat.math.*;
+import jat.core.math.*;
+
 import java.util.*;
 import jat.matvec.data.*;
 import java.io.*;

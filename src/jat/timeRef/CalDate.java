@@ -19,7 +19,8 @@
  */
 
 package jat.timeRef;
-import jat.math.*;
+import jat.core.math.*;
+
 import java.io.*;
 import jat.spacetime.*;
 

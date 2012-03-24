@@ -7,8 +7,8 @@
 package jat.timeRef;
 
 import jat.cm.*;
+import jat.core.math.*;
 import jat.matvec.data.*;
-import jat.math.*;
 
 /**
  * @author

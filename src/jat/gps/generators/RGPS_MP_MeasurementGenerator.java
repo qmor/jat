@@ -23,8 +23,8 @@
 package jat.gps.generators;
 
 import jat.alg.integrators.*;
+import jat.core.math.*;
 import jat.matvec.data.*;
-import jat.math.*;
 //import jat.cm.*;
 import jat.traj.*;
 import jat.gps.*;

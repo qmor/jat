@@ -5,7 +5,7 @@ package jat.measurements;
 import java.io.IOException;
 
 import jat.alg.integrators.LinePrinter;
-import jat.math.Interpolator;
+import jat.core.math.Interpolator;
 import jat.matvec.data.*;
 
 import java.util.Random;

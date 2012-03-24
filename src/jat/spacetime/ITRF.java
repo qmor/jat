@@ -19,7 +19,7 @@ package jat.spacetime;
 *
 */
 
-import jat.math.*;
+import jat.core.math.*;
 import jat.matvec.data.*;
 /**
  * ITRF provides a representation of the Internation Terrestrial Reference Frame.

@@ -58,12 +58,12 @@ public class Copernicus_Trajectory extends Shape3D
 
 		//int steps=10;
 		double delta_time = (t_read[num - 1] - t_read[0]) / steps;
-		jat.math.Interpolator in_x = new jat.math.Interpolator(t_read, x_read);
-		jat.math.Interpolator in_y = new jat.math.Interpolator(t_read, y_read);
-		jat.math.Interpolator in_z = new jat.math.Interpolator(t_read, z_read);
-		jat.math.Interpolator in_ux = new jat.math.Interpolator(t_read, ux_read);
-		jat.math.Interpolator in_uy = new jat.math.Interpolator(t_read, uy_read);
-		jat.math.Interpolator in_uz = new jat.math.Interpolator(t_read, uz_read);
+		jat.core.math.Interpolator in_x = new jat.core.math.Interpolator(t_read, x_read);
+		jat.core.math.Interpolator in_y = new jat.core.math.Interpolator(t_read, y_read);
+		jat.core.math.Interpolator in_z = new jat.core.math.Interpolator(t_read, z_read);
+		jat.core.math.Interpolator in_ux = new jat.core.math.Interpolator(t_read, ux_read);
+		jat.core.math.Interpolator in_uy = new jat.core.math.Interpolator(t_read, uy_read);
+		jat.core.math.Interpolator in_uz = new jat.core.math.Interpolator(t_read, uz_read);
 		// Create new arrays for interpolated values
 		t = new double[steps + 1];
 		x = new double[steps + 1];

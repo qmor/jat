@@ -29,9 +29,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.StringTokenizer;
 import jat.matvec.data.*;
-import jat.math.*;
 import jat.util.FileUtil;
 import jat.cm.Constants;
+import jat.core.math.*;
 
 /**
  * International Earth Rotation and Reference Service parameters.  Parses and calculates

@@ -20,13 +20,10 @@
 
 package jat.timeRef;
 import jat.matvec.data.*;
-import jat.math.*;
-import jat.spacetime.BodyCenteredInertialRef;
-import jat.spacetime.ReferenceFrame;
-import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.*;
 import jat.util.FileUtil;
 import jat.cm.*;
+import jat.core.math.*;
 import jat.eph.*;
 
 /**

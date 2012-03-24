@@ -22,8 +22,8 @@ package jat.gps;
  * File Created on Jul 13, 2003
  */
  
+import jat.core.math.*;
 import jat.matvec.data.*;
-import jat.math.*;
 /**
  * <P>
  * The ISS_Blockage Class provides a model of GPS signal blockage due to 

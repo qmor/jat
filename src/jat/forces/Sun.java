@@ -19,7 +19,6 @@
  */
 package jat.forces;
 
-import jat.math.MathUtils;
 import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 //import jat.matvec.data.Matrix;
@@ -33,6 +32,7 @@ import jat.timeRef.EarthRef;
 //import jat.timeRef.Time;
 import jat.util.FileUtil;
 import jat.cm.Constants;
+import jat.core.math.MathUtils;
 import jat.eph.*;
 
 /**

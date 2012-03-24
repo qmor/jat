@@ -23,11 +23,11 @@
 package jat.ins;
 //import jat.gps_ins.*;
 import jat.cm.*;
+import jat.core.math.*;
 //import jat.plot.*;
 import jat.traj.*;
 import jat.alg.integrators.*;
 import jat.matvec.data.*;
-import jat.math.*;
 //import jat.forces.*;
 import jat.timeRef.*;
 

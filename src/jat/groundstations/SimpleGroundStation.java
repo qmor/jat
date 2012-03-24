@@ -22,12 +22,12 @@
 package jat.groundstations;
 
 import jat.cm.Constants;
-import jat.math.MathUtils;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 import jat.spacetime.*;
 import jat.constants.*;
+import jat.core.math.MathUtils;
 
 public class SimpleGroundStation {
 	
