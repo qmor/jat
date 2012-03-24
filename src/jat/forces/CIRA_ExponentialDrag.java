@@ -26,7 +26,9 @@ import jat.spacetime.EarthTrueOfDateRef;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.timeRef.*;
-import jat.audio.*;
+import jat.core.*;
+import jat.core.audio.SoundPlayer;
+
 
 /**
  * <P>
