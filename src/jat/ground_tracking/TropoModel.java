@@ -19,7 +19,7 @@
 * 
 */
 package jat.ground_tracking;
-import jat.constants.*;
+import jat.core.constants.*;
 import jat.core.math.*;
 import jat.gps.*;
 import jat.matvec.data.*;

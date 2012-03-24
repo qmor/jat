@@ -137,7 +137,7 @@ public class IonosphericDelayModel {
 		
 		
 		//Determine Slant Height
-		double re = jat.constants.WGS84.R_Earth;
+		double re = jat.core.constants.WGS84.R_Earth;
 		this.slantAngle = Math.asin(re/(re+this.h)*Math.cos(el));
 		
 		
@@ -261,8 +261,8 @@ public class IonosphericDelayModel {
 				
 				
 				//Set the spacecraft's state 
-				x = jat.constants.WGS84.R_Earth*Math.cos(deg*Math.PI/180);
-				y = jat.constants.WGS84.R_Earth*Math.sin(deg*Math.PI/180);
+				x = jat.core.constants.WGS84.R_Earth*Math.cos(deg*Math.PI/180);
+				y = jat.core.constants.WGS84.R_Earth*Math.sin(deg*Math.PI/180);
 				z = 0;
 				state = new VectorN(x,y,z);
 
