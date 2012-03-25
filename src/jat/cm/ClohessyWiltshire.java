@@ -19,7 +19,7 @@
  */
 
 package jat.cm;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 import jat.matvec.data.*;
 import jat.plot.*;
 

@@ -7,7 +7,7 @@
 package jat.examples.OST;
 
 import jat.alg.VectorTimeFunction;
-import jat.alg.integrators.Printable;
+import jat.core.alg.integrators.Printable;
 import jat.core.math.Interpolator;
 import jat.matvec.data.VectorN;
 import jat.plot.SinglePlot;

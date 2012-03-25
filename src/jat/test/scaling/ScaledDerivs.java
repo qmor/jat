@@ -21,7 +21,7 @@
 package jat.test.scaling;
 
 import jat.alg.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 
 /**
  * Equations of motion

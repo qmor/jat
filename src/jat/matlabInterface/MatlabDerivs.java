@@ -19,7 +19,7 @@
  */
 package jat.matlabInterface;
 
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 import jat.matvec.data.VectorN;
 
 import com.mathworks.jmi.Matlab;
@@ -59,7 +59,7 @@ public class MatlabDerivs implements Derivatives {
 	 * @param t independent variable
 	 * @param x dependent variables
 	 * 
-	 * @see jat.alg.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.core.alg.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x) {
 		// Set up the inputs

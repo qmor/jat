@@ -22,8 +22,8 @@
  
 package jat.gps.filters.relative;
 import jat.matvec.data.*;
-import jat.alg.estimators.*;
-import jat.alg.integrators.*;
+import jat.core.alg.estimators.*;
+import jat.core.alg.integrators.*;
 //import jat.cm.*;
 import jat.gps.*;
 import jat.gps.filters.*;
@@ -76,7 +76,7 @@ import jat.timeRef.*;
 
 	
 	/**
-	 * @see jat.alg.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.core.alg.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x) {
 		

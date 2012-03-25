@@ -21,8 +21,8 @@ package jat.gps.filters.relative;
  * 
  * File Created on May 9, 2003
  */
-import jat.alg.estimators.*;
-import jat.alg.integrators.*;
+import jat.core.alg.estimators.*;
+import jat.core.alg.integrators.*;
 import jat.gps.*;
 //import jat.gps_ins.*;
 //import jat.gps_ins.*;

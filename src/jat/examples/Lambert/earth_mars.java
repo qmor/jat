@@ -20,8 +20,8 @@
 package jat.examples.Lambert;
 
 import jat.cm.*;
+import jat.core.alg.integrators.*;
 import jat.plot.*;
-import jat.alg.integrators.*;
 import jat.matvec.data.*;
 
 /**

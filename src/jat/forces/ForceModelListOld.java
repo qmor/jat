@@ -24,7 +24,7 @@ import jat.timeRef.*;
 
 import java.util.*;
 import jat.spacecraft.Spacecraft;
-import jat.alg.integrators.Derivatives;
+import jat.core.alg.integrators.Derivatives;
 
 /**
  * <p>

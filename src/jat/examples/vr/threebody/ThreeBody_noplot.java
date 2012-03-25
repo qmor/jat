@@ -22,8 +22,8 @@
 package jat.examples.vr.threebody;
 
 import jat.cm.ThreeBody;
+import jat.core.alg.integrators.*;
 //import jat.plot.*;
-import jat.alg.integrators.*;
 import jat.matvec.data.*;
 
 /**

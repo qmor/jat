@@ -22,12 +22,12 @@
 
 package jat.gps.filters.relative;
 
-import jat.alg.estimators.*;
-import jat.alg.integrators.*;
 import jat.matvec.data.*;
 import jat.gps.*;
 import jat.gps.filters.*;
 import jat.cm.*;
+import jat.core.alg.estimators.*;
+import jat.core.alg.integrators.*;
 //import jat.math.*;
 //import jat.gps_ins.*;
 import jat.timeRef.*;
@@ -158,7 +158,7 @@ public class RGPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.alg.estimators.ProcessModel#P0()
+	 * @see jat.core.alg.estimators.ProcessModel#P0()
 	 */
 	public Matrix P0() {
 		Matrix out = new Matrix(this.numberOfStates());
@@ -210,7 +210,7 @@ public class RGPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.alg.estimators.ProcessModel#numberOfStates()
+	 * @see jat.core.alg.estimators.ProcessModel#numberOfStates()
 	 */
 	public int numberOfStates() {
 		int n = 19 + 2*this.nsv;
@@ -235,7 +235,7 @@ public class RGPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.alg.estimators.ProcessModel#Q(double, double)
+	 * @see jat.core.alg.estimators.ProcessModel#Q(double, double)
 	 */
 //	public Matrix Q(double t, double dt, VectorN x) {
 //		int n = this.numberOfStates();
@@ -410,7 +410,7 @@ public class RGPS_Thruster_ProcessModel implements ProcessModel {
 
 
 	/**
-	 * @see jat.alg.estimators.ProcessModel#propagate(double, double[], double)
+	 * @see jat.core.alg.estimators.ProcessModel#propagate(double, double[], double)
 	 */
 	public double[] propagate(double t0, double[] xin, double tf) {
 		

@@ -22,7 +22,7 @@
 
 package jat.gps;
 
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 import jat.core.math.*;
 import jat.matvec.data.*;
 //import jat.cm.*;

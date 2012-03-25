@@ -13,8 +13,8 @@ import java.util.StringTokenizer;
 import jat.matvec.data.*;
 
 import java.util.Random;
-import jat.alg.estimators.*;
 import jat.cm.Constants;
+import jat.core.alg.estimators.*;
 import jat.sim.*;
 import jat.spacetime.EarthRef;
 import jat.spacetime.Time;

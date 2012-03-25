@@ -5,7 +5,7 @@ import java.util.HashMap;
 import jat.sim.initializer.*;
 import jat.sim.*;
 import jat.matvec.data.*;
-import jat.alg.estimators.*;
+import jat.core.alg.estimators.*;
 
 
 public class createMeasurements{

@@ -19,8 +19,8 @@
  */
 package jat.spacecraft;
 
-import jat.alg.estimators.EKF;
-import jat.alg.integrators.Derivatives;
+import jat.core.alg.estimators.EKF;
+import jat.core.alg.integrators.Derivatives;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.Quaternion;
 import jat.matvec.data.VectorN;

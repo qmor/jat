@@ -22,7 +22,7 @@
 
 package jat.cm;
 import jat.matvec.data.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 
 import java.io.*;
 import java.util.*;

@@ -22,8 +22,8 @@
  * */
 package jat.measurements;
 
-import jat.alg.estimators.MeasurementFileModel;
-import jat.alg.estimators.MeasurementModel;
+import jat.core.alg.estimators.MeasurementFileModel;
+import jat.core.alg.estimators.MeasurementModel;
 import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.SpacecraftModel;

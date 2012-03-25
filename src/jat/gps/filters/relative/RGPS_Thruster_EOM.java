@@ -22,9 +22,9 @@
  
 package jat.gps.filters.relative;
 import jat.matvec.data.*;
-import jat.alg.estimators.*;
-import jat.alg.integrators.*;
 import jat.cm.*;
+import jat.core.alg.estimators.*;
+import jat.core.alg.integrators.*;
 import jat.gps.*;
 import jat.gps.filters.*;
 //import jat.gps_ins.*;
@@ -84,7 +84,7 @@ public class RGPS_Thruster_EOM implements Derivatives {
 	}
 	
 	/**
-	 * @see jat.alg.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.core.alg.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x) {
 		

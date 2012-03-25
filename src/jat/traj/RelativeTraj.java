@@ -26,7 +26,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import jat.matvec.data.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 import jat.plot.*;
 import jat.spacetime.*;
 

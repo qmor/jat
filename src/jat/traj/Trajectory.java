@@ -24,7 +24,7 @@ import java.util.*;
 
 import jat.matvec.data.VectorN;
 import jat.timeRef.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 /**
 * <P>
 * The Trajectory.java Class provides the means for storing and accessing trajectory data.

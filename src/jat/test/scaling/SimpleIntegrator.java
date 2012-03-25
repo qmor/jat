@@ -20,7 +20,7 @@
 
 package jat.test.scaling;
 
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 
 public class SimpleIntegrator
 {

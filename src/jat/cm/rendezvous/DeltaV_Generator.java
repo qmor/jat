@@ -20,8 +20,8 @@
 
 package jat.cm.rendezvous;
 import jat.cm.*;
+import jat.core.alg.integrators.*;
 import jat.traj.*;
-import jat.alg.integrators.*;
 import jat.matvec.data.*;
 import jat.timeRef.*;
 /**

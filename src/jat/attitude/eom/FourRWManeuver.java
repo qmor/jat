@@ -19,8 +19,8 @@
  */
 package jat.attitude.eom;
  
-import jat.alg.integrators.*;
 import jat.attitude.QuatToDeg;
+import jat.core.alg.integrators.*;
 import jat.matvec.data.*;
 import jat.plot.*;
 

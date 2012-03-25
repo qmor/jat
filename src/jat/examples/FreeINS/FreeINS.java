@@ -21,8 +21,8 @@
 package jat.examples.FreeINS;
 
 import java.io.*;
-import jat.alg.integrators.*;
 import jat.cm.*;
+import jat.core.alg.integrators.*;
 import jat.sensors.*;
 import jat.plot.*;
 //import jat.util.*;

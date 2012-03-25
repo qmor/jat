@@ -26,7 +26,7 @@ import jat.timeRef.*;
 import jat.spacecraft.Spacecraft;
 import jat.forces.*;
 import jat.matvec.data.VectorN;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 import jat.core.math.MathUtils;
 import jat.matlabInterface.*;
 import jat.traj.Trajectory;

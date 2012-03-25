@@ -21,7 +21,7 @@
 package jat.attitude;
  
 import jat.plot.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 
 /**
  * @author Noriko Takada

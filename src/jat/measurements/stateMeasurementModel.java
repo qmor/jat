@@ -7,7 +7,8 @@ import jat.sim.*;
 import jat.gps.Visible;
 import jat.matvec.data.*;
 import java.util.Random;
-import jat.alg.estimators.*;
+
+import jat.core.alg.estimators.*;
 
 public class stateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 

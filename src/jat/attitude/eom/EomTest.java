@@ -20,10 +20,9 @@
 
 package jat.attitude.eom;
 
-import jat.alg.integrators.*;
-import jat.alg.integrators.RungeKuttaFehlberg78;
 import jat.attitude.util.AnimationWindow;
 import jat.attitude.util.AnimationWindow2;
+import jat.core.alg.integrators.*;
 
 
 /**

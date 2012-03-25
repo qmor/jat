@@ -8,7 +8,8 @@ import jat.util.FileUtil;
 import jat.gps.Visible;
 import jat.matvec.data.*;
 import java.util.Random;
-import jat.alg.estimators.*;
+
+import jat.core.alg.estimators.*;
 
 public class GPSStateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	

@@ -23,9 +23,8 @@ package jat.examples.Rendezvous;
  */
  
 import jat.cm.*;
+import jat.core.alg.integrators.*;
 import jat.matvec.data.*;
-import jat.alg.integrators.*;
-//import jat.plot.*;
  
 public class CW_Rendezvous {
 

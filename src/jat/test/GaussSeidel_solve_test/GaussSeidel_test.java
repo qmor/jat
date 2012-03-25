@@ -21,7 +21,7 @@
 
 package jat.test.GaussSeidel_solve_test;
 
-import jat.alg.solver.*;
+import jat.core.alg.solver.*;
 import jat.matvec.data.*;
 
 // Book Burden Faires

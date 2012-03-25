@@ -21,12 +21,12 @@
  **/
 package jat.sim;
 
-import jat.alg.estimators.EKF;
-import jat.alg.estimators.LunarEOM;
-import jat.alg.integrators.LinePrinter;
-import jat.alg.integrators.RungeKutta8;
 import jat.cm.Constants;
 import jat.cm.TwoBody;
+import jat.core.alg.estimators.EKF;
+import jat.core.alg.estimators.LunarEOM;
+import jat.core.alg.integrators.LinePrinter;
+import jat.core.alg.integrators.RungeKutta8;
 import jat.eph.DE405;
 import jat.forces.GravitationalBody;
 import jat.forces.GravityModel;

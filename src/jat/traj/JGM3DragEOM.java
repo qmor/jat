@@ -22,7 +22,7 @@ package jat.traj;
  * File Created on Aug 26, 2003
  */
  
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 import jat.matvec.data.*;
 //import jat.cm.*;
 import jat.timeRef.*;

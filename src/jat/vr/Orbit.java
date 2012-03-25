@@ -21,7 +21,8 @@
 package jat.vr;
 
 import jat.cm.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
+
 import javax.media.j3d.*;
 import javax.vecmath.*;
 

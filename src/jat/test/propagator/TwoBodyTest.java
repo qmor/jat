@@ -6,7 +6,7 @@
  */
 package jat.test.propagator;
 import jat.cm.*;
-import jat.alg.integrators.*;
+import jat.core.alg.integrators.*;
 
 /**
  * @author

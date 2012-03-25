@@ -20,8 +20,8 @@
 
 package jat.examples.TwoBodyExample;
 import jat.cm.*;
+import jat.core.alg.integrators.*;
 import jat.plot.*;
-import jat.alg.integrators.*;
 
 /**
  * <P>

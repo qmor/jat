@@ -21,8 +21,8 @@ package jat.examples.OrbitDetermination;
  * 
  * File Created on May 9, 2003
  */
-import jat.alg.estimators.*;
-import jat.alg.integrators.*;
+import jat.core.alg.estimators.*;
+import jat.core.alg.integrators.*;
 
 /**
 * The ODdemo.java Class is a demonstration of Orbit Determination.
