@@ -18,12 +18,12 @@
  *
  */
 
-package jat.alg.opt.test;
+package jat.core.alg.opt.test;
 
 import java.text.*;
 
-import jat.alg.opt.*;
-import jat.alg.opt.test.functions.*;
+import jat.core.alg.opt.*;
+import jat.core.alg.opt.test.functions.*;
 
 public class VarMetric_test
 {

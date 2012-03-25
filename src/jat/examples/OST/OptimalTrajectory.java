@@ -21,9 +21,9 @@
 
 package jat.examples.OST;
 
-import jat.alg.opt.*;
 import jat.cm.*;
 import jat.cm.eom.*;
+import jat.core.alg.opt.*;
 import jat.matvec.data.VectorN;
 import jat.plot.*;
 import java.io.*;

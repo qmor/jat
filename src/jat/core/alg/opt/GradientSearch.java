@@ -18,7 +18,7 @@
  *
  */
 
-package jat.alg.opt;
+package jat.core.alg.opt;
 
 import jat.alg.*;
 

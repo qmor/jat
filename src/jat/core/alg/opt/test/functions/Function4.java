@@ -18,14 +18,14 @@
  *
  */
 
-package jat.alg.opt.test.functions;
+package jat.core.alg.opt.test.functions;
 
 import jat.alg.*;
 
-public class Function3 implements ScalarfromArrayFunction
+public class Function4 implements ScalarfromArrayFunction
 {
 	public double evaluate(double[] x)
 	{
-		return ((x[0] - 10.) * (x[0] - 10.) + (x[1] - 10.) * (x[1] - 10.) + 1.);
+		return ((x[0] - 10.) * (x[0] - 10.) + (x[1] - 9.) * (x[1] - 9.) + (x[2] - 8.) * (x[2] - 8.));
 	}
 }

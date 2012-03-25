@@ -18,7 +18,7 @@
  *
  */
 
-package jat.alg.opt.test.functions;
+package jat.core.alg.opt.test.functions;
 
 import jat.alg.*;
 

@@ -18,11 +18,12 @@
  *
  */
 
-package jat.alg.opt.test;
+package jat.core.alg.opt.test;
 
 import java.util.Date;
-import jat.alg.opt.*;
-import jat.alg.opt.test.functions.*;
+
+import jat.core.alg.opt.*;
+import jat.core.alg.opt.test.functions.*;
 
 /**
  * Test the line search with a given search direction.
