@@ -20,7 +20,8 @@
 
 package jat.core.alg.opt;
 
-import jat.alg.*;
+import jat.core.alg.*;
+
 import java.text.*;
 
 /**

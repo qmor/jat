@@ -20,7 +20,7 @@
 
 package jat.core.alg.opt.test;
 
-import jat.alg.*;
+import jat.core.alg.*;
 import jat.core.alg.opt.*;
 
 public class InnerClassExample

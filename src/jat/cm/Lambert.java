@@ -18,8 +18,8 @@
  *
  */
 package jat.cm;
-import jat.alg.*;
 import jat.matvec.data.*;
+import jat.core.alg.*;
 import jat.core.alg.integrators.*;
 
 /**

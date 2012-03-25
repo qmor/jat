@@ -20,8 +20,8 @@
 
 package jat.cm.eom;
 
-import jat.alg.*;
 import jat.cm.*;
+import jat.core.alg.*;
 import jat.core.alg.integrators.*;
 import jat.matvec.data.*;
 

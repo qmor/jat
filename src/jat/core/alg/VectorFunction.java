@@ -18,20 +18,26 @@
  *
  */
 
-package jat.alg;
+
+package jat.core.alg;
+import jat.matvec.data.*;
 
 /**
- * This interface provides the mechanism for passing a method
+ * <P>
+ * The VectorFunction interface provides the mechanism for passing a method
  * that evaluates a function to a solver.
  *
- * @author Tobias Berthold
+ * @author 
  * @version 1.0
  */
-public interface ScalarfromArrayFunction
-{
-	/**
-	 * @param x double array containing the required data.
-	 * @return double containing the result of the function.
-	 */
-	public double evaluate(double [] x);
+public interface VectorFunction {
+
+    /** Evaluate a vector function.
+     * @params x    VectorN containing the required data.
+     * @return      VectorN containing the result of the function.
+     */
+
+    public VectorN evaluate(VectorN x);
+
 }
+

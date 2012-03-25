@@ -20,7 +20,7 @@
 
 package jat.test.scaling;
 
-import jat.alg.*;
+import jat.core.alg.*;
 import jat.core.alg.integrators.*;
 
 /**

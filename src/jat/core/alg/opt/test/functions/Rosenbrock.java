@@ -20,7 +20,7 @@
 
 package jat.core.alg.opt.test.functions;
 
-import jat.alg.*;
+import jat.core.alg.*;
 
 public class Rosenbrock implements ScalarfromArrayFunction
 {

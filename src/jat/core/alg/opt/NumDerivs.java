@@ -20,7 +20,7 @@
 
 package jat.core.alg.opt;
 
-import jat.alg.ScalarfromArrayFunction;
+import jat.core.alg.ScalarfromArrayFunction;
 import jat.matvec.data.*;
 
 /**

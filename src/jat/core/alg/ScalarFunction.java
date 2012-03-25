@@ -19,7 +19,7 @@
  */
 
 
-package jat.alg;
+package jat.core.alg;
 
 /**
  * <P>

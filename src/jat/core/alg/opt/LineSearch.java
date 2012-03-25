@@ -20,7 +20,7 @@
 
 package jat.core.alg.opt;
 
-import jat.alg.*;
+import jat.core.alg.*;
 
 /**
  * Line Search

@@ -22,8 +22,8 @@ package jat.gps;
 
 import jat.matvec.data.*;
 import jat.cm.*;
+import jat.core.alg.*;
 import jat.core.math.*;
-import jat.alg.*;
 
 /**
 * <P>

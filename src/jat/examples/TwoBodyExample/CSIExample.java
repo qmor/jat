@@ -21,9 +21,9 @@
 
 package jat.examples.TwoBodyExample;
 
-import jat.alg.*;
 import jat.cm.*;
 import jat.cm.eom.*;
+import jat.core.alg.*;
 import jat.core.alg.integrators.*;
 import jat.matvec.data.VectorN;
 import jat.plot.*;

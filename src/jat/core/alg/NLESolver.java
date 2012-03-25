@@ -27,7 +27,7 @@
  * @version 1.0
  */
 
-package jat.alg;
+package jat.core.alg;
 
 import jat.matvec.data.*;
 import jat.matvec.data.matrixDecompositions.*;

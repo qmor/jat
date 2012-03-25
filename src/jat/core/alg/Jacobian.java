@@ -18,7 +18,7 @@
  *
  */
 
-package jat.alg;
+package jat.core.alg;
 import jat.matvec.data.*;
 
 /**

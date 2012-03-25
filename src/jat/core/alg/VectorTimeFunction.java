@@ -18,26 +18,22 @@
  *
  */
 
-
-package jat.alg;
+package jat.core.alg;
 import jat.matvec.data.*;
 
 /**
- * <P>
- * The VectorFunction interface provides the mechanism for passing a method
+ * The VectorTimeFunction interface provides the mechanism for passing a method
  * that evaluates a function to a solver.
  *
- * @author 
+ * @author Tobias Berthold
  * @version 1.0
  */
-public interface VectorFunction {
-
-    /** Evaluate a vector function.
-     * @params x    VectorN containing the required data.
-     * @return      VectorN containing the result of the function.
-     */
-
-    public VectorN evaluate(VectorN x);
-
+public interface VectorTimeFunction
+{
+	/**
+	 * @param x VectorN containing the required data.
+	 * @param t separate data, typically time
+	 * @return VectorN containing the result of the function.
+	 */
+	public VectorN evaluate(VectorN x, double t);
 }
-

@@ -18,7 +18,7 @@
  *
  */
 
-package jat.alg;
+package jat.core.alg;
 
 /**
  * This interface provides the mechanism for passing a method
@@ -27,11 +27,11 @@ package jat.alg;
  * @author Tobias Berthold
  * @version 1.0
  */
-public interface DoubleArrayFunction
+public interface ScalarfromArrayFunction
 {
 	/**
 	 * @param x double array containing the required data.
-	 * @return double array containing the result of the function.
+	 * @return double containing the result of the function.
 	 */
-	public double[] evaluate(double [] x);
+	public double evaluate(double [] x);
 }
