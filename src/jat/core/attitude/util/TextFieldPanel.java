@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.attitude;
+package jat.core.attitude.util;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -29,7 +29,7 @@ import java.awt.event.*;
  * The TextFieldPanel provides an efficient way of creating and organizing
  * TextField objects.
  * The main objective of this class is to create input fields with labels 
- * identifying the fields. *
+ * identifying the fields. 
  *
  * @author Noriko Takada
  * @version 1.0
@@ -52,6 +52,11 @@ public class TextFieldPanel extends Panel // TextFieldPanel is itself a panel
 			
 	 /**
 	  *	Construct a CheckboxPanel object
+	  * @param	title		(String) Title of the panel
+	  * @param	labels		(String[])	Labels
+	  * @param	fields		(Strnig[])	Array of TextField
+	  * @param	c			(Color)	Background color of the panel
+	  * 
 	  */
 	 public TextFieldPanel(String title, String labels[], TextField fields[], Color c) 
 	 {
@@ -88,7 +93,8 @@ public class TextFieldPanel extends Panel // TextFieldPanel is itself a panel
  	 }// End of constructor
  
 	/**
-	 * The main() method demonstrates the use of TextFieldPanel class
+	 * Demonstrates the use of TextFieldPanel class
+	 * @param	args	(String[])	Argument
 	 */
 	public static void main(String[] args) 
    	{
@@ -119,8 +125,13 @@ public class TextFieldPanel extends Panel // TextFieldPanel is itself a panel
    	} 
 	
 	/**
-	 * The setConstraint() method set the necessary constraint for the
-	 * GridBagLayout layout
+	 * Sets the necessary constraint for the GridBagLayout layout
+	 * @param	gridx		(int)
+	 * @param	gridy		(int)
+	 * @param	gridwidth 	(int)
+	 * @param	gridheight	(int)
+	 * @param	weightx		(int)
+	 * @param	weighty		(int)
 	 */	
 	void setConstraint(int gridx, int gridy,int gridwidth,
 	                   int gridheight, double weightx, double weighty)

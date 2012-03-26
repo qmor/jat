@@ -8,7 +8,7 @@
  * visit http://www.davidflanagan.com/javaexamples2.
  */
 //package com.davidflanagan.examples.gui;
-package jat.attitude.util;
+package jat.core.attitude.util;
 import java.awt.*;
 
 /**

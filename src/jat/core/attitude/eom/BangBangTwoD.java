@@ -18,7 +18,7 @@
  *
  */
 
-package jat.attitude.eom;
+package jat.core.attitude.eom;
  
 import jat.core.alg.integrators.*;
 import jat.matvec.data.Matrix;

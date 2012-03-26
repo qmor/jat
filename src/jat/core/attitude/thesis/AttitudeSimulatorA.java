@@ -18,20 +18,19 @@
  *
  */
 
-package jat.attitude.thesis;
+package jat.core.attitude.thesis;
  
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.*;			// Used for Timer & JSlider
 import javax.swing.border.TitledBorder;
-import jat.attitude.*;
-import jat.attitude.eom.EomTest;
-import jat.attitude.util.JTextFieldPanel;
+
+import jat.core.attitude.*;
+import jat.core.attitude.eom.EomTest;
+import jat.core.attitude.util.JTextFieldPanel;
 import jat.util.FileUtil;
 
 /**

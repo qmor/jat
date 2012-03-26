@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.attitude.eom;
+package jat.core.attitude.eom;
 
 import jat.core.alg.integrators.*;
 import jat.plot.*;

@@ -18,11 +18,11 @@
  *
  */
 
-package jat.attitude.eom;
+package jat.core.attitude.eom;
 
-import jat.attitude.util.AnimationWindow;
-import jat.attitude.util.AnimationWindow2;
 import jat.core.alg.integrators.*;
+import jat.core.attitude.util.AnimationWindow;
+import jat.core.attitude.util.AnimationWindow2;
 
 
 /**

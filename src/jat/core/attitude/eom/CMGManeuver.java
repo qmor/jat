@@ -19,12 +19,12 @@
  */
 
 
-package jat.attitude.eom;
+package jat.core.attitude.eom;
 
 import jat.matvec.data.*;
 import jat.plot.*;
-import jat.attitude.*;
 import jat.core.alg.integrators.*;
+import jat.core.attitude.*;
 
 /**
  * <P>

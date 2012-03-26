@@ -17,23 +17,22 @@
  *
  */
 
-package jat.attitude.eom;
+package jat.core.attitude.eom;
  
 import jat.matvec.data.*;
 import jat.plot.*;
-import jat.attitude.QuatToDeg;
 import jat.core.alg.integrators.*;
+import jat.core.attitude.QuatToDeg;
 
 /**
+ *<P>
  * This class contains the equations of motion for the simulation
  * of a rigid spacecraft subjected to gravity gradient torque
- * while it orbit around the earth.The spacecraft has a spherical 
- * damper for stabilization.
- * 
+ * while it goes around an eccentric orbit .
  * The class implements jat.alg.integrators.Derivatives and
- * jat.alg.integrateors.Printble, so an outside application code
- * can perform a numerical simulation of equations of motion
- * defined in this class and get the output from the simulation.
+ * jat.alg.integrateors.Printble, so an outside application code can perform 
+ * a numerical simulation of equations of motion defined in this class and get 
+ * the output from the simulation.
  * 
  * @author Noriko Takada
  * Modification since the last version
@@ -41,39 +40,34 @@ import jat.core.alg.integrators.*;
  *  
  */
 
-public class RSphericalDamper implements EquationsOfMotion
+public class RGGEccentricOrbit implements EquationsOfMotion
 {
-	//	time_step:			Time step of numerical integration
-    //	quat_values[][]		Two dimensional array that contains quarternions from simulation
-    //	I1,I2,I3			Principal moments of inertia about 1,2, and 3 axes
-    //	c					Damping coefficient
- 	//	j					Spherical damper inertia
- 	//	rotation_plot		Plots of angular velocities
- 	//	damper_rotation_plot	Plots of angular velocities of spherical damper
- 	//	angle_plot			Plots of euler angles
- 	//	quarternion_check	Plot of e1^2 + e2^2 + e3^2 +e4^2
-	
+	//Note: The EOM still has some errors! because the simulation doesn't really agree 
+ //    with the Matlab simulation!!
+ //
+ //		time_step:			Time step of numerical integration
+ //		quat_values[][]		Two dimensional array that contains quarternions from simulation
+ //		I1,I2,I3			Principal moments of inertia about 1,2, and 3 axes
+ //  	e					Eccentricity
+ //		rotation_plot		Plots of angular velocities
+ //		angle_plot			Plots of euler angles
+ //		quarternion_check	Plot of e1^2 + e2^2 + e3^2 +e4^2
 	double  time_step;
 	private float quat_values[][];
 	
 	// Create variables for the necessary plots
-	private ThreePlots angular_velocity_plot = new ThreePlots();
-	private ThreePlots damper_rotation_plot = new ThreePlots();								
+	// Create variables for the necessary plots
+	private ThreePlots angular_velocity_plot = new ThreePlots();								
 	private ThreePlots euler_angle_plot = new ThreePlots();
 	private SinglePlot quarternion_check = new SinglePlot();
-	private SinglePlot angular_momentum = new SinglePlot();
 	private FourPlots quaternion_plot = new FourPlots();
-		
-	private double I1 = 2000;//10.42;    // spacecraft inertia
-    private double I2 = 1500;//35.42;
-    private double I3 = 1000;//41.67;
-    private double c  = 30;        // damping coefficient
-    private double j  = 18;        // spherical damper inertia
-    
-    public static final int GG_YES = 1;
-    public static final int GG_NO = 0;
-    
-    private int gravity_gradient = 0;
+	private SinglePlot energy_plot = new SinglePlot();
+	private FourPlots angular_momentum_plot = new FourPlots();
+	
+	private double I1 = 10.42;
+    private double I2 = 35.42;
+    private double I3 = 41.67;
+    private double e  = 0.3;	
 	
 	/**
 	 * Constructor 1
@@ -82,11 +76,10 @@ public class RSphericalDamper implements EquationsOfMotion
 	 * @param 	I1					Principle moment of inertia about 1 axis
 	 * @param 	I2					Principle moment of inertia about 2 axis
 	 * @param 	I3					Principle moment of inertia about 3 axis
-	 * @param	c					Damping coefficient
- 	 * @param	j					Spherical damper inertia
+	 * @param	e					Eccentricity
 	 */ 
-	public RSphericalDamper(double time_step, double I1, double I2, double I3,
-							 double c, double j, float quat_values[][])
+	public RGGEccentricOrbit(double time_step, double I1, double I2, double I3
+							, double e, float quat_values[][])
 	{
 		setupPlots();
 		this.time_step = time_step;
@@ -94,82 +87,82 @@ public class RSphericalDamper implements EquationsOfMotion
 		this.I1 = I1;
 		this.I2 = I2;
 		this.I3 = I3;
-		this.c = c;
-		this.j = j;
+		this.e = e;
 	}
-	
+		
 	/**
 	 * Constructor 2
 	 * @param	time_step:			Time step of numerical integration
  	 * @param	quat_values[][]		Two dimensional array that contains quarternions from simulation
  	 */
-	public RSphericalDamper(double time_step, float quat_values[][])
+	public RGGEccentricOrbit(double time_step, float quat_values[][])
 	{
 		setupPlots();
 		this.time_step = time_step;
 		this.quat_values = quat_values;
 	}
 	
-	///**
-	// * Apply or Remove Gracity Gradient on a spacecraft
-	// * @param	a	(int) GG_YES = 1: Applies gravity gradient torque assming a circular orbit
-	// * 					  GG_NO = 0:  No gravity gradient, simulation in seconds
-	// */
-	//public void setGravityGradient(int a)
-	//{
-	//	gravity_gradient = a;
-	//}
-	
 	/**
 	 * setupPlots() sets up Plots
 	 */
 	void setupPlots()
 	{
+		//ThreePlots angular_velocity_plot = new ThreePlots();								
+		//ThreePlots euler_angle_plot = new ThreePlots();
+		//SinglePlot quarternion_check = new SinglePlot();
+		//FourPlots quaternion_plot = new FourPlots();
+		//SinglePlot energy_plot = new SinglePlot();
+		//FourPlots angular_momentum_plot = new FourPlots();
+		
 		// Setup plots
 		angular_velocity_plot.setTitle("Angular Velocities");
-        angular_velocity_plot.topPlot.setXLabel("t(sec)");
-        angular_velocity_plot.topPlot.setYLabel("w1");
+        angular_velocity_plot.topPlot.setXLabel("t(orbits)");
+        angular_velocity_plot.topPlot.setYLabel("w1(rad/orbits)");
         angular_velocity_plot.middlePlot.setXLabel("t(sec)");
-		angular_velocity_plot.middlePlot.setYLabel("w2");
-        angular_velocity_plot.bottomPlot.setXLabel("t(sec)");
-        angular_velocity_plot.bottomPlot.setYLabel("w3");
+		angular_velocity_plot.middlePlot.setYLabel("w2(rad/orbits)");
+        angular_velocity_plot.bottomPlot.setXLabel("t(orbits)");
+        angular_velocity_plot.bottomPlot.setYLabel("w3(rad/orbits)");
         
-        damper_rotation_plot.setTitle("Damper/Spacecraft relative rates");
-        damper_rotation_plot.topPlot.setXLabel("t (sec)");
-        damper_rotation_plot.topPlot.setYLabel("Sigma1");
-        damper_rotation_plot.middlePlot.setXLabel("t (sec)");
-        damper_rotation_plot.middlePlot.setYLabel("Sigma2 ");
-        damper_rotation_plot.bottomPlot.setXLabel("t (sec)");
-        damper_rotation_plot.bottomPlot.setYLabel("Sigma3");
-        
-        euler_angle_plot.setTitle("Euler Angles");
-        euler_angle_plot.topPlot.setXLabel("t(sec)");
-        euler_angle_plot.topPlot.setYLabel("Theta(degrees)");
-		euler_angle_plot.middlePlot.setXLabel("t(sec)");
-		euler_angle_plot.middlePlot.setYLabel("Psi(degrees)");
-        euler_angle_plot.bottomPlot.setXLabel("t(sec)");
-        euler_angle_plot.bottomPlot.setYLabel("Phi(degrees)");
+        euler_angle_plot.setTitle("Euler angles between body frame & orbit frame");
+        euler_angle_plot.topPlot.setXLabel("t(orbits)");
+        euler_angle_plot.topPlot.setYLabel("Psi (degrees)");
+		euler_angle_plot.middlePlot.setXLabel("t(orbits)");
+		euler_angle_plot.middlePlot.setYLabel("Theta (degrees)");
+        euler_angle_plot.bottomPlot.setXLabel("t(orbits)");
+        euler_angle_plot.bottomPlot.setYLabel("Phi (degrees)");
         
         quarternion_check.setTitle("Quarternion Check");
         quarternion_check.plot.setXLabel("t(sec)");
-        quarternion_check.plot.setYLabel("e1^2 + e2^2 + e3^2 + e4^2");
-        
-        angular_momentum.setTitle("Angular Momentum");
-        angular_momentum.plot.setXLabel("t (sec)");
-        angular_momentum.plot.setYLabel("Angular Momentum");
+        quarternion_check.plot.setYLabel("q1^2 + q2^2 + q3^2 + q4^2");
         
         quaternion_plot.setTitle("Quarternions");
-        quaternion_plot.firstPlot.setXLabel("t (sec)");
+        quaternion_plot.firstPlot.setXLabel("t (Orbits)");
         quaternion_plot.firstPlot.setYLabel("q1");
-        quaternion_plot.secondPlot.setXLabel("t (sec)");
+        quaternion_plot.secondPlot.setXLabel("t (Orbits)");
         quaternion_plot.secondPlot.setYLabel("q2");
-        quaternion_plot.thirdPlot.setXLabel("t (sec) ");
+        quaternion_plot.thirdPlot.setXLabel("t (Orbits) ");
         quaternion_plot.thirdPlot.setYLabel("q3");
-        quaternion_plot.fourthPlot.setXLabel("t (sec)");
+        quaternion_plot.fourthPlot.setXLabel("t (Orbits)");
         quaternion_plot.fourthPlot.setYLabel("q4");
+        
+        energy_plot.setTitle("Energy ");
+        energy_plot.plot.setXLabel("t (Orbits)");
+        energy_plot.plot.setYLabel("Energy");
+        
+        angular_momentum_plot.setTitle("Angular Momentum");
+        angular_momentum_plot.firstPlot.setXLabel("t (Orbits)");
+        angular_momentum_plot.firstPlot.setYLabel("Hi (b1)");
+        angular_momentum_plot.secondPlot.setXLabel("t (Orbits)");
+        angular_momentum_plot.secondPlot.setYLabel("Hi (b2)");
+        angular_momentum_plot.thirdPlot.setXLabel("t (Orbits)");
+        angular_momentum_plot.thirdPlot.setYLabel("Hi (b3)");
+        angular_momentum_plot.fourthPlot.setXLabel("t (Orbits)");
+        angular_momentum_plot.fourthPlot.setYLabel("Hi total");
+        
         
 	}
 	
+	 
 	/** Compute the derivatives.
      * Equations of Motion
      * @params t    double containing time or the independent variable.
@@ -179,57 +172,53 @@ public class RSphericalDamper implements EquationsOfMotion
 		
 	public double[] derivs(double t, double[] x)
     {
-       	
+       	     
         
         double c11 = 1- 2*( x[4]*x[4] + x[5]*x[5]);
         double c21 = 2* (x[3]*x[4]-x[5]*x[6]);
         double c31 = 2* (x[3]*x[5]+x[4]*x[6]); 
         
-        // definition
-        double w1 = x[0];		//nondimensionalized
-        double w2 = x[1];		//nondimensionalized
-        double w3 = x[2];		//nondimensionalized
-        double q1 = x[3];		//nondimensionalized
-        double q2 = x[4];		//nondimensionalized
-        double q3 = x[5];		//nondimensionalized
-        double q4 = x[6];		//nondimensionalized
-        double sigma1 = x[7];		//nondimensionalized
-        double sigma2 =  x[8];		//nondimensionalized
-        double sigma3 = x[9];		//nondimensionalized
-        
-        double [] out = new double[10];
-        if (gravity_gradient == 1)
-        {
-        	//out[0] = 2*Math.PI*((I2-I3)/I1)* (x[1]*x[2] - 3*c21*c31) - 2*Math.PI*(c/I1)*(x[0]-x[7]);
-        	//out[1] = 2*Math.PI*((I3-I1)/I2)* (x[0]*x[2] - 3*c31*c11) - 2*Math.PI*(c/I2)*(x[1]-x[8]);
-        	//out[2] = 2*Math.PI*((I1-I2)/I3)* (x[0]*x[1] - 3*c11*c21) - 2*Math.PI*(c/I3)*(x[2]-x[9]);
-        	//out[3] = -Math.PI* (-(x[2]+1)*x[4] + x[1]*x[5] - x[0]*x[6]);
-        	//out[4] = -Math.PI* ((x[2]+1)*x[3]  - x[0]*x[5] - x[1]*x[6]);
-        	//out[5] = -Math.PI* (-(x[2]-1)*x[6] + x[0]*x[4] - x[1]*x[3]);
-        	//out[6] = -Math.PI* ((x[2]-1)*x[5]  + x[1]*x[4] + x[0]*x[3]);
-        	//out[7] = 2*Math.PI*(c/j)*(x[0]-x[7]) -2*Math.PI*(x[1]*x[9] - x[2]*x[8]);
-        	//out[8] = 2*Math.PI*(c/j)*(x[1]-x[8]) -2*Math.PI*(x[2]*x[7] - x[0]*x[9]);
-        	//out[9] = 2*Math.PI*(c/j)*(x[2]-x[9]) -2*Math.PI*(x[0]*x[8] - x[1]*x[7]);
-        }
-        else if (gravity_gradient==0)
-        {
-      		out[0] = ((I2-I3)/(I1-j))*w2*w3 +(c/(I1-j))*sigma1; 	//+ (c/(I1-j))*(sigma1);
-      		out[1] = ((I3-I1)/(I2-j))*w1*w3 +(c/(I2-j))*sigma2;	//- (c/(I2-j))*(sigma2);
-      		out[2] = ((I1-I2)/(I3-j))*w1*w2	+(c/(I3-j))*sigma3;	//- (c/(I3-j))*(sigma3);
-      		out[3] = -0.5* (-x[2]*x[4] + x[1]*x[5] - x[0]*x[6]);
-       		out[4] = -0.5* (x[2]*x[3]  - x[0]*x[5] - x[1]*x[6]);
-       		out[5] = -0.5* (-x[2]*x[6] + x[0]*x[4] - x[1]*x[3]);
-       		out[6] = -0.5* (x[2]*x[5]  + x[1]*x[4] + x[0]*x[3]);  
-       		out[7] = -out[0] -  (c/j)*(sigma1)- w2*sigma3 + w3*sigma2;
-       		out[8] = -out[1] -  (c/j)*(sigma2)- w3*sigma1 + w1*sigma3;
-       		out[9] = -out[2] -  (c/j)*(sigma3)- w1*sigma2 + w2*sigma1;	
-        }
-        
+        /* The non-dimensionalized equations of motion for this series are:
+
+         // *** Angular Velocity Equations ***
+         w1dot = (2*pi*A)*((iyy-izz)/ixx)*(w2*w3-3*c21*c31*B);
+         w2dot = (2*pi*A)*((izz-ixx)/iyy)*(w1*w3-3*c31*c11*B);
+         w3dot = (2*pi*A)*((ixx-iyy)/izz)*(w1*w2-3*c11*c21*B);
+
+         // *** Quaternions ***
+         e1dot = (-pi*A*(-(w3+1/A)*e2 + w2*e3 - w1*e4));
+         e2dot = (-pi*A*((w3+1/A)*e1 - w1*e3 - w2*e4));
+         e3dot = (-pi*A*(-w2*e1 + w1*e2 - (w3-1/A)*e4));
+         e4dot = (-pi*A*(w1*e1 + w2*e2 + (w3-1/A)*e3));
+
+         c11 = 1 - 2*(e2^2 + e3^2)
+         c21 = 2*(e1*e2 - e3*e4)
+         c31 = 2*(e1*e3 + e2*e4)
+			
+		 A = ((1-e^2)^(3/2)/(1+e*cos(2*pi*t))^2
+		 B = (1+e*cos(2*pi*t))^3/(1-e^2)^3	
+         */
+
+         double A=Math.pow((1-e*e),1.5)/Math.pow((1+ e*Math.cos(2*Math.PI*t)),2);
+         double B=Math.pow((1+e*Math.cos(2*Math.PI*t)),3)/Math.pow((1-e*e), 3);
+         
+         double [] out = new double[7];
+         // *** Angular Velocity Equations (dw/dnu (orbits)) *** //
+         out[0] = A*2*Math.PI*((I2-I3)/I1)*(x[1]*x[2]-3*c21*c31*B);
+         out[1] = A*2*Math.PI*((I3-I1)/I2)*(x[0]*x[2]-3*c31*c11*B);
+         out[2] = A*2*Math.PI*((I1-I2)/I3)*(x[0]*x[1]-3*c11*c21*B);
+         
+         // *** Quaternions (de/dnu (orbits)) ***
+         out[3] = -Math.PI*A*(-(x[2]+1/A)*x[4] + x[1]*x[5] - x[0]*x[6]);
+         out[4] = -Math.PI*A*((x[2]+1/A)*x[3] - x[0]*x[5] - x[1]*x[6]);
+         out[5] = -Math.PI*A*(-x[1]*x[3] + x[0]*x[4] - (x[2]-1/A)*x[6]);
+         out[6] = -Math.PI*A*(x[0]*x[3] + x[1]*x[4] + (x[2]-1/A)*x[5]);
+         //System.out.println("e is "+ e+ " "+ x[0]+" "+A+" " +B);
+              
         return out;
     }// End of derivs
     	
-    
-     /** Implements the Printable interface to get the data out of the propagator and pass it to the plot.
+    /** Implements the Printable interface to get the data out of the propagator and pass it to the plot.
      *  This method is executed by the propagator at each integration step.
      * @param t Time.
      * @param y Data array.
@@ -252,10 +241,7 @@ public class RSphericalDamper implements EquationsOfMotion
         double q2 = y[4];
         double q3 = y[5];
         double q4 = y[6];
-        double sigma1 = y[7];
-        double sigma2 = y[8];
-        double sigma3 = y[9];
-                
+        
         QuatToDeg tester = new QuatToDeg(q1, q2, q3, q4);
     	
     	double[] angle = new double[3];
@@ -265,8 +251,7 @@ public class RSphericalDamper implements EquationsOfMotion
     	double Phi = angle[2];
     	
     	double quat_check = q1*q1+q2*q2+q3*q3+q4*q4;
-    	double angMomentum = Math.sqrt((I1*w1+ j*(sigma1))*(I1*w1+ j*(sigma1))+ (I2*w2 + j*(sigma2))*(I2*w2 + j*(sigma2))+ (I3*w3 + j*(sigma3))*(I3*w3 + j*(sigma3)));
-        //double angMomentum = Math.sqrt((I1*w1+j*Alpha)*(I1*w1+j*Alpha)+(I2*w2+j*Beta)*(I2*w2+j*Beta)+(I3*w3 + j*Gamma)*(I3*w3 + j*Gamma));
+        
         
         // Calculate Transformation matrix elements
         // Transform from A to B see Bong Wie (p.318)
@@ -299,29 +284,29 @@ public class RSphericalDamper implements EquationsOfMotion
     	Matrix  T = new Matrix(array,3,3);
     	Matrix  T_transpose = new Matrix(T.transpose().A, 3,3);
         
+        //ThreePlots angular_velocity_plot = new ThreePlots();								
+		//ThreePlots euler_angle_plot = new ThreePlots();
+		//SinglePlot quarternion_check = new SinglePlot();
+		//FourPlots quaternion_plot = new FourPlots();
+		//SinglePlot energy_plot = new SinglePlot();
+		//FourPlots angular_momentum_plot = new FourPlots();
         // add data point to the plot
         angular_velocity_plot.topPlot.addPoint(0, t,y[0], first);
         angular_velocity_plot.middlePlot.addPoint(0, t, y[1], first);
 		angular_velocity_plot.bottomPlot.addPoint(0, t, y[2], first);
 		
-		damper_rotation_plot.topPlot.addPoint(0, t, y[7], first);
-		damper_rotation_plot.middlePlot.addPoint(0, t, y[8], first);
-		damper_rotation_plot.bottomPlot.addPoint(0, t, y[9], first);
-				
 		euler_angle_plot.topPlot.addPoint(0, t, Theta, first);
 		euler_angle_plot.middlePlot.addPoint(0, t, Psi, first);
 		euler_angle_plot.bottomPlot.addPoint(0, t, Phi, first);  
 		
 		quarternion_check.plot.addPoint(0, t, quat_check, first);
 		
-		angular_momentum.plot.addPoint(0, t, angMomentum, first);
-		
 		quaternion_plot.firstPlot.addPoint(0, t, q1, first);
 		quaternion_plot.secondPlot.addPoint(0, t, q2, first);
 		quaternion_plot.thirdPlot.addPoint(0, t, q3, first);
 		quaternion_plot.fourthPlot.addPoint(0, t, q4, first);
-      
-        // Store quarternion values for use in animation
+		
+		// Store quarternion values for use in animation
         quat_values[0][currentPts] = (float)t; // time value
         quat_values[1][currentPts] = (float)q1; // quaternion 1
         quat_values[2][currentPts] = (float)q2; // quarternion 2
@@ -329,8 +314,8 @@ public class RSphericalDamper implements EquationsOfMotion
         quat_values[4][currentPts] = (float)q4; // quarternion 4
         
     }
-	
-    /**
+    
+      /**
     * Return the quarternion values after simulation
     * @author	Noriko Takada
     */
@@ -346,11 +331,9 @@ public class RSphericalDamper implements EquationsOfMotion
    public void makePlotsVisible()
    {
    		angular_velocity_plot.setVisible(true);
-        damper_rotation_plot.setVisible(true);
-        euler_angle_plot.setVisible(true);
-        quarternion_check.setVisible(true);
-        angular_momentum.setVisible(true);
-        quaternion_plot.setVisible(true);
+   		euler_angle_plot.setVisible(true);
+   		quarternion_check.setVisible(true);
+   		quaternion_plot.setVisible(true);
    }
    
    /** Runs the example.
@@ -361,7 +344,7 @@ public class RSphericalDamper implements EquationsOfMotion
 
         double time_step=0.1;
         double timeDuration=10;
-        double tf = 20;
+        double tf = 15;
         double t0 = 0.0;
                
         RungeKutta8 rk8 = new RungeKutta8(time_step);
@@ -372,28 +355,24 @@ public class RSphericalDamper implements EquationsOfMotion
     	float quat_values[][]= new  float[5][numberOfPts+1];// +1 is for AnimationWindow
         
         // create an instance
-        RSphericalDamper si = new RSphericalDamper(time_step, quat_values);
+        RGGEccentricOrbit si = new RGGEccentricOrbit(time_step, quat_values);
 		
         // initialize the variables
-        double [] x0 = new double[10];
-        x0[0] = 0.1224;
+        double [] x0 = new double[7];
+        x0[0] = 0.0;
         x0[1] = 0.0;
-        x0[2] = 2.99;
+        x0[2] = 1.0;
         x0[3] = 0.0;
         x0[4] = 0.0;
         x0[5] = 0.0;
         x0[6] = 1.0;
-        x0[7] = 0.0;
-        x0[8] = 0.0;
-        x0[9] = 0.0;
-               
-
+        
         // integrate the equations
         rk8.integrate(t0, x0, tf, si, true);
         
         // make the plot visible
         si.makePlotsVisible();
-    } 
+    }
     	
 }// End of File
     		

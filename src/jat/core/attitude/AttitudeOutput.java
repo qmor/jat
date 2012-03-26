@@ -18,7 +18,7 @@
  *
  */
  
-package jat.attitude;
+package jat.core.attitude;
  
 import jat.plot.*;
 import jat.core.alg.integrators.*;
