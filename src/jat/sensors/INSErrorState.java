@@ -20,7 +20,7 @@
 
 package jat.sensors;
 import jat.matvec.data.*;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.core.math.*;
 
 /**

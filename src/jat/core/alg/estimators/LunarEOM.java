@@ -21,8 +21,8 @@
  **/
 package jat.core.alg.estimators;
 
-import jat.cm.Constants;
 import jat.core.alg.integrators.Derivatives;
+import jat.core.cm.Constants;
 import jat.eph.DE405;
 import jat.forces.GravityModel;
 import jat.forces.GravityModelType;

@@ -22,8 +22,8 @@ package jat.examples.OptimalLambert;
 
 import java.text.*;
 
-import jat.cm.*;
 import jat.core.alg.ScalarfromArrayFunction;
+import jat.core.cm.*;
 import jat.matvec.data.VectorN;
 
 /**

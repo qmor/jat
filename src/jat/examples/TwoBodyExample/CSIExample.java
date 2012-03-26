@@ -21,10 +21,10 @@
 
 package jat.examples.TwoBodyExample;
 
-import jat.cm.*;
-import jat.cm.eom.*;
 import jat.core.alg.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
+import jat.core.cm.eom.*;
 import jat.matvec.data.VectorN;
 import jat.plot.*;
 import java.io.*;

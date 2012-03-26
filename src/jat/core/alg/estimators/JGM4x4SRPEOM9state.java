@@ -22,8 +22,8 @@
 package jat.core.alg.estimators;
 
 import jat.sim.*;
-import jat.cm.Constants;
 import jat.core.alg.integrators.Derivatives;
+import jat.core.cm.Constants;
 
 import java.util.HashMap;
 

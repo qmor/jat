@@ -23,7 +23,7 @@ package jat.gps;
  */
  
 //import jat.gps.*;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.matvec.data.*;
 
 /**

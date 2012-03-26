@@ -24,14 +24,10 @@ import jat.eph.*;
 //import jat.math.MathUtils;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.Spacecraft;
-import jat.spacetime.BodyCenteredInertialRef;
-import jat.spacetime.BodyRef;
-import jat.spacetime.ReferenceFrame;
-import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.*;
 import jat.timeRef.*;
 import jat.util.FileUtil;
-import jat.cm.Constants;
+import jat.core.cm.Constants;
 
 /**
  * Simple class to model the gravitational attraction of the moon.

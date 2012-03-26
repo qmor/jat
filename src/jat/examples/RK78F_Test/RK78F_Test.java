@@ -21,8 +21,8 @@
 
 package jat.examples.RK78F_Test;
 
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 
 import java.io.*;
 

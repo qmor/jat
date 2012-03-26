@@ -18,7 +18,7 @@
  *
  */
 
-package jat.cm;
+package jat.core.cm;
 
 import jat.core.math.MathUtils;
 

@@ -18,7 +18,7 @@
  *
  */
 
-package jat.cm;
+package jat.core.cm;
 import jat.plot.*;
 import jat.util.*;
 import jat.traj.*;

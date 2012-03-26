@@ -21,9 +21,9 @@
 
 package jat.traj;
 
-import jat.cm.*;
 import jat.core.alg.integrators.*;
 //import jat.plot.*;
+import jat.core.cm.*;
 
 /**
  * <P>

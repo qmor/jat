@@ -19,9 +19,9 @@
 */
 package jat.test.propagator;
 
-import jat.cm.ThreeBody;
 import jat.core.alg.integrators.LinePrinter;
 import jat.core.alg.integrators.RungeKutta8;
+import jat.core.cm.ThreeBody;
 
 /**
  * @author rcpage

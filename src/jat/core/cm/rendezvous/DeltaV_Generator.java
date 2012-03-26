@@ -18,9 +18,9 @@
  *
  */
 
-package jat.cm.rendezvous;
-import jat.cm.*;
+package jat.core.cm.rendezvous;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 import jat.traj.*;
 import jat.matvec.data.*;
 import jat.timeRef.*;

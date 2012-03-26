@@ -6,7 +6,7 @@
  */
 package jat.timeRef;
 
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.core.math.*;
 import jat.matvec.data.*;
 

@@ -1,6 +1,6 @@
 /* JAT: Java Astrodynamics Toolkit
  *
- * Copyright (c) 2002 National Aeronautics and Space Administration. All rights reserved.
+ * Copyright (c) 2003 National Aeronautics and Space Administration. All rights reserved.
  *
  * This file is part of JAT. JAT is free software; you can 
  * redistribute it and/or modify it under the terms of the 
@@ -16,32 +16,38 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * 
+ * File Created on May 19, 2003
  */
+ 
+package jat.core.cm;
+import jat.matvec.data.*;
+import java.io.*;
 
-package jat.cm;
 
 /**
- * Simple class to store two angles
- * @author Tobias Berthold
- * @version 1.0
- */
-
-public class Position
-{
-	public Angle RA;	// Right Ascension
-	public Angle dec;	// Declination
+* The DeltaV.java Class represents a single Delta-V.
+*
+* @author 
+* @version 1.0
+*/
+public class DeltaV implements Serializable {
 	
-	public Position()
-	{
-	}
-
-	/**
-	 * @param alpha
-	 * @param delta
+	/** Epoch time of delta-v in sim time (seconds) */
+	public double t;
+		
+	/** Delta-v vector */
+	public VectorN dv;
+	
+	
+	/** Constructor
+	 * @param tsim Time of the measurement in sim time (sec).
+	 * @param deltav Delta-V vector (m/s)
 	 */
-	public Position(Angle alpha, Angle delta)
-	{
-		this.RA=alpha;
-		this.dec=delta;		
+	public DeltaV(double tsim, VectorN deltav) {
+		this.t = tsim;
+		this.dv = deltav;
 	}
+	
+
 }

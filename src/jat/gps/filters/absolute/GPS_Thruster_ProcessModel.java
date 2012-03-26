@@ -25,13 +25,13 @@ package jat.gps.filters.absolute;
 import jat.matvec.data.*;
 import jat.gps.*;
 import jat.gps.filters.*;
-import jat.cm.*;
 //import jat.math.*;
 //import jat.gps_ins.*;
 //import jat.timeRef.*;
 //import jat.forces.*;
 import jat.core.alg.estimators.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 
 /**
 * The GPS_ProcessModel.java Class provides the process model

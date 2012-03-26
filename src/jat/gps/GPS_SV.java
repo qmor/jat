@@ -21,7 +21,7 @@
 package jat.gps;
 import jat.matvec.data.*;
 import jat.spacetime.*;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.core.math.*;
 
 /**

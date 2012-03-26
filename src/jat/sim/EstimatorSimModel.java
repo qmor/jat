@@ -34,10 +34,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import jat.cm.Constants;
 import jat.core.alg.estimators.EKF;
 import jat.core.alg.integrators.Derivatives;
 import jat.core.alg.integrators.LinePrinter;
+import jat.core.cm.Constants;
 import jat.forces.GravitationalBody;
 import jat.forces.GravityModel;
 import jat.forces.GravityModelType;

@@ -24,7 +24,7 @@ import jat.matvec.data.VectorN;
 import jat.sim.SimModel;
 import jat.spacecraft.SpacecraftModel;
 import jat.util.FileUtil;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.forces.*;
 
 /**

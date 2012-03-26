@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import jat.cm.*;
+import jat.core.cm.*;
 
 /**
  * @author Tobias Berthold

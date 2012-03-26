@@ -28,7 +28,7 @@
 
 package jat.examples.ephemeris;
 
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.util.*;
 import jat.eph.*;
 import jat.matvec.data.*;

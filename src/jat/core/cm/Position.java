@@ -1,8 +1,6 @@
-package jat.cm.rendezvous;
-
 /* JAT: Java Astrodynamics Toolkit
  *
- * Copyright (c) 2003 National Aeronautics and Space Administration. All rights reserved.
+ * Copyright (c) 2002 National Aeronautics and Space Administration. All rights reserved.
  *
  * This file is part of JAT. JAT is free software; you can 
  * redistribute it and/or modify it under the terms of the 
@@ -18,37 +16,32 @@ package jat.cm.rendezvous;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * 
- * File Created on Aug 26, 2003
  */
- 
-import java.io.*;
-import jat.matvec.data.*;
+
+package jat.core.cm;
 
 /**
- * <P>
- * The CW_Target Class represents a single guidance target.
- *
- * @author 
+ * Simple class to store two angles
+ * @author Tobias Berthold
  * @version 1.0
  */
 
-public class CW_Target implements Serializable {
-	/** Epoch time of measurement in sim time (seconds) */
-	public double t;
-		
-	/** target vector */
-	public VectorN rtgt;
+public class Position
+{
+	public Angle RA;	// Right Ascension
+	public Angle dec;	// Declination
 	
-	
-	/** Constructor
-	 * @param tsim Time of the measurement in sim time (sec).
-	 * @param tgt target position
-	 */
-	public CW_Target(double tsim, VectorN tgt) {
-		this.t = tsim;
-		this.rtgt = tgt;
+	public Position()
+	{
 	}
-	
 
+	/**
+	 * @param alpha
+	 * @param delta
+	 */
+	public Position(Angle alpha, Angle delta)
+	{
+		this.RA=alpha;
+		this.dec=delta;		
+	}
 }

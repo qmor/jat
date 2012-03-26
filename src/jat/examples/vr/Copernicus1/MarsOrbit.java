@@ -22,7 +22,7 @@
 package jat.examples.vr.Copernicus1;
 
 import jat.vr.*;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.util.*;
 import java.awt.*;
 import java.applet.Applet;

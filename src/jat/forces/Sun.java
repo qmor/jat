@@ -31,7 +31,7 @@ import jat.spacetime.Time;
 import jat.timeRef.EarthRef;
 //import jat.timeRef.Time;
 import jat.util.FileUtil;
-import jat.cm.Constants;
+import jat.core.cm.Constants;
 import jat.core.math.MathUtils;
 import jat.eph.*;
 

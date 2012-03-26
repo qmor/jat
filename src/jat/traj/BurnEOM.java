@@ -23,8 +23,8 @@
 package jat.traj;
 
 import jat.matvec.data.*;
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 //import jat.spacetime.BodyRef;
 import jat.spacetime.Time;
 import jat.timeRef.*;

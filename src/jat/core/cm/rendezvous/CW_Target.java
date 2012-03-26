@@ -1,3 +1,5 @@
+package jat.core.cm.rendezvous;
+
 /* JAT: Java Astrodynamics Toolkit
  *
  * Copyright (c) 2003 National Aeronautics and Space Administration. All rights reserved.
@@ -17,45 +19,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * 
- * File Created on Aug 28, 2003
+ * File Created on Aug 26, 2003
  */
-
-package jat.cm;
-import jat.matvec.data.*;
+ 
 import java.io.*;
-
+import jat.matvec.data.*;
 
 /**
-* The FiniteBurn.java Class represents a single finite burn.
-*
-* @author 
-* @version 1.0
-*/
-public class FiniteBurn implements Serializable {
-	
-	/** Burn start time in sim time (seconds) */
-	public double tstart;
-	
-	/** Burn stop time in sim time (seconds) */
-	public double tstop;
-	
-	/** Burn acceleration in m/s^2 */
-	public double accel;
+ * <P>
+ * The CW_Target Class represents a single guidance target.
+ *
+ * @author 
+ * @version 1.0
+ */
+
+public class CW_Target implements Serializable {
+	/** Epoch time of measurement in sim time (seconds) */
+	public double t;
 		
-	/** Thrust direction unit vector */
-	public VectorN unitVector;
+	/** target vector */
+	public VectorN rtgt;
 	
 	
 	/** Constructor
-	 * @param t0 Time of burn initiation in sim time (sec).
-	 * @param tf time of burn cutoff in sim time (sec)
-	 * @param unitv thrust direction unit vector
+	 * @param tsim Time of the measurement in sim time (sec).
+	 * @param tgt target position
 	 */
-	public FiniteBurn(double t0, double tf, double acc, VectorN unitv) {
-		this.tstart = t0;
-		this.tstop = tf;
-		this.accel = acc;
-		this.unitVector = unitv;
+	public CW_Target(double tsim, VectorN tgt) {
+		this.t = tsim;
+		this.rtgt = tgt;
 	}
 	
 

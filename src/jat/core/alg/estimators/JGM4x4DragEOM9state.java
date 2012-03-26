@@ -23,8 +23,8 @@ package jat.core.alg.estimators;
 
 import java.util.HashMap;
 
-import jat.cm.Constants;
 import jat.core.alg.integrators.Derivatives;
+import jat.core.cm.Constants;
 import jat.forces.GravityModel;
 import jat.forces.GravityModelType;
 import jat.forces.HarrisPriester;

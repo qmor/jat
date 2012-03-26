@@ -29,7 +29,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import jat.cm.*;
+
+import jat.core.cm.*;
 
 /**
  * SWT GUI example to convert a Calendar date to a Julian Date. The GUI was

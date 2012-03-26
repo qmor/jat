@@ -21,7 +21,7 @@
 
 package jat.examples.JulianDate;
 
-import jat.cm.*;
+import jat.core.cm.*;
 
 /**
  * @author Tobias Berthold

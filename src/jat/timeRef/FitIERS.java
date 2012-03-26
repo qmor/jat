@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 import jat.matvec.data.*;
 import jat.util.FileUtil;
-import jat.cm.Constants;
+import jat.core.cm.Constants;
 import jat.core.math.*;
 
 /**

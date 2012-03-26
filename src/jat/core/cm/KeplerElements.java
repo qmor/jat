@@ -18,7 +18,7 @@
  *
  */
 
-package jat.cm;
+package jat.core.cm;
 
 /**
  * Simple class to store Kepler elements 

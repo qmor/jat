@@ -22,8 +22,8 @@ package jat.examples.Rendezvous;
  * File Created on Aug 25, 2003
  */
  
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 import jat.matvec.data.*;
  
 public class CW_Rendezvous {

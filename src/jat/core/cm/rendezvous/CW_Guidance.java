@@ -1,4 +1,4 @@
-package jat.cm.rendezvous;
+package jat.core.cm.rendezvous;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -22,9 +22,9 @@ package jat.cm.rendezvous;
  * File Created on Aug 26, 2003
  */
  
-import jat.cm.ClohessyWiltshire;
-import jat.cm.Constants;
-import jat.cm.TwoBody;
+import jat.core.cm.ClohessyWiltshire;
+import jat.core.cm.Constants;
+import jat.core.cm.TwoBody;
 import jat.matvec.data.*;
 import jat.timeRef.*;
 

@@ -21,7 +21,7 @@
 
 package jat.test.PosAstr;
 
-import jat.cm.*;
+import jat.core.cm.*;
 
 public class LAST_to_UT_ex
 {

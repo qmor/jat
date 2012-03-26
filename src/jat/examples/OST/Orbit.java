@@ -21,8 +21,8 @@
 
 package jat.examples.OST;
 
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 import jat.plot.*;
 
 /**

@@ -22,7 +22,7 @@ package jat.timeRef;
 import jat.matvec.data.*;
 import jat.spacetime.*;
 import jat.util.FileUtil;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.core.math.*;
 import jat.eph.*;
 

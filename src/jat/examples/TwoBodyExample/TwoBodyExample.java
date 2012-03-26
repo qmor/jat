@@ -19,8 +19,8 @@
  */
 
 package jat.examples.TwoBodyExample;
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 import jat.plot.*;
 
 /**

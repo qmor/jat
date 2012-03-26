@@ -20,7 +20,7 @@
  */
 package jat.vr;
 
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.core.math.*;
 import jat.matvec.data.VectorN;
 import javax.media.j3d.*;

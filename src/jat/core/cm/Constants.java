@@ -18,7 +18,7 @@
  *
  */
 
-package jat.cm;
+package jat.core.cm;
 
 /** Astrodynamical Constants
  * @author 

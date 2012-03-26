@@ -24,7 +24,7 @@ import jat.timeRef.*;
 import jat.spacecraft.Spacecraft;
 import jat.spacetime.BodyRef;
 import jat.spacetime.Time;
-import jat.cm.Constants;
+import jat.core.cm.Constants;
 
 /**
  * <P>

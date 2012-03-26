@@ -22,7 +22,7 @@
 package jat.examples.vr.SolarSystem;
 
 import jat.vr.*;
-import jat.cm.*;
+import jat.core.cm.*;
 import jat.matvec.data.*;
 import jat.util.*;
 import jat.eph.*;

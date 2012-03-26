@@ -22,8 +22,8 @@
  
 package jat.ins;
 //import jat.gps_ins.*;
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 import jat.core.math.*;
 //import jat.plot.*;
 import jat.traj.*;

@@ -1,3 +1,5 @@
+package jat.core.cm.rendezvous;
+
 /* JAT: Java Astrodynamics Toolkit
  *
  * Copyright (c) 2003 National Aeronautics and Space Administration. All rights reserved.
@@ -17,10 +19,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * 
- * File Created on May 19, 2003
+ * File Created on Aug 26, 2003
  */
-
-package jat.cm;
+ 
 import jat.matvec.data.*;
 import jat.core.alg.integrators.*;
 
@@ -28,41 +29,40 @@ import java.io.*;
 import java.util.*;
 
 /**
-* The DeltaV_List.java Class provides a way to deal with
-* a list of impulsive delta_V's read from a file.
-*
-* @author 
-* @version 1.0
-*/
-public class DeltaV_List implements Serializable {
-
+ * <P>
+ * The CW_Target Class contains a list of guidance targets.
+ *
+ * @author 
+ * @version 1.0
+ */ 
+public class CW_TargetList {
 	private ArrayList list = new ArrayList();
 	
 	/** Constructor
 	 */
-	public DeltaV_List() {
+	public CW_TargetList() {
 	}
 
 	/** Constructor
 	 * @param filename String containing directory and filename where the data resides
 	 */
-	public DeltaV_List(String filename) {
+	public CW_TargetList(String filename) {
 		this.readFromFile(filename);
 	}
 
 	/** Add a DeltaV to the collection
 	 * @param dv DeltaV object
 	 */
-	public void add(DeltaV dv) {
-		list.add(dv);
+	public void add(CW_Target tgt) {
+		list.add(tgt);
 	}
 
 	/** Get a GPS_Measurement out of the collection
 	 * @param index Index of the measurement
 	 * @return the GPS Measurement
 	 */
-	public DeltaV get(int index) {
-		return (DeltaV) list.get(index);
+	public CW_Target get(int index) {
+		return (CW_Target) list.get(index);
 	}
 
 	/** Return the size of the list
@@ -76,9 +76,9 @@ public class DeltaV_List implements Serializable {
 	 * @param index int containing the measurement index
 	 * @return double containing the measurement corresponding to the index.
 	 */
-	public VectorN dv(int index) {
-		DeltaV deltav = this.get(index);
-		return deltav.dv;
+	public VectorN rtgt(int index) {
+		CW_Target tgt = this.get(index);
+		return tgt.rtgt;
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class DeltaV_List implements Serializable {
 	 * @return double containing time of the measurement corresponding to the index.
 	 */
 	public double time(int index) {
-		DeltaV deltav = this.get(index);
-		return deltav.t;
+		CW_Target tgt = this.get(index);
+		return tgt.t;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class DeltaV_List implements Serializable {
 	 */
 	public boolean hasNext(int index) {
 		boolean out = false;
-		if (index < (this.size() - 1)) {
+		if (index < (this.size())) {
 			out = true;
 		}
 		return out;
@@ -121,7 +121,7 @@ public class DeltaV_List implements Serializable {
 				// check for consistent number of columns
 				if (total != 4) {
 					System.out.println(
-						"DeltaV_List.readFromFile: Number of columns do not match");
+						"CW_TargetList.readFromFile: Number of columns do not match");
 					System.exit(-99);
 				}
 
@@ -130,9 +130,9 @@ public class DeltaV_List implements Serializable {
 					String token = tok.nextToken();
 					temp[i] = Double.parseDouble(token);
 				}
-				VectorN dv = new VectorN(temp[1], temp[2], temp[3]);
-				DeltaV deltav = new DeltaV(temp[0], dv);
-				this.add(deltav);
+				VectorN rtgt = new VectorN(temp[1], temp[2], temp[3]);
+				CW_Target tgt = new CW_Target(temp[0], rtgt);
+				this.add(tgt);
 			}
 			in.close();
 			fr.close();
@@ -150,9 +150,9 @@ public class DeltaV_List implements Serializable {
 
 		// loop through the file, one line at a time
 		while (this.hasNext(index)) {
-			DeltaV deltav = this.get(index);
-			VectorN dv = deltav.dv;
-			lp.print(deltav.t, dv.x);
+			CW_Target tgt = this.get(index);
+			VectorN rtgt = tgt.rtgt;
+			lp.print(tgt.t, rtgt.x);
 			index = index + 1;
 		}
 		lp.close();
@@ -162,13 +162,13 @@ public class DeltaV_List implements Serializable {
 	 * @param filename string containing the directory and filename.
 	 * @return the trajectory
 	 */
-	public static DeltaV_List recover(String filename) {
-		DeltaV_List out = new DeltaV_List();
+	public static CW_TargetList recover(String filename) {
+		CW_TargetList out = new CW_TargetList();
 		try {
 
 			FileInputStream file = new FileInputStream(filename);
 			ObjectInputStream in = new ObjectInputStream(file);
-			out = (DeltaV_List) in.readObject();
+			out = (CW_TargetList) in.readObject();
 			in.close();
 			file.close();
 		} catch (Exception e) {
@@ -191,86 +191,6 @@ public class DeltaV_List implements Serializable {
 			System.err.println("serialize: " + e);
 		}
 	}
-	
-    public static void main(String[] args)
-    {
-        DeltaV_List x = new DeltaV_List();
-
-		// delta-v from CW equations
-		double [] deltav1 = new double[3];
-		deltav1[0] = -0.19094164920359352;
-//		deltav1[1] = -0.8776834149116475;
-		deltav1[1] = -0.878;
-		deltav1[2] = 0.0;
-		VectorN dv1 = new VectorN(deltav1);
-		
-		DeltaV deltav = new DeltaV(0.0, dv1);
-		
-		x.add(deltav);
-		
-		double [] deltav2 = new double[3];
-		deltav2[0] = -0.5603757896639145;
-		deltav2[1] = 0.6249070361006656;
-		deltav2[2] = 0.0;
-		VectorN dv2 = new VectorN(deltav2);
-		
-		deltav = new DeltaV(5000.0, dv2);
-		
-		x.add(deltav);
-
-		double [] deltav3 = new double[3];
-		deltav3[0] = 0.1606911732628235;
-		deltav3[1] = 0.14140915221166075;
-		deltav3[2] = 0.0;
-		VectorN dv3 = new VectorN(deltav3);
-		
-		deltav = new DeltaV(5750.0, dv3);
-		
-		x.add(deltav);
-
-		double [] deltav4 = new double[3];
-		deltav4[0] = 0.0707966875285207;
-		deltav4[1] = 0.06230149024070955;
-		deltav4[2] = 0.0;
-		VectorN dv4 = new VectorN(deltav4);
-		
-		deltav = new DeltaV(6500.0, dv4);
-		
-		x.add(deltav);
-
-		double [] deltav5 = new double[3];
-		deltav5[0] = 0.03560401104777747;
-		deltav5[1] = 0.034059802166368884;
-		deltav5[2] = 0.0;
-		VectorN dv5 = new VectorN(deltav5);
-		
-		deltav = new DeltaV(7250.0, dv5);
-		
-		x.add(deltav);
-		
-
-        // Print out the trajectory to the screen
-//        LinePrinter lp1 = new LinePrinter();        
-//        x.traj.printAll(lp1);
-//        lp1.close();
-        
-        
-        // Serialize the trajectory
-        x.serialize("C:\\Jat\\jat\\input\\deltav.jat");
-        System.out.println("deltav list serialized");
-        
-        // Recover the trajectory and print all to screen       
-        DeltaV_List dvl = DeltaV_List.recover("C:\\Jat\\jat\\input\\deltav.jat");
-        System.out.println("Printing Recovered DeltaV's");
-        int index = 0;
-        while (dvl.hasNext(index)){
-	        double t = dvl.time(index);
-	        VectorN delv = dvl.dv(index);
-	        System.out.println("deltav: "+index+" "+t+" "+delv);
-	        index = index + 1;
-        }
-    }
-        
 	
 
 }

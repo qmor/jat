@@ -21,7 +21,7 @@
  */
 package jat.groundstations;
 
-import jat.cm.Constants;
+import jat.core.cm.Constants;
 import jat.core.math.MathUtils;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.RotationMatrix;

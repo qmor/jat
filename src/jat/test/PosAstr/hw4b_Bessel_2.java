@@ -22,7 +22,7 @@
 
 package jat.test.PosAstr;
 
-import jat.cm.*;
+import jat.core.cm.*;
 
 public class hw4b_Bessel_2
 {

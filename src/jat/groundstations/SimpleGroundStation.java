@@ -21,11 +21,11 @@
  */
 package jat.groundstations;
 
-import jat.cm.Constants;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.RotationMatrix;
 import jat.matvec.data.VectorN;
 import jat.spacetime.*;
+import jat.core.cm.Constants;
 import jat.core.constants.*;
 import jat.core.math.MathUtils;
 

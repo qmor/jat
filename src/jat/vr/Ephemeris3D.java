@@ -24,7 +24,8 @@ package jat.vr;
 import jat.util.*;
 import jat.eph.*;
 import jat.matvec.data.*;
-import jat.cm.*;
+import jat.core.cm.*;
+
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
 import jat.spacetime.*;

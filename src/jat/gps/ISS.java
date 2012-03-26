@@ -20,8 +20,8 @@
 package jat.gps;
 
 import jat.matvec.data.*;
-import jat.cm.*;
 import jat.core.alg.integrators.*;
+import jat.core.cm.*;
 
 /**
  * <P>

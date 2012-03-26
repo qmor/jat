@@ -21,7 +21,7 @@
  * File Created on Aug 28, 2003
  */
  
-package jat.cm;
+package jat.core.cm;
  
 import jat.matvec.data.*;
 import jat.core.alg.integrators.*;

@@ -21,7 +21,8 @@
 
 package jat.vr;
 
-import jat.cm.*;
+import jat.core.cm.*;
+
 import java.applet.Applet;
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;

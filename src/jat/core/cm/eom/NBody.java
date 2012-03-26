@@ -18,7 +18,7 @@
  *
  */
 
-package jat.cm.eom;
+package jat.core.cm.eom;
 import jat.core.alg.integrators.*;
 
 /**

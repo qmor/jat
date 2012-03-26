@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.cm;
+package jat.core.cm;
 import jat.matvec.data.*;
 import jat.core.alg.*;
 import jat.core.alg.integrators.*;
