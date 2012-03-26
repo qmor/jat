@@ -25,9 +25,9 @@ import java.util.HashMap;
 
 import jat.core.alg.integrators.Derivatives;
 import jat.core.cm.Constants;
-import jat.forces.GravityModel;
-import jat.forces.GravityModelType;
-import jat.forces.HarrisPriester;
+import jat.core.forces.GravityModel;
+import jat.core.forces.GravityModelType;
+import jat.core.forces.HarrisPriester;
 import jat.gps.GPS_Utils;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;

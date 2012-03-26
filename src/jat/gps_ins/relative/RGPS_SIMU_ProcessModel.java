@@ -28,11 +28,11 @@ import jat.gps.filters.*;
 import jat.core.alg.estimators.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
+import jat.core.forces.*;
 import jat.core.math.*;
 import jat.gps_ins.*;
 import jat.ins.*;
 import jat.timeRef.*;
-import jat.forces.*;
 
 /**
 * The RGPS_SIMU_ProcessModel.java Class provides the process model for RGPS/SIMU,

@@ -24,11 +24,11 @@ package jat.gps.filters.relative;
 import jat.matvec.data.*;
 import jat.core.alg.estimators.*;
 import jat.core.alg.integrators.*;
+import jat.core.forces.*;
 //import jat.cm.*;
 import jat.gps.*;
 import jat.gps.filters.*;
 //import jat.gps_ins.*;
-import jat.forces.*;
 import jat.timeRef.*;
 
 /**

@@ -26,11 +26,11 @@ public final class JatUnitTest {
    */
     public static Test suite() {
       TestSuite suite = new TestSuite("JAT Unit Test Suite");
-      suite.addTestSuite(jat.forces.unittest.CIRAExponentialDragTest.class);
-      suite.addTestSuite(jat.forces.unittest.GravityModelTest.class);
-      suite.addTestSuite(jat.forces.unittest.HarrisPriesterTest.class);
-      suite.addTestSuite(jat.forces.unittest.NRLMSISEDragTest.class);
-      suite.addTestSuite(jat.forces.unittest.SolarRadiationPressureTest.class);
+      suite.addTestSuite(jat.core.forces.unittest.CIRAExponentialDragTest.class);
+      suite.addTestSuite(jat.core.forces.unittest.GravityModelTest.class);
+      suite.addTestSuite(jat.core.forces.unittest.HarrisPriesterTest.class);
+      suite.addTestSuite(jat.core.forces.unittest.NRLMSISEDragTest.class);
+      suite.addTestSuite(jat.core.forces.unittest.SolarRadiationPressureTest.class);
       suite.addTestSuite(jat.spacetime.unittest.BodyCenteredInertialRefTest.class);
       suite.addTestSuite(jat.spacetime.unittest.LunaFixedRefTest.class);
       return suite;

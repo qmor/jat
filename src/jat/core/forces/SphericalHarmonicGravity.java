@@ -18,7 +18,7 @@
  *
  */
 
-package jat.forces;
+package jat.core.forces;
 import jat.matvec.data.*;
 import jat.timeRef.EarthRef;
 import jat.spacecraft.Spacecraft;

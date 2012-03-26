@@ -25,15 +25,15 @@ import jat.matvec.data.VectorN;
 import jat.matvec.data.Matrix;
 import jat.core.alg.integrators.*;
 import jat.core.cm.Constants;
-import jat.forces.AtmosphericDrag;
-import jat.forces.GravitationalBody;
-import jat.forces.GravityModel;
-import jat.forces.GravityModelType;
-import jat.forces.HarrisPriester;
-import jat.forces.Moon;
-import jat.forces.NRLMSISE_Drag;
-import jat.forces.SolarRadiationPressure;
-import jat.forces.Sun;
+import jat.core.forces.AtmosphericDrag;
+import jat.core.forces.GravitationalBody;
+import jat.core.forces.GravityModel;
+import jat.core.forces.GravityModelType;
+import jat.core.forces.HarrisPriester;
+import jat.core.forces.Moon;
+import jat.core.forces.NRLMSISE_Drag;
+import jat.core.forces.SolarRadiationPressure;
+import jat.core.forces.Sun;
 
 /**
  * This is the primary class for the OD Toolbox interface. Each instantiation

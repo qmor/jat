@@ -17,10 +17,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.forces;
+package jat.core.forces;
 
 import java.lang.Math;
-import jat.forces.nrlmsise.NRLMSISE_data;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 import jat.timeRef.EarthRef;
@@ -31,6 +30,7 @@ import jat.spacetime.EarthTrueOfDateRef;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
 import jat.core.cm.Constants;
+import jat.core.forces.nrlmsise.NRLMSISE_data;
 import jat.core.math.*;
 
 /**

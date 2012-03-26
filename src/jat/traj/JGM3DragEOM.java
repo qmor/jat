@@ -23,10 +23,10 @@ package jat.traj;
  */
  
 import jat.core.alg.integrators.*;
+import jat.core.forces.*;
 import jat.matvec.data.*;
 //import jat.cm.*;
 import jat.timeRef.*;
-import jat.forces.*;
 import jat.spacetime.Time;
 
 /**

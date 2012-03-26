@@ -25,10 +25,10 @@ import jat.matvec.data.*;
 import jat.core.alg.estimators.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
+import jat.core.forces.*;
 import jat.gps.*;
 import jat.gps.filters.*;
 //import jat.gps_ins.*;
-import jat.forces.*;
 import jat.timeRef.*;
 
 /**

@@ -1,8 +1,8 @@
-package jat.forces.unittest;
+package jat.core.forces.unittest;
 
 import java.io.IOException;
 
-import jat.forces.HarrisPriester;
+import jat.core.forces.HarrisPriester;
 import jat.spacecraft.Spacecraft;
 
 public class HarrisPriesterTest extends ForceModelTest {

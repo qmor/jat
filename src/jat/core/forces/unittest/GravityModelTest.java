@@ -1,9 +1,9 @@
-package jat.forces.unittest;
+package jat.core.forces.unittest;
 
 import java.io.IOException;
 
-import jat.forces.GravityModel;
-import jat.forces.GravityModelType;
+import jat.core.forces.GravityModel;
+import jat.core.forces.GravityModelType;
 import jat.spacecraft.Spacecraft;
 
 public class GravityModelTest extends ForceModelTest {

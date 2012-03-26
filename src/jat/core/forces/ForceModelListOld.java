@@ -17,7 +17,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 * 
 */
-package jat.forces;
+package jat.core.forces;
 
 import jat.matvec.data.VectorN;
 import jat.timeRef.*;

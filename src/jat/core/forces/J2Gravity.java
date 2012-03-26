@@ -20,7 +20,7 @@
  * File Created on Aug 30, 2003
  */
  
-package jat.forces;
+package jat.core.forces;
 import jat.matvec.data.*;
 import jat.spacecraft.Spacecraft;
 import jat.timeRef.EarthRef;

@@ -20,7 +20,7 @@
 package jat.spacetime;
 
 //import jat.spacetime.*;
-import jat.forces.*;
+import jat.core.forces.*;
 import jat.spacecraft.Spacecraft;
 //import jat.math.*;
 
@@ -134,7 +134,7 @@ public class UniverseModel {
     
     /**
      * Add a force model to the universe.
-     * @see jat.forces.ForceModel
+     * @see jat.core.forces.ForceModel
      * @param f The force model.
      */
     public void addForce(ForceModel f){

@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.forces.nrlmsise;
+package jat.core.forces.nrlmsise;
 
 /**
  * Container class for the data used in NRLMSISE_Drag.java

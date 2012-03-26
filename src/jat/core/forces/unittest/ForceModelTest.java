@@ -1,4 +1,4 @@
-package jat.forces.unittest;
+package jat.core.forces.unittest;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jat.forces.ForceModel;
+import jat.core.forces.ForceModel;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.Spacecraft;
 import jat.spacetime.EarthRef;

@@ -18,7 +18,7 @@
  *
  */
 
-package jat.forces;
+package jat.core.forces;
 
 import jat.spacetime.EarthFixedRef;
 
