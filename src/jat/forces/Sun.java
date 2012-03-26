@@ -32,8 +32,8 @@ import jat.timeRef.EarthRef;
 //import jat.timeRef.Time;
 import jat.util.FileUtil;
 import jat.core.cm.Constants;
+import jat.core.eph.*;
 import jat.core.math.MathUtils;
-import jat.eph.*;
 
 /**
  * Simple class to obtain the gravitational effect of the Sun.

@@ -23,7 +23,7 @@ package jat.examples.vr.Copernicus1;
 
 import jat.vr.*;
 import jat.core.cm.*;
-import jat.eph.*;
+import jat.core.eph.*;
 import jat.util.*;
 import jat.spacetime.*;
 import jat.matvec.data.*;

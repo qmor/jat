@@ -23,8 +23,8 @@ package jat.examples.vr.SolarSystem;
 
 import jat.vr.*;
 import jat.core.cm.*;
+import jat.core.eph.*;
 import jat.util.*;
-import jat.eph.*;
 
 import java.awt.*;
 import java.util.*;

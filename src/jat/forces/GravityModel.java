@@ -22,8 +22,8 @@ package jat.forces;
 import jat.matvec.data.Matrix;
 import jat.spacetime.*;
 import jat.util.FileUtil;
+import jat.core.eph.*;
 import jat.core.math.MathUtils;
-import jat.eph.*;
 
 import java.io.BufferedReader;
 import java.io.File;

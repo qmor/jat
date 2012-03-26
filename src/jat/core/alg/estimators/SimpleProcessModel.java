@@ -27,7 +27,7 @@ import java.util.Random;
 import jat.core.alg.integrators.Derivatives;
 import jat.core.alg.integrators.LinePrinter;
 import jat.core.alg.integrators.RungeKutta8;
-import jat.eph.DE405;
+import jat.core.eph.DE405;
 import jat.matvec.data.Matrix;
 import jat.matvec.data.VectorN;
 import jat.measurements.OpticalMeasurementModel;

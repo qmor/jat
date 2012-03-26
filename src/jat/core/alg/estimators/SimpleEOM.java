@@ -25,8 +25,8 @@ import java.util.HashMap;
 
 import jat.core.alg.integrators.Derivatives;
 import jat.core.cm.Constants;
-import jat.eph.DE405;
-import jat.eph.DE405_Body;
+import jat.core.eph.DE405;
+import jat.core.eph.DE405_Body;
 import jat.forces.GravityModel;
 import jat.forces.GravityModelType;
 import jat.forces.SolarRadiationPressure;

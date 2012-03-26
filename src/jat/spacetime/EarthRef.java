@@ -23,8 +23,8 @@ import jat.matvec.data.*;
 import jat.spacetime.Time;
 import jat.util.FileUtil;
 import jat.core.cm.*;
+import jat.core.eph.*;
 import jat.core.math.*;
-import jat.eph.*;
 
 /**
  * <P>

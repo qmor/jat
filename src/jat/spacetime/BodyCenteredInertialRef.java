@@ -19,7 +19,7 @@
  */
 package jat.spacetime;
 
-import jat.eph.*;
+import jat.core.eph.*;
 import jat.matvec.data.VectorN;
 
 /**

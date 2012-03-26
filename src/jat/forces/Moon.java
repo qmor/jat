@@ -20,7 +20,6 @@
 package jat.forces;
 
 //import jat.cm.Constants;
-import jat.eph.*;
 //import jat.math.MathUtils;
 import jat.matvec.data.VectorN;
 import jat.spacecraft.Spacecraft;
@@ -28,6 +27,7 @@ import jat.spacetime.*;
 import jat.timeRef.*;
 import jat.util.FileUtil;
 import jat.core.cm.Constants;
+import jat.core.eph.*;
 
 /**
  * Simple class to model the gravitational attraction of the moon.

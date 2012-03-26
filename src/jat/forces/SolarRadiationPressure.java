@@ -20,6 +20,7 @@
 package jat.forces;
 
 import jat.core.cm.Constants;
+import jat.core.eph.*;
 import jat.matvec.data.VectorN;
 import jat.timeRef.EarthRef;
 import jat.spacecraft.Spacecraft;
@@ -28,7 +29,6 @@ import jat.spacetime.BodyRef;
 import jat.spacetime.ReferenceFrame;
 import jat.spacetime.ReferenceFrameTranslater;
 import jat.spacetime.Time;
-import jat.eph.*;
 
 /**
  * <P>

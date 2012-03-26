@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Rob Antonucci 
  **/
-package jat.eph.unittest;
+package jat.core.eph.unittest;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import jat.matvec.data.*;
-import jat.eph.*;
+import jat.core.eph.*;
 import jat.spacetime.CalDate;
 import jat.spacetime.Time;
 import junit.framework.TestCase;

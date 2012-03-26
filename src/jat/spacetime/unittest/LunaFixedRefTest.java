@@ -21,7 +21,7 @@
  **/
 package jat.spacetime.unittest;
 
-import jat.eph.*;
+import jat.core.eph.*;
 import jat.matvec.data.VectorN;
 import jat.spacetime.BodyCenteredInertialRef;
 import jat.spacetime.EarthRef;

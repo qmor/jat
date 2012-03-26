@@ -25,7 +25,7 @@ import java.util.HashMap;
 import jat.sim.*;
 import jat.matvec.data.*;
 import jat.core.alg.integrators.LinePrinter;
-import jat.eph.DE405;
+import jat.core.eph.DE405;
 import jat.measurements.*;
 import jat.spacecraft.SpacecraftModel;
 import jat.spacetime.Time;
