@@ -19,9 +19,9 @@
 */
 package jat.core.forces;
 
-import jat.matvec.data.VectorN;
-import jat.spacecraft.Spacecraft;
-import jat.timeRef.EarthRef;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.timeRef.EarthRef;
 
 /**
  * This interface allows for uniformity among extensible and newly added

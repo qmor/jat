@@ -1,6 +1,6 @@
 package jat.test.path_test;
 
-import jat.util.*;
+import jat.core.util.*;
 
 public class path_test
 {

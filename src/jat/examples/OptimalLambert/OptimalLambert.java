@@ -22,8 +22,9 @@ package jat.examples.OptimalLambert;
 
 import jat.core.alg.opt.*;
 import jat.core.cm.*;
-import jat.matvec.data.VectorN;
-import jat.plot.*;
+import jat.core.matvec.data.VectorN;
+import jat.core.plot.*;
+
 import java.io.*;
 
 /**

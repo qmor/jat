@@ -22,7 +22,7 @@
 package jat.examples.OrbitDetermination;
 
 import jat.core.alg.integrators.Derivatives;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 /**
 * The J2DragEOM.java Class provides the equations of motion (derivatives)

@@ -31,7 +31,7 @@ import javax.swing.border.TitledBorder;
 import jat.core.attitude.*;
 import jat.core.attitude.eom.EomTest;
 import jat.core.attitude.util.JTextFieldPanel;
-import jat.util.FileUtil;
+import jat.core.util.FileUtil;
 
 /**
  * <P>

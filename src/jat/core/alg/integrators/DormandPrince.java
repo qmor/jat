@@ -19,7 +19,7 @@
  */
 package jat.core.alg.integrators;
 
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.VectorN;
 
 /**
  * Implements a Dormand-Prince 8(7) integrator

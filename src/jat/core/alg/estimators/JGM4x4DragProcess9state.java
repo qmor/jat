@@ -22,10 +22,10 @@
 package jat.core.alg.estimators;
 
 import jat.core.alg.integrators.RungeKutta8;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacetime.RSW_Frame;
 import jat.sim.initializer;
-import jat.spacetime.RSW_Frame;
 
 import java.util.HashMap;
 

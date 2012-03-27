@@ -22,7 +22,8 @@
 package jat.examples.vr.attitude;
 
 import jat.vr.*;
-import jat.util.*;
+import jat.core.util.*;
+
 import java.awt.*;
 import java.applet.Applet;
 import javax.media.j3d.*;

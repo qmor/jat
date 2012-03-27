@@ -21,10 +21,10 @@
  */
  
 package jat.core.forces;
-import jat.matvec.data.*;
-import jat.spacecraft.Spacecraft;
-import jat.timeRef.EarthRef;
 import jat.core.cm.Constants;
+import jat.core.matvec.data.*;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.timeRef.EarthRef;
 
 /**
 * The J2Gravity.java Class computes the gravitational acceleration and

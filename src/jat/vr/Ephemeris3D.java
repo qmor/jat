@@ -21,14 +21,14 @@
 
 package jat.vr;
 
-import jat.util.*;
-import jat.matvec.data.*;
 import jat.core.cm.*;
 import jat.core.eph.*;
+import jat.core.matvec.data.*;
+import jat.core.spacetime.*;
+import jat.core.util.*;
 
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
-import jat.spacetime.*;
 
 /**
  * @author Tobias Berthold

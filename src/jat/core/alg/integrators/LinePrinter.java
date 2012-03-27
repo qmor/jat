@@ -19,7 +19,7 @@
  */
 
 package jat.core.alg.integrators;
-import jat.util.FileUtil;
+import jat.core.util.FileUtil;
 
 import java.io.*;
 import java.net.URL;

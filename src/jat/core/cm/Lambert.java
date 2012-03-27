@@ -18,9 +18,9 @@
  *
  */
 package jat.core.cm;
-import jat.matvec.data.*;
 import jat.core.alg.*;
 import jat.core.alg.integrators.*;
+import jat.core.matvec.data.*;
 
 /**
  * <P>

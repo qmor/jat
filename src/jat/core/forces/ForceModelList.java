@@ -19,11 +19,11 @@
 */
 package jat.core.forces;
 
-import jat.matvec.data.VectorN;
-import jat.spacetime.*;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.*;
 
 import java.util.*;
-import jat.spacecraft.Spacecraft;
 
 /**
  * ForceModelList is a countainer for force models.  It allows the simulation to encapsulate

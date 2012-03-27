@@ -19,15 +19,15 @@
  */
 
 package jat.core.forces;
-import jat.matvec.data.*;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.BodyRef;
-import jat.spacetime.EarthTrueOfDateRef;
-import jat.spacetime.ReferenceFrameTranslater;
-import jat.spacetime.Time;
-import jat.timeRef.*;
 import jat.core.*;
 import jat.core.audio.SoundPlayer;
+import jat.core.matvec.data.*;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.BodyRef;
+import jat.core.spacetime.EarthTrueOfDateRef;
+import jat.core.spacetime.ReferenceFrameTranslater;
+import jat.core.spacetime.Time;
+import jat.core.timeRef.*;
 
 
 /**

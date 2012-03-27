@@ -25,7 +25,8 @@
  */
 package jat.vr;
 
-import jat.util.*;
+import jat.core.util.*;
+
 import javax.media.j3d.*;
 import javax.vecmath.*;
 

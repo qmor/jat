@@ -30,8 +30,8 @@ package jat.examples.ephemeris;
 
 import jat.core.cm.*;
 import jat.core.eph.*;
-import jat.util.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
+import jat.core.util.*;
 
 /**
  * @author Tobias Berthold

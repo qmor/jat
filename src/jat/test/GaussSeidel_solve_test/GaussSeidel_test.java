@@ -22,7 +22,7 @@
 package jat.test.GaussSeidel_solve_test;
 
 import jat.core.alg.solver.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 // Book Burden Faires
 // Chapter 7.3 example 1

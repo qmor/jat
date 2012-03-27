@@ -20,8 +20,8 @@
  */
 
 package jat.examples.vr.threebody;
-import jat.plot.*;
 import jat.core.alg.integrators.*;
+import jat.core.plot.*;
 
 /**
  * <P>

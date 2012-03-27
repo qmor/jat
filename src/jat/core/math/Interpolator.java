@@ -21,8 +21,8 @@
 
 package jat.core.math;
 
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
 
 import java.io.*;
 

@@ -21,7 +21,8 @@
 
 package jat.core.cm;
 import java.io.*;
-import jat.matvec.data.*;
+
+import jat.core.matvec.data.*;
 
 /** Implements Hills Equations
  *

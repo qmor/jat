@@ -11,7 +11,7 @@ import java.text.*;
 import jat.core.alg.ScalarfromArrayFunction;
 import jat.core.alg.integrators.*;
 import jat.core.cm.eom.TwoBodyCSI;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.VectorN;
 
 /**
  * @author Tobias Berthold

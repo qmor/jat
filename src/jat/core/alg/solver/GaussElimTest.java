@@ -20,8 +20,8 @@
 
 package jat.core.alg.solver;
 
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
 
 class GaussElimTest
 {

@@ -19,7 +19,7 @@
  */
 
 package jat.core.alg;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 /**
  * Utility class for Numerical Derivatives

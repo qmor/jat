@@ -24,8 +24,8 @@ package jat.examples.OrbitDetermination;
 
 import jat.core.alg.estimators.*;
 import jat.core.alg.integrators.*;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
 
 /**
 * The J2DragProcess.java Class provides the dynamics model for an orbit 

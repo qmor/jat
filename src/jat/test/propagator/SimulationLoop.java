@@ -21,15 +21,15 @@ package jat.test.propagator;
 
 import com.mathworks.jmi.Matlab;
 
-import jat.timeRef.*;
 //import jat.util.FileUtil;
-import jat.spacecraft.Spacecraft;
-import jat.matvec.data.VectorN;
 import jat.core.alg.integrators.*;
 import jat.core.forces.*;
 import jat.core.math.MathUtils;
-import jat.matlabInterface.*;
-import jat.traj.Trajectory;
+import jat.core.matlabInterface.*;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.timeRef.*;
+import jat.core.traj.Trajectory;
 
 /**
  * SimulationLoop provides a way to encapsulate the feedback loop

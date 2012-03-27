@@ -24,8 +24,9 @@ package jat.examples.vr.threebody;
 import jat.vr.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
-import jat.util.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
+import jat.core.util.*;
+
 import java.awt.*;
 import java.applet.Applet;
 import javax.media.j3d.*;

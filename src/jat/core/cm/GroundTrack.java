@@ -19,10 +19,11 @@
  */
 
 package jat.core.cm;
-import jat.plot.*;
-import jat.util.*;
-import jat.traj.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
+import jat.core.plot.*;
+import jat.core.traj.*;
+import jat.core.util.*;
+
 import java.io.*;
 import java.util.*;
 

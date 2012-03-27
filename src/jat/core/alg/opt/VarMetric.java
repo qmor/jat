@@ -21,7 +21,8 @@
 package jat.core.alg.opt;
 
 import jat.core.alg.ScalarfromArrayFunction;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
+
 import java.text.*;
 
 /**

@@ -23,7 +23,7 @@ package jat.core.cm.eom;
 import jat.core.alg.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 /**
  * Equations of motion for a powered spacecraft with constant specific impulse

@@ -19,7 +19,8 @@
  */
 package jat.core.attitude.util;
 
-import jat.util.FileUtil;
+import jat.core.util.FileUtil;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

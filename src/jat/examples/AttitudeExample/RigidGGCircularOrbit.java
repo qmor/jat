@@ -21,8 +21,8 @@
 
 package jat.examples.AttitudeExample;
 
-import jat.plot.*;
 import jat.core.alg.integrators.*;
+import jat.core.plot.*;
 
 /**
  * <p>This class demonstrates a way to do a simple s/c attitude simulation.

@@ -23,9 +23,9 @@
 package jat.examples.OrbitDetermination;
 import java.io.*;
 import java.util.*;
-import jat.util.*;
 import jat.core.alg.estimators.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
+import jat.core.util.*;
 
 /**
 * The ObsData.java Class provides the measurements and measurement model for a

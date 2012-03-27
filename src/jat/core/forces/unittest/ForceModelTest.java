@@ -9,11 +9,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import jat.core.forces.ForceModel;
-import jat.matvec.data.VectorN;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.EarthRef;
-import jat.spacetime.Time;
-import jat.spacetime.TimeUtils;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.EarthRef;
+import jat.core.spacetime.Time;
+import jat.core.spacetime.TimeUtils;
 import junit.framework.TestCase;
 
 public class ForceModelTest extends TestCase {

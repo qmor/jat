@@ -19,8 +19,8 @@
  */
 
 package jat.examples.IntegratorExample;
-import jat.plot.*;
 import jat.core.alg.integrators.*;
+import jat.core.plot.*;
 
 /**
  * <P>

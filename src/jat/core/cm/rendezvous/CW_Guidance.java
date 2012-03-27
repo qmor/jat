@@ -25,8 +25,8 @@ package jat.core.cm.rendezvous;
 import jat.core.cm.ClohessyWiltshire;
 import jat.core.cm.Constants;
 import jat.core.cm.TwoBody;
-import jat.matvec.data.*;
-import jat.timeRef.*;
+import jat.core.matvec.data.*;
+import jat.core.timeRef.*;
 
 /**
  * <P>

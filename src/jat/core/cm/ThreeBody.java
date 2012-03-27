@@ -21,7 +21,7 @@
 package jat.core.cm;
 
 import jat.core.alg.integrators.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 /**
  * <P>

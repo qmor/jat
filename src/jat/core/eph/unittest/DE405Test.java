@@ -28,10 +28,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import jat.matvec.data.*;
 import jat.core.eph.*;
-import jat.spacetime.CalDate;
-import jat.spacetime.Time;
+import jat.core.matvec.data.*;
+import jat.core.spacetime.CalDate;
+import jat.core.spacetime.Time;
 import junit.framework.TestCase;
 
 public class DE405Test extends TestCase {

@@ -3,7 +3,7 @@ package jat.core.forces.unittest;
 import java.io.IOException;
 
 import jat.core.forces.SolarRadiationPressure;
-import jat.spacecraft.Spacecraft;
+import jat.core.spacecraft.Spacecraft;
 
 public class SolarRadiationPressureTest extends ForceModelTest {
 

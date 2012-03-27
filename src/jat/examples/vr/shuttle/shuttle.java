@@ -23,7 +23,7 @@ package jat.examples.vr.shuttle;
 
 import jat.vr.*;
 import jat.core.cm.*;
-import jat.util.*;
+import jat.core.util.*;
 
 import java.awt.*;
 import java.applet.Applet;

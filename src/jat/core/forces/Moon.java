@@ -21,13 +21,13 @@ package jat.core.forces;
 
 //import jat.cm.Constants;
 //import jat.math.MathUtils;
-import jat.matvec.data.VectorN;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.*;
-import jat.timeRef.*;
-import jat.util.FileUtil;
 import jat.core.cm.Constants;
 import jat.core.eph.*;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.*;
+import jat.core.timeRef.*;
+import jat.core.util.FileUtil;
 
 /**
  * Simple class to model the gravitational attraction of the moon.
@@ -92,7 +92,7 @@ public class Moon extends GravitationalBody {
      * @param eRef Earth Reference
      * @param sc Spacecraft parameters and state
      */
-    public VectorN acceleration(jat.spacetime.EarthRef eRef, Spacecraft sc) {
+    public VectorN acceleration(jat.core.spacetime.EarthRef eRef, Spacecraft sc) {
 
       //ReferenceFrameTranslater xlater = 
         //new ReferenceFrameTranslater(eRef, moonRef, new Time(eRef.mjd_utc()));

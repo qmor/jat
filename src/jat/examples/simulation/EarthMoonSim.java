@@ -20,12 +20,12 @@
  */
 package jat.examples.simulation;
 
-import jat.matvec.data.VectorN;
-import jat.sim.SimModel;
-import jat.spacecraft.SpacecraftModel;
-import jat.util.FileUtil;
 import jat.core.cm.*;
 import jat.core.forces.*;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.SpacecraftModel;
+import jat.core.util.FileUtil;
+import jat.sim.SimModel;
 
 /**
  * TODO Javadoc
@@ -123,7 +123,7 @@ public class EarthMoonSim {
         System.out.println("Elapsed time [min]: "+elapsed);
         //* Format and output the Celestia files for visualization
         if(plot_traj){
-        	jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+        	jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
         	try{
         		//i--;
         		//j--;

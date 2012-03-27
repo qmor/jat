@@ -25,8 +25,9 @@ import jat.core.alg.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
 import jat.core.cm.eom.*;
-import jat.matvec.data.VectorN;
-import jat.plot.*;
+import jat.core.matvec.data.VectorN;
+import jat.core.plot.*;
+
 import java.io.*;
 
 /** This demo computes the trajectory of a spacecraft with a constant specific 

@@ -19,21 +19,21 @@
  */
 package jat.core.forces;
 
-import jat.matvec.data.RotationMatrix;
-import jat.matvec.data.VectorN;
 //import jat.matvec.data.Matrix;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.BodyCenteredInertialRef;
-import jat.spacetime.BodyRef;
-import jat.spacetime.ReferenceFrame;
-import jat.spacetime.ReferenceFrameTranslater;
-import jat.spacetime.Time;
-import jat.timeRef.EarthRef;
 //import jat.timeRef.Time;
-import jat.util.FileUtil;
 import jat.core.cm.Constants;
 import jat.core.eph.*;
 import jat.core.math.MathUtils;
+import jat.core.matvec.data.RotationMatrix;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.BodyCenteredInertialRef;
+import jat.core.spacetime.BodyRef;
+import jat.core.spacetime.ReferenceFrame;
+import jat.core.spacetime.ReferenceFrameTranslater;
+import jat.core.spacetime.Time;
+import jat.core.timeRef.EarthRef;
+import jat.core.util.FileUtil;
 
 /**
  * Simple class to obtain the gravitational effect of the Sun.

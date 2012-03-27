@@ -19,11 +19,11 @@
 */
 package jat.core.forces;
 
-import jat.matvec.data.Matrix;
-import jat.spacetime.*;
-import jat.util.FileUtil;
 import jat.core.eph.*;
 import jat.core.math.MathUtils;
+import jat.core.matvec.data.Matrix;
+import jat.core.spacetime.*;
+import jat.core.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.File;

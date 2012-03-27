@@ -29,8 +29,8 @@
 
 package jat.core.alg;
 
-import jat.matvec.data.*;
-import jat.matvec.data.matrixDecompositions.*;
+import jat.core.matvec.data.*;
+import jat.core.matvec.data.matrixDecompositions.*;
 
 abstract public class NLESolver
 {

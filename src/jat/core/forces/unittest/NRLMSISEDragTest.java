@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import jat.core.forces.CIRA_ExponentialDrag;
 import jat.core.forces.NRLMSISE_Drag;
-import jat.spacecraft.Spacecraft;
+import jat.core.spacecraft.Spacecraft;
 
 public class NRLMSISEDragTest extends ForceModelTest {
 

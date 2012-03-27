@@ -2,10 +2,10 @@ package jat.test.alg.integrators;
 
 import jat.core.alg.integrators.Derivatives;
 import jat.core.alg.integrators.RKF78_StoreSteps;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
-import jat.matvec.io.data.fileTools.MatrixString;
-import jat.util.PrintMatrix;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
+import jat.core.matvec.io.data.fileTools.MatrixString;
+import jat.core.util.PrintMatrix;
 
 /**
  * Test the Runge Kutta integrator by comparing it's output of a harmonic oscillator with the sine and cosine functions

@@ -21,7 +21,7 @@ package jat.core.alg.estimators;
  * 
  * File Created on May 7, 2003
  */
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 /**
 * The MeasurementModel Interface provides a mechanism to pass measurements

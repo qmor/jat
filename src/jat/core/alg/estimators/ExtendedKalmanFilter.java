@@ -21,8 +21,7 @@ package jat.core.alg.estimators;
  * 
  * File Created on May 7, 2003
  */
-import jat.matvec.data.*;
-//import jat.audio.*;
+import jat.core.matvec.data.*;
 
 /**
  * The ExtendedKalmanFilter Class processes measurements using an EKF algorith,

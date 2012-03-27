@@ -33,7 +33,7 @@
 package jat.core.alg.solver;
 
 import jat.core.math.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
 
 public class GaussSeidel
 {

@@ -21,8 +21,8 @@
 
 package jat.test.PosAstr;
 
-import jat.matvec.data.*;
 import jat.core.cm.*;
+import jat.core.matvec.data.*;
 
 public class Longitude
 {

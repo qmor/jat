@@ -21,8 +21,8 @@
  **/
 package jat.core.alg.estimators;
 
-import jat.matvec.data.VectorN;
-import jat.measurements.ObservationMeasurement;
+import jat.core.matvec.data.VectorN;
+import jat.core.measurements.ObservationMeasurement;
 
 public interface MeasurementFileModel {
 

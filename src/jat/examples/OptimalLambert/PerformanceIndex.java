@@ -24,7 +24,7 @@ import java.text.*;
 
 import jat.core.alg.ScalarfromArrayFunction;
 import jat.core.cm.*;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.VectorN;
 
 /**
  * @author Tobias Berthold

@@ -19,12 +19,12 @@
  */
 
 package jat.core.forces;
-import jat.matvec.data.*;
-import jat.timeRef.*;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.BodyRef;
-import jat.spacetime.Time;
 import jat.core.cm.Constants;
+import jat.core.matvec.data.*;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.BodyRef;
+import jat.core.spacetime.Time;
+import jat.core.timeRef.*;
 
 /**
  * <P>
@@ -229,7 +229,7 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
      * @param t Time reference object
      * @param bRef Earth reference object
      * @param sc Spacecraft parameters and state
-     * @see jat.core.forces.ForceModel#acceleration(jat.spacetime.Time, jat.spacetime.BodyRef, jat.spacecraft.Spacecraft)
+     * @see jat.core.forces.ForceModel#acceleration(jat.core.spacetime.Time, jat.core.spacetime.BodyRef, jat.core.spacecraft.Spacecraft)
      */
     public VectorN acceleration(Time t, BodyRef bRef, Spacecraft sc) {
         this.omega_e = bRef.get_spin_rate(t);
@@ -242,7 +242,7 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
      * @param eRef Earth reference object
      * @param sc Spacecraft parameters and state
      * @deprecated
-     * @see jat.core.forces.EarthForceModel#acceleration(jat.timeRef.EarthRef, jat.spacecraft.Spacecraft)
+     * @see jat.core.forces.EarthForceModel#acceleration(jat.core.timeRef.EarthRef, jat.core.spacecraft.Spacecraft)
      */
     public VectorN acceleration(EarthRef eRef, Spacecraft sc) {
         this.omega_e = eRef.get_omega_e();

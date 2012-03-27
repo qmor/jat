@@ -23,10 +23,9 @@ package jat.examples.FreeINS;
 import java.io.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
-import jat.sensors.*;
-import jat.plot.*;
-//import jat.util.*;
-import jat.matvec.data.*;
+import jat.core.matvec.data.*;
+import jat.core.plot.*;
+import jat.core.sensors.*;
 
 /**
  * <P>

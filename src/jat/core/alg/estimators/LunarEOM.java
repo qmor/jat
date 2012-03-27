@@ -27,14 +27,14 @@ import jat.core.eph.DE405;
 import jat.core.forces.GravityModel;
 import jat.core.forces.GravityModelType;
 import jat.core.forces.SolarRadiationPressure;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.LunaFixedRef;
+import jat.core.spacetime.LunaRef;
+import jat.core.spacetime.Time;
+import jat.core.spacetime.UniverseModel;
 import jat.sim.initializer;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.LunaFixedRef;
-import jat.spacetime.LunaRef;
-import jat.spacetime.Time;
-import jat.spacetime.UniverseModel;
 
 import java.util.HashMap;
 

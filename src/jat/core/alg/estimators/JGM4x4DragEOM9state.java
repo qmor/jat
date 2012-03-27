@@ -28,12 +28,12 @@ import jat.core.cm.Constants;
 import jat.core.forces.GravityModel;
 import jat.core.forces.GravityModelType;
 import jat.core.forces.HarrisPriester;
-import jat.gps.GPS_Utils;
-import jat.matvec.data.Matrix;
-import jat.matvec.data.VectorN;
+import jat.core.gps.GPS_Utils;
+import jat.core.matvec.data.Matrix;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacetime.Time;
+import jat.core.spacetime.UniverseModel;
 import jat.sim.initializer;
-import jat.spacetime.Time;
-import jat.spacetime.UniverseModel;
 
 /**
 * This file has to be reconstructed for each state used.  It uses a 

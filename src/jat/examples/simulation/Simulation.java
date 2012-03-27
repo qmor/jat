@@ -19,16 +19,16 @@
  */
 package jat.examples.simulation;
 
-import jat.sim.*;
 import jat.core.alg.integrators.LinePrinter;
-import jat.matlabInterface.MatlabControl;
-import jat.matlabInterface.MatlabFunc;
-import jat.matvec.data.VectorN;
-import jat.spacecraft.Spacecraft;
-import jat.spacecraft.SpacecraftModel;
-import jat.spacetime.EarthRef;
-import jat.traj.RelativeTraj;
-import jat.util.FileUtil;
+import jat.core.matlabInterface.MatlabControl;
+import jat.core.matlabInterface.MatlabFunc;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacecraft.SpacecraftModel;
+import jat.core.spacetime.EarthRef;
+import jat.core.traj.RelativeTraj;
+import jat.core.util.FileUtil;
+import jat.sim.*;
 
 /**
  * This is a demo class for a generic simulation scenario.  It creates the necessary
@@ -117,7 +117,7 @@ public class Simulation {
         System.out.println("Elapsed time [min]: "+elapsed);
         //* Format and output the Celestia files for visualization
         if(plot_traj){
-        	jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+        	jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
         	try{
         		i--;
         		j--;
@@ -195,7 +195,7 @@ public class Simulation {
         System.out.println("Period [hr]: "+period+"  a: "+a+"  e: "+e);
         
         if(plot_traj){
-            jat.util.Celestia celestia = new jat.util.Celestia("C:/games/Celestia_dev/celestia/");
+            jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_dev/celestia/");
             try{
                 for(int k=0; k<sim.get_number_of_spacecraft(); k++){
                     celestia.set_trajectory(sim.get_traj(k));

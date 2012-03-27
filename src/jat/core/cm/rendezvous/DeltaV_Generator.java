@@ -21,9 +21,9 @@
 package jat.core.cm.rendezvous;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
-import jat.traj.*;
-import jat.matvec.data.*;
-import jat.timeRef.*;
+import jat.core.matvec.data.*;
+import jat.core.timeRef.*;
+import jat.core.traj.*;
 /**
  * <P>
  * The DeltaV_Generator Class provides an example of how to generate a rendezvous trajectory 

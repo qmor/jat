@@ -21,14 +21,14 @@ package jat.core.forces;
 
 import jat.core.cm.Constants;
 import jat.core.eph.*;
-import jat.matvec.data.VectorN;
-import jat.timeRef.EarthRef;
-import jat.spacecraft.Spacecraft;
-import jat.spacetime.BodyCenteredInertialRef;
-import jat.spacetime.BodyRef;
-import jat.spacetime.ReferenceFrame;
-import jat.spacetime.ReferenceFrameTranslater;
-import jat.spacetime.Time;
+import jat.core.matvec.data.VectorN;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.BodyCenteredInertialRef;
+import jat.core.spacetime.BodyRef;
+import jat.core.spacetime.ReferenceFrame;
+import jat.core.spacetime.ReferenceFrameTranslater;
+import jat.core.spacetime.Time;
+import jat.core.timeRef.EarthRef;
 
 /**
  * <P>

@@ -19,13 +19,11 @@
  */
 
 package jat.core.forces;
-import jat.matvec.data.*;
-import jat.spacecraft.Spacecraft;
-import jat.timeRef.*;
-import jat.timeRef.EarthRef;
 import jat.core.forces.harrispriester.*;
-import jat.spacetime.*;
-//import jat.eph.*;
+import jat.core.matvec.data.*;
+import jat.core.spacecraft.Spacecraft;
+import jat.core.spacetime.*;
+import jat.core.timeRef.*;
 
 /**
  * <P>
