@@ -24,6 +24,7 @@ import jat.core.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.*;
+import jat.core.timeRef.EarthRef;
 
 /**
  * <P>
