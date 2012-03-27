@@ -28,7 +28,7 @@ import jat.core.spacecraft.SpacecraftModel;
 import jat.core.spacetime.EarthRef;
 import jat.core.traj.RelativeTraj;
 import jat.core.util.FileUtil;
-import jat.sim.*;
+import jat.simulation.*;
 
 /**
  * This is a demo class for a generic simulation scenario.  It creates the necessary

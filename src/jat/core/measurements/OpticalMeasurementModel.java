@@ -46,10 +46,10 @@ import jat.core.spacetime.ReferenceFrameTranslater;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
-import jat.sim.CEVLunarSim;
-import jat.sim.CEVSim;
-import jat.sim.EstimatorSimModel;
-import jat.sim.initializer;
+import jat.simulation.CEVLunarSim;
+import jat.simulation.CEVSim;
+import jat.simulation.EstimatorSimModel;
+import jat.simulation.initializer;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	

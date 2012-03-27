@@ -37,7 +37,7 @@ import jat.core.traj.DistanceUnits;
 import jat.core.traj.TimeUnits;
 import jat.core.traj.Trajectory;
 import jat.core.util.FileUtil;
-import jat.sim.*;
+import jat.simulation.*;
 
 
 /**

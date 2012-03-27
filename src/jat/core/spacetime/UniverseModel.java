@@ -190,7 +190,7 @@ public class UniverseModel {
      * This method is called by SimModel to provide the derivatives to the 
      * RungeKutta integrator.
      * 
-     * @see jat.sim.SimModel
+     * @see jat.simulation.SimModel
      * 
      * @param t Current simulation time in seconds since the initial epoch.
      * @param sc Spacecraft to opperate upon.

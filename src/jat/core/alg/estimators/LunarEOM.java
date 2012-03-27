@@ -34,7 +34,7 @@ import jat.core.spacetime.LunaFixedRef;
 import jat.core.spacetime.LunaRef;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.UniverseModel;
-import jat.sim.initializer;
+import jat.simulation.initializer;
 
 import java.util.HashMap;
 

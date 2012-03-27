@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Richard C. Page III 
  **/
-package jat.sim;
+package jat.simulation;
 
 import jat.core.alg.estimators.EKF;
 import jat.core.alg.estimators.LunarEOM;

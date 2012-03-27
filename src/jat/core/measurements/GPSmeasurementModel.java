@@ -36,7 +36,7 @@ import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.traj.*;
 import jat.core.util.FileUtil;
-import jat.sim.*;
+import jat.simulation.*;
 
 import java.util.HashMap;
 

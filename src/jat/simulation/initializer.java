@@ -1,4 +1,4 @@
-package jat.sim;
+package jat.simulation;
 
 
 

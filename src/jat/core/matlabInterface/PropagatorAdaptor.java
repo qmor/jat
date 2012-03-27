@@ -27,7 +27,7 @@ import jat.core.alg.integrators.Derivatives;
 import jat.core.alg.integrators.RungeKutta8;
 import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.SpacecraftModel;
-import jat.sim.SimModel;
+import jat.simulation.SimModel;
 
 /**
 * The JatAdaptor.java Class is an adaptor for Matlab to call the JAT Integrators in the same 

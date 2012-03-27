@@ -9,7 +9,7 @@ import jat.core.alg.estimators.*;
 import jat.core.gps.Visible;
 import jat.core.matvec.data.*;
 import jat.core.util.FileUtil;
-import jat.sim.*;
+import jat.simulation.*;
 
 public class GPSStateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	

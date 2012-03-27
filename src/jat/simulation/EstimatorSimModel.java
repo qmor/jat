@@ -20,7 +20,7 @@
  * National Aeronautics and Space Administration
  * Created by Richard C. Page III
  * */
-package jat.sim;
+package jat.simulation;
 
 import java.io.BufferedReader;
 import java.io.File;

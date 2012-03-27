@@ -25,7 +25,7 @@ import jat.core.forces.*;
 import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.util.FileUtil;
-import jat.sim.SimModel;
+import jat.simulation.SimModel;
 
 /**
  * TODO Javadoc

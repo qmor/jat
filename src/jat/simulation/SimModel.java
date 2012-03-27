@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.sim;
+package jat.simulation;
 
 //import jat.matlabInterface.MatlabControl;
 import jat.core.alg.integrators.*;
@@ -741,7 +741,7 @@ public class SimModel implements Derivatives {
     /**
      * Get the Relative Trajectory comparison between the 'truth' and the simulation.
      * The 'truth' trajectory must be set.
-     * @see jat.sim.SimModel#set_truth_traj(String)
+     * @see jat.simulation.SimModel#set_truth_traj(String)
      * @param printer Allows writing to a file or the command line
      * @return The relative trajectory comparison
      */
@@ -901,7 +901,7 @@ public class SimModel implements Derivatives {
 
     /**
      * Used to increment the simulation and output to a file or the command line.
-     * @see jat.sim.SimModel#step(double)
+     * @see jat.simulation.SimModel#step(double)
      * @param dt Timestep in seconds
      * @param lp Printer to file or command line
      */
