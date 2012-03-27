@@ -29,7 +29,7 @@ import jat.core.gps.GPS_Utils;
 import jat.core.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
-import jat.simulation.*;
+import jat.core.simulation.*;
 
 import java.util.HashMap;
 

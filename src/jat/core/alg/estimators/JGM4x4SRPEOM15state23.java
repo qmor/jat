@@ -32,7 +32,7 @@ import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.RSW_Frame;
 import jat.core.util.FileUtil;
-import jat.simulation.*;
+import jat.core.simulation.*;
 
 import java.util.HashMap;
 

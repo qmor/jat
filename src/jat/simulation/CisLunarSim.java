@@ -37,6 +37,8 @@ import jat.core.matvec.data.VectorN;
 import jat.core.measurements.GPSmeasurementModel;
 import jat.core.measurements.OpticalMeasurementModel;
 import jat.core.measurements.createMeasurements;
+import jat.core.simulation.EstimatorSimModel;
+import jat.core.simulation.initializer;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.spacetime.LunaFixedRef;

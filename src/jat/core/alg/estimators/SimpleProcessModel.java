@@ -44,7 +44,7 @@ import jat.core.traj.TimeUnits;
 import jat.core.traj.Trajectory;
 import jat.core.util.FileUtil;
 import jat.simulation.CEVLunarSim;
-import jat.simulation.initializer;
+import jat.core.simulation.initializer;
 
 public class SimpleProcessModel implements ProcessModel {
 

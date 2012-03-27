@@ -48,8 +48,8 @@ import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
 import jat.simulation.CEVLunarSim;
 import jat.simulation.CEVSim;
-import jat.simulation.EstimatorSimModel;
-import jat.simulation.initializer;
+import jat.core.simulation.EstimatorSimModel;
+import jat.core.simulation.initializer;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	

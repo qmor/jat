@@ -33,7 +33,7 @@ import jat.core.spacetime.GPSTimeFormat;
 import jat.core.spacetime.Time;
 import jat.core.traj.Trajectory;
 import jat.core.util.FileUtil;
-import jat.simulation.initializer;
+import jat.core.simulation.initializer;
 
 import java.io.BufferedReader;
 import java.io.EOFException;

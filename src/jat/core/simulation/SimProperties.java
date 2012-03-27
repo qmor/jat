@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.simulation;
+package jat.core.simulation;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

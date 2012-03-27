@@ -4,8 +4,9 @@ import java.io.*;
 import java.util.HashMap;
 import jat.core.alg.estimators.*;
 import jat.core.matvec.data.*;
+import jat.core.simulation.initializer;
 import jat.simulation.*;
-import jat.simulation.initializer.*;
+import jat.core.simulation.initializer.*;
 
 
 public class createMeasurements{

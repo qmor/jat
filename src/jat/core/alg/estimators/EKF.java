@@ -30,7 +30,7 @@ import jat.core.spacecraft.SpacecraftModel;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
-import jat.simulation.*;
+import jat.core.simulation.*;
 
 //import jat.audio.*;
 

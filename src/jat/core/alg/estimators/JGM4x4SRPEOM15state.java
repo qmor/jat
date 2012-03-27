@@ -28,7 +28,7 @@ import jat.core.forces.*;
 import jat.core.gps.GPS_Utils;
 import jat.core.matvec.data.*;
 import jat.core.spacetime.*;
-import jat.simulation.*;
+import jat.core.simulation.*;
 
 import java.util.HashMap;
 

@@ -35,7 +35,7 @@ import jat.core.matvec.data.Matrix;
 import jat.core.matvec.data.VectorN;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.UniverseModel;
-import jat.simulation.initializer;
+import jat.core.simulation.initializer;
 
 public class SimpleEOM implements Derivatives {
 	
