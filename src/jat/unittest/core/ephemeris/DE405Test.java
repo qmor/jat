@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Rob Antonucci 
  **/
-package jat.core.ephemeris.unittest;
+package jat.unittest.core.ephemeris;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
