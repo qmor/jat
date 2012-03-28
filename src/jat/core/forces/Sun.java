@@ -22,7 +22,7 @@ package jat.core.forces;
 //import jat.matvec.data.Matrix;
 //import jat.timeRef.Time;
 import jat.core.cm.Constants;
-import jat.core.eph.*;
+import jat.core.ephemeris.*;
 import jat.core.math.MathUtils;
 import jat.core.matvec.data.RotationMatrix;
 import jat.core.matvec.data.VectorN;

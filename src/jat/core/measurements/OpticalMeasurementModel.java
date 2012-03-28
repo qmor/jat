@@ -29,7 +29,7 @@ import java.util.Random;
 import jat.core.alg.estimators.MeasurementModel;
 import jat.core.alg.integrators.LinePrinter;
 import jat.core.cm.Constants;
-import jat.core.eph.*;
+import jat.core.ephemeris.*;
 import jat.core.math.Interpolator;
 import jat.core.math.MathUtils;
 import jat.core.matvec.data.Matrix;

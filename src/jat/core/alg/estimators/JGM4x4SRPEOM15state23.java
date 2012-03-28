@@ -23,7 +23,7 @@ package jat.core.alg.estimators;
 
 import jat.core.alg.integrators.Derivatives;
 import jat.core.cm.Constants;
-import jat.core.eph.DE405;
+import jat.core.ephemeris.DE405;
 import jat.core.forces.*;
 import jat.core.gps.GPS_Utils;
 import jat.core.math.MathUtils;

@@ -27,7 +27,7 @@ import jat.core.alg.integrators.LinePrinter;
 import jat.core.alg.integrators.RungeKutta8;
 import jat.core.cm.Constants;
 import jat.core.cm.TwoBody;
-import jat.core.eph.DE405;
+import jat.core.ephemeris.DE405;
 import jat.core.forces.GravitationalBody;
 import jat.core.forces.GravityModel;
 import jat.core.forces.GravityModelType;

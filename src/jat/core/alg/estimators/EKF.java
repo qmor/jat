@@ -23,7 +23,7 @@ package jat.core.alg.estimators;
  */
 import java.util.HashMap;
 import jat.core.alg.integrators.LinePrinter;
-import jat.core.eph.DE405;
+import jat.core.ephemeris.DE405;
 import jat.core.matvec.data.*;
 import jat.core.measurements.*;
 import jat.core.spacecraft.SpacecraftModel;

@@ -29,7 +29,7 @@
 package jat.examples.ephemeris;
 
 import jat.core.cm.*;
-import jat.core.eph.*;
+import jat.core.ephemeris.*;
 import jat.core.matvec.data.*;
 import jat.core.util.*;
 
