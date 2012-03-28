@@ -21,7 +21,7 @@
 
 package jat.examples.vr.threebody;
 
-import jat.vr.*;
+import jat.core.vr.*;
 import jat.core.alg.integrators.*;
 import jat.core.cm.*;
 import jat.core.matvec.data.*;

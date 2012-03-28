@@ -21,7 +21,7 @@
 
 package jat.examples.vr.Java3DTimer;
 
-import jat.vr.*;
+import jat.core.vr.*;
 import java.awt.*;
 import java.applet.Applet;
 import javax.media.j3d.*;

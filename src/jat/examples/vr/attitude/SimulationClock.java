@@ -24,7 +24,7 @@
 
 package jat.examples.vr.attitude;
 
-import jat.vr.*;
+import jat.core.vr.*;
 import java.util.Enumeration;
 import javax.vecmath.*;
 import javax.media.j3d.*;

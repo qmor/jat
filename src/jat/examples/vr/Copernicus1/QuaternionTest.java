@@ -21,7 +21,7 @@
 
 package jat.examples.vr.Copernicus1;
 
-import jat.vr.*;
+import jat.core.vr.*;
 import jat.core.util.*;
 
 import java.awt.*;

@@ -21,7 +21,7 @@
 
 package jat.examples.vr.EarthMoon;
 
-import jat.vr.*;
+import jat.core.vr.*;
 import jat.core.cm.*;
 import jat.core.util.*;
 

@@ -21,7 +21,7 @@
 
 package jat.examples.vr.attitude;
 
-import jat.vr.*;
+import jat.core.vr.*;
 import jat.core.alg.integrators.*;
 import jat.core.attitude.eom.*;
 import jat.core.util.*;
