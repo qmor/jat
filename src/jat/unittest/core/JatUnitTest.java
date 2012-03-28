@@ -1,4 +1,4 @@
-package jat.test;
+package jat.unittest.core;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
