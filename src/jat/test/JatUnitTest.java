@@ -31,8 +31,8 @@ public final class JatUnitTest {
       suite.addTestSuite(jat.core.forces.unittest.HarrisPriesterTest.class);
       suite.addTestSuite(jat.core.forces.unittest.NRLMSISEDragTest.class);
       suite.addTestSuite(jat.core.forces.unittest.SolarRadiationPressureTest.class);
-      suite.addTestSuite(jat.core.spacetime.unittest.BodyCenteredInertialRefTest.class);
-      suite.addTestSuite(jat.core.spacetime.unittest.LunaFixedRefTest.class);
+      suite.addTestSuite(jat.unittest.core.spacetime.BodyCenteredInertialRefTest.class);
+      suite.addTestSuite(jat.unittest.core.spacetime.LunaFixedRefTest.class);
       return suite;
     }
 

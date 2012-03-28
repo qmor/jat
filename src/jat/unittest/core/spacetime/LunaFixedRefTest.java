@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Rob Antonucci 
  **/
-package jat.core.spacetime.unittest;
+package jat.unittest.core.spacetime;
 
 import jat.core.eph.*;
 import jat.core.matvec.data.VectorN;
