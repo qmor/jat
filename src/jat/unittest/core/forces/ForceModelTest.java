@@ -1,4 +1,4 @@
-package jat.core.forces.unittest;
+package jat.unittest.core.forces;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
