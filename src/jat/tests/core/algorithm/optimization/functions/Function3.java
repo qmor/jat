@@ -18,14 +18,14 @@
  *
  */
 
-package jat.core.algorithm.optimization.test.functions;
+package jat.tests.core.algorithm.optimization.functions;
 
 import jat.core.algorithm.*;
 
-public class QuadraticFunction implements ScalarfromArrayFunction
+public class Function3 implements ScalarfromArrayFunction
 {
 	public double evaluate(double[] x)
 	{
-		return (x[0] * x[0] + 0.5 * x[1] * x[1]);
+		return ((x[0] - 10.) * (x[0] - 10.) + (x[1] - 10.) * (x[1] - 10.) + 1.);
 	}
 }

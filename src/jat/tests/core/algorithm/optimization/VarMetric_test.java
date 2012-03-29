@@ -18,12 +18,12 @@
  *
  */
 
-package jat.core.algorithm.optimization.test;
+package jat.tests.core.algorithm.optimization;
 
 import java.text.*;
 
 import jat.core.algorithm.optimization.*;
-import jat.core.algorithm.optimization.test.functions.*;
+import jat.tests.core.algorithm.optimization.functions.*;
 
 public class VarMetric_test
 {

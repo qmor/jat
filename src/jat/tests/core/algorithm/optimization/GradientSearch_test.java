@@ -18,10 +18,10 @@
  *
  */
 
-package jat.core.algorithm.optimization.test;
+package jat.tests.core.algorithm.optimization;
 
 import jat.core.algorithm.optimization.*;
-import jat.core.algorithm.optimization.test.functions.*;
+import jat.tests.core.algorithm.optimization.functions.*;
 
 public class GradientSearch_test
 {

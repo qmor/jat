@@ -18,47 +18,35 @@
  *
  */
 
-package jat.core.algorithm.optimization.test;
+package jat.tests.core.algorithm.optimization;
 
-import jat.core.algorithm.*;
 import jat.core.algorithm.optimization.*;
+import jat.tests.core.algorithm.optimization.functions.*;
 
-public class InnerClassExample
+/**
+ * Davidon-Fletcher-Powell variable metric method
+ * @author Tobias Berthold
+ *
+ */
+public class DFP_test
 {
-	public class Function implements ScalarfromArrayFunction
-	{
-		public double evaluate(double[] x)
-		{
-			return (0.1 * x[0] * x[0] - 2. * x[0] + 10.);
-		}
-	}
-
-	static void printmin(double[] x)
-	{
-		System.out.print("The min is at  ");
-		for (int i = 0; i < x.length; i++)
-			System.out.print("x" + i + "= " + x[i] + "  ");
-
-		System.out.println();
-		System.out.println();
-	}
 
 	public static void main(String argv[])
 	{
-		double[] x; // result
-		double[] x1 = new double[1]; // initial guess
-		double[] d1 = new double[1]; // search direction
-
-		//System.out.println("Unconstrained Parameter Optimization Test");
+		double[] x_init=new double[2];
+		
+		System.out.println("Rosenbrock function, Numerical derivs, DFP");
 
 		// create instances of the classes
-		InnerClassExample ot = new InnerClassExample();
-
-		x1[0] = 0.;
-		d1[0] = 1.;
-		//opt.G=ot.new Function();
-		x = LineSearch.ods(ot.new Function(), x1, d1, 1.e-4);
-		printmin(x);
-
+		DFP_test dt = new DFP_test();
+		x_init[0] = -1.2;
+		x_init[1] = 1.;
+		DFP dfp = new DFP(new Rosenbrock(), x_init);
+		dfp.err_ods=1.e-6;
+		dfp.err_dfp=1.e-6;
+		dfp.eps_CD=1.e-5;
+		dfp.max_it=50;
+		double[] x=dfp.find_min_DFP();
+		
 	}
 }

@@ -18,17 +18,14 @@
  *
  */
 
-package jat.core.algorithm.optimization.test.functions;
+package jat.tests.core.algorithm.optimization.functions;
 
 import jat.core.algorithm.*;
 
-public class Rosenbrock implements ScalarfromArrayFunction
+public class Function4 implements ScalarfromArrayFunction
 {
 	public double evaluate(double[] x)
 	{
-		// Rosenbrock
-		double term1 = x[0] * x[0] - x[1];
-		double term2 = 1 - x[0];
-		return (100. * term1 * term1 + term2 * term2);
+		return ((x[0] - 10.) * (x[0] - 10.) + (x[1] - 9.) * (x[1] - 9.) + (x[2] - 8.) * (x[2] - 8.));
 	}
 }
