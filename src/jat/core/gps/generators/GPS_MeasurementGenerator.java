@@ -26,7 +26,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.matvec.data.*;
-import jat.core.traj.*;
+import jat.core.trajectory.*;
 //import jat.cm.*;
 import java.io.*;
 

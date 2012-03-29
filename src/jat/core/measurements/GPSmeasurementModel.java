@@ -36,7 +36,7 @@ import jat.core.spacetime.FitIERS;
 import jat.core.spacetime.GPSTimeFormat;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
-import jat.core.traj.*;
+import jat.core.trajectory.*;
 import jat.core.util.FileUtil;
 import jat.simulation.*;
 

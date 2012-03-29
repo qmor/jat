@@ -21,7 +21,7 @@ import jat.core.simulation.initializer;
 import jat.core.spacetime.EarthRef;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
-import jat.core.traj.Trajectory;
+import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
 import jat.simulation.*;
 

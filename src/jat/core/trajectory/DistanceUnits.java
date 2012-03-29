@@ -1,4 +1,4 @@
-package jat.core.traj;
+package jat.core.trajectory;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -23,38 +23,38 @@ package jat.core.traj;
  
 /**
 * <P>
-* The TimeUnits.java Class provides the means for specifying the 
-* time units used in creating a trajectory.
+* The DistanceUnits.java Class provides the means for specifying the 
+* distance units used in creating a trajectory.
 *
 * @author 
 * @version 1.0
-*/
+*/ 
 
-public final class TimeUnits implements Serializable {
+public final class DistanceUnits implements Serializable {
 
   private String name;
 
-  private TimeUnits(String nm) { name = nm; }
+  private DistanceUnits(String nm) { name = nm; }
 
   public String toString() { return name; }
 
-  public final static TimeUnits
-    SECONDS = new TimeUnits("s"),
-    DAYS = new TimeUnits("days"),
-    OTHER = new TimeUnits("Other");
+  public final static DistanceUnits
+    METERS = new DistanceUnits("meters"),
+    KILOMETERS = new DistanceUnits("km"),
+    OTHER = new DistanceUnits("Other");
 
 
-  public final static TimeUnits[] index =  {
-    SECONDS, DAYS, OTHER
+  public final static DistanceUnits[] index =  {
+    METERS, KILOMETERS, OTHER
   };
 
 
   public static void main(String[] args) {
-    TimeUnits m = TimeUnits.SECONDS;
+    DistanceUnits m = DistanceUnits.METERS;
     System.out.println(m);
-    m = TimeUnits.index[1];
+    m = DistanceUnits.index[1];
     System.out.println(m);
-    System.out.println(m == TimeUnits.SECONDS);
-    System.out.println(m.equals(TimeUnits.DAYS));
+    System.out.println(m == DistanceUnits.METERS);
+    System.out.println(m.equals(DistanceUnits.KILOMETERS));
   }
 }

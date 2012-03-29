@@ -31,11 +31,11 @@ import jat.core.algorithm.integrators.RungeKutta8;
 import jat.core.matvec.data.Matrix;
 import jat.core.matvec.data.VectorN;
 import jat.core.timeRef.RSW_Frame;
-import jat.core.traj.CentralBody;
-import jat.core.traj.CoordinateSystem;
-import jat.core.traj.DistanceUnits;
-import jat.core.traj.TimeUnits;
-import jat.core.traj.Trajectory;
+import jat.core.trajectory.CentralBody;
+import jat.core.trajectory.CoordinateSystem;
+import jat.core.trajectory.DistanceUnits;
+import jat.core.trajectory.TimeUnits;
+import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
 import jat.core.simulation.*;
 

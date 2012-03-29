@@ -23,7 +23,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.matvec.data.*;
 import jat.core.timeRef.*;
-import jat.core.traj.*;
+import jat.core.trajectory.*;
 /**
  * <P>
  * The DeltaV_Generator Class provides an example of how to generate a rendezvous trajectory 

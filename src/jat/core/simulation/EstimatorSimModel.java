@@ -58,8 +58,8 @@ import jat.core.spacetime.RSW_Frame;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.spacetime.UniverseModel;
-import jat.core.traj.RelativeTraj;
-import jat.core.traj.Trajectory;
+import jat.core.trajectory.RelativeTraj;
+import jat.core.trajectory.Trajectory;
 import jat.core.util.Celestia;
 import jat.core.util.FileUtil;
 

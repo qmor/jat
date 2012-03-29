@@ -17,28 +17,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * 
- * File Created on Aug 29, 2003
+ * File Created on Aug 28, 2003
  */
+ 
+package jat.core.trajectory;
 
-package jat.core.traj;
-	
 import jat.core.algorithm.integrators.*;
+import jat.core.cm.*;
 import jat.core.forces.*;
 import jat.core.matvec.data.*;
 import jat.core.spacetime.Time;
 import jat.core.timeRef.*;
-//import jat.cm.*;
-
+//import jat.spacetime.BodyRef;
 
 /**
  * <P>
- * The ChaserEOM Class implements the EquationsOfMotion interface. It provides
- * the equations of motion for a body in a JGM3 gravity field with Harris-Priester drag.
+ * The BurnEOM Class implements the EquationsOfMotion interface. It provides
+ * the equations of motion for a body in a JGM3 gravity field with Harris-Priester drag
+ * and finite duration thrust.
  * @author 
  * @version 1.0
  */
-
-public class ChaserEOM implements EquationsOfMotion{
+ 
+public class BurnEOM implements EquationsOfMotion {
 	private Trajectory traj;
     private HarrisPriester hp; // earth atmosphere model
 	private double t_mjd0;
@@ -46,16 +47,36 @@ public class ChaserEOM implements EquationsOfMotion{
 	private double area;
 	private double cd;
 	private JGM3 jgm3 = new JGM3(12,12);
-//	private CIRA_ExponentialDrag ced;
 	
-	public ChaserEOM(Trajectory t, double mjd0, double m, double a, double c){
+	private VectorN fburn;
+	private int index = 0;
+	private boolean used = false;
+	
+	/**
+	 * Constructor - see HarrisPriester for parameter details
+	 * @param t Trajectory
+	 * @param mjd0 initial MJD
+	 * @param m mass
+	 * @param a area
+	 * @param c Cd
+	 */
+	public BurnEOM(Trajectory t, double mjd0, double m, double a, double c){
 		this.traj = t;
 		this.t_mjd0 = mjd0;
 		this.mass = m;
 		this.area = a;
 		this.cd = c;
 		this.hp = new HarrisPriester(this.cd, this.area, this.mass);
-//		this.ced = new CIRA_ExponentialDrag(this.cd, this.area, this.mass);
+	}
+	
+	/**
+	 * Set the next finite burn
+	 * @param b FiniteBurn
+	 */
+	public void setBurn(FiniteBurn b) {
+		double thrust = b.accel;
+		VectorN unit = b.unitVector;
+		this.fburn = unit.times(thrust);		
 	}
 	
 	/** Implements the Printable interface to get the data out of the propagator and pass it to the trajectory.
@@ -73,15 +94,19 @@ public class ChaserEOM implements EquationsOfMotion{
 	 * @return Array containing the derivatives.
 	 */
 	public double[] derivs(double t, double[] y) {
-
+		
 		VectorN out = new VectorN(y.length);
-
+		
 		// strip out incoming data    
 		VectorN r = new VectorN(y[0], y[1], y[2]);
 		VectorN v = new VectorN(y[3], y[4], y[5]);
 		Quaternion q = new Quaternion(y[6], y[7], y[8], y[9]);
-		q.unitize();
 
+//		// construct the true orbit
+//		TwoBody true_orbit = new TwoBody(Constants.GM_Earth, r, v);
+//
+//		// compute local gravity
+//		VectorN g = true_orbit.local_grav();
 		
 		double Mjd = this.t_mjd0 + t/86400.0;
         EarthRef ref = new EarthRef(Mjd);
@@ -91,23 +116,16 @@ public class ChaserEOM implements EquationsOfMotion{
         // Acceleration due to harmonic gravity field        
         VectorN g = jgm3.gravity(r, E);
         
-//        TwoBody orbit = new TwoBody(Constants.GM_Earth, r, v);
-//        VectorN ggg = orbit.local_grav();
-//        VectorN diff = g.minus(ggg);
-//        
-//        J2Gravity j2 = new J2Gravity(r);
-//        VectorN gg = j2.local_gravity();
-//        VectorN diff2 = g.minus(gg);
-        
+        // acceleration due to the burn
+        Matrix Cb2i = q.quat2DCM();
+        VectorN thrust = Cb2i.times(this.fburn);
+        //Time t, BodyRef ref, VectorN r, VectorN v
         Time time = new Time(Mjd);
         hp.compute(time,ref, r, v);
         VectorN drag = hp.dragAccel();
         VectorN accel = drag.plus(g);
         
-        // drag check
-//        ced.compute(ref, r, v);
-//        VectorN cedrag = ced.dragAccel();
-//        System.out.println("hp: "+drag.mag()+" ced: "+cedrag.mag());
+        accel = accel.plus(thrust);
 		
 		// compute attitude rate
 		
@@ -115,33 +133,14 @@ public class ChaserEOM implements EquationsOfMotion{
 		VectorN w = rsw.omega();
 		Matrix omega_true = Quaternion.omega(w);
 		VectorN q_deriv = omega_true.times(q);
-		
 
 		// derivatives for true orbit
 		out.set(0, v);
 		out.set(3, accel);
 		out.set(6, q_deriv);
-		
-		// accelerometer state
-//		Matrix rsw2eci = q.quat2DCM();
-//		Matrix eci2rsw = rsw2eci.transpose();
-		Matrix eci2rsw = rsw.ECI2RSW();
-		VectorN df = eci2rsw.times(drag);
-		out.set(10, df);
-		
-
-//		diff = eci2rsw.times(diff);
-//		diff2 = eci2rsw.times(diff2);
-		
-//		System.out.println("df = "+df);
-		
-		// gyro state
-		out.set(13, w);
-		
 
 		return out.x;
 	}
-	
 	
 	
 

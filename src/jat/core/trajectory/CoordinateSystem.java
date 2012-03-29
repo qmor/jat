@@ -1,4 +1,4 @@
-package jat.core.traj;
+package jat.core.trajectory;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -23,38 +23,39 @@ package jat.core.traj;
  
 /**
 * <P>
-* The DistanceUnits.java Class provides the means for specifying the 
-* distance units used in creating a trajectory.
+* The CoordinateSystem.java Class provides the means for specifying the 
+* coordinate system used in creating a trajectory.
 *
 * @author 
 * @version 1.0
 */ 
 
-public final class DistanceUnits implements Serializable {
+public final class CoordinateSystem implements Serializable {
 
   private String name;
 
-  private DistanceUnits(String nm) { name = nm; }
+  private CoordinateSystem(String nm) { name = nm; }
 
   public String toString() { return name; }
 
-  public final static DistanceUnits
-    METERS = new DistanceUnits("meters"),
-    KILOMETERS = new DistanceUnits("km"),
-    OTHER = new DistanceUnits("Other");
+  public final static CoordinateSystem
+    INERTIAL = new CoordinateSystem("Inertial"),
+    PLANETFIXED = new CoordinateSystem("PlanetFixed"),
+    LLH = new CoordinateSystem("LLH"),
+    OTHER = new CoordinateSystem("Other");
 
 
-  public final static DistanceUnits[] index =  {
-    METERS, KILOMETERS, OTHER
+  public final static CoordinateSystem[] index =  {
+    INERTIAL, PLANETFIXED, LLH, OTHER
   };
 
 
   public static void main(String[] args) {
-    DistanceUnits m = DistanceUnits.METERS;
+    CoordinateSystem m = CoordinateSystem.INERTIAL;
     System.out.println(m);
-    m = DistanceUnits.index[1];
+    m = CoordinateSystem.index[1];
     System.out.println(m);
-    System.out.println(m == DistanceUnits.METERS);
-    System.out.println(m.equals(DistanceUnits.KILOMETERS));
+    System.out.println(m == CoordinateSystem.PLANETFIXED);
+    System.out.println(m.equals(CoordinateSystem.INERTIAL));
   }
 }

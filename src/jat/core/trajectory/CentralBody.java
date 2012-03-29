@@ -1,4 +1,4 @@
-package jat.core.traj;
+package jat.core.trajectory;
 
 
 

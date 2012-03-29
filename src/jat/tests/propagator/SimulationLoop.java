@@ -29,7 +29,7 @@ import jat.core.matlabInterface.*;
 import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.timeRef.*;
-import jat.core.traj.Trajectory;
+import jat.core.trajectory.Trajectory;
 
 /**
  * SimulationLoop provides a way to encapsulate the feedback loop

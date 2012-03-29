@@ -19,7 +19,7 @@
  */
 package jat.core.util;
 
-import jat.core.traj.*;
+import jat.core.trajectory.*;
 //import jat.matvec.data.Matrix;
 //import jat.matvec.data.VectorN;
 
@@ -287,7 +287,7 @@ public class Celestia {
     }
     /**
      * Read a file into a trajectory and then store to the class for writing.
-     * @see jat.core.traj.Trajectory
+     * @see jat.core.trajectory.Trajectory
      * @param file
      */
     public void get_trajectory(String file){

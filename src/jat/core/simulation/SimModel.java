@@ -36,7 +36,7 @@ import jat.core.matlabInterface.MatlabFunc;
 import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.*;
 import jat.core.spacetime.UniverseModel;
-import jat.core.traj.*;
+import jat.core.trajectory.*;
 import jat.core.util.*;
 //import jat.forces.ForceModelList;
 

@@ -26,7 +26,7 @@ import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.spacetime.EarthRef;
-import jat.core.traj.RelativeTraj;
+import jat.core.trajectory.RelativeTraj;
 import jat.core.util.FileUtil;
 import jat.core.simulation.*;
 

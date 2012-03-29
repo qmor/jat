@@ -21,7 +21,7 @@
 package jat.core.cm;
 import jat.core.matvec.data.*;
 import jat.core.plot.*;
-import jat.core.traj.*;
+import jat.core.trajectory.*;
 import jat.core.util.*;
 
 import java.io.*;

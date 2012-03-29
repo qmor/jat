@@ -27,9 +27,7 @@ import jat.core.cm.*;
 import jat.core.math.*;
 import jat.core.matvec.data.*;
 import jat.core.timeRef.*;
-import jat.core.traj.*;
-//import jat.plot.*;
-//import jat.forces.*;
+import jat.core.trajectory.*;
 
 /** 
  * SIMU_MeasurementGenerator generates SIMU measurements and truth trajectories for

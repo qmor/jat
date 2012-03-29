@@ -34,8 +34,8 @@ import jat.core.spacetime.EarthRef;
 import jat.core.spacetime.FitIERS;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
-import jat.core.traj.RelativeTraj;
-import jat.core.traj.Trajectory;
+import jat.core.trajectory.RelativeTraj;
+import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
 import jat.tests.propagator.PlotTrajectory;
 

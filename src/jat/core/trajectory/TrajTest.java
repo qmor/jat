@@ -19,7 +19,7 @@
  *
  */
 
-package jat.core.traj;
+package jat.core.trajectory;
 
 import jat.core.algorithm.integrators.*;
 //import jat.plot.*;

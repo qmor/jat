@@ -1,4 +1,4 @@
-package jat.core.traj;
+package jat.core.trajectory;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -23,39 +23,38 @@ package jat.core.traj;
  
 /**
 * <P>
-* The CoordinateSystem.java Class provides the means for specifying the 
-* coordinate system used in creating a trajectory.
+* The TimeUnits.java Class provides the means for specifying the 
+* time units used in creating a trajectory.
 *
 * @author 
 * @version 1.0
-*/ 
+*/
 
-public final class CoordinateSystem implements Serializable {
+public final class TimeUnits implements Serializable {
 
   private String name;
 
-  private CoordinateSystem(String nm) { name = nm; }
+  private TimeUnits(String nm) { name = nm; }
 
   public String toString() { return name; }
 
-  public final static CoordinateSystem
-    INERTIAL = new CoordinateSystem("Inertial"),
-    PLANETFIXED = new CoordinateSystem("PlanetFixed"),
-    LLH = new CoordinateSystem("LLH"),
-    OTHER = new CoordinateSystem("Other");
+  public final static TimeUnits
+    SECONDS = new TimeUnits("s"),
+    DAYS = new TimeUnits("days"),
+    OTHER = new TimeUnits("Other");
 
 
-  public final static CoordinateSystem[] index =  {
-    INERTIAL, PLANETFIXED, LLH, OTHER
+  public final static TimeUnits[] index =  {
+    SECONDS, DAYS, OTHER
   };
 
 
   public static void main(String[] args) {
-    CoordinateSystem m = CoordinateSystem.INERTIAL;
+    TimeUnits m = TimeUnits.SECONDS;
     System.out.println(m);
-    m = CoordinateSystem.index[1];
+    m = TimeUnits.index[1];
     System.out.println(m);
-    System.out.println(m == CoordinateSystem.PLANETFIXED);
-    System.out.println(m.equals(CoordinateSystem.INERTIAL));
+    System.out.println(m == TimeUnits.SECONDS);
+    System.out.println(m.equals(TimeUnits.DAYS));
   }
 }
