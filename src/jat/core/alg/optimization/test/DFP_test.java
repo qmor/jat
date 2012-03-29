@@ -18,17 +18,35 @@
  *
  */
 
-package jat.core.alg.opt.test.functions;
+package jat.core.alg.optimization.test;
 
-import jat.core.alg.*;
+import jat.core.alg.optimization.*;
+import jat.core.alg.optimization.test.functions.*;
 
-public class Rosenbrock implements ScalarfromArrayFunction
+/**
+ * Davidon-Fletcher-Powell variable metric method
+ * @author Tobias Berthold
+ *
+ */
+public class DFP_test
 {
-	public double evaluate(double[] x)
+
+	public static void main(String argv[])
 	{
-		// Rosenbrock
-		double term1 = x[0] * x[0] - x[1];
-		double term2 = 1 - x[0];
-		return (100. * term1 * term1 + term2 * term2);
+		double[] x_init=new double[2];
+		
+		System.out.println("Rosenbrock function, Numerical derivs, DFP");
+
+		// create instances of the classes
+		DFP_test dt = new DFP_test();
+		x_init[0] = -1.2;
+		x_init[1] = 1.;
+		DFP dfp = new DFP(new Rosenbrock(), x_init);
+		dfp.err_ods=1.e-6;
+		dfp.err_dfp=1.e-6;
+		dfp.eps_CD=1.e-5;
+		dfp.max_it=50;
+		double[] x=dfp.find_min_DFP();
+		
 	}
 }

@@ -18,10 +18,10 @@
  *
  */
 
-package jat.core.alg.opt.test;
+package jat.core.alg.optimization.test;
 
 import jat.core.alg.*;
-import jat.core.alg.opt.*;
+import jat.core.alg.optimization.*;
 
 public class InnerClassExample
 {

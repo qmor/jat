@@ -18,14 +18,17 @@
  *
  */
 
-package jat.core.alg.opt.test.functions;
+package jat.core.alg.optimization.test.functions;
 
 import jat.core.alg.*;
 
-public class QuadraticFunction implements ScalarfromArrayFunction
+public class Rosenbrock implements ScalarfromArrayFunction
 {
 	public double evaluate(double[] x)
 	{
-		return (x[0] * x[0] + 0.5 * x[1] * x[1]);
+		// Rosenbrock
+		double term1 = x[0] * x[0] - x[1];
+		double term2 = 1 - x[0];
+		return (100. * term1 * term1 + term2 * term2);
 	}
 }

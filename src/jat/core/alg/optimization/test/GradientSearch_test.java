@@ -18,10 +18,10 @@
  *
  */
 
-package jat.core.alg.opt.test;
+package jat.core.alg.optimization.test;
 
-import jat.core.alg.opt.*;
-import jat.core.alg.opt.test.functions.*;
+import jat.core.alg.optimization.*;
+import jat.core.alg.optimization.test.functions.*;
 
 public class GradientSearch_test
 {

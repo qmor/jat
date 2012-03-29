@@ -1,4 +1,4 @@
-package jat.core.alg.opt.LBFGS;
+package jat.core.alg.optimization.LBFGS;
 
 
 public class Sdrive

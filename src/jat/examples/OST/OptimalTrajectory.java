@@ -21,7 +21,7 @@
 
 package jat.examples.OST;
 
-import jat.core.alg.opt.*;
+import jat.core.alg.optimization.*;
 import jat.core.cm.*;
 import jat.core.cm.eom.*;
 import jat.core.matvec.data.VectorN;

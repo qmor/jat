@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA, 02111-1307, USA,
  * or visit the GNU web site, www.gnu.org.
  */
-package jat.core.alg.opt.LBFGS;
+package jat.core.alg.optimization.LBFGS;
 
 /** <p> This class contains code for the limited-memory Broyden-Fletcher-Goldfarb-Shanno
   * (LBFGS) algorithm for large-scale multidimensional unconstrained minimization problems.
