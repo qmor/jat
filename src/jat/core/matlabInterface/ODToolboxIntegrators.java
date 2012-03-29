@@ -23,10 +23,10 @@ package jat.core.matlabInterface;
 import java.util.Arrays;
 import java.util.Vector;
 
-import jat.core.alg.integrators.Derivatives;
-import jat.core.alg.integrators.RungeKutta4;
-import jat.core.alg.integrators.RungeKutta8;
-import jat.core.alg.integrators.RungeKuttaFehlberg78;
+import jat.core.algorithm.integrators.Derivatives;
+import jat.core.algorithm.integrators.RungeKutta4;
+import jat.core.algorithm.integrators.RungeKutta8;
+import jat.core.algorithm.integrators.RungeKuttaFehlberg78;
 import jat.core.matvec.data.VectorN;
 
 import java.io.*;

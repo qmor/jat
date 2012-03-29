@@ -22,7 +22,7 @@ package jat.core.traj;
 import java.io.*;
 import java.util.*;
 
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.VectorN;
 import jat.core.timeRef.*;
 /**

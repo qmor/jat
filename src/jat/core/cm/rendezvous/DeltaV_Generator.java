@@ -19,7 +19,7 @@
  */
 
 package jat.core.cm.rendezvous;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.matvec.data.*;
 import jat.core.timeRef.*;

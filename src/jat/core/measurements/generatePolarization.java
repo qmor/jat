@@ -4,7 +4,7 @@ package jat.core.measurements;
 
 import java.io.IOException;
 
-import jat.core.alg.integrators.LinePrinter;
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.Interpolator;
 import jat.core.matvec.data.*;
 import jat.core.spacetime.Time;

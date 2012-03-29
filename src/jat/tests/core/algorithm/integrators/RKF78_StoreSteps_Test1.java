@@ -1,7 +1,7 @@
 package jat.tests.core.algorithm.integrators;
 
-import jat.core.alg.integrators.Derivatives;
-import jat.core.alg.integrators.RKF78_StoreSteps;
+import jat.core.algorithm.integrators.Derivatives;
+import jat.core.algorithm.integrators.RKF78_StoreSteps;
 import jat.core.matvec.data.Matrix;
 import jat.core.matvec.data.VectorN;
 import jat.core.matvec.io.data.fileTools.MatrixString;

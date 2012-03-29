@@ -22,7 +22,7 @@
 package jat.examples.vr.attitude;
 
 import jat.core.vr.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.attitude.eom.*;
 import jat.core.util.*;
 

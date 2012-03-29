@@ -21,8 +21,8 @@ package jat.core.gps.filters.absolute;
  * 
  * File Created on May 9, 2003
  */
-import jat.core.alg.estimators.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.estimators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 
 /**

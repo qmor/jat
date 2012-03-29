@@ -2,7 +2,8 @@ package jat.core.measurements;
 
 import java.io.*;
 import java.util.HashMap;
-import jat.core.alg.estimators.*;
+
+import jat.core.algorithm.estimators.*;
 import jat.core.matvec.data.*;
 import jat.core.simulation.initializer;
 import jat.simulation.*;

@@ -20,7 +20,7 @@
 package jat.core.simulation;
 
 //import jat.matlabInterface.MatlabControl;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.Constants;
 import jat.core.forces.ForceModel;
 import jat.core.forces.GravitationalBody;

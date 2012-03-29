@@ -21,7 +21,7 @@
  */
 
 package jat.core.gps;
-import jat.core.alg.estimators.*;
+import jat.core.algorithm.estimators.*;
 //import jat.gps.*;
 
 import java.io.*;

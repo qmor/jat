@@ -25,7 +25,7 @@ package jat.core.traj;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.*;
 import jat.core.plot.*;
 import jat.core.spacetime.*;

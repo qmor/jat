@@ -21,7 +21,7 @@ package jat.core.simulation;
 
 import java.util.Random;
 
-import jat.core.alg.integrators.LinePrinter;
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.matlabInterface.MatlabControl;
 import jat.core.matlabInterface.MatlabFunc;
 import jat.core.matvec.data.RandomNumber;

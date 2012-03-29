@@ -22,7 +22,7 @@
 
 package jat.core.traj;
 	
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
 import jat.core.matvec.data.*;
 import jat.core.spacetime.Time;

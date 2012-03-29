@@ -20,7 +20,7 @@
 
 package jat.core.attitude.eom;
 
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.attitude.util.AnimationWindow;
 import jat.core.attitude.util.AnimationWindow2;
 

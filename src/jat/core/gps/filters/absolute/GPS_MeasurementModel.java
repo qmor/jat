@@ -22,7 +22,7 @@
 
 package jat.core.gps.filters.absolute;
 
-import jat.core.alg.estimators.*;
+import jat.core.algorithm.estimators.*;
 import jat.core.gps.*;
 import jat.core.matvec.data.*;
 //import jat.alg.integrators.*;
@@ -77,14 +77,14 @@ public class GPS_MeasurementModel implements MeasurementModel {
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.MeasurementModel#H(VectorN)
+	 * @see jat.core.algorithm.estimators.MeasurementModel#H(VectorN)
 	 */
 	public VectorN H(VectorN xref) {
 		return this.htilde;
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.MeasurementModel#R()
+	 * @see jat.core.algorithm.estimators.MeasurementModel#R()
 	 */
 	public double R() {
 		double r = rangeSigma*rangeSigma;
@@ -93,7 +93,7 @@ public class GPS_MeasurementModel implements MeasurementModel {
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.MeasurementModel#zPred(int, double, VectorN)
+	 * @see jat.core.algorithm.estimators.MeasurementModel#zPred(int, double, VectorN)
 	 */
 	public double zPred(int index, double t, VectorN xref) {
 		

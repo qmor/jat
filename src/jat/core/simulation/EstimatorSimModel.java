@@ -34,9 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import jat.core.alg.estimators.EKF;
-import jat.core.alg.integrators.Derivatives;
-import jat.core.alg.integrators.LinePrinter;
+import jat.core.algorithm.estimators.EKF;
+import jat.core.algorithm.integrators.Derivatives;
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.cm.Constants;
 import jat.core.forces.GravitationalBody;
 import jat.core.forces.GravityModel;

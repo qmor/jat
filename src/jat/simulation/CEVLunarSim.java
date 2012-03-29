@@ -21,10 +21,10 @@
  **/
 package jat.simulation;
 
-import jat.core.alg.estimators.EKF;
-import jat.core.alg.estimators.LunarEOM;
-import jat.core.alg.integrators.LinePrinter;
-import jat.core.alg.integrators.RungeKutta8;
+import jat.core.algorithm.estimators.EKF;
+import jat.core.algorithm.estimators.LunarEOM;
+import jat.core.algorithm.integrators.LinePrinter;
+import jat.core.algorithm.integrators.RungeKutta8;
 import jat.core.cm.Constants;
 import jat.core.cm.TwoBody;
 import jat.core.ephemeris.DE405;

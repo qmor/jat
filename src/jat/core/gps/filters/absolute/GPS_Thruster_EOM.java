@@ -21,8 +21,8 @@
  */
  
 package jat.core.gps.filters.absolute;
-import jat.core.alg.estimators.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.estimators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
 import jat.core.gps.*;
@@ -78,7 +78,7 @@ public class GPS_Thruster_EOM implements Derivatives {
 	}
 	
 	/**
-	 * @see jat.core.alg.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.core.algorithm.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x) {
 		

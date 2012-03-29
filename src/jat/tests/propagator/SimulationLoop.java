@@ -22,7 +22,7 @@ package jat.tests.propagator;
 import com.mathworks.jmi.Matlab;
 
 //import jat.util.FileUtil;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
 import jat.core.math.MathUtils;
 import jat.core.matlabInterface.*;

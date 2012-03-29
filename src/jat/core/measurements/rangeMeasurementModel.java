@@ -12,7 +12,8 @@ import java.util.StringTokenizer;
 //import jat.sim.closedLoopSim;
 
 import java.util.Random;
-import jat.core.alg.estimators.*;
+
+import jat.core.algorithm.estimators.*;
 import jat.core.cm.Constants;
 import jat.core.matvec.data.*;
 import jat.core.simulation.EstimatorSimModel;

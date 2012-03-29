@@ -20,7 +20,7 @@
 
 package jat.examples.OptimalLambert;
 
-import jat.core.alg.optimization.*;
+import jat.core.algorithm.optimization.*;
 import jat.core.cm.*;
 import jat.core.matvec.data.VectorN;
 import jat.core.plot.*;

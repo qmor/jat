@@ -21,7 +21,7 @@
 package jat.tests.propagator;
 
 
-import jat.core.alg.integrators.LinePrinter;
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.traj.*;
 /**
  * @author Richard C. Page III

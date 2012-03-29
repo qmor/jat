@@ -21,7 +21,7 @@
  */
 package jat.examples.OrbitDetermination;
 
-import jat.core.alg.integrators.Derivatives;
+import jat.core.algorithm.integrators.Derivatives;
 import jat.core.matvec.data.*;
 
 /**

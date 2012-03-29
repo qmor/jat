@@ -8,8 +8,8 @@ package jat.examples.OST;
 
 import java.text.*;
 
-import jat.core.alg.ScalarfromArrayFunction;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.ScalarfromArrayFunction;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.eom.TwoBodyCSI;
 import jat.core.matvec.data.VectorN;
 

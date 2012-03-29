@@ -5,7 +5,7 @@
  * Window - Preferences - Java - Code Style - Code Templates
  */
 package jat.tests.propagator;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 
 /**

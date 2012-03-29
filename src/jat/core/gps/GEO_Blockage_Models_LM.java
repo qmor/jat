@@ -30,7 +30,8 @@ import java.io.FileWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import jat.core.alg.integrators.LinePrinter;
+
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.cm.FiniteBurn;
 import jat.core.gps.*;
 import jat.core.math.*;

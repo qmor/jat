@@ -19,7 +19,7 @@
  */
 
 package jat.core.cm.eom;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 
 /**
  * <P>

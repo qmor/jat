@@ -23,7 +23,7 @@
  
 package jat.core.groundstations;
  
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.math.*;
 import jat.core.util.FileUtil;
 

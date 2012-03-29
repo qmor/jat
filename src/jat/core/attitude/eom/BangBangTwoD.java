@@ -20,7 +20,7 @@
 
 package jat.core.attitude.eom;
  
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.Matrix;
 import jat.core.plot.*;
 

@@ -23,7 +23,8 @@
 package jat.examples.OrbitDetermination;
 import java.io.*;
 import java.util.*;
-import jat.core.alg.estimators.*;
+
+import jat.core.algorithm.estimators.*;
 import jat.core.matvec.data.*;
 import jat.core.util.*;
 

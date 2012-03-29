@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import jat.core.alg.estimators.MeasurementModel;
-import jat.core.alg.integrators.LinePrinter;
+import jat.core.algorithm.estimators.MeasurementModel;
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.cm.Constants;
 import jat.core.ephemeris.*;
 import jat.core.math.Interpolator;

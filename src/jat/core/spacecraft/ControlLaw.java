@@ -19,7 +19,7 @@
  */
 package jat.core.spacecraft;
 
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
 import jat.core.matvec.data.VectorN;
 

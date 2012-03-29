@@ -19,7 +19,7 @@
  */
 
 package jat.examples.TwoBodyExample;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.plot.*;
 

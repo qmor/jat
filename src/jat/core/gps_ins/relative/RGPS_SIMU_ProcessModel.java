@@ -22,8 +22,8 @@
 
 package jat.core.gps_ins.relative;
 
-import jat.core.alg.estimators.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.estimators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
 import jat.core.gps.*;
@@ -177,7 +177,7 @@ public class RGPS_SIMU_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.ProcessModel#P0()
+	 * @see jat.core.algorithm.estimators.ProcessModel#P0()
 	 */
 	public Matrix P0() {
 		Matrix out = new Matrix(this.numberOfStates());
@@ -247,7 +247,7 @@ public class RGPS_SIMU_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.ProcessModel#numberOfStates()
+	 * @see jat.core.algorithm.estimators.ProcessModel#numberOfStates()
 	 */
 	public int numberOfStates() {
 		int n = 28 + 2*this.nsv;
@@ -255,7 +255,7 @@ public class RGPS_SIMU_ProcessModel implements Derivs, ProcessModel {
 	}
 	
 	/**
-	 * @see jat.core.alg.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.core.algorithm.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x, INS_Measurement measl_1, INS_Measurement measl, int sw) {
 		
@@ -517,7 +517,7 @@ public class RGPS_SIMU_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.ProcessModel#Q(double, double)
+	 * @see jat.core.algorithm.estimators.ProcessModel#Q(double, double)
 	 */
 //	public Matrix Q(double t, double dt, VectorN x) {
 //		int n = this.numberOfStates();
@@ -747,7 +747,7 @@ public class RGPS_SIMU_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.alg.estimators.ProcessModel#propagate(double, double[], double)
+	 * @see jat.core.algorithm.estimators.ProcessModel#propagate(double, double[], double)
 	 */
 	public double[] propagate(double t0, double[] xin, double tf) {
 		

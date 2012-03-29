@@ -22,7 +22,7 @@ package jat.core.ins;
 
 //import jat.matvec.data.*;
 //import java.io.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.gps_ins.Derivs;
 import jat.core.gps_ins.EOM;
 //import jat.gps_ins.*;

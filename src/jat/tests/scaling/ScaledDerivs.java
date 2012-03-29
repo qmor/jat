@@ -20,8 +20,8 @@
 
 package jat.tests.scaling;
 
-import jat.core.alg.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.*;
+import jat.core.algorithm.integrators.*;
 
 /**
  * Equations of motion

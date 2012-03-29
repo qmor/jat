@@ -22,7 +22,7 @@ package jat.examples.OptimalLambert;
 
 import java.text.*;
 
-import jat.core.alg.ScalarfromArrayFunction;
+import jat.core.algorithm.ScalarfromArrayFunction;
 import jat.core.cm.*;
 import jat.core.matvec.data.VectorN;
 

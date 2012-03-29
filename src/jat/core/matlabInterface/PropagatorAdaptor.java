@@ -23,8 +23,8 @@ package jat.core.matlabInterface;
 import java.util.Arrays;
 import java.util.Vector;
 
-import jat.core.alg.integrators.Derivatives;
-import jat.core.alg.integrators.RungeKutta8;
+import jat.core.algorithm.integrators.Derivatives;
+import jat.core.algorithm.integrators.RungeKutta8;
 import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.simulation.SimModel;

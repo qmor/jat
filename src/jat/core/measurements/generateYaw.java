@@ -4,7 +4,7 @@ package jat.core.measurements;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import jat.core.alg.integrators.LinePrinter;
+import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.timeRef.RSW_Frame;

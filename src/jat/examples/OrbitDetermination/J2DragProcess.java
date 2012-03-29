@@ -22,8 +22,8 @@
 
 package jat.examples.OrbitDetermination;
 
-import jat.core.alg.estimators.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.estimators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.Matrix;
 import jat.core.matvec.data.VectorN;
 

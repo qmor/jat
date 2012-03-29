@@ -22,10 +22,10 @@
 
 package jat.core.measurements;
 
-import jat.core.alg.estimators.EKF;
-import jat.core.alg.estimators.MeasurementFileModel;
-import jat.core.alg.estimators.MeasurementModel;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.estimators.EKF;
+import jat.core.algorithm.estimators.MeasurementFileModel;
+import jat.core.algorithm.estimators.MeasurementModel;
+import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.matvec.data.*;

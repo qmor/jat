@@ -20,7 +20,7 @@
 
 package jat.core.cm;
 
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.*;
 
 /**

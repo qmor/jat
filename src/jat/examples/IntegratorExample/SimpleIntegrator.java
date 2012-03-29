@@ -19,7 +19,7 @@
  */
 
 package jat.examples.IntegratorExample;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.plot.*;
 
 /**

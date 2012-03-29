@@ -22,7 +22,7 @@ package jat.core.cm.rendezvous;
  * File Created on Aug 26, 2003
  */
  
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.*;
 
 import java.io.*;

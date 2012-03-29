@@ -23,7 +23,7 @@
 package jat.core.ins;
 //import jat.alg.estimators.*;
 //import jat.ins.*;
-import jat.core.alg.integrators.*;
+import jat.core.algorithm.integrators.*;
 import jat.core.matvec.data.*;
 
 import java.io.*;
