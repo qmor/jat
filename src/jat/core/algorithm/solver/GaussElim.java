@@ -23,7 +23,7 @@ package jat.core.algorithm.solver;
 import jat.core.matvec.data.Matrix;
 import jat.core.matvec.data.VectorN;
 
-class GaussElim
+public class GaussElim
 {
 	public static Matrix C; // Augmented matrix  C= [ A | y ]
 
@@ -43,7 +43,7 @@ class GaussElim
 	 * Date        :   6-16-2004
 	 * @version 1.0
 	 */
-	static VectorN solve(Matrix A, VectorN y)
+	public static VectorN solve(Matrix A, VectorN y)
 	{
 		//		double R, S, Z, V, EX, AER, RATIO, sum;
 		//		int J, K, L, KP, LP1, i, j;

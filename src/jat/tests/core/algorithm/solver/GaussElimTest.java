@@ -18,8 +18,9 @@
  *
  */
 
-package jat.core.algorithm.solver;
+package jat.tests.core.algorithm.solver;
 
+import jat.core.algorithm.solver.GaussElim;
 import jat.core.matvec.data.Matrix;
 import jat.core.matvec.data.VectorN;
 

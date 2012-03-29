@@ -19,7 +19,7 @@
  *
  */
 
-package jat.tests.GaussSeidel_solve_test;
+package jat.tests.core.algorithm.solver;
 
 import jat.core.algorithm.solver.*;
 import jat.core.matvec.data.*;

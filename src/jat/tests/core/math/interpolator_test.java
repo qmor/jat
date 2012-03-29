@@ -20,7 +20,7 @@
  */
 
 
-package jat.tests.interpolator_test;
+package jat.tests.core.math;
 
 
 public class interpolator_test
