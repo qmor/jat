@@ -51,7 +51,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 {
 	private static AttitudeSimulatorA theApplet; // Applet itself!
 	private static JFrame theFrame; // Frame is used in main()
-	private static String LastUpdate = "Last Update: 08/07/2003, 12:25";
+	private static String LastUpdate = "Last Update: 03/31/2012, 12:25";
 
 	// Instantiate a Font object
 	Font fancyFont = new Font("Serif", Font.BOLD | Font.ITALIC, 25);
@@ -85,6 +85,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	JButton convertButton = new JButton("Convert Button");
 	JButton resetButton = new JButton("Reset Button");
 	JButton helpButton = new JButton("Help! Button");
+	JButton simHelpButton = new JButton("Simulation Help");
 
 	JComboBox combo;
 	JCheckBox twoDeeBox;
@@ -124,7 +125,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	JTextField inputField1row4[] = new JTextField[length1row4];
 	// Default Initial Condition
 	String defaultIc1row1[] = { "10.42", "35.42", "41.67" };
-	String defaultIc1row2[] = { "0.0", "0.0", "0.0" };
+	String defaultIc1row2[] = { "0.0", "0.0", "1.0" };
 	String defaultIc1row3[] = { "0.0", "0.0", "0.0" };
 	String defaultIc1row4[] = { "0.0", "0.0", "0.0", "1.0" };
 
@@ -369,6 +370,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		startButton.addActionListener(new ButtonHandler());
 		convertButton.addActionListener(new ButtonHandler());
 		resetButton.addActionListener(new ButtonHandler());
+		simHelpButton.addActionListener(new ButtonHandler());
 
 		JPanel firstPane = new JPanel();
 		firstPane.setLayout(new BoxLayout(firstPane, BoxLayout.X_AXIS));
@@ -418,6 +420,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		JLabel comboLabel = new JLabel("Please select a scenario");
 		comboLabel.setAlignmentX(LEFT_ALIGNMENT);
 
+		comboBoxPane.add(simHelpButton);
+
+		
 		makeInputPanels();
 
 		// ==============>
