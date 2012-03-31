@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.attitude.thesis;
+package jat.application.AttitudeSimulator;
 
 import java.awt.*;
 import java.awt.event.*;
