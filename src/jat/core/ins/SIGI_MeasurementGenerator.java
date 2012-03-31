@@ -25,7 +25,7 @@ package jat.core.ins;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
 import jat.core.trajectory.*;
 

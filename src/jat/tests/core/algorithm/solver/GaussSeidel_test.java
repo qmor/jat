@@ -22,7 +22,7 @@
 package jat.tests.core.algorithm.solver;
 
 import jat.core.algorithm.solver.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 // Book Burden Faires
 // Chapter 7.3 example 1

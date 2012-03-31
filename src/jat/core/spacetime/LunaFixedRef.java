@@ -22,8 +22,8 @@
 package jat.core.spacetime;
 
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 
 /**
  * Represents the Lunar Centered Fixed or Selenographic Reference Frame.

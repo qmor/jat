@@ -23,7 +23,7 @@ package jat.core.forces;
 //import jat.math.MathUtils;
 import jat.core.cm.Constants;
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.*;

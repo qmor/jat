@@ -22,11 +22,11 @@ package jat.core.simulation;
 import java.util.Random;
 
 import jat.core.algorithm.integrators.LinePrinter;
+import jat.core.math.matvec.data.RandomNumber;
+import jat.core.math.matvec.data.RotationMatrix;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.matlabInterface.MatlabControl;
 import jat.core.matlabInterface.MatlabFunc;
-import jat.core.matvec.data.RandomNumber;
-import jat.core.matvec.data.RotationMatrix;
-import jat.core.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.spacetime.CalDate;

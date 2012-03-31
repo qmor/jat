@@ -24,9 +24,9 @@ package jat.core.groundstations;
 import jat.core.cm.Constants;
 import jat.core.constants.*;
 import jat.core.math.MathUtils;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.RotationMatrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.RotationMatrix;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.*;
 
 public class SimpleGroundStation {

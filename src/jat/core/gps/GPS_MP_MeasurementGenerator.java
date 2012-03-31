@@ -24,7 +24,7 @@ package jat.core.gps;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.trajectory.*;
 //import jat.cm.*;
 //import jat.gps.*;

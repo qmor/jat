@@ -33,7 +33,7 @@
 package jat.core.algorithm.solver;
 
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 public class GaussSeidel
 {

@@ -25,7 +25,7 @@ import java.util.Vector;
 
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.simulation.SimModel;
 

@@ -24,7 +24,7 @@ package jat.core.cm.rendezvous;
  
 import java.io.*;
 
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
  * <P>

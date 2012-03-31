@@ -22,9 +22,8 @@
 package jat.core.spacetime;
 
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.VectorN;
-//import jat.math.MathUtils;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 
 public class LunaRef extends BodyCenteredInertialRef implements BodyRef {
   

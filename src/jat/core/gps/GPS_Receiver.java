@@ -20,8 +20,8 @@
 
 package jat.core.gps;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
-import jat.core.matvec.data.arrayTools.*;
+import jat.core.math.matvec.data.*;
+import jat.core.math.matvec.data.arrayTools.*;
 //import jat.alg.integrators.*;
 //import jat.alg.*;
 import java.io.*;

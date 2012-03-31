@@ -22,8 +22,8 @@
 package jat.core.algorithm.estimators;
 
 import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.RSW_Frame;
 import jat.core.simulation.initializer;
 

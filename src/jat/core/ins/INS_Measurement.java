@@ -21,7 +21,7 @@
  */
  
 package jat.core.ins;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 import java.io.*;
 

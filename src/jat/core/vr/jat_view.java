@@ -25,7 +25,7 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 import jat.core.cm.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 
 /**
  * The jat_view class contains methods related to the viewing platform in Java3D,

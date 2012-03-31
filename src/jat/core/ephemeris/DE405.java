@@ -66,7 +66,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import jat.core.matvec.data.*;
+
+import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
 

@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.spacetime.CalDate;
 import jat.core.spacetime.Time;
 import junit.framework.TestCase;

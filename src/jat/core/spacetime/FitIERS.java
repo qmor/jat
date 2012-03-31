@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.StringTokenizer;
 import jat.core.cm.Constants;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.util.FileUtil;
 
 /**

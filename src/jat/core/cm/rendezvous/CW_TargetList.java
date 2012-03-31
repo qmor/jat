@@ -23,7 +23,7 @@ package jat.core.cm.rendezvous;
  */
  
 import jat.core.algorithm.integrators.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 import java.io.*;
 import java.util.*;

@@ -23,7 +23,7 @@ package jat.core.math;
 
 import javax.vecmath.Vector3d;
 
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 
 /**
  * Transformations between different coordinate systems

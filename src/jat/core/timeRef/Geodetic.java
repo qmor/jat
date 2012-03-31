@@ -21,7 +21,7 @@
 package jat.core.timeRef;
 import jat.core.cm.*;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 /**
  * <P>
  * The Geodetic Class provides methods of converting between geocentric and geodetic reference systems.

@@ -20,7 +20,7 @@
 package jat.core.forces;
 
 import jat.core.cm.Constants;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.BodyRef;
 import jat.core.spacetime.Time;

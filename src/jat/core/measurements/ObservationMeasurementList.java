@@ -23,9 +23,9 @@
 package jat.core.measurements;
 
 import jat.core.gps.GPS_Measurement;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.RotationMatrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.RotationMatrix;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.CalDate;
 import jat.core.spacetime.EarthRef;
 import jat.core.spacetime.FitIERS;

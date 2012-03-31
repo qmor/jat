@@ -21,7 +21,7 @@
  */
 
 package jat.core.algorithm.estimators;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
 * The EstSTM Class contains the state and state transition matrix (STM) for

@@ -24,7 +24,8 @@ package jat.core.vr;
 import java.applet.Applet;
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import jat.core.matvec.data.*;
+
+import jat.core.math.matvec.data.*;
 import jat.core.util.*;
 
 /** Base class for 3D objects. Planet, moons, and spacecraft extend this class.

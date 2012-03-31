@@ -19,7 +19,7 @@
  */
 
 package jat.core.algorithm;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
  * Utility class for Numerical Derivatives

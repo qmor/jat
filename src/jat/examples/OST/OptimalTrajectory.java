@@ -24,7 +24,7 @@ package jat.examples.OST;
 import jat.core.algorithm.optimization.*;
 import jat.core.cm.*;
 import jat.core.cm.eom.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.plot.*;
 
 import java.io.*;

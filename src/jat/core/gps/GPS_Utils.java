@@ -22,7 +22,7 @@ package jat.core.gps;
  * File Created on Jun 20, 2003
  */
  
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
 * The GPSutils.java Class provides general utility functions needed for GPS

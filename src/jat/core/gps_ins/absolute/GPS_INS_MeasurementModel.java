@@ -24,8 +24,7 @@ package jat.core.gps_ins.absolute;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.gps.*;
-import jat.core.matvec.data.*;
-//import jat.alg.integrators.*;
+import jat.core.math.matvec.data.*;
 
 /**
 * The GPS_INS_MeasurementModel.java Class provides the measurement model for GPS/INS

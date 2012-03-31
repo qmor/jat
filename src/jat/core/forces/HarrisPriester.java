@@ -20,7 +20,7 @@
 
 package jat.core.forces;
 import jat.core.forces.harrispriester.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.*;

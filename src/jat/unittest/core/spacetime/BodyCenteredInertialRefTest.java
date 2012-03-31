@@ -22,7 +22,7 @@
 package jat.unittest.core.spacetime;
 
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.EarthRef;
 import jat.core.spacetime.LunaRef;
 import jat.core.spacetime.ReferenceFrameTranslater;

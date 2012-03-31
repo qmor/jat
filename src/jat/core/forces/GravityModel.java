@@ -21,7 +21,7 @@ package jat.core.forces;
 
 import jat.core.ephemeris.*;
 import jat.core.math.MathUtils;
-import jat.core.matvec.data.Matrix;
+import jat.core.math.matvec.data.Matrix;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
 

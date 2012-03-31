@@ -26,7 +26,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
 import jat.core.gps.*;
 import jat.core.gps.filters.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
 //import jat.cm.*;
 //import jat.gps_ins.*;

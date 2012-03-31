@@ -22,7 +22,7 @@ package jat.core.vr;
 
 import jat.core.cm.*;
 import jat.core.math.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;

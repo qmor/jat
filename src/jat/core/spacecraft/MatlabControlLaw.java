@@ -19,8 +19,8 @@
  */
 package jat.core.spacecraft;
 
+import jat.core.math.matvec.data.VectorN;
 import jat.core.matlabInterface.*;
-import jat.core.matvec.data.VectorN;
 /**
  * This class represents a call to a Matlab function which runs a control algorithm.  The
  * class implements ControlLaw and can be used in JAT as any other Java based control law

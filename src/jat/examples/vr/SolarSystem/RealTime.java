@@ -24,7 +24,7 @@ package jat.examples.vr.SolarSystem;
 import jat.core.vr.*;
 import jat.core.cm.*;
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.*;
 import java.awt.*;

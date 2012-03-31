@@ -21,7 +21,7 @@ package jat.core.algorithm.estimators;
  * 
  * File Created on May 7, 2003
  */
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
 * The ProcessModel.java Class provides an interface to the Extended Kalman Filter

@@ -22,7 +22,7 @@ package jat.core.ground_tracking;
 import jat.core.constants.*;
 import jat.core.gps.*;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
  * Tropospheric Refraction Model

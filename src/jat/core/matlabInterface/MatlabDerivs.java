@@ -20,7 +20,7 @@
 package jat.core.matlabInterface;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 
 import com.mathworks.jmi.Matlab;
 

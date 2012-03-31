@@ -20,7 +20,7 @@
 package jat.core.spacetime;
 
 import jat.core.ephemeris.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 
 /**
  * Used to represent the inertial reference frame centered at any one

@@ -23,7 +23,7 @@ import java.io.*;
 import java.util.*;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.timeRef.*;
 /**
 * <P>

@@ -20,7 +20,7 @@ package jat.core.spacetime;
 */
 
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 /**
  * ITRF provides a representation of the Internation Terrestrial Reference Frame.
  * It is used to compute the transformation between ECI and ECEF frames.

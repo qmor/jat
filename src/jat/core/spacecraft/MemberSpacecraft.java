@@ -19,8 +19,8 @@
  */
 package jat.core.spacecraft;
 
-import jat.core.matvec.data.Quaternion;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Quaternion;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.timeRef.RSW_Frame;
 
 /**

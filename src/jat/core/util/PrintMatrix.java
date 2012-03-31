@@ -1,6 +1,6 @@
 package jat.core.util;
 
-import jat.core.matvec.data.Matrix;
+import jat.core.math.matvec.data.Matrix;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

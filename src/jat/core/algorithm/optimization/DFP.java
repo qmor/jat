@@ -21,7 +21,7 @@
 package jat.core.algorithm.optimization;
 
 import jat.core.algorithm.ScalarfromArrayFunction;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
  * Davidon-Fletcher-Powell variable metric method

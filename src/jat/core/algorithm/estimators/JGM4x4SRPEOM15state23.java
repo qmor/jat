@@ -27,7 +27,7 @@ import jat.core.ephemeris.DE405;
 import jat.core.forces.*;
 import jat.core.gps.GPS_Utils;
 import jat.core.math.MathUtils;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.RSW_Frame;

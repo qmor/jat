@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.Interpolator;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.spacetime.Time;
 
 import java.util.Random;

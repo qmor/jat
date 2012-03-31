@@ -22,7 +22,7 @@ package jat.core.gps;
  * File Created on Jul 13, 2003
  */
  
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
  * <P>

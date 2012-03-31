@@ -19,7 +19,7 @@
  */
 
 package jat.core.cm;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.plot.*;
 import jat.core.trajectory.*;
 import jat.core.util.*;

@@ -24,8 +24,7 @@ package jat.core.gps.filters.relative;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.gps.*;
-import jat.core.matvec.data.*;
-//import jat.alg.integrators.*;
+import jat.core.math.matvec.data.*;
 
 /**
 * The RGPS_MeasurementModel.java Class provides ...

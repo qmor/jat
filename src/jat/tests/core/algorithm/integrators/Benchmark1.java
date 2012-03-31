@@ -23,8 +23,8 @@ package jat.tests.core.algorithm.integrators;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 
 
 /**

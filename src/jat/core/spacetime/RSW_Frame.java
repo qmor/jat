@@ -22,7 +22,7 @@ package jat.core.spacetime;
  * File Created on Aug 4, 2003
  */
  
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 /**
  * <P>
  * The RSW_Frame Class provides methods of converting between the ECI and RSW frame,

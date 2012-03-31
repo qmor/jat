@@ -21,9 +21,9 @@ package jat.core.spacecraft;
 
 import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.integrators.Derivatives;
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.Quaternion;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.Quaternion;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.UniverseModel;
 
@@ -399,7 +399,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Send a command to the indicated member spacecraft.
-	 * @see jat.core.spacecraft.MemberSpacecraft#send_control(jat.core.matvec.data.VectorN, jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.core.spacecraft.MemberSpacecraft#send_control(jat.core.math.matvec.data.VectorN, jat.core.spacecraft.PrimarySpacecraft)
 	 */
 	public void send_control(VectorN pos, PrimarySpacecraft s) {
 		// TODO Auto-generated method stub

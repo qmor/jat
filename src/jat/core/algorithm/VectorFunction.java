@@ -20,7 +20,7 @@
 
 
 package jat.core.algorithm;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
  * <P>

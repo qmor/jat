@@ -24,7 +24,7 @@ package jat.core.ins;
 //import jat.alg.estimators.*;
 //import jat.ins.*;
 import jat.core.algorithm.integrators.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 import java.io.*;
 import java.util.*;

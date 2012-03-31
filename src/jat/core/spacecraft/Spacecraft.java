@@ -19,7 +19,7 @@
  */
 package jat.core.spacecraft;
 
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.timeRef.RSW_Frame;
 
 /**

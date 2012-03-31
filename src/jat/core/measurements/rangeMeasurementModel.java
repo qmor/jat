@@ -15,7 +15,7 @@ import java.util.Random;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.cm.Constants;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.simulation.EstimatorSimModel;
 import jat.core.simulation.initializer;
 import jat.core.spacetime.EarthRef;

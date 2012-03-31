@@ -28,7 +28,7 @@ import jat.core.algorithm.estimators.MeasurementModel;
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 import jat.core.math.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.simulation.EstimatorSimModel;
 import jat.core.simulation.initializer;
 import jat.core.spacetime.EarthRef;

@@ -21,7 +21,7 @@ package jat.core.spacecraft;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 
 /**
  * A template class intended to be extended to implement various control

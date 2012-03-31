@@ -19,9 +19,9 @@
  */
 package jat.core.spacecraft;
 
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.Quaternion;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.Quaternion;
+import jat.core.math.matvec.data.VectorN;
 /**
  * Interface representing the primary or central spacecraft of a formation.
  * 

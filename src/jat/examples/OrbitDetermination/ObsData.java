@@ -25,7 +25,7 @@ import java.io.*;
 import java.util.*;
 
 import jat.core.algorithm.estimators.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 import jat.core.util.*;
 
 /**

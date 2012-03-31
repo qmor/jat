@@ -22,7 +22,7 @@ package jat.examples.simulation;
 
 import jat.core.cm.*;
 import jat.core.forces.*;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.core.util.FileUtil;
 import jat.core.simulation.SimModel;

@@ -31,7 +31,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.gps.*;
 import jat.core.gps.filters.*;
-import jat.core.matvec.data.*;
+import jat.core.math.matvec.data.*;
 
 /**
 * The GPS_ProcessModel.java Class provides the process model

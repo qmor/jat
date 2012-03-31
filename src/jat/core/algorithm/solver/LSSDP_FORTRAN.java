@@ -1,7 +1,7 @@
 package jat.core.algorithm.solver;
 
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 
 class LSSDP_FORTRAN
 {

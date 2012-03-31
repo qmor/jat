@@ -21,8 +21,8 @@ package jat.core.spacecraft;
 
 import java.util.*;
 
-import jat.core.matvec.data.Matrix;
-import jat.core.matvec.data.VectorN;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 
 /**
  * This class represents a spacecraft formation.  It contains any number of spacecraft
