@@ -66,7 +66,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	static int secondPanelWidth = 750;
 	static int thirdPanelWidth = 200;
 	// Dimension of J components
-	Dimension maxSize = new Dimension(50, 20);
+	Dimension maxSize = new Dimension(150, 20);
 	Dimension secondPaneSize = new Dimension(750, 800); // width, height
 	Dimension thirdPaneSize = new Dimension(200, 800);
 	Dimension panelSize = new Dimension(755, 400);
@@ -663,7 +663,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 
 			System.out.println(f.root_path);
 			
-			s ="file:/"+ f.find_attitude_help_folder()+ fileName;
+			s ="file:"+ f.find_attitude_help_folder()+ fileName;
 			System.out.println(s);
 			
 			// ==============>

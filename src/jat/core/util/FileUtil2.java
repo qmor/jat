@@ -29,7 +29,7 @@ public class FileUtil2 {
 
 	public String find_attitude_help_folder() {
 
-		return find_root() + "src/jat/core/attitude/thesis/help/";
+		return find_root() + "src/jat/application/AttitudeSimulator/help/";
 	}
 
 	public String find_data_folder() {
