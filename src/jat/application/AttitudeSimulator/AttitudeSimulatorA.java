@@ -357,9 +357,8 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	JComponent instruction8Pane;
 	JComponent instruction9Pane;
 
-	
-	FileUtil2 f=new FileUtil2();
-	
+	FileUtil2 f = new FileUtil2();
+
 	/**
 	 * Builds the applet's graphical user interface
 	 */
@@ -422,7 +421,6 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 
 		comboBoxPane.add(simHelpButton);
 
-		
 		makeInputPanels();
 
 		// ==============>
@@ -489,7 +487,6 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		instructionCards.add(SCENARIO_8, instruction8Pane);
 		instructionCards.add(SCENARIO_9, instruction9Pane);
 
-
 		/* Add Scenario panels to the card Panel */
 		/* Associate the comboBox elements with the correponding JPanel */
 		inputCards = new JPanel();
@@ -517,7 +514,6 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		editorScrollPane.setMinimumSize(inertiaPaneSize);
 		editorScrollPane.setAlignmentX(LEFT_ALIGNMENT);
 		editorScrollPane.setBackground(Color.pink);
-
 
 		/* Add Items to the Top-level JPanels */
 		thirdPane.add(new JLabel("Euler Angle Converter"));
@@ -662,17 +658,18 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		try {
 
 			System.out.println(f.root_path);
-			
-			s ="file:"+ f.find_attitude_help_folder()+ fileName;
+
+			s = "file:" + f.find_attitude_help_folder() + fileName;
 			System.out.println(s);
-			
+
 			// ==============>
 			System.out.println("applet init p5");
-			
-			//s = "http://jamesbond.atl.calpoly.edu/~ntakada/Applets/WebHelpFile/"+ fileName;
+
+			// s =
+			// "http://jamesbond.atl.calpoly.edu/~ntakada/Applets/WebHelpFile/"+
+			// fileName;
 			URL helpURL2 = new URL(s);
-			
-			
+
 			displayURL(helpURL2, editorPane, fileName);
 
 			// ==============>
@@ -684,7 +681,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 			// displayURL(url, editorPane);
 		} catch (Exception e) {
 			System.err.println("Couldn't create help URL!!: " + s);
-			//readAgain(editorPane, fileName, s);
+			// readAgain(editorPane, fileName, s);
 			System.exit(0);
 		}
 
@@ -736,7 +733,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 			editorPane.setPage(url);
 		} catch (IOException e) {
 			System.err.println("Attempted to read a bad URL: " + url);
-			//readAgain(editorPane, fileName, again);
+			// readAgain(editorPane, fileName, again);
 		}
 	}
 
@@ -1551,6 +1548,25 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 				quaternionOutputField[1].setText("0");
 				quaternionOutputField[2].setText("0");
 				quaternionOutputField[3].setText("1");
+			}
+
+			if (ev.getSource() == simHelpButton) {
+				System.out.println("help button pressed");
+
+				/*
+				 * switch (combo.getSelectedItem()) {
+				 * 
+				 * case 4: // doSomething4(); break; default: //
+				 * doSomethingElse(); }
+				 */
+
+				if (combo.getSelectedItem() == SCENARIO_1) {
+					System.out.println("scenario 1");
+					HelpWindow h = new HelpWindow();
+					h.setVisible(true);
+				} else if (combo.getSelectedItem() == SCENARIO_2) {
+
+				}
 			}
 
 		}// End of ActionPerformed
