@@ -20,15 +20,16 @@ public class HelpWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public HelpWindow() throws HeadlessException {
+	public HelpWindow(String name) throws HeadlessException {
 
 		super("Simulation Instruction");
 		Dimension windowSize = new Dimension(150, 20);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JLabel emptyLabel = new JLabel("");
 		emptyLabel.setPreferredSize(new Dimension(175, 100));
-		// getContentPane().add(emptyLabel, BorderLayout.CENTER);
-		getContentPane().add(createEditorPane("ConstantTorque.html"),
+		//getContentPane().add(createEditorPane("ConstantTorque.html"),
+			//	BorderLayout.CENTER);
+		getContentPane().add(createEditorPane(name),
 				BorderLayout.CENTER);
 
 		pack();
@@ -39,7 +40,7 @@ public class HelpWindow extends JFrame {
 		JEditorPane editorPane = new JEditorPane();
 		editorPane.setEditable(false);
 		editorPane.setBackground(Color.white);
-		Dimension mysize=new Dimension(600, 400);
+		Dimension mysize = new Dimension(600, 400);
 		editorPane.setPreferredSize(mysize);
 		String s = null;
 		FileUtil2 f = new FileUtil2();
@@ -63,14 +64,23 @@ public class HelpWindow extends JFrame {
 		return editorPane;
 	}
 
-	
+	/**
+	 * Displays URL
+	 * 
+	 * @author Sun's Swing tutorial example
+	 * @param url
+	 *            (URL)
+	 * @param editorPane
+	 *            (JEditorPane)
+	 * @param fileName
+	 *            (String)
+	 */
 	private void displayURL(URL url, JEditorPane editorPane, String fileName) {
 		try {
 			editorPane.setPage(url);
 		} catch (IOException e) {
 			System.err.println("Attempted to read a bad URL: " + url);
 		}
-	}	
-	
-	
+	}
+
 }

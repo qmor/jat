@@ -20,19 +20,42 @@
 
 package jat.application.AttitudeSimulator;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.swing.*; // Used for Timer & JSlider
-import javax.swing.border.TitledBorder;
-
-import jat.core.attitude.*;
+import jat.core.attitude.DegToQuat;
 import jat.core.attitude.eom.EomTest;
 import jat.core.attitude.util.JTextFieldPanel;
-import jat.core.util.FileUtil;
 import jat.core.util.FileUtil2;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 /**
  * <P>
@@ -322,7 +345,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 
 	/* CardLayout-JPanel for scenario specific inputs */
 	JPanel inputCards;
-	JPanel instructionCards;
+	//JPanel instructionCards;
 	final static String SCENARIO_1 = "1. Constant Torque";
 	final static String SCENARIO_2 = "2. GG Circular";
 	final static String SCENARIO_3 = "3. GG Eccentric";
@@ -332,6 +355,11 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	final static String SCENARIO_7 = "7. 1 axis Bang-Bang Control";
 	final static String SCENARIO_8 = "8. Simple 2D Flexible S/C";
 	final static String SCENARIO_9 = "9. Simple 3D Flexible S/C";
+
+	final static String[] helpfile = { "ConstantTorque.html", "GGCircular.html",
+			"GGEccentric.html", "SphericalDamper.html", "FourRWControl.html",
+			"CMGControl.html", "BangBangControl.html", "Simple2DFlexSC.html",
+			"Simple3DFlexSC.html" };
 
 	/* Declare Panels for simulation inputs for each panels */
 	JTextFieldPanel inertiaPane;
@@ -347,6 +375,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	JPanel scenario9Pane;
 
 	/* Declare Panels for text instructions for each scenario */
+	/*
 	JComponent instruction1Pane;
 	JComponent instruction2Pane;
 	JComponent instruction3Pane;
@@ -356,7 +385,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	JComponent instruction7Pane;
 	JComponent instruction8Pane;
 	JComponent instruction9Pane;
-
+*/
 	FileUtil2 f = new FileUtil2();
 
 	/**
@@ -428,6 +457,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 
 		/* Build instructionPanel using JEditorPane component */
 		/* Load the help file in rtf format in a JEditorPane */
+		/*
 		instruction1Pane = new JPanel();
 		instruction1Pane.setBackground(Color.white);
 		instruction2Pane = new JPanel();
@@ -446,9 +476,10 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		instruction8Pane.setBackground(Color.white);
 		instruction9Pane = new JPanel();
 		instruction9Pane.setBackground(Color.white);
+		*/
 		// ==============>
 		System.out.println("applet init p3");
-
+/*
 		instruction1Pane.add(createEditorPane("ConstantTorque.html"),
 				BorderLayout.CENTER);
 		// ==============>
@@ -469,14 +500,14 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 				BorderLayout.CENTER);
 		instruction9Pane.add(createEditorPane("Simple3DFlexSC.html"),
 				BorderLayout.CENTER);
-
+*/
 		/* Add Instruction panes to indtructionCards */
-		instructionCards = new JPanel();
+		//instructionCards = new JPanel();
 		// instructionCards.setMaximumSize(inertiaPaneSize);
 		// instructionCards.setPreferredSize(inertiaPaneSize);
 		// instructionCards.setMinimumSize(inertiaPaneSize);
 		// instructionCards.setAlignmentX(LEFT_ALIGNMENT);
-		instructionCards.setLayout(new CardLayout());
+/*		instructionCards.setLayout(new CardLayout());
 		instructionCards.add(SCENARIO_1, instruction1Pane);
 		instructionCards.add(SCENARIO_2, instruction2Pane);
 		instructionCards.add(SCENARIO_3, instruction3Pane);
@@ -486,9 +517,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		instructionCards.add(SCENARIO_7, instruction7Pane);
 		instructionCards.add(SCENARIO_8, instruction8Pane);
 		instructionCards.add(SCENARIO_9, instruction9Pane);
-
+*/
 		/* Add Scenario panels to the card Panel */
-		/* Associate the comboBox elements with the correponding JPanel */
+		/* Associate the comboBox elements with the corresponding JPanel */
 		inputCards = new JPanel();
 		inputCards.setPreferredSize(panelSize);
 		inputCards.setMinimumSize(panelSize);
@@ -507,14 +538,14 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		inputCards.add(SCENARIO_8, scenario8Pane);
 		inputCards.add(SCENARIO_9, scenario9Pane);
 
-		JScrollPane editorScrollPane = new JScrollPane(instructionCards);
+/*		JScrollPane editorScrollPane = new JScrollPane(instructionCards);
 		editorScrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		editorScrollPane.setPreferredSize(inertiaPaneSize);
 		editorScrollPane.setMinimumSize(inertiaPaneSize);
 		editorScrollPane.setAlignmentX(LEFT_ALIGNMENT);
 		editorScrollPane.setBackground(Color.pink);
-
+*/
 		/* Add Items to the Top-level JPanels */
 		thirdPane.add(new JLabel("Euler Angle Converter"));
 		thirdPane.add(new JLabel("Sequence: 3-2-1"));
@@ -551,7 +582,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		secondPane.add(comboBoxPane);
 		secondPane.add(Box.createRigidArea(new Dimension(0, 5)));
 		secondPane.add(new JLabel("Simulation Instruction"));
-		secondPane.add(editorScrollPane);
+		//secondPane.add(editorScrollPane);
 		secondPane.add(Box.createRigidArea(new Dimension(0, 5)));
 		// secondPane.add(new
 		// JLabel("Principal Moments of Inertia for 3-Axes Simulation (kg*m^2)"));
@@ -586,6 +617,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		// Register a listener for the check boxes.
 		twoDeeBox.addItemListener(new ButtonHandler());
 		threeDeeBox.addItemListener(new ButtonHandler());
+
 		// Create a JPanel for putting check boxes
 		JPanel boxPane = new JPanel();
 		boxPane.setLayout(new BoxLayout(boxPane, BoxLayout.X_AXIS));
@@ -633,109 +665,6 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		System.out.println("applet init end");
 
 	}// End of init()
-
-	/**
-	 * Creates the desired name of a file located at where the class of this
-	 * file is located
-	 * 
-	 * @param fileName
-	 *            the name of a file to be loaded
-	 * @return JEditorPane
-	 */
-	private JEditorPane createEditorPane(String fileName) {
-		JEditorPane editorPane = new JEditorPane();
-		editorPane.setEditable(false);
-		Dimension inertiaPaneSize = new Dimension(510, 150);
-		// editorPane.setMaximumSize(inertiaPaneSize);
-		// editorPane.setPreferredSize(inertiaPaneSize);
-		// editorPane.setMinimumSize(inertiaPaneSize);
-		// editorPane.setAlignmentX(LEFT_ALIGNMENT);
-		// editorPane.setAlignmentX(LEFT_ALIGNMENT);
-		editorPane.setBackground(Color.white);
-		String s = null;
-
-		// URL helpURL = null;
-		try {
-
-			System.out.println(f.root_path);
-
-			s = "file:" + f.find_attitude_help_folder() + fileName;
-			System.out.println(s);
-
-			// ==============>
-			System.out.println("applet init p5");
-
-			// s =
-			// "http://jamesbond.atl.calpoly.edu/~ntakada/Applets/WebHelpFile/"+
-			// fileName;
-			URL helpURL2 = new URL(s);
-
-			displayURL(helpURL2, editorPane, fileName);
-
-			// ==============>
-			System.out.println("applet init p6");
-
-			// URL codeBase = this.getCodeBase();
-			// URL url = null;
-			// url = new URL(codeBase, fileName);
-			// displayURL(url, editorPane);
-		} catch (Exception e) {
-			System.err.println("Couldn't create help URL!!: " + s);
-			// readAgain(editorPane, fileName, s);
-			System.exit(0);
-		}
-
-		return editorPane;
-	}
-
-	/**
-	 * Reads the filename one more time if an error occurs
-	 * 
-	 * @param editorPane
-	 *            (JeditorPane)
-	 * @param fileName
-	 *            (String)
-	 * @param s
-	 *            (String)
-	 */
-	private void readAgain(JEditorPane editorPane, String fileName, String s) {
-		try {
-			System.err.println("Couldn't create help URL!!: " + s);
-			String class_path = FileUtil.getClassFilePath(
-					"jat.attitude.thesis", "AttitudeSimulatorA");
-			// s = "file:"+
-			// System.getProperty("user.dir")
-			// + System.getProperty("file.separator")
-			// + "jat\\attitude\\thesis\\help\\"+fileName;
-			s = "file:" + class_path + "help\\" + fileName;
-			URL helpURL = new URL(s);
-			displayURL(helpURL, editorPane, fileName);
-
-		} catch (Exception e2) {
-			System.err.println("Couldn't create help URL for the 2nd time: ");
-		}
-	}
-
-	/**
-	 * Displays URL
-	 * 
-	 * @author Sun's Swing tutorial example
-	 * @param url
-	 *            (URL)
-	 * @param editorPane
-	 *            (JEditorPane)
-	 * @param fileName
-	 *            (String)
-	 */
-	private void displayURL(URL url, JEditorPane editorPane, String fileName) {
-		String again = null;
-		try {
-			editorPane.setPage(url);
-		} catch (IOException e) {
-			System.err.println("Attempted to read a bad URL: " + url);
-			// readAgain(editorPane, fileName, again);
-		}
-	}
 
 	/**
 	 * Makes panels for prompting users to input necessary fields
@@ -1562,7 +1491,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 
 				if (combo.getSelectedItem() == SCENARIO_1) {
 					System.out.println("scenario 1");
-					HelpWindow h = new HelpWindow();
+					HelpWindow h = new HelpWindow(helpfile[0]);
 					h.setVisible(true);
 				} else if (combo.getSelectedItem() == SCENARIO_2) {
 
@@ -1639,9 +1568,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		public void itemStateChanged(ItemEvent e) {
 
 			CardLayout cl = (CardLayout) (inputCards.getLayout());
-			CardLayout c2 = (CardLayout) (instructionCards.getLayout());
+			//CardLayout c2 = (CardLayout) (instructionCards.getLayout());
 			cl.show(inputCards, (String) e.getItem());
-			c2.show(instructionCards, (String) e.getItem());
+			//c2.show(instructionCards, (String) e.getItem());
 
 		}
 
