@@ -86,24 +86,18 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	/* GUI Dimensions */
 	static int appletwidth = 950; // Width of Applet
 	static int appletheight = 800;
-	static int secondPanelWidth = 750;
-	static int thirdPanelWidth = 200;
+	static int comboBoxPane_width = 750;
+	//static int thirdPanelWidth = 200;
+	
 	// Dimension of J components
 	Dimension maxSize = new Dimension(150, 20);
-	Dimension secondPaneSize = new Dimension(750, 800); // width, height
-	Dimension thirdPaneSize = new Dimension(200, 800);
+	Dimension level3_Pane_simulation_size = new Dimension(750, 800); // width, height
+	Dimension level3_Pane_conversion_size = new Dimension(200, 800);
 	Dimension panelSize = new Dimension(755, 400);
 	Dimension scrollPanelSize = new Dimension(755, 300);
 	Dimension inertiaPaneSize = new Dimension(525, 50);
 
 	/* Buttons */
-	// String images_path =
-	// fileutil.get_win_path_of_class("jat.attitude.thesis",
-	// "AttitudeSimulator")+ "images/";
-	// String images_path ="http://jamesbond.atl.calpoly.edu/~ntakada/images/";
-	// ImageIcon domburi = new ImageIcon(images_path+"Shuttle.gif");
-	// JButton startButton = new JButton("Start Button",domburi);
-
 	JButton startButton = new JButton("Start Button");
 	JButton convertButton = new JButton("Convert Button");
 	JButton resetButton = new JButton("Reset Button");
@@ -374,18 +368,6 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	JPanel scenario8Pane;
 	JPanel scenario9Pane;
 
-	/* Declare Panels for text instructions for each scenario */
-	/*
-	JComponent instruction1Pane;
-	JComponent instruction2Pane;
-	JComponent instruction3Pane;
-	JComponent instruction4Pane;
-	JComponent instruction5Pane;
-	JComponent instruction6Pane;
-	JComponent instruction7Pane;
-	JComponent instruction8Pane;
-	JComponent instruction9Pane;
-*/
 	FileUtil2 f = new FileUtil2();
 
 	/**
@@ -400,28 +382,28 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		resetButton.addActionListener(new ButtonHandler());
 		simHelpButton.addActionListener(new ButtonHandler());
 
-		JPanel firstPane = new JPanel();
-		firstPane.setLayout(new BoxLayout(firstPane, BoxLayout.X_AXIS));
-		firstPane.setBackground(Color.pink);
+		JPanel level2_Pane = new JPanel();
+		level2_Pane.setLayout(new BoxLayout(level2_Pane, BoxLayout.X_AXIS));
+		level2_Pane.setBackground(Color.pink);
 		// firstPane.setBorder(BorderFactory.createTitledBorder("1st Pane"));
 
-		JPanel secondPane = new JPanel();
-		secondPane.setMaximumSize(secondPaneSize);
-		secondPane.setPreferredSize(secondPaneSize);
-		secondPane.setMinimumSize(secondPaneSize);
-		secondPane.setLayout(new BoxLayout(secondPane, BoxLayout.Y_AXIS));
-		secondPane.setBackground(Color.pink);
+		JPanel level3_Pane_simulation = new JPanel();
+		level3_Pane_simulation.setMaximumSize(level3_Pane_simulation_size);
+		level3_Pane_simulation.setPreferredSize(level3_Pane_simulation_size);
+		level3_Pane_simulation.setMinimumSize(level3_Pane_simulation_size);
+		level3_Pane_simulation.setLayout(new BoxLayout(level3_Pane_simulation, BoxLayout.Y_AXIS));
+		level3_Pane_simulation.setBackground(Color.pink);
 		TitledBorder titled;
 		titled = BorderFactory.createTitledBorder("");
-		secondPane.setBorder(titled);
+		level3_Pane_simulation.setBorder(titled);
 
-		JPanel thirdPane = new JPanel();
-		thirdPane.setMaximumSize(thirdPaneSize);
-		thirdPane.setPreferredSize(thirdPaneSize);
-		thirdPane.setMinimumSize(thirdPaneSize);
-		thirdPane.setLayout(new BoxLayout(thirdPane, BoxLayout.Y_AXIS));
-		thirdPane.setBackground(Color.pink);
-		thirdPane.setBorder(BorderFactory.createTitledBorder(""));
+		JPanel level3_Pane_conversion = new JPanel();
+		level3_Pane_conversion.setMaximumSize(level3_Pane_conversion_size);
+		level3_Pane_conversion.setPreferredSize(level3_Pane_conversion_size);
+		level3_Pane_conversion.setMinimumSize(level3_Pane_conversion_size);
+		level3_Pane_conversion.setLayout(new BoxLayout(level3_Pane_conversion, BoxLayout.Y_AXIS));
+		level3_Pane_conversion.setBackground(Color.pink);
+		level3_Pane_conversion.setBorder(BorderFactory.createTitledBorder(""));
 
 		/* Build Input Panels */
 		// Put the JComboBox in a JPanel
@@ -430,9 +412,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 				SCENARIO_9 };
 		JPanel comboBoxPane = new JPanel();
 		comboBoxPane.setLayout(new BoxLayout(comboBoxPane, BoxLayout.X_AXIS));
-		comboBoxPane.setPreferredSize(new Dimension(secondPanelWidth, 30));
-		comboBoxPane.setMaximumSize(new Dimension(secondPanelWidth, 20));
-		comboBoxPane.setMinimumSize(new Dimension(secondPanelWidth, 20));
+		comboBoxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		comboBoxPane.setMaximumSize(new Dimension(comboBoxPane_width, 20));
+		comboBoxPane.setMinimumSize(new Dimension(comboBoxPane_width, 20));
 		comboBoxPane.setBackground(Color.pink);
 		comboBoxPane.setAlignmentX(LEFT_ALIGNMENT);
 
@@ -452,72 +434,6 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 
 		makeInputPanels();
 
-		// ==============>
-		System.out.println("applet init p2");
-
-		/* Build instructionPanel using JEditorPane component */
-		/* Load the help file in rtf format in a JEditorPane */
-		/*
-		instruction1Pane = new JPanel();
-		instruction1Pane.setBackground(Color.white);
-		instruction2Pane = new JPanel();
-		instruction2Pane.setBackground(Color.white);
-		instruction3Pane = new JPanel();
-		instruction3Pane.setBackground(Color.white);
-		instruction4Pane = new JPanel();
-		instruction4Pane.setBackground(Color.white);
-		instruction5Pane = new JPanel();
-		instruction5Pane.setBackground(Color.white);
-		instruction6Pane = new JPanel();
-		instruction6Pane.setBackground(Color.white);
-		instruction7Pane = new JPanel();
-		instruction7Pane.setBackground(Color.white);
-		instruction8Pane = new JPanel();
-		instruction8Pane.setBackground(Color.white);
-		instruction9Pane = new JPanel();
-		instruction9Pane.setBackground(Color.white);
-		*/
-		// ==============>
-		System.out.println("applet init p3");
-/*
-		instruction1Pane.add(createEditorPane("ConstantTorque.html"),
-				BorderLayout.CENTER);
-		// ==============>
-		System.out.println("applet init p4");
-		instruction2Pane.add(createEditorPane("GGCircular.html"),
-				BorderLayout.CENTER);
-		instruction3Pane.add(createEditorPane("GGEccentric.html"),
-				BorderLayout.CENTER);
-		instruction4Pane.add(createEditorPane("SphericalDamper.html"),
-				BorderLayout.CENTER);
-		instruction5Pane.add(createEditorPane("FourRWControl.html"),
-				BorderLayout.CENTER);
-		instruction6Pane.add(createEditorPane("CMGControl.html"),
-				BorderLayout.CENTER);
-		instruction7Pane.add(createEditorPane("BangBangControl.html"),
-				BorderLayout.CENTER);
-		instruction8Pane.add(createEditorPane("Simple2DFlexSC.html"),
-				BorderLayout.CENTER);
-		instruction9Pane.add(createEditorPane("Simple3DFlexSC.html"),
-				BorderLayout.CENTER);
-*/
-		/* Add Instruction panes to indtructionCards */
-		//instructionCards = new JPanel();
-		// instructionCards.setMaximumSize(inertiaPaneSize);
-		// instructionCards.setPreferredSize(inertiaPaneSize);
-		// instructionCards.setMinimumSize(inertiaPaneSize);
-		// instructionCards.setAlignmentX(LEFT_ALIGNMENT);
-/*		instructionCards.setLayout(new CardLayout());
-		instructionCards.add(SCENARIO_1, instruction1Pane);
-		instructionCards.add(SCENARIO_2, instruction2Pane);
-		instructionCards.add(SCENARIO_3, instruction3Pane);
-		instructionCards.add(SCENARIO_4, instruction4Pane);
-		instructionCards.add(SCENARIO_5, instruction5Pane);
-		instructionCards.add(SCENARIO_6, instruction6Pane);
-		instructionCards.add(SCENARIO_7, instruction7Pane);
-		instructionCards.add(SCENARIO_8, instruction8Pane);
-		instructionCards.add(SCENARIO_9, instruction9Pane);
-*/
 		/* Add Scenario panels to the card Panel */
 		/* Associate the comboBox elements with the corresponding JPanel */
 		inputCards = new JPanel();
@@ -538,17 +454,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		inputCards.add(SCENARIO_8, scenario8Pane);
 		inputCards.add(SCENARIO_9, scenario9Pane);
 
-/*		JScrollPane editorScrollPane = new JScrollPane(instructionCards);
-		editorScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorScrollPane.setPreferredSize(inertiaPaneSize);
-		editorScrollPane.setMinimumSize(inertiaPaneSize);
-		editorScrollPane.setAlignmentX(LEFT_ALIGNMENT);
-		editorScrollPane.setBackground(Color.pink);
-*/
 		/* Add Items to the Top-level JPanels */
-		thirdPane.add(new JLabel("Euler Angle Converter"));
-		thirdPane.add(new JLabel("Sequence: 3-2-1"));
+		level3_Pane_conversion.add(new JLabel("Euler Angle Converter"));
+		level3_Pane_conversion.add(new JLabel("Sequence: 3-2-1"));
 		for (int i = 0; i < lengthEulerInput; ++i)
 			eulerInputField[i] = new JTextField(defaultEulerInput[i], 5);
 		eulerPanel = new JTextFieldPanel(2, "Input", eulerInput,
@@ -560,38 +468,25 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 			quaternionOutputField[i].setEditable(false);
 		quaternionPanel = new JTextFieldPanel(2, "Output", quaternionOutput,
 				quaternionOutputField, Color.pink);
-		thirdPane.add(eulerPanel);
-		thirdPane.add(quaternionPanel);
-		thirdPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		thirdPane.add(convertButton);
-		thirdPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		thirdPane.add(resetButton);
-		thirdPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		thirdPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		thirdPane.add(new JLabel("Suggsted gain from Linear Control Theory"));
-		thirdPane.add(new JLabel("K = wn*wn*J"));
-		thirdPane.add(new JLabel("Kd = 2*J*damping*wn"));
-		thirdPane.add(Box.createVerticalGlue());
-		// thirdPane.add(new JLabel("Simulation Start"));
-		// thirdPane.add(startButton);
+		level3_Pane_conversion.add(eulerPanel);
+		level3_Pane_conversion.add(quaternionPanel);
+		level3_Pane_conversion.add(Box.createRigidArea(new Dimension(0, 5)));
+		level3_Pane_conversion.add(convertButton);
+		level3_Pane_conversion.add(Box.createRigidArea(new Dimension(0, 5)));
+		level3_Pane_conversion.add(resetButton);
+		level3_Pane_conversion.add(Box.createRigidArea(new Dimension(0, 5)));
+		level3_Pane_conversion.add(Box.createRigidArea(new Dimension(0, 5)));
+		level3_Pane_conversion.add(new JLabel("Suggsted gain from Linear Control Theory"));
+		level3_Pane_conversion.add(new JLabel("K = wn*wn*J"));
+		level3_Pane_conversion.add(new JLabel("Kd = 2*J*damping*wn"));
+		level3_Pane_conversion.add(Box.createVerticalGlue());
 
-		secondPane.add(new JLabel(LastUpdate));
-		secondPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		secondPane.add(comboLabel);
-		secondPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		secondPane.add(comboBoxPane);
-		secondPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		secondPane.add(new JLabel("Simulation Instruction"));
-		//secondPane.add(editorScrollPane);
-		secondPane.add(Box.createRigidArea(new Dimension(0, 5)));
-		// secondPane.add(new
-		// JLabel("Principal Moments of Inertia for 3-Axes Simulation (kg*m^2)"));
-		// secondPane.add(inertiaPane);
-		// secondPane.add(Box.createRigidArea(new Dimension(0,5)));
-		// secondPane.add(new
-		// JLabel("Moment of Inertia for 1-Axis Simulation (kg*m^2)"));
-		// secondPane.add(inertiaJPane);
-		// secondPane.add(Box.createRigidArea(new Dimension(0,5)));
+		level3_Pane_simulation.add(new JLabel(LastUpdate));
+		level3_Pane_simulation.add(Box.createRigidArea(new Dimension(0, 5)));
+		level3_Pane_simulation.add(comboLabel);
+		level3_Pane_simulation.add(Box.createRigidArea(new Dimension(0, 5)));
+		level3_Pane_simulation.add(comboBoxPane);
+		level3_Pane_simulation.add(Box.createRigidArea(new Dimension(0, 5)));
 		JScrollPane inputScrollPane = new JScrollPane(inputCards);
 		inputScrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -599,14 +494,15 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		inputScrollPane.setMinimumSize(scrollPanelSize);
 		inputScrollPane.setAlignmentX(LEFT_ALIGNMENT);
 		inputScrollPane.setBackground(Color.cyan);
-		secondPane.add(inputScrollPane);
-		secondPane.add(new JLabel("Simulation Control"));
+		level3_Pane_simulation.add(inputScrollPane);
+		level3_Pane_simulation.add(new JLabel("Simulation Control"));
 		for (int i = 0; i < lengthControlInput; ++i)
 			controlInputField[i] = new JTextField(defaultControlInput[i], 5);
 		controlPanel = new JTextFieldPanel(1, "", controlInput,
 				controlInputField, Color.pink);
-		secondPane.add(controlPanel);
-		secondPane.add(new JLabel("Output Option"));
+		level3_Pane_simulation.add(controlPanel);
+		level3_Pane_simulation.add(new JLabel("Output Option"));
+		
 		// Create the check boxes.
 		twoDeeBox = new JCheckBox("2D Plots");
 		twoDeeBox.setSelected(true);
@@ -619,48 +515,53 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		threeDeeBox.addItemListener(new ButtonHandler());
 
 		// Create a JPanel for putting check boxes
-		JPanel boxPane = new JPanel();
-		boxPane.setLayout(new BoxLayout(boxPane, BoxLayout.X_AXIS));
-		boxPane.setPreferredSize(new Dimension(secondPanelWidth, 30));
-		boxPane.setMaximumSize(new Dimension(secondPanelWidth, 30));
-		boxPane.setMinimumSize(new Dimension(secondPanelWidth, 30));
-		boxPane.setBackground(Color.pink);
-		boxPane.setAlignmentX(LEFT_ALIGNMENT);
-		boxPane.add(twoDeeBox);
-		boxPane.add(threeDeeBox);
-		boxPane.add(Box.createHorizontalGlue());
-		secondPane.add(boxPane);
+		JPanel level4_Pane_simcheckboxes = new JPanel();
+		level4_Pane_simcheckboxes.setLayout(new BoxLayout(level4_Pane_simcheckboxes, BoxLayout.X_AXIS));
+		level4_Pane_simcheckboxes.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		level4_Pane_simcheckboxes.setMaximumSize(new Dimension(comboBoxPane_width, 30));
+		level4_Pane_simcheckboxes.setMinimumSize(new Dimension(comboBoxPane_width, 30));
+		level4_Pane_simcheckboxes.setBackground(Color.pink);
+		level4_Pane_simcheckboxes.setAlignmentX(LEFT_ALIGNMENT);
+		level4_Pane_simcheckboxes.add(twoDeeBox);
+		level4_Pane_simcheckboxes.add(threeDeeBox);
+		level3_Pane_simulation.add(level4_Pane_simcheckboxes);
+
+		level3_Pane_simulation.add(new JLabel("Simulation Start"));
+		level3_Pane_simulation.add(startButton);
+		level3_Pane_simulation.add(Box.createHorizontalGlue());
+
+		
 		// Create a pane to put the Start Button
 		JPanel startButtonPane = new JPanel();
 		startButtonPane.setLayout(new BoxLayout(startButtonPane,
 				BoxLayout.X_AXIS));
-		startButtonPane.setPreferredSize(new Dimension(secondPanelWidth, 50));
-		startButtonPane.setMaximumSize(new Dimension(secondPanelWidth, 50));
-		startButtonPane.setMinimumSize(new Dimension(secondPanelWidth, 50));
+		startButtonPane.setPreferredSize(new Dimension(comboBoxPane_width, 50));
+		startButtonPane.setMaximumSize(new Dimension(comboBoxPane_width, 50));
+		startButtonPane.setMinimumSize(new Dimension(comboBoxPane_width, 50));
 		startButtonPane.setBackground(Color.pink);
 		startButtonPane.setAlignmentX(LEFT_ALIGNMENT);
 		startButtonPane.add(Box.createHorizontalGlue());
-		startButtonPane.add(startButton);
+		//startButtonPane.add(startButton);
 
 		// Create a pane for "simulation start" label
-		JPanel labelPane = new JPanel();
-		labelPane.setLayout(new BoxLayout(labelPane, BoxLayout.X_AXIS));
-		labelPane.setPreferredSize(new Dimension(secondPanelWidth, 30));
-		labelPane.setMaximumSize(new Dimension(secondPanelWidth, 30));
-		labelPane.setMinimumSize(new Dimension(secondPanelWidth, 30));
-		labelPane.setBackground(Color.pink);
-		labelPane.setAlignmentX(LEFT_ALIGNMENT);
-		labelPane.add(Box.createHorizontalGlue());
-		labelPane.add(new JLabel("Simulation Start   "));
+		JPanel level4_Pane_simstartlabel = new JPanel();
+		level4_Pane_simstartlabel.setLayout(new BoxLayout(level4_Pane_simstartlabel, BoxLayout.X_AXIS));
+		level4_Pane_simstartlabel.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		level4_Pane_simstartlabel.setMaximumSize(new Dimension(comboBoxPane_width, 30));
+		level4_Pane_simstartlabel.setMinimumSize(new Dimension(comboBoxPane_width, 30));
+		level4_Pane_simstartlabel.setBackground(Color.pink);
+		level4_Pane_simstartlabel.setAlignmentX(LEFT_ALIGNMENT);
+		level4_Pane_simstartlabel.add(Box.createHorizontalGlue());
+		level4_Pane_simstartlabel.add(new JLabel("Simulation Start   "));
 
-		secondPane.add(labelPane);
-		secondPane.add(startButtonPane);
-		secondPane.add(Box.createVerticalGlue());
-		firstPane.add(secondPane);
-		firstPane.add(thirdPane);
+		level3_Pane_simulation.add(level4_Pane_simstartlabel);
+		level3_Pane_simulation.add(startButtonPane);
+		level3_Pane_simulation.add(Box.createVerticalGlue());
+		level2_Pane.add(level3_Pane_simulation);
+		level2_Pane.add(level3_Pane_conversion);
 
-		Container contentPane = getContentPane();
-		contentPane.add(firstPane, BorderLayout.CENTER);
+		Container level1_Pane = getContentPane();
+		level1_Pane.add(level2_Pane, BorderLayout.CENTER);
 		this.setSize(appletwidth, appletheight);
 		System.out.println("applet init end");
 
@@ -885,9 +786,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		// Create a JPanel for putting check boxes
 		JPanel boxPane = new JPanel();
 		boxPane.setLayout(new BoxLayout(boxPane, BoxLayout.X_AXIS));
-		boxPane.setPreferredSize(new Dimension(secondPanelWidth, 30));
-		boxPane.setMaximumSize(new Dimension(secondPanelWidth, 30));
-		boxPane.setMinimumSize(new Dimension(secondPanelWidth, 30));
+		boxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		boxPane.setMaximumSize(new Dimension(comboBoxPane_width, 30));
+		boxPane.setMinimumSize(new Dimension(comboBoxPane_width, 30));
 		boxPane.setBackground(Color.cyan);
 		boxPane.setAlignmentX(LEFT_ALIGNMENT);
 		boxPane.add(threeRWRadio);
@@ -1110,7 +1011,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	}// End of main()
 
 	/**
-	 * Hanles the event associated with clicking of a mouse.
+	 * Handles the event associated with clicking of a mouse.
 	 * 
 	 */
 
@@ -1492,8 +1393,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 				if (combo.getSelectedItem() == SCENARIO_1) {
 					System.out.println("scenario 1");
 					HelpWindow h = new HelpWindow(helpfile[0]);
-					h.setVisible(true);
+					//h.setVisible(true);
 				} else if (combo.getSelectedItem() == SCENARIO_2) {
+					new HelpWindow(helpfile[1]);
 
 				}
 			}
