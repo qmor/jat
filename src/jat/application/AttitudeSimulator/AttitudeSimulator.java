@@ -59,7 +59,7 @@ import javax.swing.border.TitledBorder;
 
 /**
  * <P>
- * AttitudeSimulatorA is a JApplet developed as a Master's thesis Project at
+ * AttitudeSimulator is a JApplet developed as a Master's thesis Project at
  * California Polytechnic State University, San Luis Obispo (Cal Poly)
  * 
  * @author Noriko Takada
@@ -73,9 +73,9 @@ import javax.swing.border.TitledBorder;
  * 
  */
 
-public class AttitudeSimulatorA extends JApplet // implements ItemListener
+public class AttitudeSimulator extends JApplet // implements ItemListener
 {
-	private static AttitudeSimulatorA theApplet; // Applet itself!
+	private static AttitudeSimulator theApplet; // Applet itself!
 	private static JFrame theFrame; // Frame is used in main()
 	private static String LastUpdate = "Last Update: 03/31/2012, 12:25";
 
@@ -89,7 +89,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	/* GUI Dimensions */
 	static int appletwidth = 950; // Width of Applet
 	static int appletheight = 700;
-	static int comboBoxPane_width = 750;
+	//static int comboBoxPane_width = 750;
 	//static int thirdPanelWidth = 200;
 	
 	// Dimension of J components
@@ -374,51 +374,37 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		String comboBoxItems[] = { SCENARIO_1, SCENARIO_2, SCENARIO_3,
 				SCENARIO_4, SCENARIO_5, SCENARIO_6, SCENARIO_7, SCENARIO_8,
 				SCENARIO_9 };
-		/*
-		JPanel comboBoxPane = new JPanel();
-		comboBoxPane.setLayout(new BoxLayout(comboBoxPane, BoxLayout.X_AXIS));
-		comboBoxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
-		comboBoxPane.setMaximumSize(new Dimension(comboBoxPane_width, 20));
-		comboBoxPane.setMinimumSize(new Dimension(comboBoxPane_width, 20));
-		comboBoxPane.setBackground(Color.pink);
-		comboBoxPane.setAlignmentX(LEFT_ALIGNMENT);
-*/
 		combo = new JComboBox(comboBoxItems);
 		combo.setEditable(false);
 		combo.setBackground(Color.cyan);
 		combo.setAlignmentX(LEFT_ALIGNMENT);
 		combo.addItemListener(new ChoiceHandler());
 
-		//comboBoxPane.add(combo);
-		//comboBoxPane.add(Box.createHorizontalGlue());
-
 		JLabel comboLabel = new JLabel("Please select a scenario:");
-		comboLabel.setAlignmentX(LEFT_ALIGNMENT);
-
-		//comboBoxPane.add(simHelpButton);
-/*
-		level3_Pane_simulation.add(new JLabel(LastUpdate));
-		level3_Pane_simulation.add(Box.createRigidArea(new Dimension(0, 5)));
-		level3_Pane_simulation.add(comboLabel);
-		level3_Pane_simulation.add(Box.createRigidArea(new Dimension(0, 5)));
-		level3_Pane_simulation.add(comboBoxPane);
-		level3_Pane_simulation.add(Box.createRigidArea(new Dimension(0, 5)));
-*/
-		
+		comboLabel.setAlignmentX(LEFT_ALIGNMENT);	
 		
 		JPanel level5_Pane_top_left = new JPanel();
+		level5_Pane_top_left.setLayout(new BoxLayout(level5_Pane_top_left, BoxLayout.Y_AXIS));
 		level5_Pane_top_left.setBackground(Color.pink);
 		level5_Pane_top_left.add(comboLabel);
+		level5_Pane_top_left.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_top_left.add(combo);
+		level5_Pane_top_left.add(Box.createRigidArea(new Dimension(0, 5)));
 
+		
 		JPanel level5_Pane_top_right= new JPanel();
+		level5_Pane_top_right.setLayout(new BoxLayout(level5_Pane_top_right, BoxLayout.Y_AXIS));
 		level5_Pane_top_right.setBackground(Color.pink);
-		level5_Pane_top_right.add(simHelpButton);
 		level5_Pane_top_right.add(new JLabel(LastUpdate));
+		level5_Pane_top_right.add(Box.createRigidArea(new Dimension(0, 5)));
+		level5_Pane_top_right.add(simHelpButton);
+		level5_Pane_top_right.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		JPanel level4_Pane_scenario = new JPanel();
+		level4_Pane_scenario.setBackground(Color.pink);
 		level4_Pane_scenario.setLayout(new BoxLayout(level4_Pane_scenario, BoxLayout.X_AXIS));
 		level4_Pane_scenario.add(level5_Pane_top_left);
+		level4_Pane_scenario.add(Box.createRigidArea(new Dimension(10, 0)));
 		level4_Pane_scenario.add(level5_Pane_top_right);
 		
 		
@@ -471,7 +457,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		// Create a JPanel for putting check boxes		
 		JPanel level6_Pane_simcheckboxes = new JPanel();
 		level6_Pane_simcheckboxes.setLayout(new BoxLayout(level6_Pane_simcheckboxes, BoxLayout.X_AXIS));
-		level6_Pane_simcheckboxes.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		//level6_Pane_simcheckboxes.setPreferredSize(new Dimension(comboBoxPane_width, 30));
 		//level5_Pane_simcheckboxes.setMaximumSize(new Dimension(comboBoxPane_width, 30));
 		//level5_Pane_simcheckboxes.setMinimumSize(new Dimension(comboBoxPane_width, 30));
 		level6_Pane_simcheckboxes.setBackground(Color.pink);
@@ -482,37 +468,48 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		
 		JPanel level5_Pane_bottom_left = new JPanel();
 		level5_Pane_bottom_left.setLayout(new BoxLayout(level5_Pane_bottom_left, BoxLayout.Y_AXIS));
-		level5_Pane_bottom_left.setPreferredSize(new Dimension(comboBoxPane_width/2, 100));
-		level5_Pane_bottom_left.setMaximumSize(new Dimension(comboBoxPane_width/2, 100));
+		//level5_Pane_bottom_left.setPreferredSize(new Dimension(comboBoxPane_width/2, 100));
+		//level5_Pane_bottom_left.setMaximumSize(new Dimension(comboBoxPane_width/2, 100));
 		//level5_Pane_left.setMinimumSize(new Dimension(comboBoxPane_width/2, 100));
 		level5_Pane_bottom_left.setBackground(Color.pink);
 		level5_Pane_bottom_left.setAlignmentX(LEFT_ALIGNMENT);
 		level5_Pane_bottom_left.add(Box.createRigidArea(new Dimension(0, 5)));
-		level5_Pane_bottom_left.add(new JLabel("Simulation Control"));
+		level5_Pane_bottom_left.add(new JLabel("Simulation Time"));
 		level5_Pane_bottom_left.add(Box.createRigidArea(new Dimension(0, 5)));
 		for (int i = 0; i < lengthControlInput; ++i)
 			controlInputField[i] = new JTextField(defaultControlInput[i], 5);
 		controlPanel = new JTextFieldPanel(1, "", controlInput,
 				controlInputField, Color.pink);
 		level5_Pane_bottom_left.add(controlPanel);
-		level5_Pane_bottom_left.add(Box.createRigidArea(new Dimension(0, 10)));
-		level5_Pane_bottom_left.add(new JLabel("Output Option"));
-		level5_Pane_bottom_left.add(Box.createRigidArea(new Dimension(0, 5)));
-		level5_Pane_bottom_left.add(level6_Pane_simcheckboxes);
+		
+		JPanel level5_Pane_bottom_center = new JPanel();
+		level5_Pane_bottom_center.setLayout(new BoxLayout(level5_Pane_bottom_center, BoxLayout.Y_AXIS));
+		level5_Pane_bottom_center.setBackground(Color.pink);
+		level5_Pane_bottom_center.add(Box.createRigidArea(new Dimension(0, 5)));
+		level5_Pane_bottom_center.add(new JLabel("Output Option"));
+		level5_Pane_bottom_center.add(Box.createRigidArea(new Dimension(0, 5)));
+		level5_Pane_bottom_center.add(level6_Pane_simcheckboxes);
+
 		
 		JPanel level5_Pane_bottom_right = new JPanel();
 		level5_Pane_bottom_right.setLayout(new BoxLayout(level5_Pane_bottom_right, BoxLayout.Y_AXIS));
-		level5_Pane_bottom_right.setPreferredSize(new Dimension(comboBoxPane_width/2, 80));
-		level5_Pane_bottom_right.setMaximumSize(new Dimension(comboBoxPane_width/2, 80));
+		//level5_Pane_bottom_right.setPreferredSize(new Dimension(comboBoxPane_width/2, 80));
+		//level5_Pane_bottom_right.setMaximumSize(new Dimension(comboBoxPane_width/2, 80));
 		//level5_Pane_right.setMinimumSize(new Dimension(comboBoxPane_width/2, 80));
 		level5_Pane_bottom_right.setBackground(Color.pink);
 		level5_Pane_bottom_right.setAlignmentX(LEFT_ALIGNMENT);
+		level5_Pane_bottom_right.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_bottom_right.add(new JLabel("Simulation Start"));
+		level5_Pane_bottom_right.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_bottom_right.add(startButton);
 		
 		JPanel level4_Pane_simulation_control = new JPanel();
+		level4_Pane_simulation_control.setBackground(Color.pink);
 		level4_Pane_simulation_control.setLayout(new BoxLayout(level4_Pane_simulation_control, BoxLayout.X_AXIS));
 		level4_Pane_simulation_control.add(level5_Pane_bottom_left);
+		level4_Pane_simulation_control.add(Box.createRigidArea(new Dimension(10, 0)));
+		level4_Pane_simulation_control.add(level5_Pane_bottom_center);
+		level4_Pane_simulation_control.add(Box.createRigidArea(new Dimension(10, 0)));
 		level4_Pane_simulation_control.add(level5_Pane_bottom_right);
 
 		// Simulation Pane
@@ -521,6 +518,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		//level3_Pane_simulation.setPreferredSize(level3_Pane_simulation_size);
 		//level3_Pane_simulation.setMinimumSize(level3_Pane_simulation_size);
 		level3_Pane_simulation.setLayout(new BoxLayout(level3_Pane_simulation, BoxLayout.PAGE_AXIS));
+		level3_Pane_simulation.setAlignmentX(LEFT_ALIGNMENT);
 		level3_Pane_simulation.setBackground(Color.pink);
 		TitledBorder titled;
 		titled = BorderFactory.createTitledBorder("");
@@ -559,12 +557,12 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		level3_Pane_conversion.add(resetButton);
 		level3_Pane_conversion.add(Box.createRigidArea(new Dimension(0, 5)));
 		level3_Pane_conversion.add(Box.createRigidArea(new Dimension(0, 5)));
-		level3_Pane_conversion.add(new JLabel("Suggsted gain from Linear Control Theory"));
+		level3_Pane_conversion.add(new JLabel("Suggested gain from"));
+		level3_Pane_conversion.add(new JLabel("Linear Control Theory"));
 		level3_Pane_conversion.add(new JLabel("K = wn*wn*J"));
 		level3_Pane_conversion.add(new JLabel("Kd = 2*J*damping*wn"));
 		level3_Pane_conversion.add(Box.createVerticalGlue());
-		
-		
+				
 		JPanel level2_Pane = new JPanel();
 		level2_Pane.setLayout(new BoxLayout(level2_Pane, BoxLayout.X_AXIS));
 		level2_Pane.setBackground(Color.pink);
@@ -787,9 +785,9 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 		// Create a JPanel for putting check boxes
 		JPanel boxPane = new JPanel();
 		boxPane.setLayout(new BoxLayout(boxPane, BoxLayout.X_AXIS));
-		boxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
-		boxPane.setMaximumSize(new Dimension(comboBoxPane_width, 30));
-		boxPane.setMinimumSize(new Dimension(comboBoxPane_width, 30));
+		//boxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		//boxPane.setMaximumSize(new Dimension(comboBoxPane_width, 30));
+		//boxPane.setMinimumSize(new Dimension(comboBoxPane_width, 30));
 		boxPane.setBackground(Color.cyan);
 		boxPane.setAlignmentX(LEFT_ALIGNMENT);
 		boxPane.add(threeRWRadio);
@@ -989,7 +987,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 	 *            (String[]) Argument
 	 */
 	public static void main(String[] args) {
-		theApplet = new AttitudeSimulatorA();
+		theApplet = new AttitudeSimulator();
 		theFrame = new JFrame();
 		// Initialize the applet
 		theApplet.init();
@@ -1382,7 +1380,7 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 			}
 
 			if (ev.getSource() == simHelpButton) {
-				System.out.println("help button pressed");
+				//System.out.println("help button pressed");
 
 				/*
 				 * switch (combo.getSelectedItem()) {
@@ -1392,11 +1390,23 @@ public class AttitudeSimulatorA extends JApplet // implements ItemListener
 				 */
 
 				if (combo.getSelectedItem() == SCENARIO_1) {
-					System.out.println("scenario 1");
 					HelpWindow h = new HelpWindow(helpfile[0]);
-					//h.setVisible(true);
 				} else if (combo.getSelectedItem() == SCENARIO_2) {
 					new HelpWindow(helpfile[1]);
+				} else if (combo.getSelectedItem() == SCENARIO_3) {
+					new HelpWindow(helpfile[2]);
+				} else if (combo.getSelectedItem() == SCENARIO_4) {
+					new HelpWindow(helpfile[3]);
+				} else if (combo.getSelectedItem() == SCENARIO_5) {
+					new HelpWindow(helpfile[4]);
+				} else if (combo.getSelectedItem() == SCENARIO_6) {
+					new HelpWindow(helpfile[5]);
+				} else if (combo.getSelectedItem() == SCENARIO_7) {
+					new HelpWindow(helpfile[6]);
+				} else if (combo.getSelectedItem() == SCENARIO_8) {
+					new HelpWindow(helpfile[7]);
+				} else if (combo.getSelectedItem() == SCENARIO_9) {
+					new HelpWindow(helpfile[8]);
 
 				}
 			}

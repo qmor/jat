@@ -12,6 +12,7 @@ import java.net.URL;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 public class HelpWindow extends JFrame {
 
@@ -29,14 +30,19 @@ public class HelpWindow extends JFrame {
 		emptyLabel.setPreferredSize(new Dimension(175, 100));
 		//getContentPane().add(createEditorPane("ConstantTorque.html"),
 			//	BorderLayout.CENTER);
-		getContentPane().add(createEditorPane(name),
-				BorderLayout.CENTER);
+
+		JScrollPane helpScrollPane = new JScrollPane(createEditorPane(name));
+
+		getContentPane().add(helpScrollPane, BorderLayout.CENTER);
+		//getContentPane().add(createEditorPane(name), BorderLayout.CENTER);
 
 		pack();
 		setVisible(true);
 	}
 
 	private JEditorPane createEditorPane(String fileName) {
+
+		
 		JEditorPane editorPane = new JEditorPane();
 		editorPane.setEditable(false);
 		editorPane.setBackground(Color.white);
