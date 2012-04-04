@@ -1381,32 +1381,28 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 			if (ev.getSource() == simHelpButton) {
 				//System.out.println("help button pressed");
+				FileUtil2 f = new FileUtil2();
 
-				/*
-				 * switch (combo.getSelectedItem()) {
-				 * 
-				 * case 4: // doSomething4(); break; default: //
-				 * doSomethingElse(); }
-				 */
+				String hpath="file:"+f.current_path+"jat/application/AttitudeSimulator/help/";
 
 				if (combo.getSelectedItem() == SCENARIO_1) {
-					HelpWindow h = new HelpWindow(helpfile[0]);
+					HelpWindow h = new HelpWindow(hpath+helpfile[0]);
 				} else if (combo.getSelectedItem() == SCENARIO_2) {
-					new HelpWindow(helpfile[1]);
+					new HelpWindow(hpath+helpfile[1]);
 				} else if (combo.getSelectedItem() == SCENARIO_3) {
-					new HelpWindow(helpfile[2]);
+					new HelpWindow(hpath+helpfile[2]);
 				} else if (combo.getSelectedItem() == SCENARIO_4) {
-					new HelpWindow(helpfile[3]);
+					new HelpWindow(hpath+helpfile[3]);
 				} else if (combo.getSelectedItem() == SCENARIO_5) {
-					new HelpWindow(helpfile[4]);
+					new HelpWindow(hpath+helpfile[4]);
 				} else if (combo.getSelectedItem() == SCENARIO_6) {
-					new HelpWindow(helpfile[5]);
+					new HelpWindow(hpath+helpfile[5]);
 				} else if (combo.getSelectedItem() == SCENARIO_7) {
-					new HelpWindow(helpfile[6]);
+					new HelpWindow(hpath+helpfile[6]);
 				} else if (combo.getSelectedItem() == SCENARIO_8) {
-					new HelpWindow(helpfile[7]);
+					new HelpWindow(hpath+helpfile[7]);
 				} else if (combo.getSelectedItem() == SCENARIO_9) {
-					new HelpWindow(helpfile[8]);
+					new HelpWindow(hpath+helpfile[8]);
 
 				}
 			}

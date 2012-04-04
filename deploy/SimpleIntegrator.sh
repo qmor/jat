@@ -1,5 +1,5 @@
 
-java -cp jat_src.jar:plot.jar  jat.examples.IntegratorExample.SimpleIntegrator
+java -cp jat_src.jar:../lib/plot.jar  jat.examples.IntegratorExample.SimpleIntegrator
 
 echo press enter
 

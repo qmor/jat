@@ -1,7 +1,5 @@
 package jat.application.AttitudeSimulator;
 
-import jat.core.util.FileUtil2;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,20 +12,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+
 public class HelpWindow extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	public HelpWindow(String name) throws HeadlessException {
 
 		super("Simulation Instruction");
-		Dimension windowSize = new Dimension(150, 20);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JLabel emptyLabel = new JLabel("");
-		emptyLabel.setPreferredSize(new Dimension(175, 100));
+		emptyLabel.setPreferredSize(new Dimension(400, 300));
 		//getContentPane().add(createEditorPane("ConstantTorque.html"),
 			//	BorderLayout.CENTER);
 
@@ -48,22 +42,25 @@ public class HelpWindow extends JFrame {
 		editorPane.setBackground(Color.white);
 		Dimension mysize = new Dimension(600, 400);
 		editorPane.setPreferredSize(mysize);
-		String s = null;
-		FileUtil2 f = new FileUtil2();
+		//String s = null;
+		//FileUtil2 f = new FileUtil2();
 
 		try {
 
-			System.out.println(f.root_path);
+			//System.out.println(f.root_path);
 
-			s = "file:" + f.find_attitude_help_folder() + fileName;
-			System.out.println(s);
+			//s="file:"+f.current_path+"localResource/help/SphericalDamper.html";
 
-			URL helpURL2 = new URL(s);
+			//s = "file:" + f.find_attitude_help_folder() + fileName;
+			
+			//System.out.println(s);
+
+			URL helpURL2 = new URL(fileName);
 
 			displayURL(helpURL2, editorPane, fileName);
 
 		} catch (Exception e) {
-			System.err.println("Couldn't create help URL!!: " + s);
+			System.err.println("Couldn't create help URL!!: " + fileName);
 			System.exit(0);
 		}
 

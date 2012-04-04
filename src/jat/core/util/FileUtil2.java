@@ -22,9 +22,11 @@ import java.net.URL;
 public class FileUtil2 {
 
 	public String root_path;
+	public String current_path ;
 
 	public FileUtil2() {
-		root_path=find_root();
+		current_path=find_current_path();
+		//root_path=find_root();
 	}
 
 	public String find_attitude_help_folder() {
@@ -61,5 +63,15 @@ public class FileUtil2 {
 		System.out.println(root_path);
 
 		return (root_path);
+	}
+
+	public String find_current_path() {
+
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		URL url = classLoader.getResource("");
+		// System.out.println(url.getPath());
+		String current_path = url.getPath();
+		return current_path;
 	}
 }
