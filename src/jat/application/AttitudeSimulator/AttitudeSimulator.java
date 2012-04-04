@@ -68,8 +68,8 @@ import javax.swing.border.TitledBorder;
  *          import javax.swing.border.LineBorder; import javax.swing.event.*;
  *          import jat.attitude.util.AnimationWindow;
  * @author Tobias Berthold
- * @version 1.3 (04/03/2012) Modifications: change layout so that start button is visible
- * 			load help pages locally
+ * @version 1.3 (04/03/2012) Modifications: change layout so that start button
+ *          is visible load help pages locally
  * 
  */
 
@@ -87,18 +87,19 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	Font normalf = new Font("Dialog", Font.PLAIN, 12);
 
 	/* GUI Dimensions */
-	static int appletwidth = 950; // Width of Applet
-	static int appletheight = 700;
-	//static int comboBoxPane_width = 750;
-	//static int thirdPanelWidth = 200;
-	
+	static int appletwidth = 750; // Width of Applet
+	static int appletheight = 500;
+	// static int comboBoxPane_width = 750;
+	// static int thirdPanelWidth = 200;
+
 	// Dimension of J components
-	//Dimension maxSize = new Dimension(150, 20);
-	//Dimension level3_Pane_simulation_size = new Dimension(750, appletheight); // width, height
-	//Dimension level3_Pane_conversion_size = new Dimension(200, appletheight);
-	//Dimension panelSize = new Dimension(755, 400);
-	//Dimension scrollPanelSize = new Dimension(755, 300);
-	//Dimension inertiaPaneSize = new Dimension(525, 50);
+	// Dimension maxSize = new Dimension(150, 20);
+	// Dimension level3_Pane_simulation_size = new Dimension(750, appletheight);
+	// // width, height
+	// Dimension level3_Pane_conversion_size = new Dimension(200, appletheight);
+	// Dimension panelSize = new Dimension(755, 400);
+	// Dimension scrollPanelSize = new Dimension(755, 300);
+	// Dimension inertiaPaneSize = new Dimension(525, 50);
 
 	/* Buttons */
 	JButton startButton = new JButton("Start Button");
@@ -112,7 +113,6 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	JCheckBox threeDeeBox;
 	JRadioButton threeRWRadio;
 	JRadioButton fourRWRadio;
-
 
 	/* Note: Each case is identified by the number from 1 to 8 */
 	/* (1) Constant Torque case */
@@ -327,7 +327,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 	/* CardLayout-JPanel for scenario specific inputs */
 	JPanel inputCards;
-	//JPanel instructionCards;
+	// JPanel instructionCards;
 	final static String SCENARIO_1 = "1. Constant Torque";
 	final static String SCENARIO_2 = "2. GG Circular";
 	final static String SCENARIO_3 = "3. GG Eccentric";
@@ -338,10 +338,10 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	final static String SCENARIO_8 = "8. Simple 2D Flexible S/C";
 	final static String SCENARIO_9 = "9. Simple 3D Flexible S/C";
 
-	final static String[] helpfile = { "ConstantTorque.html", "GGCircular.html",
-			"GGEccentric.html", "SphericalDamper.html", "FourRWControl.html",
-			"CMGControl.html", "BangBangControl.html", "Simple2DFlexSC.html",
-			"Simple3DFlexSC.html" };
+	final static String[] helpfile = { "ConstantTorque.html",
+			"GGCircular.html", "GGEccentric.html", "SphericalDamper.html",
+			"FourRWControl.html", "CMGControl.html", "BangBangControl.html",
+			"Simple2DFlexSC.html", "Simple3DFlexSC.html" };
 
 	/* Declare Panels for simulation inputs for each panels */
 	JTextFieldPanel inertiaPane;
@@ -356,7 +356,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	JPanel scenario8Pane;
 	JPanel scenario9Pane;
 
-	FileUtil2 f = new FileUtil2();
+	// FileUtil2 f = new FileUtil2();
 
 	/**
 	 * Builds the applet's graphical user interface
@@ -381,19 +381,20 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		combo.addItemListener(new ChoiceHandler());
 
 		JLabel comboLabel = new JLabel("Please select a scenario:");
-		comboLabel.setAlignmentX(LEFT_ALIGNMENT);	
-		
+		comboLabel.setAlignmentX(LEFT_ALIGNMENT);
+
 		JPanel level5_Pane_top_left = new JPanel();
-		level5_Pane_top_left.setLayout(new BoxLayout(level5_Pane_top_left, BoxLayout.Y_AXIS));
+		level5_Pane_top_left.setLayout(new BoxLayout(level5_Pane_top_left,
+				BoxLayout.Y_AXIS));
 		level5_Pane_top_left.setBackground(Color.pink);
 		level5_Pane_top_left.add(comboLabel);
 		level5_Pane_top_left.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_top_left.add(combo);
 		level5_Pane_top_left.add(Box.createRigidArea(new Dimension(0, 5)));
 
-		
-		JPanel level5_Pane_top_right= new JPanel();
-		level5_Pane_top_right.setLayout(new BoxLayout(level5_Pane_top_right, BoxLayout.Y_AXIS));
+		JPanel level5_Pane_top_right = new JPanel();
+		level5_Pane_top_right.setLayout(new BoxLayout(level5_Pane_top_right,
+				BoxLayout.Y_AXIS));
 		level5_Pane_top_right.setBackground(Color.pink);
 		level5_Pane_top_right.add(new JLabel(LastUpdate));
 		level5_Pane_top_right.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -402,21 +403,21 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 		JPanel level4_Pane_scenario = new JPanel();
 		level4_Pane_scenario.setBackground(Color.pink);
-		level4_Pane_scenario.setLayout(new BoxLayout(level4_Pane_scenario, BoxLayout.X_AXIS));
+		level4_Pane_scenario.setLayout(new BoxLayout(level4_Pane_scenario,
+				BoxLayout.X_AXIS));
 		level4_Pane_scenario.add(level5_Pane_top_left);
 		level4_Pane_scenario.add(Box.createRigidArea(new Dimension(10, 0)));
 		level4_Pane_scenario.add(level5_Pane_top_right);
-		
-		
+
 		// Input panels
 		makeInputPanels();
 
 		/* Add Scenario panels to the card Panel */
 		/* Associate the comboBox elements with the corresponding JPanel */
 		inputCards = new JPanel();
-		//inputCards.setPreferredSize(panelSize);
-		//inputCards.setMinimumSize(panelSize);
-		//inputCards.setMaximumSize(panelSize);
+		// inputCards.setPreferredSize(panelSize);
+		// inputCards.setMinimumSize(panelSize);
+		// inputCards.setMaximumSize(panelSize);
 		inputCards.setAlignmentX(LEFT_ALIGNMENT);
 		inputCards.setBackground(Color.white);
 
@@ -430,19 +431,19 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		inputCards.add(SCENARIO_7, scenario7Pane);
 		inputCards.add(SCENARIO_8, scenario8Pane);
 		inputCards.add(SCENARIO_9, scenario9Pane);
-		
+
 		JScrollPane level5_inputScrollPane = new JScrollPane(inputCards);
 		level5_inputScrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		//level4_inputScrollPane.setPreferredSize(scrollPanelSize);
-		//level4_inputScrollPane.setMinimumSize(scrollPanelSize);
+		// level4_inputScrollPane.setPreferredSize(scrollPanelSize);
+		// level4_inputScrollPane.setMinimumSize(scrollPanelSize);
 		level5_inputScrollPane.setAlignmentX(LEFT_ALIGNMENT);
 		level5_inputScrollPane.setBackground(Color.cyan);
 
 		JPanel level4_inputPane = new JPanel();
 		level4_inputPane.setLayout(new BorderLayout());
 		level4_inputPane.add(level5_inputScrollPane);
-		
+
 		// Create the check boxes.
 		twoDeeBox = new JCheckBox("2D Plots");
 		twoDeeBox.setSelected(true);
@@ -454,23 +455,30 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		twoDeeBox.addItemListener(new ButtonHandler());
 		threeDeeBox.addItemListener(new ButtonHandler());
 
-		// Create a JPanel for putting check boxes		
+		// Create a JPanel for putting check boxes
 		JPanel level6_Pane_simcheckboxes = new JPanel();
-		level6_Pane_simcheckboxes.setLayout(new BoxLayout(level6_Pane_simcheckboxes, BoxLayout.X_AXIS));
-		//level6_Pane_simcheckboxes.setPreferredSize(new Dimension(comboBoxPane_width, 30));
-		//level5_Pane_simcheckboxes.setMaximumSize(new Dimension(comboBoxPane_width, 30));
-		//level5_Pane_simcheckboxes.setMinimumSize(new Dimension(comboBoxPane_width, 30));
+		level6_Pane_simcheckboxes.setLayout(new BoxLayout(
+				level6_Pane_simcheckboxes, BoxLayout.X_AXIS));
+		// level6_Pane_simcheckboxes.setPreferredSize(new
+		// Dimension(comboBoxPane_width, 30));
+		// level5_Pane_simcheckboxes.setMaximumSize(new
+		// Dimension(comboBoxPane_width, 30));
+		// level5_Pane_simcheckboxes.setMinimumSize(new
+		// Dimension(comboBoxPane_width, 30));
 		level6_Pane_simcheckboxes.setBackground(Color.pink);
 		level6_Pane_simcheckboxes.setAlignmentX(LEFT_ALIGNMENT);
 		level6_Pane_simcheckboxes.add(twoDeeBox);
 		level6_Pane_simcheckboxes.add(threeDeeBox);
-		
-		
+
 		JPanel level5_Pane_bottom_left = new JPanel();
-		level5_Pane_bottom_left.setLayout(new BoxLayout(level5_Pane_bottom_left, BoxLayout.Y_AXIS));
-		//level5_Pane_bottom_left.setPreferredSize(new Dimension(comboBoxPane_width/2, 100));
-		//level5_Pane_bottom_left.setMaximumSize(new Dimension(comboBoxPane_width/2, 100));
-		//level5_Pane_left.setMinimumSize(new Dimension(comboBoxPane_width/2, 100));
+		level5_Pane_bottom_left.setLayout(new BoxLayout(
+				level5_Pane_bottom_left, BoxLayout.Y_AXIS));
+		// level5_Pane_bottom_left.setPreferredSize(new
+		// Dimension(comboBoxPane_width/2, 100));
+		// level5_Pane_bottom_left.setMaximumSize(new
+		// Dimension(comboBoxPane_width/2, 100));
+		// level5_Pane_left.setMinimumSize(new Dimension(comboBoxPane_width/2,
+		// 100));
 		level5_Pane_bottom_left.setBackground(Color.pink);
 		level5_Pane_bottom_left.setAlignmentX(LEFT_ALIGNMENT);
 		level5_Pane_bottom_left.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -481,61 +489,70 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		controlPanel = new JTextFieldPanel(1, "", controlInput,
 				controlInputField, Color.pink);
 		level5_Pane_bottom_left.add(controlPanel);
-		
+
 		JPanel level5_Pane_bottom_center = new JPanel();
-		level5_Pane_bottom_center.setLayout(new BoxLayout(level5_Pane_bottom_center, BoxLayout.Y_AXIS));
+		level5_Pane_bottom_center.setLayout(new BoxLayout(
+				level5_Pane_bottom_center, BoxLayout.Y_AXIS));
 		level5_Pane_bottom_center.setBackground(Color.pink);
 		level5_Pane_bottom_center.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_bottom_center.add(new JLabel("Output Option"));
 		level5_Pane_bottom_center.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_bottom_center.add(level6_Pane_simcheckboxes);
 
-		
 		JPanel level5_Pane_bottom_right = new JPanel();
-		level5_Pane_bottom_right.setLayout(new BoxLayout(level5_Pane_bottom_right, BoxLayout.Y_AXIS));
-		//level5_Pane_bottom_right.setPreferredSize(new Dimension(comboBoxPane_width/2, 80));
-		//level5_Pane_bottom_right.setMaximumSize(new Dimension(comboBoxPane_width/2, 80));
-		//level5_Pane_right.setMinimumSize(new Dimension(comboBoxPane_width/2, 80));
+		level5_Pane_bottom_right.setLayout(new BoxLayout(
+				level5_Pane_bottom_right, BoxLayout.Y_AXIS));
+		// level5_Pane_bottom_right.setPreferredSize(new
+		// Dimension(comboBoxPane_width/2, 80));
+		// level5_Pane_bottom_right.setMaximumSize(new
+		// Dimension(comboBoxPane_width/2, 80));
+		// level5_Pane_right.setMinimumSize(new Dimension(comboBoxPane_width/2,
+		// 80));
 		level5_Pane_bottom_right.setBackground(Color.pink);
 		level5_Pane_bottom_right.setAlignmentX(LEFT_ALIGNMENT);
 		level5_Pane_bottom_right.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_bottom_right.add(new JLabel("Simulation Start"));
 		level5_Pane_bottom_right.add(Box.createRigidArea(new Dimension(0, 5)));
 		level5_Pane_bottom_right.add(startButton);
-		
+
 		JPanel level4_Pane_simulation_control = new JPanel();
 		level4_Pane_simulation_control.setBackground(Color.pink);
-		level4_Pane_simulation_control.setLayout(new BoxLayout(level4_Pane_simulation_control, BoxLayout.X_AXIS));
+		level4_Pane_simulation_control.setLayout(new BoxLayout(
+				level4_Pane_simulation_control, BoxLayout.X_AXIS));
 		level4_Pane_simulation_control.add(level5_Pane_bottom_left);
-		level4_Pane_simulation_control.add(Box.createRigidArea(new Dimension(10, 0)));
+		level4_Pane_simulation_control.add(Box.createRigidArea(new Dimension(
+				10, 0)));
 		level4_Pane_simulation_control.add(level5_Pane_bottom_center);
-		level4_Pane_simulation_control.add(Box.createRigidArea(new Dimension(10, 0)));
+		level4_Pane_simulation_control.add(Box.createRigidArea(new Dimension(
+				10, 0)));
 		level4_Pane_simulation_control.add(level5_Pane_bottom_right);
 
 		// Simulation Pane
 		JPanel level3_Pane_simulation = new JPanel();
-		//level3_Pane_simulation.setMaximumSize(level3_Pane_simulation_size);
-		//level3_Pane_simulation.setPreferredSize(level3_Pane_simulation_size);
-		//level3_Pane_simulation.setMinimumSize(level3_Pane_simulation_size);
-		level3_Pane_simulation.setLayout(new BoxLayout(level3_Pane_simulation, BoxLayout.PAGE_AXIS));
+		// level3_Pane_simulation.setMaximumSize(level3_Pane_simulation_size);
+		// level3_Pane_simulation.setPreferredSize(level3_Pane_simulation_size);
+		// level3_Pane_simulation.setMinimumSize(level3_Pane_simulation_size);
+		level3_Pane_simulation.setLayout(new BoxLayout(level3_Pane_simulation,
+				BoxLayout.PAGE_AXIS));
 		level3_Pane_simulation.setAlignmentX(LEFT_ALIGNMENT);
 		level3_Pane_simulation.setBackground(Color.pink);
 		TitledBorder titled;
 		titled = BorderFactory.createTitledBorder("");
-		level3_Pane_simulation.setBorder(titled);		
+		level3_Pane_simulation.setBorder(titled);
 		level3_Pane_simulation.add(level4_Pane_scenario);
 		level3_Pane_simulation.add(level4_inputPane);
 		level3_Pane_simulation.add(level4_Pane_simulation_control);
-				
+
 		// Conversion Pane
 		JPanel level3_Pane_conversion = new JPanel();
-		//level3_Pane_conversion.setMaximumSize(level3_Pane_conversion_size);
-		//level3_Pane_conversion.setPreferredSize(level3_Pane_conversion_size);
-		//level3_Pane_conversion.setMinimumSize(level3_Pane_conversion_size);
-		level3_Pane_conversion.setLayout(new BoxLayout(level3_Pane_conversion, BoxLayout.Y_AXIS));
+		// level3_Pane_conversion.setMaximumSize(level3_Pane_conversion_size);
+		// level3_Pane_conversion.setPreferredSize(level3_Pane_conversion_size);
+		// level3_Pane_conversion.setMinimumSize(level3_Pane_conversion_size);
+		level3_Pane_conversion.setLayout(new BoxLayout(level3_Pane_conversion,
+				BoxLayout.Y_AXIS));
 		level3_Pane_conversion.setBackground(Color.pink);
 		level3_Pane_conversion.setBorder(BorderFactory.createTitledBorder(""));
-		
+
 		level3_Pane_conversion.add(new JLabel("Euler Angle Converter"));
 		level3_Pane_conversion.add(new JLabel("Sequence: 3-2-1"));
 		for (int i = 0; i < lengthEulerInput; ++i)
@@ -562,7 +579,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		level3_Pane_conversion.add(new JLabel("K = wn*wn*J"));
 		level3_Pane_conversion.add(new JLabel("Kd = 2*J*damping*wn"));
 		level3_Pane_conversion.add(Box.createVerticalGlue());
-				
+
 		JPanel level2_Pane = new JPanel();
 		level2_Pane.setLayout(new BoxLayout(level2_Pane, BoxLayout.X_AXIS));
 		level2_Pane.setBackground(Color.pink);
@@ -580,7 +597,6 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	 * Makes panels for prompting users to input necessary fields
 	 */
 	void makeInputPanels() {
-
 
 		scenario1Pane = new JPanel();
 		for (int i = 0; i < length1row1; ++i)
@@ -600,9 +616,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				inputField1row3, Color.cyan);
 		JTextFieldPanel row4 = new JTextFieldPanel(1, "", input1row4,
 				inputField1row4, Color.cyan);
-		//scenario1Pane.setMaximumSize(panelSize);
-		//scenario1Pane.setPreferredSize(panelSize);
-		//scenario1Pane.setMinimumSize(panelSize);
+		// scenario1Pane.setMaximumSize(panelSize);
+		// scenario1Pane.setPreferredSize(panelSize);
+		// scenario1Pane.setMinimumSize(panelSize);
 		scenario1Pane.setLayout(new BoxLayout(scenario1Pane, BoxLayout.Y_AXIS));
 		scenario1Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario1Pane.setBackground(Color.cyan);
@@ -632,9 +648,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		row3 = new JTextFieldPanel(1, "", input2row3, inputField2row3,
 				Color.cyan);
-		//scenario2Pane.setMaximumSize(panelSize);
-		//scenario2Pane.setPreferredSize(panelSize);
-		//scenario2Pane.setMinimumSize(panelSize);
+		// scenario2Pane.setMaximumSize(panelSize);
+		// scenario2Pane.setPreferredSize(panelSize);
+		// scenario2Pane.setMinimumSize(panelSize);
 		scenario2Pane.setLayout(new BoxLayout(scenario2Pane, BoxLayout.Y_AXIS));
 		scenario2Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario2Pane.setBackground(Color.cyan);
@@ -666,9 +682,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		row4 = new JTextFieldPanel(1, "", input3row4, inputField3row4,
 				Color.cyan);
-		//scenario3Pane.setMaximumSize(panelSize);
-		//scenario3Pane.setPreferredSize(panelSize);
-		//scenario3Pane.setMinimumSize(panelSize);
+		// scenario3Pane.setMaximumSize(panelSize);
+		// scenario3Pane.setPreferredSize(panelSize);
+		// scenario3Pane.setMinimumSize(panelSize);
 		scenario3Pane.setLayout(new BoxLayout(scenario3Pane, BoxLayout.Y_AXIS));
 		scenario3Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario3Pane.setBackground(Color.cyan);
@@ -706,9 +722,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		JTextFieldPanel row5 = new JTextFieldPanel(1, "", input4row5,
 				inputField4row5, Color.cyan);
-		//scenario4Pane.setMaximumSize(panelSize);
-		//scenario4Pane.setPreferredSize(panelSize);
-		//scenario4Pane.setMinimumSize(panelSize);
+		// scenario4Pane.setMaximumSize(panelSize);
+		// scenario4Pane.setPreferredSize(panelSize);
+		// scenario4Pane.setMinimumSize(panelSize);
 		scenario4Pane.setLayout(new BoxLayout(scenario4Pane, BoxLayout.Y_AXIS));
 		scenario4Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario4Pane.setBackground(Color.cyan);
@@ -751,9 +767,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		JTextFieldPanel row6 = new JTextFieldPanel(1, "", input5row6,
 				inputField5row6, Color.cyan);
-		//scenario5Pane.setMaximumSize(panelSize);
-		//scenario5Pane.setPreferredSize(panelSize);
-		//scenario5Pane.setMinimumSize(panelSize);
+		// scenario5Pane.setMaximumSize(panelSize);
+		// scenario5Pane.setPreferredSize(panelSize);
+		// scenario5Pane.setMinimumSize(panelSize);
 		scenario5Pane.setLayout(new BoxLayout(scenario5Pane, BoxLayout.Y_AXIS));
 		scenario5Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario5Pane.setBackground(Color.cyan);
@@ -785,9 +801,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		// Create a JPanel for putting check boxes
 		JPanel boxPane = new JPanel();
 		boxPane.setLayout(new BoxLayout(boxPane, BoxLayout.X_AXIS));
-		//boxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
-		//boxPane.setMaximumSize(new Dimension(comboBoxPane_width, 30));
-		//boxPane.setMinimumSize(new Dimension(comboBoxPane_width, 30));
+		// boxPane.setPreferredSize(new Dimension(comboBoxPane_width, 30));
+		// boxPane.setMaximumSize(new Dimension(comboBoxPane_width, 30));
+		// boxPane.setMinimumSize(new Dimension(comboBoxPane_width, 30));
 		boxPane.setBackground(Color.cyan);
 		boxPane.setAlignmentX(LEFT_ALIGNMENT);
 		boxPane.add(threeRWRadio);
@@ -831,9 +847,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		row6 = new JTextFieldPanel(1, "", input6row6, inputField6row6,
 				Color.cyan);
-		//scenario6Pane.setMaximumSize(panelSize);
-		//scenario6Pane.setPreferredSize(panelSize);
-		//scenario6Pane.setMinimumSize(panelSize);
+		// scenario6Pane.setMaximumSize(panelSize);
+		// scenario6Pane.setPreferredSize(panelSize);
+		// scenario6Pane.setMinimumSize(panelSize);
 		scenario6Pane.setLayout(new BoxLayout(scenario6Pane, BoxLayout.Y_AXIS));
 		scenario6Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario6Pane.setBackground(Color.cyan);
@@ -877,9 +893,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		row5 = new JTextFieldPanel(1, "", input7row5, inputField7row5,
 				Color.cyan);
-		//scenario7Pane.setMaximumSize(panelSize);
-		//scenario7Pane.setPreferredSize(panelSize);
-		//scenario7Pane.setMinimumSize(panelSize);
+		// scenario7Pane.setMaximumSize(panelSize);
+		// scenario7Pane.setPreferredSize(panelSize);
+		// scenario7Pane.setMinimumSize(panelSize);
 		scenario7Pane.setLayout(new BoxLayout(scenario7Pane, BoxLayout.Y_AXIS));
 		scenario7Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario7Pane.setBackground(Color.cyan);
@@ -921,9 +937,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		row5 = new JTextFieldPanel(1, "", input8row5, inputField8row5,
 				Color.cyan);
 
-		//scenario8Pane.setMaximumSize(panelSize);
-		//scenario8Pane.setPreferredSize(panelSize);
-		//scenario8Pane.setMinimumSize(panelSize);
+		// scenario8Pane.setMaximumSize(panelSize);
+		// scenario8Pane.setPreferredSize(panelSize);
+		// scenario8Pane.setMinimumSize(panelSize);
 		scenario8Pane.setLayout(new BoxLayout(scenario8Pane, BoxLayout.Y_AXIS));
 		scenario8Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario8Pane.setBackground(Color.cyan);
@@ -959,9 +975,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				Color.cyan);
 		row4 = new JTextFieldPanel(1, "", input9row4, inputField9row4,
 				Color.cyan);
-		//scenario9Pane.setMaximumSize(panelSize);
-		//scenario9Pane.setPreferredSize(panelSize);
-		//scenario9Pane.setMinimumSize(panelSize);
+		// scenario9Pane.setMaximumSize(panelSize);
+		// scenario9Pane.setPreferredSize(panelSize);
+		// scenario9Pane.setMinimumSize(panelSize);
 		scenario9Pane.setLayout(new BoxLayout(scenario9Pane, BoxLayout.Y_AXIS));
 		scenario9Pane.setAlignmentX(LEFT_ALIGNMENT);
 		scenario9Pane.setBackground(Color.cyan);
@@ -1380,31 +1396,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 			}
 
 			if (ev.getSource() == simHelpButton) {
-				//System.out.println("help button pressed");
-				FileUtil2 f = new FileUtil2();
+				HelpWindow h = new HelpWindow("help/"
+						+ helpfile[combo.getSelectedIndex()]);
 
-				String hpath="file:"+f.current_path+"jat/application/AttitudeSimulator/help/";
-
-				if (combo.getSelectedItem() == SCENARIO_1) {
-					HelpWindow h = new HelpWindow(hpath+helpfile[0]);
-				} else if (combo.getSelectedItem() == SCENARIO_2) {
-					new HelpWindow(hpath+helpfile[1]);
-				} else if (combo.getSelectedItem() == SCENARIO_3) {
-					new HelpWindow(hpath+helpfile[2]);
-				} else if (combo.getSelectedItem() == SCENARIO_4) {
-					new HelpWindow(hpath+helpfile[3]);
-				} else if (combo.getSelectedItem() == SCENARIO_5) {
-					new HelpWindow(hpath+helpfile[4]);
-				} else if (combo.getSelectedItem() == SCENARIO_6) {
-					new HelpWindow(hpath+helpfile[5]);
-				} else if (combo.getSelectedItem() == SCENARIO_7) {
-					new HelpWindow(hpath+helpfile[6]);
-				} else if (combo.getSelectedItem() == SCENARIO_8) {
-					new HelpWindow(hpath+helpfile[7]);
-				} else if (combo.getSelectedItem() == SCENARIO_9) {
-					new HelpWindow(hpath+helpfile[8]);
-
-				}
 			}
 
 		}// End of ActionPerformed
@@ -1477,9 +1471,9 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		public void itemStateChanged(ItemEvent e) {
 
 			CardLayout cl = (CardLayout) (inputCards.getLayout());
-			//CardLayout c2 = (CardLayout) (instructionCards.getLayout());
+			// CardLayout c2 = (CardLayout) (instructionCards.getLayout());
 			cl.show(inputCards, (String) e.getItem());
-			//c2.show(instructionCards, (String) e.getItem());
+			// c2.show(instructionCards, (String) e.getItem());
 
 		}
 

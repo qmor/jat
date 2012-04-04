@@ -1,5 +1,8 @@
 package jat.application.AttitudeSimulator;
 
+
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,15 +16,20 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 
+
 public class HelpWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public HelpWindow(String name) throws HeadlessException {
 
 		super("Simulation Instruction");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JLabel emptyLabel = new JLabel("");
-		emptyLabel.setPreferredSize(new Dimension(400, 300));
+		emptyLabel.setPreferredSize(new Dimension(175, 100));
 		//getContentPane().add(createEditorPane("ConstantTorque.html"),
 			//	BorderLayout.CENTER);
 
@@ -34,7 +42,7 @@ public class HelpWindow extends JFrame {
 		setVisible(true);
 	}
 
-	private JEditorPane createEditorPane(String fileName) {
+	private JEditorPane createEditorPane(String relative_path) {
 
 		
 		JEditorPane editorPane = new JEditorPane();
@@ -55,12 +63,14 @@ public class HelpWindow extends JFrame {
 			
 			//System.out.println(s);
 
-			URL helpURL2 = new URL(fileName);
+			//URL helpURL2 = new URL(fileName);
+			ResourceLoader c=new ResourceLoader();
+			URL helpURL2 = c.loadURL(relative_path);
 
-			displayURL(helpURL2, editorPane, fileName);
+			displayURL(helpURL2, editorPane, relative_path);
 
 		} catch (Exception e) {
-			System.err.println("Couldn't create help URL!!: " + fileName);
+			System.err.println("Couldn't create help URL!!: " + relative_path);
 			System.exit(0);
 		}
 
