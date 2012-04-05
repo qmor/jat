@@ -449,7 +449,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		twoDeeBox.setSelected(true);
 		twoDeeBox.setBackground(Color.pink);
 		threeDeeBox = new JCheckBox("3D Animation");
-		threeDeeBox.setSelected(true);
+		threeDeeBox.setSelected(false);
 		threeDeeBox.setBackground(Color.pink);
 		// Register a listener for the check boxes.
 		twoDeeBox.addItemListener(new ButtonHandler());
@@ -1038,6 +1038,22 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		// double I3 = 41.67;
 
 		public void itemStateChanged(ItemEvent e) {
+		    /** Listens to the check boxes. */
+		        Object source = e.getItemSelectable();
+
+				if (source == threeDeeBox) {
+					
+					System.out.println("3dbox");
+				}
+		        //Now that we know which button was pushed, find out
+		        //whether it was selected or deselected.
+		        if (e.getStateChange() == ItemEvent.SELECTED) {
+					System.out.println("3dbox selected");
+					jat.core.vr.util u= new jat.core.vr.util();
+					System.out.println(u.check_for_Java3D_b());
+					
+					
+		        }
 
 		}
 
@@ -1399,6 +1415,11 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				HelpWindow h = new HelpWindow("help/"
 						+ helpfile[combo.getSelectedIndex()]);
 
+				if (ev.getSource() == threeDeeBox) {
+					
+					System.out.println("3dbox");
+				}				
+				
 			}
 
 		}// End of ActionPerformed
