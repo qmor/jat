@@ -23,7 +23,7 @@ package jat.application.AttitudeSimulator;
 import jat.core.attitude.DegToQuat;
 import jat.core.attitude.eom.EomTest;
 import jat.core.attitude.util.JTextFieldPanel;
-import jat.core.util.FileUtil2;
+import jat.core.vr.util;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -1038,22 +1038,24 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		// double I3 = 41.67;
 
 		public void itemStateChanged(ItemEvent e) {
-		    /** Listens to the check boxes. */
-		        Object source = e.getItemSelectable();
+			/** Listens to the check boxes. */
+			Object source = e.getItemSelectable();
 
-				if (source == threeDeeBox) {
-					
-					System.out.println("3dbox");
-				}
-		        //Now that we know which button was pushed, find out
-		        //whether it was selected or deselected.
-		        if (e.getStateChange() == ItemEvent.SELECTED) {
-					System.out.println("3dbox selected");
-					jat.core.vr.util u= new jat.core.vr.util();
-					System.out.println(u.check_for_Java3D_b());
-					
-					
-		        }
+			if (source == threeDeeBox) {
+
+				System.out.println("3dbox");
+			}
+			// Now that we know which button was pushed, find out
+			// whether it was selected or deselected.
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				System.out.println("3dbox selected");
+				util u = new util();
+				System.out.println(u.check_for_Java3D_b());
+				//if (!u.check_for_Java3D_b()) {
+					//JOptionPane.showMessageDialog(theFrame,
+						//	"Java3D not installed.");
+				//}
+			}
 
 		}
 
@@ -1416,10 +1418,10 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 						+ helpfile[combo.getSelectedIndex()]);
 
 				if (ev.getSource() == threeDeeBox) {
-					
+
 					System.out.println("3dbox");
-				}				
-				
+				}
+
 			}
 
 		}// End of ActionPerformed
