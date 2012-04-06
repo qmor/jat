@@ -3,6 +3,8 @@ package jat.application.AttitudeSimulator;
 
 
 
+import jat.core.util.ResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -30,13 +32,10 @@ public class HelpWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JLabel emptyLabel = new JLabel("");
 		emptyLabel.setPreferredSize(new Dimension(175, 100));
-		//getContentPane().add(createEditorPane("ConstantTorque.html"),
-			//	BorderLayout.CENTER);
-
+		
 		JScrollPane helpScrollPane = new JScrollPane(createEditorPane(name));
 
 		getContentPane().add(helpScrollPane, BorderLayout.CENTER);
-		//getContentPane().add(createEditorPane(name), BorderLayout.CENTER);
 
 		pack();
 		setVisible(true);
@@ -65,7 +64,7 @@ public class HelpWindow extends JFrame {
 
 			//URL helpURL2 = new URL(fileName);
 			ResourceLoader c=new ResourceLoader();
-			URL helpURL2 = c.loadURL(relative_path);
+			URL helpURL2 = c.loadURL(this.getClass(), relative_path);
 
 			displayURL(helpURL2, editorPane, relative_path);
 

@@ -33,6 +33,7 @@ import com.sun.j3d.utils.applet.MainFrame;
 
 import javax.swing.*; // For Timer
 import java.awt.event.*;
+import java.net.URL;
 
 /**
  * 
@@ -58,7 +59,13 @@ public class PlanetGrid extends Applet implements ActionListener
 	{
 		// Get path of this class, frames will be saved in subdirectory frames
 		Orbit orb1 = null;
-		String b = FileUtil.getClassFilePath("jat.demo.vr.PlanetGrid", "PlanetGrid");
+		
+		ResourceLoader rl=new ResourceLoader();
+		URL PlanetGrid_URL = rl.loadURL(this.getClass(), ".");
+		System.out.println(PlanetGrid_URL.getPath());
+		
+		String b = PlanetGrid_URL.getPath();
+		//String b = FileUtil.getClassFilePath("jat.demo.vr.PlanetGrid", "PlanetGrid");
 		System.out.println(b);
 
 		setLayout(new BorderLayout());

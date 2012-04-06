@@ -18,18 +18,15 @@
 // loads resources (any file - image, html, etc.)
 // works in Eclipse, in a jar file, and (hopefully) applet on web page!! 
 
-package jat.application.AttitudeSimulator;
+package jat.core.util;
 
 import java.awt.image.*;
 import java.io.*;
 import java.net.URL;
 
 import javax.imageio.*;
-import javax.swing.*;
 
 public class ResourceLoader {
-	private JLabel label = new JLabel();
-
 	public ResourceLoader() {
 	}
 
@@ -37,8 +34,22 @@ public class ResourceLoader {
 		return getClass().getResourceAsStream(name);
 	}
 
+	/**
+	 * @param myclass reference to the class to which we want 
+	 * to get the relative path  
+	 * @param relative_path relative path (without leading /)
+	 * @return
+	 */
+	public URL loadURL(Class myclass, String relative_path) {
+		return myclass.getResource(relative_path);
+	}
+
 	public URL loadURL(String relative_path) {
 		return getClass().getResource(relative_path);
+	}
+
+	public URL get_data_path() {
+		return getClass().getResource(".");
 	}
 
 	public BufferedImage loadImage(String name) {

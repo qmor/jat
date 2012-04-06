@@ -22,68 +22,105 @@
 package jat.core.vr;
 
 import java.applet.Applet;
+import java.io.File;
+import java.net.URL;
+
 import javax.media.j3d.*;
 import javax.vecmath.*;
 
 import jat.core.math.matvec.data.*;
 import jat.core.util.*;
 
-/** Base class for 3D objects. Planet, moons, and spacecraft extend this class.
+/**
+ * Base class for 3D objects. Planet, moons, and spacecraft extend this class.
  * To be extended by specific object
+ * 
  * @author Tobias Berthold
  */
 // Temporarily renamed class Body3D to ABody3D because of difficulties with CVS
 
-//abstract public class body3D extends TransformGroup
-public class Body3D extends TransformGroup
-{
+// abstract public class body3D extends TransformGroup
+public class Body3D extends TransformGroup {
 	Vector3f Vf = new Vector3f();
 	Vector3d Vd = new Vector3d();
 	Vector3d VRot = new Vector3d();
 	Transform3D Trans = new Transform3D();
 	double scale = 1.0; // scale factor for 3D objects
 	Applet myapplet;
-	static String images_path, Lightwave_path, Wavefront_path, ThreeDStudio_path;
+	static String images_path, Lightwave_path, Wavefront_path,
+			ThreeDStudio_path;
 
-	public Body3D()
-	{
+	public Body3D() {
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 	}
 
-	public Body3D(Applet myapplet)
-	{
+	public Body3D(Applet myapplet) {
 		this.myapplet = myapplet;
-		String thisClassName="Body3D";
-		images_path = FileUtil.getClassFilePath("jat.core.vr", thisClassName) + "images_hires/";
-		Wavefront_path = FileUtil.getClassFilePath("jat.core.vr", thisClassName) + "Wavefront\\";
-		Lightwave_path = FileUtil.getClassFilePath("jat.core.vr", thisClassName) + "Lightwave\\";
-		ThreeDStudio_path = FileUtil.getClassFilePath("jat.core.vr", thisClassName) + "3DStudio\\";
-		//System.out.println(images_path);
+		String thisClassName = "Body3D";
+		ResourceLoader rl = new ResourceLoader();
+		System.out.println(rl.get_data_path());
+		// URL url = new URL(new URL(rl.getRequestURL ().toString()),"../");
+		File dir;
+		String parentpath;
+		dir = new File(rl.get_data_path().toString());
+		parentpath = dir.getParent();
+		System.out.println("Current Directory : " + dir);
+		System.out.println("parent Directory  : " + parentpath);
+		dir = new File(parentpath);
+		parentpath = dir.getParent();
+		System.out.println("parent Directory  : " + parentpath);
+		dir = new File(parentpath);
+		parentpath = dir.getParent();
+		System.out.println("parent Directory  : " + parentpath);
+		dir = new File(parentpath);
+		parentpath = dir.getParent();
+		System.out.println("parent Directory  : " + parentpath);
+		//String data_path = (dir.getParent()).getParent();
+		images_path=parentpath+"/data/core/vr/images_hires/";
+		 System.out.println(images_path);
+		
+		 
+		 images_path="/home/user/workspace/jat/data/core/vr/images_hires/";
+		//images_path = FileUtil.getClassFilePath("jat.core.vr", thisClassName)
+			//	+ "images_hires/";
+		Wavefront_path = FileUtil
+				.getClassFilePath("jat.core.vr", thisClassName)
+				+ "Wavefront\\";
+		Lightwave_path = FileUtil
+				.getClassFilePath("jat.core.vr", thisClassName)
+				+ "Lightwave\\";
+		ThreeDStudio_path = FileUtil.getClassFilePath("jat.core.vr",
+				thisClassName)
+				+ "3DStudio\\";
+		System.out.println(images_path);
 
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 
-		//add();
+		// add();
 	}
 
 	// Methods to be implemented in subclasses
-	//abstract public void add();
+	// abstract public void add();
 
-	public void set_scale(double scale)
-	{
+	public void set_scale(double scale) {
 		getTransform(Trans);
 		Trans.setScale(scale);
 		setTransform(Trans);
 	}
 
-	/** Set the position of the body in km
-	 * @param x x position
-	 * @param y y position
-	 * @param z z position
+	/**
+	 * Set the position of the body in km
+	 * 
+	 * @param x
+	 *            x position
+	 * @param y
+	 *            y position
+	 * @param z
+	 *            z position
 	 */
-	public void set_position(double x, double y, double z)
-	{
+	public void set_position(double x, double y, double z) {
 		getTransform(Trans);
 		Vd.x = x;
 		Vd.y = y;
@@ -95,10 +132,11 @@ public class Body3D extends TransformGroup
 
 	/**
 	 * Set new body position.
-	 * @param rv new position
+	 * 
+	 * @param rv
+	 *            new position
 	 */
-	public void set_position(double[] rv)
-	{
+	public void set_position(double[] rv) {
 		getTransform(Trans);
 		Vd.x = rv[0];
 		Vd.y = rv[1];
@@ -110,10 +148,11 @@ public class Body3D extends TransformGroup
 
 	/**
 	 * Set new body position.
-	 * @param r new position
+	 * 
+	 * @param r
+	 *            new position
 	 */
-	public void set_position(VectorN r)
-	{
+	public void set_position(VectorN r) {
 		getTransform(Trans);
 		Vd.x = r.x[0];
 		Vd.y = r.x[1];
@@ -123,8 +162,7 @@ public class Body3D extends TransformGroup
 		setTransform(Trans);
 	}
 
-	public void set_position(Point3d r)
-	{
+	public void set_position(Point3d r) {
 		getTransform(Trans);
 		Vd.x = r.x;
 		Vd.y = r.y;
@@ -134,8 +172,7 @@ public class Body3D extends TransformGroup
 		setTransform(Trans);
 	}
 
-	public void set_position(Vector3d r)
-	{
+	public void set_position(Vector3d r) {
 		getTransform(Trans);
 		Vd.x = r.x;
 		Vd.y = r.y;
@@ -147,20 +184,25 @@ public class Body3D extends TransformGroup
 
 	/**
 	 * Set_body attitude.using quaternion
-	 * @param quatObject quaternion
+	 * 
+	 * @param quatObject
+	 *            quaternion
 	 */
-	public void set_attitude(Transform3D quatObject)
-	{
+	public void set_attitude(Transform3D quatObject) {
 		setTransform(quatObject);
 	}
 
-	/** Set body attitude without changing position or scale using Euler angles
-	 * @param alpha x angle
-	 * @param beta y angle
-	 * @param gamma z angle
+	/**
+	 * Set body attitude without changing position or scale using Euler angles
+	 * 
+	 * @param alpha
+	 *            x angle
+	 * @param beta
+	 *            y angle
+	 * @param gamma
+	 *            z angle
 	 */
-	public void set_attitude(double alpha, double beta, double gamma)
-	{
+	public void set_attitude(double alpha, double beta, double gamma) {
 		getTransform(Trans);
 		Trans.get(Vf);
 		VRot.x = alpha;
@@ -174,6 +216,7 @@ public class Body3D extends TransformGroup
 
 	/**
 	 * Set body position and attitude
+	 * 
 	 * @param x
 	 * @param y
 	 * @param z
@@ -181,8 +224,8 @@ public class Body3D extends TransformGroup
 	 * @param beta
 	 * @param gamma
 	 */
-	public void set_pos_attitude(double x, double y, double z, double alpha, double beta, double gamma)
-	{
+	public void set_pos_attitude(double x, double y, double z, double alpha,
+			double beta, double gamma) {
 		getTransform(Trans);
 		Trans.get(Vf);
 		VRot.x = alpha;
@@ -198,61 +241,39 @@ public class Body3D extends TransformGroup
 	}
 }
 
+// Transform3D T_3D = new Transform3D();
+// Transform3D RotX = new Transform3D();
+// Transform3D RotY = new Transform3D();
+// Transform3D RotZ = new Transform3D();
+/*
+ * public void set_attitude(double alpha, double beta, double gamma) {
+ * getTransform(T_3D); T_3D.get(Vf); // translate.set(Vf);
+ * 
+ * RotX.setIdentity(); RotY.setIdentity(); RotZ.setIdentity(); RotX.rotX(alpha);
+ * RotY.rotY(beta); RotZ.rotZ(gamma); RotX.mul(RotY); // RotX=RotX . RotY
+ * RotX.mul(RotZ); // RotX=RotX . RotZ
+ * 
+ * RotX.setTranslation(Vf); setTransform(RotX); }
+ * 
+ * 
+ * public void set_attitude(double alpha, double beta, double gamma) {
+ * getTransform(RotX); RotX.get(Vf); // scale=RotX.getScale();
+ * RotY.setIdentity(); RotZ.setIdentity(); RotX.rotX(alpha); RotY.rotY(beta);
+ * RotZ.rotZ(gamma); RotX.mul(RotY); // RotX=RotX . RotY RotX.mul(RotZ); //
+ * RotX=RotX . RotZ
+ * 
+ * RotX.setTranslation(Vf); RotX.setScale(scale); setTransform(RotX); }
+ */
 
-//Transform3D T_3D = new Transform3D();
-//Transform3D RotX = new Transform3D();
-//Transform3D RotY = new Transform3D();
-//Transform3D RotZ = new Transform3D();
-	/*
-		public void set_attitude(double alpha, double beta, double gamma)
-		{
-			getTransform(T_3D);
-			T_3D.get(Vf);
-	//		translate.set(Vf);
-
-			RotX.setIdentity();
-			RotY.setIdentity();
-			RotZ.setIdentity();
-			RotX.rotX(alpha);
-			RotY.rotY(beta);
-			RotZ.rotZ(gamma);
-			RotX.mul(RotY); // RotX=RotX . RotY
-			RotX.mul(RotZ); // RotX=RotX . RotZ
-
-			RotX.setTranslation(Vf);
-			setTransform(RotX);
-		}
-
-
-		public void set_attitude(double alpha, double beta, double gamma)
-		{
-			getTransform(RotX);
-			RotX.get(Vf);
-	//		scale=RotX.getScale();
-			RotY.setIdentity();
-			RotZ.setIdentity();
-			RotX.rotX(alpha);
-			RotY.rotY(beta);
-			RotZ.rotZ(gamma);
-			RotX.mul(RotY); // RotX=RotX . RotY
-			RotX.mul(RotZ); // RotX=RotX . RotZ
-
-			RotX.setTranslation(Vf);
-			RotX.setScale(scale);
-			setTransform(RotX);
-		}
-	*/
-
-
-//	public void set_earth_rotation(double angle)
-//	{
-//		earthRotate.setIdentity();
-//		earthRotate.rotZ(angle);
-//	}
+// public void set_earth_rotation(double angle)
+// {
+// earthRotate.setIdentity();
+// earthRotate.rotZ(angle);
+// }
 //
-//	public void rotate_earth()
-//	{
-//		TG_earth.getTransform(T_3D);
-//		T_3D.mul(earthRotate, T_3D);
-//		TG_earth.setTransform(T_3D);
-//	}
+// public void rotate_earth()
+// {
+// TG_earth.getTransform(T_3D);
+// T_3D.mul(earthRotate, T_3D);
+// TG_earth.setTransform(T_3D);
+// }
