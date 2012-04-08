@@ -20,9 +20,9 @@
 
 package jat.application.AttitudeSimulator;
 
+import jat.core.GUI.JTextFieldPanel;
 import jat.core.attitude.DegToQuat;
 import jat.core.attitude.eom.EomTest;
-import jat.core.attitude.util.JTextFieldPanel;
 import jat.core.vr.util;
 
 import java.awt.BorderLayout;
@@ -47,7 +47,6 @@ import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -69,12 +68,16 @@ import javax.swing.border.TitledBorder;
  *          import jat.attitude.util.AnimationWindow;
  * @author Tobias Berthold
  * @version 1.3 (04/03/2012) Modifications: change layout so that start button
- *          is visible load help pages locally
+ *          is visible. Load help pages locally.
  * 
  */
 
 public class AttitudeSimulator extends JApplet // implements ItemListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5907632930552441343L;
 	private static AttitudeSimulator theApplet; // Applet itself!
 	private static JFrame theFrame; // Frame is used in main()
 	private static String LastUpdate = "Last Update: 03/31/2012, 12:25";
@@ -105,7 +108,6 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	JButton startButton = new JButton("Start Button");
 	JButton convertButton = new JButton("Convert Button");
 	JButton resetButton = new JButton("Reset Button");
-	JButton helpButton = new JButton("Help! Button");
 	JButton simHelpButton = new JButton("Simulation Help");
 
 	JComboBox combo;
@@ -1070,7 +1072,6 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 						.getText());
 				boolean errorFree = false;
 
-				int numberOfPts = (int) (timeDuration / time_step) + 1;
 				// Set up eomObject with new parameter values
 				EomTest eomObject = new EomTest(time_step, timeDuration);
 				// eomObject.setParameters(time_step, timeDuration, I1, I2, I3);
@@ -1414,8 +1415,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 			}
 
 			if (ev.getSource() == simHelpButton) {
-				HelpWindow h = new HelpWindow("help/"
-						+ helpfile[combo.getSelectedIndex()]);
+				new HelpWindow("help/"	+ helpfile[combo.getSelectedIndex()]);
 
 				if (ev.getSource() == threeDeeBox) {
 

@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- package jat.core.attitude.util;
+ package jat.application.AttitudeSimulator.util;
 
  import java.awt.*;
  import java.awt.event.*;
@@ -33,7 +33,7 @@
  * <P>
  * AnimatioWindow2 is a modification of AnimationWindow to include 
  * flexible beams and concentrated masses at the tip for 3D visualization
- * of spacecraft attitude dynmics defined in jat.eom.FlexibleThreeD.java
+ * of spacecraft attitude dynamics defined in jat.eom.FlexibleThreeD.java
  * and jat.eom.FlexibleTwoD.java.
  * @author 	Daniel Quock	December 2001, July 2002
  * @author 	Noriko Takada

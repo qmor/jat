@@ -56,6 +56,7 @@ public class RConstantTorque implements EquationsOfMotion
  	//		energy_and_angularM	Plots of system energy and angular momentum
  	//  
 	double  time_step;
+	int currentPts=0;
 	private float quat_values[][];
 	
 	private double M1 = 0;           // External torque
@@ -213,7 +214,7 @@ public class RConstantTorque implements EquationsOfMotion
         	boolean first = true;
         	if (t == 0.0) first = false;
         	
-        	int currentPts = (int)(t/time_step); // This is the array index
+        	//int currentPts = (int)(t/time_step); // This is the array index
         	
        	 	double w1 = y[0];
         	double w2 = y[1];
@@ -321,6 +322,8 @@ public class RConstantTorque implements EquationsOfMotion
         	quat_values[2][currentPts] = (float)q2; // quarternion 2
         	quat_values[3][currentPts] = (float)q3; // quarternion 3
         	quat_values[4][currentPts] = (float)q4; // quarternion 4
+        	
+        	currentPts++;
         	//also print to the screen 
         	System.out.println(t+" "+y[0]+" "+y[1]+" "+y[2]);
     	}// End of print
