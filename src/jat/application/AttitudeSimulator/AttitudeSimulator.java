@@ -147,7 +147,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	JTextField inputField2row2[] = new JTextField[length2row2];
 	JTextField inputField2row3[] = new JTextField[length2row3];
 	String defautlIc2row1[] = { "10.42", "35.42", "41.67" };
-	String defaultIc2row2[] = { "0.0", "0.0", "1.0" };
+	String defaultIc2row2[] = { "0.1", "0.0", "1.0" };
 	String defaultIc2row3[] = { "0.0", "0.0", "0.0", "1.0" };
 
 	/* (3) Gravity Gradient (Eccentric Orbit) case */
@@ -591,7 +591,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		Container level1_Pane = getContentPane();
 		level1_Pane.add(level2_Pane, BorderLayout.CENTER);
 		this.setSize(appletwidth, appletheight);
-		System.out.println("applet init end");
+		//System.out.println("applet init end");
 
 	}// End of init()
 
@@ -1045,18 +1045,18 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 			if (source == threeDeeBox) {
 
-				System.out.println("3dbox");
+				//System.out.println("3dbox");
 			}
 			// Now that we know which button was pushed, find out
 			// whether it was selected or deselected.
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				System.out.println("3dbox selected");
+				//System.out.println("3dbox selected");
 				util u = new util();
-				System.out.println(u.check_for_Java3D_b());
-				//if (!u.check_for_Java3D_b()) {
-					//JOptionPane.showMessageDialog(theFrame,
-						//	"Java3D not installed.");
-				//}
+				//System.out.println(u.check_for_Java3D_b());
+				if (!u.check_for_Java3D_b()) {
+					JOptionPane.showMessageDialog(theFrame,
+						"Java3D not installed.");
+				}
 			}
 
 		}

@@ -58,7 +58,7 @@ public class EomTest {
 
 	private double J = 600; // Moment of Inertia for a single axis simulation
 	public int animationYes = 1;
-	public int plotYes = 1;
+	public int plotYes = 0;
 	public int number_of_RW = 3;
 	public float quat_values[][] = null;
 
@@ -99,9 +99,9 @@ public class EomTest {
 	}
 
 	public static void main(String[] args) {
-		EOM = new EomTest(0.01, 20.0);
+		EOM = new EomTest(0.1, 20.0);
 		// EOM = new EomTest(0.1, 10.0, 600);
-		int scenario = 5;
+		int scenario = 2;
 
 		if (scenario == 1) {
 			double M1 = 1; // External torque
@@ -290,6 +290,39 @@ public class EomTest {
 		}
 	}
 
+	/**
+	 * Method doGGCircular.
+	 */
+	public void doGGCircular(double[] x0) {
+		double tf = timeDuration;
+		double t0 = 0.0;
+		RungeKutta8 rk8 = new RungeKutta8(time_step);
+		timeDuration = tf; // Duration of the simulation time is the same as the
+							// final time
+		int size_quat_values = (int) (timeDuration / time_step) + 1;
+		float quat_values[][] = new float[5][size_quat_values + 1];// +1 is for
+																// AnimationWindow
+		// create an instance
+		RGGCircularOrbit si = new RGGCircularOrbit(time_step, I1, I2, I3,
+				quat_values);
+
+		// integrate the equations
+		rk8.integrate(t0, x0, tf, si, true);
+		int numberOfPts = si.currentPts - 1;
+		// make the plot visible
+		if (plotYes == 1)
+			si.makePlotsVisible();
+		// Animation
+		quat_values = si.getQuaternion();
+		if (animationYes == 1) {
+			AnimationWindow theAnimWindow = new AnimationWindow("Animation",
+					(float) I1, (float) I2, (float) I3, numberOfPts,
+					quat_values, "Gravity Gradient");
+		}
+	}
+
+
+	
 	/**
 	 * Method doThreeDFlex.
 	 */
@@ -517,36 +550,6 @@ public class EomTest {
 		// Animation
 		quat_values = si.getQuaternion();
 
-		if (animationYes == 1) {
-			AnimationWindow theAnimWindow = new AnimationWindow("Animation",
-					(float) I1, (float) I2, (float) I3, numberOfPts,
-					quat_values, "Gravity Gradient");
-		}
-	}
-
-	/**
-	 * Method doGGCircular.
-	 */
-	public void doGGCircular(double[] x0) {
-		double tf = timeDuration;
-		double t0 = 0.0;
-		RungeKutta8 rk8 = new RungeKutta8(time_step);
-		timeDuration = tf; // Duration of the simulation time is the same as the
-							// final time
-		int numberOfPts = (int) (timeDuration / time_step) + 1;
-		float quat_values[][] = new float[5][numberOfPts + 1];// +1 is for
-																// AnimationWindow
-		// create an instance
-		RGGCircularOrbit si = new RGGCircularOrbit(time_step, I1, I2, I3,
-				quat_values);
-
-		// integrate the equations
-		rk8.integrate(t0, x0, tf, si, true);
-		// make the plot visible
-		if (plotYes == 1)
-			si.makePlotsVisible();
-		// Animation
-		quat_values = si.getQuaternion();
 		if (animationYes == 1) {
 			AnimationWindow theAnimWindow = new AnimationWindow("Animation",
 					(float) I1, (float) I2, (float) I3, numberOfPts,
