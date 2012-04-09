@@ -19,7 +19,9 @@
  *
  */
 
-package jat.core.attitude;
+package jat.tests.core.attitude;
+
+import jat.core.attitude.QuatToDeg;
 
 
 

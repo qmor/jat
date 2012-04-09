@@ -282,6 +282,41 @@ public class EomTest
 		 		 	
 	}
 
+
+	/**
+	 * Method doConstantTorque.
+	 */
+	public void doConstantTorque(double[] x0,
+							      double M1, double M2, double M3) 
+	{
+		double tf = timeDuration;
+        double t0 = 0.0;               
+        RungeKutta8 rk8 = new RungeKutta8(time_step);
+		timeDuration=tf;	// Duration of the simulation time is the same as the final time
+		int numberOfPts = (int)(timeDuration/time_step) +1 ;  				
+       	quat_values = new  float[5][numberOfPts+1];// +1 is for AnimationWindow
+	    // create an instance
+        RConstantTorque si = new RConstantTorque(time_step,M1,M2,M3,I1,I2,I3,  quat_values);
+	    
+		// integrate the equations
+        rk8.integrate(t0, x0, tf, si, true);
+        numberOfPts=si.currentPts-1;
+        
+        // make the plot visible
+        if (plotYes ==1 )
+        	si.makePlotsVisible();
+        // Animation
+        quat_values = si.getQuaternion();
+		if (animationYes ==1)
+		{
+			AnimationWindow theAnimWindow = new AnimationWindow("Animation", 
+															 (float)I1, (float)I2, (float)I3, 
+															 numberOfPts, quat_values , "else");
+		}			
+	}
+
+	
+	
 	/**
 	 * Method doThreeDFlex.
 	 */
@@ -548,36 +583,6 @@ public class EomTest
 		}
 	}
 
-
-	/**
-	 * Method doConstantTorque.
-	 */
-	public void doConstantTorque(double[] x0,
-							      double M1, double M2, double M3) 
-	{
-		double tf = timeDuration;
-        double t0 = 0.0;               
-        RungeKutta8 rk8 = new RungeKutta8(time_step);
-		timeDuration=tf;	// Duration of the simulation time is the same as the final time
-		int numberOfPts = (int)(timeDuration/time_step) +1 ;  				
-       	quat_values = new  float[5][numberOfPts+1];// +1 is for AnimationWindow
-	    // create an instance
-        RConstantTorque si = new RConstantTorque(time_step,M1,M2,M3,I1,I2,I3,  quat_values);
-	    
-		// integrate the equations
-        rk8.integrate(t0, x0, tf, si, true);
-        // make the plot visible
-        if (plotYes ==1 )
-        	si.makePlotsVisible();
-        // Animation
-        quat_values = si.getQuaternion();
-		if (animationYes ==1)
-		{
-			AnimationWindow theAnimWindow = new AnimationWindow("Animation", 
-															 (float)I1, (float)I2, (float)I3, 
-															 numberOfPts, quat_values , "else");
-		}			
-	}
 
     
     public void doCMGManeuver(double[] x0,

@@ -325,7 +325,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 	String controlInput[] = { "time step", "time" };
 	int lengthControlInput = controlInput.length;
 	JTextField controlInputField[] = new JTextField[lengthControlInput];
-	String defaultControlInput[] = { "0.01", "10" };
+	String defaultControlInput[] = { "0.1", "20" };
 
 	/* CardLayout-JPanel for scenario specific inputs */
 	JPanel inputCards;
@@ -448,10 +448,10 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 		// Create the check boxes.
 		twoDeeBox = new JCheckBox("2D Plots");
-		twoDeeBox.setSelected(true);
+		twoDeeBox.setSelected(false);
 		twoDeeBox.setBackground(Color.pink);
 		threeDeeBox = new JCheckBox("3D Animation");
-		threeDeeBox.setSelected(false);
+		threeDeeBox.setSelected(true);
 		threeDeeBox.setBackground(Color.pink);
 		// Register a listener for the check boxes.
 		twoDeeBox.addItemListener(new ButtonHandler());

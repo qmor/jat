@@ -53,6 +53,7 @@ public class FlexibleTwoD implements EquationsOfMotion
  	//		energy_and_angularM	Plots of system energy and angular momentum
  	// 
 	double  time_step;
+	int currentPts=0;
 	private float quat_values[][];
 	private float quatBeam1[][];
 	private float quatBeam2[][];
@@ -253,7 +254,7 @@ public class FlexibleTwoD implements EquationsOfMotion
         	boolean first = true;
         	if (t == 0.0) first = false;
         	
-        	int currentPts = (int)(t/time_step); // This is the array index
+        	//int currentPts = (int)(t/time_step); // This is the array index
         	
        	 	double alpha = y[0];
         	double u1 = y[1];
@@ -424,6 +425,9 @@ public class FlexibleTwoD implements EquationsOfMotion
         	quatBeam2[2][currentPts] = (float)q2Beam2; // quarternion 2
         	quatBeam2[3][currentPts] = (float)q3Beam2; // quarternion 3
         	quatBeam2[4][currentPts] = (float)q4Beam2; // quarternion 4
+        	
+        	currentPts++;
+
         	//also print to the screen 
         	System.out.println(t+" "+y[0]+" "+y[1]+" "+y[2]+" "+y[3]+" "+y[4]+" "+y[5]);
     	}// End of print
