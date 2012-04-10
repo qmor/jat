@@ -22,7 +22,7 @@ package jat.application.AttitudeSimulator;
 
 import jat.core.GUI.JTextFieldPanel;
 import jat.core.attitude.DegToQuat;
-import jat.core.attitude.eom.EomTest;
+import jat.core.attitude.eom.EomRunner;
 import jat.core.vr.util;
 
 import java.awt.BorderLayout;
@@ -1073,7 +1073,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 				boolean errorFree = false;
 
 				// Set up eomObject with new parameter values
-				EomTest eomObject = new EomTest(time_step, timeDuration);
+				EomRunner eomObject = new EomRunner(time_step, timeDuration);
 				// eomObject.setParameters(time_step, timeDuration, I1, I2, I3);
 				if (threeDeeBox.isSelected() == true)
 					eomObject.animationYes = 1;

@@ -58,6 +58,7 @@ public class CMGManeuver implements EquationsOfMotion
  //		CMGPlot				Plot of CMGs rotor speeds
 	
 	double time_step = 0.1;
+	int currentPts;
 	private float quat_values[][];
 	
 	// Create variables for the necessary plots
@@ -350,7 +351,7 @@ public class CMGManeuver implements EquationsOfMotion
         
         boolean first = true;
         if (t == 0.0) first = false;
-		int currentPts = (int)(t/time_step); // This is the array index
+		//int currentPts = (int)(t/time_step); // This is the array index
 		
         System.out.println(t+" "+y[0]+" "+y[1]+" "+first);
 
@@ -531,6 +532,7 @@ public class CMGManeuver implements EquationsOfMotion
         quat_values[3][currentPts] = (float)q3; // quarternion 3
         quat_values[4][currentPts] = (float)q4; // quarternion 4
         
+        currentPts++;        
     }
 	
 	/**
