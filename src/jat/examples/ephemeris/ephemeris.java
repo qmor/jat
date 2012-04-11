@@ -42,14 +42,18 @@ public class ephemeris
     public static void main (String argv[])
     {
         double jd=cm.juliandate(2002, 2, 17, 12, 0, 0);
+        FileUtil2 f=new FileUtil2();
 		String fs = FileUtil.file_separator();
-		DE405 my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs);
+        System.out.println(f.root_path);
+        String DE405_data_folder=f.root_path+"data"+fs+"core"+fs+"ephemeris"+fs+"DE405data"+fs;
+        System.out.println(DE405_data_folder);
+		DE405 my_eph = new DE405(DE405_data_folder);
         VectorN rv=my_eph.get_planet_posvel(DE405_Body.MARS, jd);
 
-        System.out.println("The position of Mars on 10-17-2002 at 12:00pm is ");
-        System.out.println("x= "+rv.get(0)+" km");
-        System.out.println("y= "+rv.get(1)+" km");
-        System.out.println("z= "+rv.get(2)+" km");
+        System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
+        //System.out.println("x= "+rv.get(0)+" km");
+        //System.out.println("y= "+rv.get(1)+" km");
+        //System.out.println("z= "+rv.get(2)+" km");
 
 
     }

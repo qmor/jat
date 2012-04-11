@@ -591,7 +591,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 		Container level1_Pane = getContentPane();
 		level1_Pane.add(level2_Pane, BorderLayout.CENTER);
 		this.setSize(appletwidth, appletheight);
-		//System.out.println("applet init end");
+		// System.out.println("applet init end");
 
 	}// End of init()
 
@@ -1045,17 +1045,19 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 			if (source == threeDeeBox) {
 
-				//System.out.println("3dbox");
+				// System.out.println("3dbox");
 			}
 			// Now that we know which button was pushed, find out
 			// whether it was selected or deselected.
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				//System.out.println("3dbox selected");
+				// System.out.println("3dbox selected");
 				util u = new util();
-				//System.out.println(u.check_for_Java3D_b());
+				// System.out.println(u.check_for_Java3D_b());
 				if (!u.check_for_Java3D_b()) {
 					JOptionPane.showMessageDialog(theFrame,
-						"Java3D not installed.");
+							"Java3D not installed.");
+					threeDeeBox.setSelected(false);
+
 				}
 			}
 
@@ -1415,7 +1417,7 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 			}
 
 			if (ev.getSource() == simHelpButton) {
-				new HelpWindow("help/"	+ helpfile[combo.getSelectedIndex()]);
+				new HelpWindow("help/" + helpfile[combo.getSelectedIndex()]);
 
 				if (ev.getSource() == threeDeeBox) {
 

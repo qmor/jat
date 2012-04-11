@@ -26,7 +26,7 @@ public class FileUtil2 {
 
 	public FileUtil2() {
 		current_path=find_current_path();
-		//root_path=find_root();
+		root_path=find_root();
 	}
 
 	public String find_attitude_help_folder() {
