@@ -51,6 +51,7 @@ public class FlexibleThreeD implements EquationsOfMotion
  	//		quat_plot			Plots of quaternions
  	//		energy_and_angularM	Plots of system energy and angular momentum
 	double  time_step;
+	int currentPts;
 	private float quat_values[][];
 	private float quatBeam1[][];
 	private float quatBeam2[][];
@@ -378,7 +379,7 @@ public class FlexibleThreeD implements EquationsOfMotion
         	boolean first = true;
         	if (t == 0.0) first = false;
         	
-        	int currentPts = (int)(t/time_step); // This is the array index
+        	//int currentPts = (int)(t/time_step); // This is the array index
         	
        	 	double u1 = y[0];
         	double u2 = y[1];
@@ -692,6 +693,9 @@ public class FlexibleThreeD implements EquationsOfMotion
         	quatBeam2[2][currentPts] = (float)q2Beam2; // quarternion 2
         	quatBeam2[3][currentPts] = (float)q3Beam2; // quarternion 3
         	quatBeam2[4][currentPts] = (float)q4Beam2; // quarternion 4
+
+        	currentPts++;
+        	
         	//also print to the screen 
         	//System.out.println("m= "+m);//+" "+y[1]+" "+y[2]);
     	}// End of print

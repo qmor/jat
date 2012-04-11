@@ -20,8 +20,8 @@
 
 package jat.core.attitude.eom;
 
-import jat.application.AttitudeSimulator.util.AnimationWindow;
-import jat.application.AttitudeSimulator.util.AnimationWindow2;
+import jat.application.AttitudeSimulator.animation.AnimationWindow;
+import jat.application.AttitudeSimulator.animation.AnimationWindow2;
 import jat.core.algorithm.integrators.*;
 
 /**
@@ -330,48 +330,8 @@ public class EomRunner {
 					quat_values, "else");
 		}
 	}
+
 	
-	
-	/**
-	 * Method doThreeDFlex.
-	 */
-	public void doThreeDFlex(double[] x0, double a, double L, double EI,
-			double m) {
-		double tf = timeDuration;
-		double t0 = 0.0;
-		RungeKutta8 rk8 = new RungeKutta8(time_step);
-		timeDuration = tf; // Duration of the simulation time is the same as the
-							// final time
-		int numberOfPts = (int) (timeDuration / time_step) + 1;
-		float quat_values[][] = new float[5][numberOfPts + 1];// +1 is for
-																// AnimationWindow
-		float quatBeam1[][] = new float[5][numberOfPts + 1];
-		float quatBeam2[][] = new float[5][numberOfPts + 1];
-		// create an instance
-		FlexibleThreeD si = new FlexibleThreeD(time_step, m, a, L, EI, I1, I2,
-				I3, quat_values, quatBeam1, quatBeam2);
-
-		// integrate the equations
-		rk8.integrate(t0, x0, tf, si, true);
-		// make the plot visible
-		if (plotYes == 1)
-			si.makePlotsVisible();
-
-		// Animation
-		quat_values = si.getQuaternion();
-		if (animationYes == 1) {
-			/*
-			 * AnimationWindow theAnimWindow = new AnimationWindow("Animation",
-			 * (float)I1, (float)I2, (float)I3, numberOfPts, quat_values ,
-			 * "else");
-			 */
-			AnimationWindow2 theAnimWindow = new AnimationWindow2("Animation",
-					(float) I3, (float) I3, (float) I3, numberOfPts,
-					quat_values, "else", quatBeam1, quatBeam2, (float) a,
-					(float) L);
-		}
-	}
-
 	/**
 	 * Method doTwoDFlex.
 	 */
@@ -423,10 +383,53 @@ public class EomRunner {
 	}
 
 
+	
+	/**
+	 * Method doThreeDFlex.
+	 */
+	public void doThreeDFlex(double[] x0, double a, double L, double EI,
+			double m) {
+		double tf = timeDuration;
+		double t0 = 0.0;
+		RungeKutta8 rk8 = new RungeKutta8(time_step);
+		timeDuration = tf; // Duration of the simulation time is the same as the
+							// final time
+		int size_quat_values = (int) (timeDuration / time_step) + 1;
+		float quat_values[][] = new float[5][size_quat_values + 1];// +1 is for
+																// AnimationWindow
+		float quatBeam1[][] = new float[5][size_quat_values + 1];
+		float quatBeam2[][] = new float[5][size_quat_values + 1];
+		// create an instance
+		FlexibleThreeD si = new FlexibleThreeD(time_step, m, a, L, EI, I1, I2,
+				I3, quat_values, quatBeam1, quatBeam2);
+
+		// integrate the equations
+		rk8.integrate(t0, x0, tf, si, true);
+		int numberOfPts = si.currentPts - 1;
+		// make the plot visible
+		if (plotYes == 1)
+			si.makePlotsVisible();
+
+		// Animation
+		quat_values = si.getQuaternion();
+		if (animationYes == 1) {
+			/*
+			 * AnimationWindow theAnimWindow = new AnimationWindow("Animation",
+			 * (float)I1, (float)I2, (float)I3, numberOfPts, quat_values ,
+			 * "else");
+			 */
+			AnimationWindow2 theAnimWindow = new AnimationWindow2("Animation",
+					(float) I3, (float) I3, (float) I3, numberOfPts,
+					quat_values, "else", quatBeam1, quatBeam2, (float) a,
+					(float) L);
+		}
+	}
+
+
 	public static void main(String[] args) {
 		EOM = new EomRunner(0.1, 20.0);
 		// EOM = new EomTest(0.1, 10.0, 600);
-		int scenario = 7;
+		int scenario = 2;
 
 		if (scenario == 1) {
 			double M1 = 1; // External torque

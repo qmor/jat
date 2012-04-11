@@ -17,8 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-//package thesis;
-package jat.application.AttitudeSimulator.util;
+package jat.application.AttitudeSimulator.animation;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -33,12 +32,17 @@ import javax.swing.event.*; // Required for ChangeListener
 
 /**
  * <P>
- * AnimationWindow creates a pop-up Java3D animation window
+ * AnimatioWindow2 is a modification of AnimationWindow to include flexible
+ * beams and concentrated masses at the tip for 3D visualization of spacecraft
+ * attitude dynamics defined in jat.eom.FlexibleThreeD.java and
+ * jat.eom.FlexibleTwoD.java.
  * 
- * @author Daniel Quock
- * @version 1.3 (03/09/2004) Modification since the last version Removed: import
+ * @author Daniel Quock December 2001, July 2002
+ * @author Noriko Takada
+ * @version 1.5 (03/09/2004) Modification since the last version Removed: import
  *          java.applet.*; import com.sun.j3d.utils.geometry.*;
  */
+
 // ************************************************************************
 // *
 // * AnimationWindow class
@@ -104,10 +108,42 @@ import javax.swing.event.*; // Required for ChangeListener
 // * delayvalue (int) = shows delay between frames in animation
 // *
 // ************************************************************************/
+// package thesis;
 
-public class AnimationWindow extends JPanel implements ActionListener,
+public class AnimationWindow2 extends JPanel implements ActionListener,
 		ChangeListener {
-	private static AnimationWindow theAnimWindow;
+	// ---Naming Convention-------------------------------
+	// * Fields and constants
+	// Nonconstant field names follow the same capitalization conventions
+	// as method names. If a field is a static final constant, it should
+	// be written in uppercase. If the name of a constant includes more
+	// than one word, the words should be separated with underscores.
+	// A field name should be chosen to best describe the purpose of
+	// the field or the value it holds
+	//
+	// * Parameters
+	// The names of method parameters appear in the documentation for a
+	// method, so you should choose names that make the purpose of the
+	// parameters as clear as possible. Try to keep parameter names to
+	// a single word and use them consistently. For example, if a
+	// WidgetProcessor
+	// class defines many methods that accept a Widget object as the first
+	// parameter, name this parameter widget or even w in each method.
+	//
+	// * Local variables
+	// Local variable names are an implementation detail and never visible
+	// outside your class. Nevertheless, choosing good names makes your
+	// code easier to read, understand, and maintain. Variables are typically
+	// named following the same convensions as methods and fields
+
+	/**
+	 * AnimationWindow2: A variable of AnimationWindow2
+	 */
+	private static AnimationWindow2 theAnimWindow;
+
+	/**
+	 * JFrame: Used for the animation frame
+	 */
 	JFrame animFrame = new JFrame(" ");
 
 	// Location of Inertial Axes
@@ -117,9 +153,21 @@ public class AnimationWindow extends JPanel implements ActionListener,
 	final float axeslength = 2.0f;
 
 	// Assigns the inertial and body axes' colors
-	Color3f xcolor = new Color3f(1.0f, 0.0f, 0.0f);
-	Color3f ycolor = new Color3f(1.0f, 1.0f, 1.0f);
-	Color3f zcolor = new Color3f(0.0f, 0.0f, 1.0f);
+	Color3f xcolor = new Color3f(1.0f, 0.0f, 0.0f); // red
+	Color3f ycolor = new Color3f(1.0f, 1.0f, 1.0f); // white
+	Color3f zcolor = new Color3f(0.0f, 0.0f, 1.0f); // blue
+	Color3f green = new Color3f(0.0f, 1.0f, 0.0f); // green
+
+	Color3f white = new Color3f(1.0f, 1.0f, 1.0f);
+	Color3f black = new Color3f(0.0f, 0.0f, 0.0f);
+	Color3f red = new Color3f(0.9f, 0.1f, 0.2f);
+	Color3f blue = new Color3f(0.3f, 0.3f, 0.8f);
+	Color3f yellow = new Color3f(1.0f, 1.0f, 0.0f);
+	Color3f ambRed = new Color3f(0.3f, 0.03f, 0.03f);
+	Color3f ambBlue = new Color3f(0.03f, 0.03f, 0.3f);
+	Color3f ambYellow = new Color3f(0.3f, 0.3f, 0.03f);
+	Color3f ambWhite = new Color3f(0.3f, 0.3f, 0.3f);
+	Color3f specular = new Color3f(1.0f, 1.0f, 1.0f);
 
 	// Initial model translation
 	final float mtx = 0f;
@@ -146,6 +194,7 @@ public class AnimationWindow extends JPanel implements ActionListener,
 	int curr_pt; // Current point in animation
 	int tot_pts; // Total number of points in anim
 
+	Button help_button;
 	Button start_button, stop_button, reset_button;
 	JCheckBox repeatBox;
 	Label timeLabel, animSpeedLabel;
@@ -183,6 +232,22 @@ public class AnimationWindow extends JPanel implements ActionListener,
 
 	// Delay value for animation
 	int delayValue;
+
+	// Newly added variables since AnimationWindow------------------------
+	public TransformGroup Beam1TG = new TransformGroup();
+	public TransformGroup Beam2TG = new TransformGroup();
+	public Transform3D BeamTrans1 = new Transform3D();
+	public Transform3D BeamTrans2 = new Transform3D();
+	LineArray beam1_line;
+	LineArray beam2_line;
+	com.sun.j3d.utils.geometry.Sphere mass1;
+	com.sun.j3d.utils.geometry.Sphere mass2;
+	float quatBeam1[][];
+	float quatBeam2[][];
+	float a;
+	float L;
+
+	// --------------------------------------------------------------------
 
 	// **
 	// *
@@ -227,10 +292,18 @@ public class AnimationWindow extends JPanel implements ActionListener,
 	 *            (float[][]) array of values
 	 * @param tsimType
 	 *            (String) temp type of simulation (e.g. "Gravity Gradient")
-	 * 
+	 * @param Beam1
+	 *            (float[][]) array of quaternion values for Transform3D
+	 * @param Beam2
+	 *            (float[][]) array of quaternion values for Transform3D
+	 * @param a
+	 *            (float) deimension of half the x_length of the spacecraft
+	 * @param L
+	 *            (float) Length of the beam
 	 */
-	public AnimationWindow(String title, float ixxt, float iyyt, float izzt,
-			int pts, float tvars[][], String simTypet) {
+	public AnimationWindow2(String title, float ixxt, float iyyt, float izzt,
+			int pts, float tvars[][], String simTypet, float Beam1[][],
+			float Beam2[][], float a, float L) {
 		int frameWidth = 800;
 		int frameHeight = 600;
 
@@ -255,6 +328,8 @@ public class AnimationWindow extends JPanel implements ActionListener,
 
 		// Quaternions array
 		quat_values = new float[4][tot_pts + 1];
+		quatBeam1 = new float[4][tot_pts + 1];
+		quatBeam2 = new float[4][tot_pts + 1];
 
 		// Assign the time and quaternion values
 		for (int index = 0; index <= tot_pts; index++) {
@@ -264,6 +339,32 @@ public class AnimationWindow extends JPanel implements ActionListener,
 			quat_values[2][index] = tvars[3][index]; // e3
 			quat_values[3][index] = tvars[4][index]; // e4
 		}
+
+		if (quatBeam1 == null)
+			System.out.println("quatBeam1 is null");
+		if (quatBeam2 == null)
+			System.out.println("quatBeam2 is null");
+		// ----------------------------------------------------------------
+		// Assign the time and quaternion values
+		for (int index = 0; index <= tot_pts; index++) {
+			time_values[index] = tvars[0][index];
+			quatBeam1[0][index] = Beam1[1][index]; // e1
+			quatBeam1[1][index] = Beam1[2][index]; // e2
+			quatBeam1[2][index] = Beam1[3][index]; // e3
+			quatBeam1[3][index] = Beam1[4][index]; // e4
+		}
+
+		// Assign the time and quaternion values
+		for (int index = 0; index <= tot_pts; index++) {
+			time_values[index] = tvars[0][index];
+			quatBeam2[0][index] = Beam2[1][index]; // e1
+			quatBeam2[1][index] = Beam2[2][index]; // e2
+			quatBeam2[2][index] = Beam2[3][index]; // e3
+			quatBeam2[3][index] = Beam2[4][index]; // e4
+		}
+		this.a = a;
+		this.L = L;
+		// --------------------------------------------------------------------
 
 		// Assign the principal moments of inertia
 		ixx = ixxt;
@@ -363,6 +464,10 @@ public class AnimationWindow extends JPanel implements ActionListener,
 		repeatBox = new JCheckBox("repeat");
 		CtrlPanel.add(repeatBox);
 
+		help_button = new Button("Help");
+		CtrlPanel.add(help_button);
+		help_button.addActionListener(this);
+
 		// Adds Panel to BorderLayout
 		content.add("South", CtrlPanel);
 
@@ -459,6 +564,7 @@ public class AnimationWindow extends JPanel implements ActionListener,
 			} else
 				animControl.stop();
 		}
+
 		// Updates the control panel and graphic if animation is not running
 		if (animControl.isRunning() == false) {
 			animControl.start();
@@ -527,14 +633,28 @@ public class AnimationWindow extends JPanel implements ActionListener,
 			if (delayValue > 5)
 				delayValue = delayValue / 5;
 			animControl.setDelay(delayValue);
-		}
-
-		else // Run animation
+		} else if (e.getSource() == help_button) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Left mouse button drag : rotate\nMiddle mouse button drag : zoom\nCTRL-ALT-Left mouse button drag: zoom\nRight mouse button drag: translate ");
+		} else // Run animation
 		{
 			SatTrans.setRotation(new Quat4f(quat_values[0][curr_pt],
 					quat_values[1][curr_pt], quat_values[2][curr_pt],
 					quat_values[3][curr_pt]));
 			sattlTrans.setTransform(SatTrans);
+
+			BeamTrans1.setRotation(new Quat4f(quatBeam1[0][curr_pt],
+					quatBeam1[1][curr_pt], quatBeam1[2][curr_pt],
+					quatBeam1[3][curr_pt]));
+			Beam1TG.setTransform(BeamTrans1);
+
+			BeamTrans2.setRotation(new Quat4f(quatBeam2[0][curr_pt],
+					quatBeam2[1][curr_pt], quatBeam2[2][curr_pt],
+					quatBeam2[3][curr_pt]));
+			Beam2TG.setTransform(BeamTrans2);
+
 			// Increment to next point
 			curr_pt = curr_pt + 1;
 		}
@@ -550,12 +670,13 @@ public class AnimationWindow extends JPanel implements ActionListener,
 			timeLabel.setText("Time: " + nf.format(time_values[curr_pt])
 					+ " secs   ");
 		// Stop animation at end
+		// Stop animation at end
 		if (curr_pt >= tot_pts)
 			if (repeatBox.isSelected()) {
 				curr_pt = 0;
 			} else
 				animControl.stop();
-	} // End actionPerformed
+	}// End actionPerformed
 
 	// ************************************************************************
 	// *
@@ -613,6 +734,10 @@ public class AnimationWindow extends JPanel implements ActionListener,
 		// Allows mouse to alter scene
 		modelTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		modelTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		Beam1TG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		Beam1TG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		Beam2TG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		Beam2TG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 
 		// Create Mouse Rotate
 		MouseRotate modelRot = new MouseRotate();
@@ -727,6 +852,17 @@ public class AnimationWindow extends JPanel implements ActionListener,
 	 * white "X", "Y"m and "Z")
 	 */
 	public TransformGroup generateAxesLabels() {
+		/**
+		 * Local Variables:<br>
+		 * axislabelTrans (TransformGroup) = Java3D TransformGroup<br>
+		 * font3d (Font3D) = Java3D Font3D<br>
+		 * xfont (Text3D) = 3D "X"<br>
+		 * xshape (Shape3D) = Java3D Shape3D of xfont<br>
+		 * yfont (Text3D) = 3D "Y"<br>
+		 * yshape (Shape3D) = Java3D Shape3D of yfont<br>
+		 * zfont (Text3D) = 3D "Z"<br>
+		 * zshape (Shape3D) = Java3D Shape3D of zfont<br>
+		 */
 		axislabelTrans = new TransformGroup();
 
 		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 1),
@@ -830,6 +966,8 @@ public class AnimationWindow extends JPanel implements ActionListener,
 
 		sattlTrans.addChild(new Shape3D(body_axes));
 		sattlTrans.addChild(satellite);
+		sattlTrans.addChild(generateBeam1());
+		sattlTrans.addChild(generateBeam2());
 		return sattlTrans;
 
 	} // End generateSatellite
@@ -890,9 +1028,76 @@ public class AnimationWindow extends JPanel implements ActionListener,
 		max_length = max_length / largest_length;
 
 		// Divide each length by max_length for the largest length
-		xlength = x_temp / max_length;
-		ylength = y_temp / max_length;
-		zlength = z_temp / max_length;
+		// xlength = x_temp / max_length;
+		// ylength = y_temp / max_length;
+		// zlength = z_temp / max_length;
+		xlength = (float) 2 * a;
+		ylength = (float) 2 * a;
+		zlength = (float) 2 * a;
+
 	} // End findDimensions
+
+	/**
+	 * Generates a massless beam and a tip mass on the negative side of the
+	 * satellite x-axis
+	 * 
+	 * @since August 2003
+	 */
+	public TransformGroup generateBeam1() {
+		Point3f origin = new Point3f(0.0f, 0.0f, 0.0f);
+
+		TransformGroup mass1TG = new TransformGroup();
+		Transform3D trans = new Transform3D();
+		trans.setTranslation(new Vector3d((double) (xlength / 2 + L), 0.0d,
+				0.0d));
+		mass1TG.setTransform(trans);
+		// Places body axes on satellite
+		beam1_line = new LineArray(2, LineArray.COORDINATES | LineArray.COLOR_3);
+
+		// Beam
+		beam1_line.setCoordinate(0, new Point3f(xlength, 0.0f, 0.0f));
+		beam1_line.setCoordinate(1, new Point3f(xlength / 2 + L, 0.0f, 0.0f));
+		beam1_line.setColor(0, yellow);
+		beam1_line.setColor(1, yellow);
+
+		mass1 = new com.sun.j3d.utils.geometry.Sphere((xlength) / 3);
+		mass1TG.addChild(mass1);
+		Beam1TG.addChild(mass1TG);
+		Beam1TG.addChild(new Shape3D(beam1_line));
+
+		return Beam1TG;
+	} // End generateAxes
+
+	/**
+	 * Generates a massless beam and a tip mass on the positive side of the
+	 * satellite y-axis
+	 * 
+	 * @since August 2003
+	 */
+	public TransformGroup generateBeam2() {
+		Point3f origin = new Point3f(0.0f, 0.0f, 0.0f);
+
+		TransformGroup mass2TG = new TransformGroup();
+		Transform3D trans = new Transform3D();
+		trans.setTranslation(new Vector3d(-(double) (xlength / 2 + L), 0.0d,
+				0.0d));
+		mass2TG.setTransform(trans);
+		// Places body axes on satellite
+		beam2_line = new LineArray(2, LineArray.COORDINATES | LineArray.COLOR_3);
+
+		// Beam
+		beam2_line.setCoordinate(0, new Point3f(-xlength, 0.0f, 0.0f));
+		beam2_line
+				.setCoordinate(1, new Point3f(-(xlength / 2 + L), 0.0f, 0.0f));
+		beam2_line.setColor(0, yellow);
+		beam2_line.setColor(1, yellow);
+
+		mass2 = new com.sun.j3d.utils.geometry.Sphere((xlength) / 3);
+		mass2TG.addChild(mass2);
+		Beam2TG.addChild(mass2TG);
+		Beam2TG.addChild(new Shape3D(beam2_line));
+		// Beam1TG.setTransform(beamTrans);
+		return Beam2TG;
+	} // End generateAxes
 
 } // End AnimationWindow

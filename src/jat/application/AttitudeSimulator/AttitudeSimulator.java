@@ -448,10 +448,10 @@ public class AttitudeSimulator extends JApplet // implements ItemListener
 
 		// Create the check boxes.
 		twoDeeBox = new JCheckBox("2D Plots");
-		twoDeeBox.setSelected(false);
+		twoDeeBox.setSelected(true);
 		twoDeeBox.setBackground(Color.pink);
 		threeDeeBox = new JCheckBox("3D Animation");
-		threeDeeBox.setSelected(true);
+		threeDeeBox.setSelected(false);
 		threeDeeBox.setBackground(Color.pink);
 		// Register a listener for the check boxes.
 		twoDeeBox.addItemListener(new ButtonHandler());
