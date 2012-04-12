@@ -1,5 +1,5 @@
 
-java -cp ../dist/jat1.jar jat.examples.JulianDate.JulianDate
+java -cp ../dist/jatcore.jar,../dist/jatexamples.jar jat.examples.JulianDate.JulianDate
 
 echo press enter
 
