@@ -20,16 +20,6 @@
 	</target>
 
 	<!--Creates the deployable jar file  -->
-	<target name="jatapplication.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" excludes="**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
-			<manifest>
-				<attribute name="Main-Class" value="test.Main" />
-			</manifest>
-		</jar>
-	</target>
-
-	
-	<!--Creates the deployable jar file  -->
 	<target name="jatcore.jar" depends="clean,makedir">
 		<jar destfile="${dist.dir}\jatcore.jar" basedir="${build.dir}" excludes="**/application/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
 			<manifest>
@@ -38,9 +28,29 @@
 		</jar>
 	</target>
 
+	<!--Creates the deployable jar file  -->
+	<target name="jatapplication.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" excludes="**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!--Creates the deployable jar file  -->
+	<target name="jatexamples.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jatexamples.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/simulation/,**/tests/,**/unittest/"  >
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	
+
 			
 			
-	<target name="main" depends="jatcore.jar, jatapplication.jar">
+	<target name="main" depends="jatcore.jar, jatapplication.jar, jatexamples.jar">
 		<description>Main target</description>
 	</target>
 
