@@ -6,17 +6,21 @@
 	<property name="build.dir" location="bin" />
 	<property name="dist.dir" location="dist" />
 	<property name="docs.dir" location="javadoc" />
-
+	<property name="project-name" value="jat" />
+	<property name="folder-to-zip" value="." />
+	
 	<!-- Deletes the existing build, docs and dist directory-->
 	<target name="clean">
 		<delete dir="${docs.dir}" />
 		<delete dir="${dist.dir}" />
+		<delete dir="zip" />
 	</target>
 
 	<!-- Creates the  build, docs and dist directory-->
 	<target name="makedir">
 		<mkdir dir="${docs.dir}" />
 		<mkdir dir="${dist.dir}" />
+		<mkdir dir="zip" />
 	</target>
 
 	<!--Creates the deployable jar file  -->
@@ -47,10 +51,12 @@
 	</target>
 
 	
-
+	<target name="zip">
+			<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" excludes="**/.settings/,**/bin/,**/data/,**/docs/,**/src/" />
+		</target>
 			
 			
-	<target name="main" depends="jatcore.jar, jatapplication.jar, jatexamples.jar">
+	<target name="main" depends="jatcore.jar, jatapplication.jar, jatexamples.jar, zip">
 		<description>Main target</description>
 	</target>
 
