@@ -209,7 +209,7 @@ public class Copernicus1 extends Applet implements ActionListener
 
 		// Update text in panel
 		//V=jat_view.get_vp();
-		cal = cm.Calendar(jd);
+		cal = cm.JD_to_Calendar(jd);
 		String jds = pr.fwdts(jd, 10, 6);
 		panel.label.setText(
 			"JD: "

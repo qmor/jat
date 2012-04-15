@@ -11,13 +11,13 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 
 public class DateConvertermain {
-	private static DateConverter theApplet;
-	static int appletwidth = 400; // Width of Applet
-	static int appletheight = 300;
+	private static DateConverterGUI theApplet;
+	static int appletwidth = 500; // Width of Applet
+	static int appletheight = 200;
 	JButton btn_Jul_to_Cal;
 	JButton btn_Cal_to_Jul;
 	JFormattedTextField yearfield;
-	ButtonHandler myb;
+	DateConverterEvents myb;
 
 	
 	/**
@@ -27,11 +27,11 @@ public class DateConvertermain {
 	 *            (String[]) Argument
 	 */
 	public static void main(String[] args) {
-		theApplet = new DateConverter();
+		theApplet = new DateConverterGUI();
 		JFrame theFrame = new JFrame();
 		// Initialize the applet
 		theApplet.init();
-		theFrame.setTitle("Attitude Simulator");
+		theFrame.setTitle("Date Converter");
 		theFrame.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {

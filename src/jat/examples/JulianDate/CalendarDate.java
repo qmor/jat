@@ -45,7 +45,8 @@ public class CalendarDate
 		//double JD = cm.juliandate(1985, 2, 17, 7, 38, 16);
 		//double JD = cm.juliandate(2001, 1, 1, 12, 0, 0);
 		double JD = cm.juliandate(2005, 3, 8, 14, 23, 56);
-		Calendar cal = cm.Calendar(JD);
+		JD=2456033;
+		Calendar cal = cm.JD_to_Calendar(JD);
 		System.out.println("JD: " + JD + "   Greg: " + sdf.format(cal.getTime()));
 
 		// Current Time
@@ -53,7 +54,7 @@ public class CalendarDate
 		//dd.setTime(java.lang.System.currentTimeMillis());
 		cal.setTime(dd);
 		JD = cm.juliandate(cal);
-		cal = cm.Calendar(JD);
+		cal = cm.JD_to_Calendar(JD);
 		System.out.println("JD: " + JD + "   Greg: " + sdf.format(cal.getTime()));
 
 	}

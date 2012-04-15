@@ -71,7 +71,7 @@ public class cm
 	 * but it has a large overhead for some applications.  
 	 *
 	 */
-	public static class Date
+	public static class shortDate
 	{
 		public long year, month, day, hour, minute, second, timezone;
 	}
@@ -91,7 +91,7 @@ public class cm
 	 */
 	public static double juliandate(Calendar c)
 	{
-		Date d = new Date();
+		shortDate d = new shortDate();
 		d.year = c.get(Calendar.YEAR);
 		d.month = c.get(Calendar.MONTH) + 1;
 		d.day = c.get(Calendar.DAY_OF_MONTH);
@@ -106,11 +106,11 @@ public class cm
 	 * 
 	 * @param JD
 	 */
-	public static Date Date(double JD)
+	public static shortDate Date(double JD)
 	{
 		long I, A, B, C, D, E, G;
 		double decimalday, decimalhour, decimalminute;
-		Date d = new Date();
+		shortDate d = new shortDate();
 
 		double JD1 = JD + 0.5; // Add 0.5 to JD
 		I = (long)Math.floor(JD1); // set I to integer part
@@ -151,11 +151,11 @@ public class cm
 	 * @param JD Julian date
 	 * @return Date in Calendar format as in java.util.Calendar
 	 */
-	public static Calendar Calendar(double JD)
+	public static Calendar JD_to_Calendar(double JD)
 	{
 		long I, A, B, C, D, E, G;
 		double decimalday, decimalhour, decimalminute;
-		Date d = new Date();
+		shortDate d = new shortDate();
 
 		double JD1 = JD + 0.5; // Add 0.5 to JD
 		I = (long)Math.floor(JD1); // set I to integer part
@@ -192,7 +192,7 @@ public class cm
 		return cal;
 	}
 
-	public static double juliandate(Date d)
+	public static double juliandate(shortDate d)
 	{
 		return juliandate(d.year, d.month, d.day, d.hour, d.minute, d.second);
 	}
