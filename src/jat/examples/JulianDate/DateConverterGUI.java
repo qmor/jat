@@ -19,8 +19,6 @@ import javax.swing.SwingConstants;
 
 public class DateConverterGUI extends JApplet {
 	private static final long serialVersionUID = 1321470082814219656L;
-	static int appletwidth = 400; // Width of Applet
-	static int appletheight = 300;
 	public JButton btn_Jul_to_Cal;
 	JButton btn_Cal_to_Jul;
 	JFormattedTextField yearfield;
@@ -39,6 +37,8 @@ public class DateConverterGUI extends JApplet {
 		JPanel level2_Pane_Mid = new JPanel();
 		JPanel level2_Pane_Jul = new JPanel();
 		JPanel level2_Pane_Cal = new JPanel();
+		JPanel level3_Pane_Mid1 = new JPanel();
+		JPanel level3_Pane_Mid2 = new JPanel();
 		level2_Pane_Jul.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel lblJulianDate = new JLabel("Days");
@@ -52,6 +52,7 @@ public class DateConverterGUI extends JApplet {
 
 		JDfield = new JFormattedTextField();
 		JDfield.setColumns(12);
+		JDfield.setValue(2456033.1);
 		level2_Pane_Jul.add(JDfield);
 		level1_Pane.add(level2_Pane_Mid);
 		level1_Pane.add(level2_Pane_Cal);
@@ -60,12 +61,17 @@ public class DateConverterGUI extends JApplet {
 		btn_Jul_to_Cal = new JButton(">>");
 		// btn_Jul_to_Cal.addActionListener(new ButtonHandler());
 		btn_Jul_to_Cal.addActionListener(myb);
-
-		level2_Pane_Mid.add(btn_Jul_to_Cal);
-
+		level3_Pane_Mid1.setLayout(new BorderLayout(0, 0));
+		level3_Pane_Mid1.add(btn_Jul_to_Cal);
+		//level2_Pane_Mid.add(btn_Jul_to_Cal);
+		level2_Pane_Mid.add(level3_Pane_Mid1);
+		level2_Pane_Mid.add(level3_Pane_Mid2);
+		level3_Pane_Mid2.setLayout(new BorderLayout(0, 0));
+		
 		btn_Cal_to_Jul = new JButton("<<");
+		level3_Pane_Mid2.add(btn_Cal_to_Jul);
 		btn_Cal_to_Jul.addActionListener(myb);
-		level2_Pane_Mid.add(btn_Cal_to_Jul);
+
 		level2_Pane_Cal
 				.setLayout(new FormLayout(new ColumnSpec[] {
 						FormFactory.RELATED_GAP_COLSPEC,
@@ -88,8 +94,6 @@ public class DateConverterGUI extends JApplet {
 
 		yearfield = new JFormattedTextField();
 		yearfield.setHorizontalAlignment(SwingConstants.RIGHT);
-		// int year = 2000;
-		// yearfield.setValue(new Integer(year));
 		yearfield.setValue(2012);
 		yearfield.setColumns(6);
 		level2_Pane_Cal.add(yearfield, "4, 1, left, top");
@@ -101,8 +105,6 @@ public class DateConverterGUI extends JApplet {
 
 		monthfield = new JFormattedTextField();
 		monthfield.setHorizontalAlignment(SwingConstants.RIGHT);
-		// int month=11;
-		// monthfield.setValue(new Integer(month));
 		monthfield.setValue(4);
 		monthfield.setColumns(6);
 		level2_Pane_Cal.add(monthfield, "4, 2, left, top");
