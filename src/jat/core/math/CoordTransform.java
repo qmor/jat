@@ -34,19 +34,24 @@ import jat.core.math.matvec.data.VectorN;
 public class CoordTransform
 {
 	/**
-	 * Convert spherical coordiantes to Cartesian coordinates
+	 * Convert spherical coordinates to Cartesian coordinates
 	 * @param r radius
 	 * @param theta angle between z-axis and point in radians
 	 * @param phi angle between x-axis and projection of point onto x-y plane in radians
 	 * @return VectorN
 	 */
-	public static VectorN Spherical_to_Cartesian(double r, double theta, double phi)
+	public static VectorN Spherical_to_Cartesian_rad(double r, double theta, double phi)
 	{
 		VectorN out = new VectorN(3);
 		out.set(0,r*Math.sin(theta)*Math.cos(phi));
 		out.set(1,r*Math.sin(theta)*Math.sin(phi));
 		out.set(2,r*Math.cos(theta));
 		return out;
+	}
+
+	public static VectorN Spherical_to_Cartesian_deg(double r, double theta, double phi)
+	{
+		return Spherical_to_Cartesian_rad(r, MathUtils.RAD2DEG*theta, MathUtils.RAD2DEG*phi);
 	}
 
 	public static Vector3d Spherical_to_Cartesian(Vector3d coord)

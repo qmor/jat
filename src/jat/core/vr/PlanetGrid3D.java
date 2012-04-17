@@ -81,7 +81,7 @@ public class PlanetGrid3D extends Body3D
 			while (j < max * 3)
 			{
 				//System.out.println("theta " + theta + " phi " + phi);
-				point = CoordTransform.Spherical_to_Cartesian(radius, Math.toRadians(theta), Math.toRadians(phi));
+				point = CoordTransform.Spherical_to_Cartesian_rad(radius, Math.toRadians(theta), Math.toRadians(phi));
 				//point.print();
 				coords[j + 0] = point.get(0);
 				coords[j + 1] = point.get(1);
@@ -112,7 +112,7 @@ public class PlanetGrid3D extends Body3D
 			while (j < max * 3)
 			{
 				//System.out.println("theta " + theta + " phi " + phi);
-				point = CoordTransform.Spherical_to_Cartesian(radius, Math.toRadians(theta), Math.toRadians(phi));
+				point = CoordTransform.Spherical_to_Cartesian_rad(radius, Math.toRadians(theta), Math.toRadians(phi));
 				//point.print();
 				coords[j + 0] = point.get(0);
 				coords[j + 1] = point.get(1);
