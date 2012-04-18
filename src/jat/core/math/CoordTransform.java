@@ -51,7 +51,7 @@ public class CoordTransform
 
 	public static VectorN Spherical_to_Cartesian_deg(double r, double theta, double phi)
 	{
-		return Spherical_to_Cartesian_rad(r, MathUtils.RAD2DEG*theta, MathUtils.RAD2DEG*phi);
+		return Spherical_to_Cartesian_rad(r, MathUtils.DEG2RAD*theta, MathUtils.DEG2RAD*phi);
 	}
 
 	public static Vector3d Spherical_to_Cartesian(Vector3d coord)
