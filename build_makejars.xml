@@ -23,27 +23,36 @@
 		<mkdir dir="zip" />
 	</target>
 
-	<!--Creates the deployable jar file  -->
+	<!--JAT Core Creates the deployable jar file  -->
 	<target name="jatcore.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatcore.jar" basedir="${build.dir}" excludes="**/application/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
+		<jar destfile="${dist.dir}\jatcore.jar" basedir="${build.dir}" excludes="**/application/,**/examples/,**/simulation/,**/tests/,**/unittest/,**/org/"  >
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
 		</jar>
 	</target>
 
-	<!--Creates the deployable jar file  -->
+	<!--JAT Application Creates the deployable jar file  -->
 	<target name="jatapplication.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" excludes="**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
+		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" excludes="**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/,**/org/"  >
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
 		</jar>
 	</target>
 
-	<!--Creates the deployable jar file  -->
+	<!--JAT Examples Creates the deployable jar file  -->
 	<target name="jatexamples.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatexamples.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/simulation/,**/tests/,**/unittest/"  >
+		<jar destfile="${dist.dir}\jatexamples.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/simulation/,**/tests/,**/unittest/,**/org/"  >
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!--JAT JMathTools Creates the deployable jar file  -->
+	<target name="jatjmathtools.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jatjmathtools.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
@@ -56,7 +65,7 @@
 		</target>
 			
 			
-	<target name="main" depends="jatcore.jar, jatapplication.jar, jatexamples.jar, zip">
+	<target name="main" depends="jatcore.jar, jatapplication.jar, jatexamples.jar, jatjmathtools.jar, zip">
 		<description>Main target</description>
 	</target>
 
