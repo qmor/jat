@@ -24,6 +24,7 @@ package jat.examples.vr.SolarSystem;
 import jat.core.vr.*;
 import jat.core.cm.*;
 import jat.core.ephemeris.*;
+import jat.core.spacetime.Time;
 import jat.core.util.*;
 
 import java.awt.*;
@@ -44,6 +45,10 @@ import com.sun.j3d.utils.applet.MainFrame;
  */
 public class Constellation extends Applet //implements ActionListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 336741693196660983L;
 	BranchGroup BG_root;
 	BranchGroup BG_vp;
 	TransformGroup TG_scene;
@@ -67,7 +72,9 @@ public class Constellation extends Applet //implements ActionListener
 	public Constellation()
 	{
 		// Get path of this class, frames will be saved in subdirectory frames
-		String b = FileUtil.getClassFilePath("jat.demo.vr.SolarSystem", "Constellation");
+        FileUtil2 f=new FileUtil2();
+        String b=f.current_path;
+		//String b = FileUtil.getClassFilePath("jat.demo.vr.SolarSystem", "Constellation");
 		System.out.println(b);
 
 		//Applet window
@@ -78,9 +85,16 @@ public class Constellation extends Applet //implements ActionListener
 		add("South", panel);
 
 		// Ephemeris data
+        Time mytime=new Time(2002, 2, 17, 12, 0, 0);
 		String fs = FileUtil.file_separator();
-		my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","eph")+fs+"DE405"+fs);
-		jd = cm.juliandate(2002, 2, 17, 12, 0, 0);
+        System.out.println(f.root_path);
+        String DE405_data_folder=f.root_path+"data"+fs+"core"+fs+"ephemeris"+fs+"DE405data"+fs;
+        System.out.println(DE405_data_folder);
+		DE405 my_eph = new DE405(DE405_data_folder);
+		
+		//String fs = FileUtil.file_separator();
+		//my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","eph")+fs+"DE405"+fs);
+		//jd = cm.juliandate(2002, 2, 17, 12, 0, 0);
 
 		// Date related functions
 		sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
@@ -122,6 +136,12 @@ public class Constellation extends Applet //implements ActionListener
 		Locale locale = new Locale(universe);
 		locale.addBranchGraph(BG_root);
 		locale.addBranchGraph(BG_vp);
+
+		
+		
+		earth.set_position(1.e8,0,0);
+		
+		mars.set_position(my_eph.get_planet_posvel(DE405_Body.MARS, mytime));
 
 		// Have Java 3D perform optimizations on this scene graph.
 		//BG_root.compile();

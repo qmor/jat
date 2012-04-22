@@ -29,10 +29,6 @@ public class FileUtil2 {
 		root_path=find_root();
 	}
 
-	public String find_attitude_help_folder() {
-
-		return find_root() + "src/jat/application/AttitudeSimulator/help/";
-	}
 
 	public String find_data_folder() {
 
@@ -60,7 +56,7 @@ public class FileUtil2 {
 
 		root_path = root_path + "jat" + "/";
 
-		System.out.println(root_path);
+		//System.out.println(root_path);
 
 		return (root_path);
 	}

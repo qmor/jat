@@ -28,7 +28,7 @@ This class contains the methods necessary to parse the JPL DE405 ephemeris files
 IMPORTANT: In order to use these methods, the user should:
 - save this class in a directory of his/her choosing;
 - save to the same directory the text versions of the DE405 ephemeris files,
-which must be named  "ASCPxxxx.txt", where xxxx represents the start-year of the
+which must be named  "ascpxxxx.txt", where xxxx represents the start-year of the
 20-year block;
 - have at least Java 1.1.8 installed.
 
@@ -95,7 +95,7 @@ public class DE405
 	private static final double emrat = 81.3005600000000044;
 
 	/*	  Chebyshev coefficients for the DE405 ephemeris are contained in the files
-	"ASCPxxxx.txt".  These files are broken into intervals of length "interval_duration",
+	"ascpxxxx.txt".  These files are broken into intervals of length "interval_duration",
 	in days.	*/
 	private static final int interval_duration = 32;
 
@@ -244,7 +244,7 @@ public class DE405
 		/*
 		  Procedure to calculate the position and velocity of planet i, subject to the
 		  JPL DE405 ephemeris.  The positions and velocities are calculated using Chebyshev
-		  polynomials, the coefficients of which are stored in the files "ASCPxxxx.txt".
+		  polynomials, the coefficients of which are stored in the files "ascpxxxx.txt".
 		  The general idea is as follows:  First, check to be sure the proper ephemeris
 		  coefficients (corresponding to jultime) are available.  Then read the coefficients
 		  corresponding to jultime, and calculate the positions and velocities of the planet.
@@ -387,92 +387,92 @@ public class DE405
 	  {
 	    ephemeris_dates[1] = 2414992.5;
 	    ephemeris_dates[2] = 2422320.5;
-	    filename = path+"ASCP1900.405";
+	    filename = path+"ascp1900.405";
 	    records = 230;
 	  } else if ((jultime >= 2422320.5) && (jultime < 2429616.5))
 	  {
 	    ephemeris_dates[1] = 2422320.5;
 	    ephemeris_dates[2] = 2429616.5;
-	    filename = path+"ASCP1920.405";
+	    filename = path+"ascp1920.405";
 	    records = 229;
 	  } else if ((jultime >= 2429616.5) && (jultime < 2436912.5))
 	  {
 	    ephemeris_dates[1] = 2429616.5;
 	    ephemeris_dates[2] = 2436912.5;
-	    filename = path+"ASCP1940.405";
+	    filename = path+"ascp1940.405";
 	    records = 229;
 	  } else if ((jultime >= 2436912.5) && (jultime < 2444208.5))
 	  {
 	    ephemeris_dates[1] = 2436912.5;
 	    ephemeris_dates[2] = 2444208.5;
-	    filename = path+"ASCP1960.405";
+	    filename = path+"ascp1960.405";
 	    records = 229;
 	  } else if ((jultime >= 2444208.5) && (jultime < 2451536.5))
 	  {
 	    ephemeris_dates[1] = 2444208.5;
 	    ephemeris_dates[2] = 2451536.5;
-	    filename = path + "ASCP1980.405";
+	    filename = path + "ascp1980.405";
 	    records = 230;
 	  } else if ((jultime >= 2451536.5) && (jultime < 2458832.5))
 	  {
 	    ephemeris_dates[1] = 2451536.5;
 	    ephemeris_dates[2] = 2458832.5;
-	    filename = path + "ASCP2000.405";
+	    filename = path + "ascp2000.405";
 	    records = 229;
 	  } else if ((jultime >= 2458832.5) && (jultime < 2466128.5))
 	  {
 	    ephemeris_dates[1] = 2458832.5;
 	    ephemeris_dates[2] = 2466128.5;
-	    filename = path + "ASCP2020.405";
+	    filename = path + "ascp2020.405";
 	    records = 229;
 	  } else if ((jultime >= 2466128.5) && (jultime < 2473456.5))
 	  {
 	    ephemeris_dates[1] = 2466128.5;
 	    ephemeris_dates[2] = 2473456.5;
-	    filename = path+"ASCP2040.405";
+	    filename = path+"ascp2040.405";
 	    records = 230;
 	  } else if ((jultime >= 2473456.5) && (jultime < 2480752.5))
 	  {
 	    ephemeris_dates[1] = 2473456.5;
 	    ephemeris_dates[2] = 2480752.5;
-	    filename = path+"ASCP2060.405";
+	    filename = path+"ascp2060.405";
 	    records = 229;
 	  } else if ((jultime >= 2480752.5) && (jultime < 2488048.5))
 	  {
 	    ephemeris_dates[1] = 2480752.5;
 	    ephemeris_dates[2] = 2488048.5;
-	    filename = path+"ASCP2080.405";
+	    filename = path+"ascp2080.405";
 	    records = 229;
 	  } else if ((jultime >= 2488048.5) && (jultime < 2495344.5))
 	  {
 	    ephemeris_dates[1] = 2488048.5;
 	    ephemeris_dates[2] = 2495344.5;
-	    filename = path+"ASCP2100.405";
+	    filename = path+"ascp2100.405";
 	    records = 229;
 	  } else if ((jultime >= 2495344.5) && (jultime < 2502672.5))
 	  {
 	    ephemeris_dates[1] = 2495344.5;
 	    ephemeris_dates[2] = 2502672.5;
-	    filename = path+"ASCP2120.405";
+	    filename = path+"ascp2120.405";
 	    records = 230;
 	  } else if ((jultime >= 2502672.5) && (jultime < 2509968.5))
 	  {
 	    ephemeris_dates[1] = 2502672.5;
 	    ephemeris_dates[2] = 2509968.5;
-	    filename = path+"ASCP2140.405";
+	    filename = path+"ascp2140.405";
 	    records = 229;
 	  } else if ((jultime >= 2509968.5) && (jultime < 2517264.5))
 	  {
 	    ephemeris_dates[1] = 2509968.5;
 	    ephemeris_dates[2] = 2517264.5;
-	    filename = path+"ASCP2160.405";
+	    filename = path+"ascp2160.405";
 	    records = 229;
 	  } else if ((jultime >= 2517264.5)
 	      && (jultime < 2524624.5))
 	  {
 	    ephemeris_dates[1] = 2517264.5;
 	    ephemeris_dates[2] = 2524624.5;
-	    filename = path+"ASCP2180.405";
+	    filename = path+"ascp2180.405";
 	    records = 230;
 	  }
       
