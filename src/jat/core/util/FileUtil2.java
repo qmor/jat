@@ -19,6 +19,11 @@ package jat.core.util;
 
 import java.net.URL;
 
+/**
+ * @author Tobias Berthold
+ * File Utilities
+ * 
+ */
 public class FileUtil2 {
 
 	public String root_path;
@@ -35,6 +40,14 @@ public class FileUtil2 {
 		return find_root() + "data/";
 	}
 
+	/**
+	 * @return path to root
+	 * Finds the path to the root of the project. Starts with the path 
+	 * of the class from which it is called, strips everything after  it
+	 * finds the string "jat" or "jatdevelop".
+	 * Works with an open folder structure or inside a jar file,
+	 * on a local hard disk as well as on the Internet. 
+	 */
 	public String find_root() {
 
 		ClassLoader classLoader = Thread.currentThread()
@@ -42,7 +55,7 @@ public class FileUtil2 {
 		URL url = classLoader.getResource("");
 		// System.out.println(url.getPath());
 		String current_path = url.getPath();
-		// System.out.println(current_path);
+		System.out.println(current_path);
 
 		String[] numberSplit = current_path.split("/");
 
@@ -52,7 +65,7 @@ public class FileUtil2 {
 			// System.out.println(numberSplit[i]);
 			root_path = root_path + numberSplit[i] + "/";
 			i++;
-		} while (!(numberSplit[i].equals("jat")));
+		} while (!(numberSplit[i].equals("jat")) && !(numberSplit[i].equals("jatdevelop")));
 
 		root_path = root_path + "jat" + "/";
 
