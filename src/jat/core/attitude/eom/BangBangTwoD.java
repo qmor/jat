@@ -65,7 +65,7 @@ public class BangBangTwoD implements EquationsOfMotion
  	//		quaternionPlot		Plots of quaternions
  	//  
 	double  time_step;
-	int currentPts;
+	public int currentPts;
 	private float quat_values[][];
 	
 	private double J = 600;

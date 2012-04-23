@@ -53,7 +53,7 @@ public class FlexibleTwoD implements EquationsOfMotion
  	//		energy_and_angularM	Plots of system energy and angular momentum
  	// 
 	double  time_step;
-	int currentPts=0;
+	public int currentPts=0;
 	private float quat_values[][];
 	private float quatBeam1[][];
 	private float quatBeam2[][];

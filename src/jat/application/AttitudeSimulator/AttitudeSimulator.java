@@ -22,7 +22,6 @@ package jat.application.AttitudeSimulator;
 
 import jat.core.GUI.JTextFieldPanel;
 import jat.core.attitude.DegToQuat;
-import jat.core.attitude.eom.EomRunner;
 import jat.core.vr.util;
 
 import java.awt.BorderLayout;

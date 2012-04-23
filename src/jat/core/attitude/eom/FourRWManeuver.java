@@ -54,11 +54,11 @@ public class FourRWManeuver implements EquationsOfMotion {
 	// psi, theta, phi Amount of attitude maneuver in terms of euler angles
 	// q Target quarternions (converted from the euler angles)
 	double time_step;
-	int currentPts;
+	public int currentPts;
 	private float quat_values[][];
 	public static final int THREE_RW = 3;
 	public static final int FOUR_RW = 4;
-	int number_of_RW = THREE_RW;
+	public int number_of_RW = THREE_RW;
 
 	// Create variables for the necessary plots
 	private FourPlots wheel_velocity_plot = new FourPlots();

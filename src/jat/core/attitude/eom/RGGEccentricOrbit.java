@@ -53,7 +53,7 @@ public class RGGEccentricOrbit implements EquationsOfMotion
  //		angle_plot			Plots of euler angles
  //		quarternion_check	Plot of e1^2 + e2^2 + e3^2 +e4^2
 	double  time_step;
-	int currentPts=0;
+	public int currentPts=0;
 	private float quat_values[][];
 	
 	// Create variables for the necessary plots

@@ -56,7 +56,7 @@ public class RConstantTorque implements EquationsOfMotion
  	//		energy_and_angularM	Plots of system energy and angular momentum
  	//  
 	double  time_step;
-	int currentPts=0;
+	public int currentPts=0;
 	private float quat_values[][];
 	
 	private double M1 = 0;           // External torque

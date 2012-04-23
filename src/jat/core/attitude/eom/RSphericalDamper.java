@@ -54,7 +54,7 @@ public class RSphericalDamper implements EquationsOfMotion
  	//	quarternion_check	Plot of e1^2 + e2^2 + e3^2 +e4^2
 	
 	double  time_step;
-	int currentPts;
+	public int currentPts;
 	private float quat_values[][];
 	
 	// Create variables for the necessary plots

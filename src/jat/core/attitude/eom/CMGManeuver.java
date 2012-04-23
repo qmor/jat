@@ -58,7 +58,7 @@ public class CMGManeuver implements EquationsOfMotion
  //		CMGPlot				Plot of CMGs rotor speeds
 	
 	double time_step = 0.1;
-	int currentPts;
+	public int currentPts;
 	private float quat_values[][];
 	
 	// Create variables for the necessary plots

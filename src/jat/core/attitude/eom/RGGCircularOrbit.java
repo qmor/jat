@@ -47,7 +47,7 @@ import jat.core.plot.*;
 public class RGGCircularOrbit implements EquationsOfMotion
 {
 	double  time_step;
-	int currentPts;
+	public int currentPts;
 	private float quat_values[][];
 	
 	// Create variables for the necessary plots
