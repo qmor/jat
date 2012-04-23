@@ -22,7 +22,7 @@ package jat.core.attitude.eom;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.Matrix;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 
 /**

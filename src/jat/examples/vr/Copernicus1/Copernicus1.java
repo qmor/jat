@@ -21,9 +21,9 @@
 
 package jat.examples.vr.Copernicus1;
 
-import jat.core.vr.*;
 import jat.core.cm.*;
 import jat.core.ephemeris.*;
+import jat.core.jat3D.*;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.*;

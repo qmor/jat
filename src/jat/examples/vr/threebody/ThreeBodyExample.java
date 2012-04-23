@@ -23,7 +23,7 @@ package jat.examples.vr.threebody;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.ThreeBody;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 /**
  * <P>

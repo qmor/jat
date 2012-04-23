@@ -20,7 +20,7 @@
 
 package jat.core.matlabInterface;
 import jat.core.algorithm.integrators.*;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 /**
  * <P>

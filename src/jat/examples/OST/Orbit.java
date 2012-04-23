@@ -23,7 +23,7 @@ package jat.examples.OST;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 /**
  * @author Tobias Berthold

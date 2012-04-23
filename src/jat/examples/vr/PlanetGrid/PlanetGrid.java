@@ -21,8 +21,8 @@
 
 package jat.examples.vr.PlanetGrid;
 
-import jat.core.vr.*;
 import jat.core.cm.*;
+import jat.core.jat3D.*;
 import jat.core.util.*;
 
 import java.awt.*;

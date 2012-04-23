@@ -22,7 +22,7 @@
 package jat.examples.ZeroVelCurve;
 
 import jat.core.math.matvec.data.*;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 /**
  * <P>

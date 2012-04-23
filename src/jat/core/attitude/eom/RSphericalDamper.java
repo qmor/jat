@@ -22,7 +22,7 @@ package jat.core.attitude.eom;
 import jat.core.algorithm.integrators.*;
 import jat.core.attitude.QuatToDeg;
 import jat.core.math.matvec.data.*;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 /**
  * This class contains the equations of motion for the simulation

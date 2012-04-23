@@ -25,7 +25,7 @@ import jat.core.algorithm.optimization.*;
 import jat.core.cm.*;
 import jat.core.cm.eom.*;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 import java.io.*;
 

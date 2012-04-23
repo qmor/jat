@@ -22,7 +22,7 @@ package jat.application.AttitudeSimulator;
 
 import jat.core.GUI.JTextFieldPanel;
 import jat.core.attitude.DegToQuat;
-import jat.core.vr.util;
+import jat.core.jat3D.util;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;

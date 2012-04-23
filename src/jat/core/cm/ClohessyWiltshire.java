@@ -21,7 +21,7 @@
 package jat.core.cm;
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.*;
-import jat.core.plot.*;
+import jat.core.plotutil.*;
 
 /**
  * <P>

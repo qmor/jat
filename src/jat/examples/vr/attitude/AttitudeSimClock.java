@@ -21,9 +21,9 @@
 
 package jat.examples.vr.attitude;
 
-import jat.core.vr.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.attitude.eom.*;
+import jat.core.jat3D.*;
 import jat.core.util.*;
 
 import java.awt.*;
