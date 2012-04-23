@@ -11,7 +11,6 @@ import jat.core.math.matvec.data.*;
 import jat.core.simulation.EstimatorSimModel;
 import jat.core.simulation.initializer;
 import jat.core.util.FileUtil;
-import jat.simulation.*;
 
 public class GPSStateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	

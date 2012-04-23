@@ -37,7 +37,7 @@ import jat.core.spacetime.TimeUtils;
 import jat.core.trajectory.RelativeTraj;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
-import jat.tests.propagator.PlotTrajectory;
+//import jat.tests.propagator.PlotTrajectory;
 
 /**
  * This is the primary class for a simulation scenario.  It obtains input from files

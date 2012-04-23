@@ -18,7 +18,7 @@
  * 
  */
 
-package jat.tests.propagator;
+package jat.core.simulation;
 
 
 import jat.core.algorithm.integrators.LinePrinter;

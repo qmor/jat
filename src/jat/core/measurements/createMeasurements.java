@@ -1,13 +1,10 @@
 package jat.core.measurements;
 
-import java.io.*;
 import java.util.HashMap;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.math.matvec.data.*;
 import jat.core.simulation.initializer;
-import jat.simulation.*;
-import jat.core.simulation.initializer.*;
 
 
 public class createMeasurements{

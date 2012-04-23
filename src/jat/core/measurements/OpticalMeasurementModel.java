@@ -46,8 +46,8 @@ import jat.core.spacetime.ReferenceFrameTranslater;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
-import jat.simulation.CEVLunarSim;
-import jat.simulation.CEVSim;
+import jat.core.simulation.CEVLunarSim;
+import jat.core.simulation.CEVSim;
 import jat.core.simulation.EstimatorSimModel;
 import jat.core.simulation.initializer;
 

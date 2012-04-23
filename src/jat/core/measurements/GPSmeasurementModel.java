@@ -38,8 +38,6 @@ import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.trajectory.*;
 import jat.core.util.FileUtil;
-import jat.simulation.*;
-
 import java.util.HashMap;
 
 import java.io.*;

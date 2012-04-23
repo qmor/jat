@@ -23,7 +23,6 @@ import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
-import jat.simulation.*;
 
 public class rangeMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	
