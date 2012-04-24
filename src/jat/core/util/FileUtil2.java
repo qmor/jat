@@ -55,7 +55,7 @@ public class FileUtil2 {
 		URL url = classLoader.getResource("");
 		// System.out.println(url.getPath());
 		String current_path = url.getPath();
-		System.out.println(current_path);
+		//System.out.println(current_path);
 
 		String[] numberSplit = current_path.split("/");
 

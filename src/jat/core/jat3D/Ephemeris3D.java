@@ -44,7 +44,7 @@ public class Ephemeris3D extends Shape3D
 	Color3f Color = Colors.gray;
 	DE405 my_eph;
 	double jd;
-	Matrix MRot;
+	//Matrix MRot;
 
 	public Ephemeris3D(DE405_Body bod, double jd_start, double jd_end)
 	{
@@ -53,7 +53,7 @@ public class Ephemeris3D extends Shape3D
 		this.jd=jd_start;
 		String fs = FileUtil.file_separator();
 		my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs);
-		MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
+		//MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
 		draw();
 	}
 	
@@ -63,9 +63,16 @@ public class Ephemeris3D extends Shape3D
 		this.body = bod;
 		this.jd=jd_start;
 		this.steps=days;
+
+		FileUtil2 f = new FileUtil2();
 		String fs = FileUtil.file_separator();
-		my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs);
-		MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
+		String DE405_data_folder = f.root_path + "data" + fs + "core" + fs + "ephemeris" + fs + "DE405data" + fs;
+		my_eph = new DE405(DE405_data_folder);
+
+		
+		//String fs = FileUtil.file_separator();
+		//my_eph = new DE405(FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs);
+		//MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
 		draw();
 	}
 	
@@ -78,7 +85,8 @@ public class Ephemeris3D extends Shape3D
 		for (int k = 0; k < steps; k++)
 		{
 			double mjd_tt = TimeUtils.JDtoMJD(jd);
-			rv = MRot.times(new VectorN(my_eph.get_planet_pos(body, mjd_tt+k)));
+			//rv = MRot.times(new VectorN(my_eph.get_planet_pos(body, mjd_tt+k)));
+			rv = new VectorN(my_eph.get_planet_pos(body, mjd_tt+k));
 //			System.out.println("The position is");
 //			System.out.println("x= " + rv[0] + " km");
 //			System.out.println("y= " + rv[1] + " km");

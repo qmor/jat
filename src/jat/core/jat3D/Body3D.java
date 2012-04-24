@@ -21,15 +21,17 @@
 
 package jat.core.jat3D;
 
+import jat.core.math.matvec.data.VectorN;
+import jat.core.util.FileUtil;
+import jat.core.util.FileUtil2;
+
 import java.applet.Applet;
-import java.io.File;
-import java.net.URL;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
-
-import jat.core.math.matvec.data.*;
-import jat.core.util.*;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 /**
  * Base class for 3D objects. Planet, moons, and spacecraft extend this class.
@@ -47,8 +49,7 @@ public class Body3D extends TransformGroup {
 	Transform3D Trans = new Transform3D();
 	double scale = 1.0; // scale factor for 3D objects
 	Applet myapplet;
-	static String images_path, Lightwave_path, Wavefront_path,
-			ThreeDStudio_path;
+	static String images_path, Lightwave_path, Wavefront_path, ThreeDStudio_path;
 
 	public Body3D() {
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -57,43 +58,14 @@ public class Body3D extends TransformGroup {
 
 	public Body3D(Applet myapplet) {
 		this.myapplet = myapplet;
-		String thisClassName = "Body3D";
-		ResourceLoader rl = new ResourceLoader();
-		System.out.println(rl.get_data_path());
-		// URL url = new URL(new URL(rl.getRequestURL ().toString()),"../");
-		File dir;
-		String parentpath;
-		dir = new File(rl.get_data_path().toString());
-		parentpath = dir.getParent();
-		System.out.println("Current Directory : " + dir);
-		System.out.println("parent Directory  : " + parentpath);
-		dir = new File(parentpath);
-		parentpath = dir.getParent();
-		System.out.println("parent Directory  : " + parentpath);
-		dir = new File(parentpath);
-		parentpath = dir.getParent();
-		System.out.println("parent Directory  : " + parentpath);
-		dir = new File(parentpath);
-		parentpath = dir.getParent();
-		System.out.println("parent Directory  : " + parentpath);
-		//String data_path = (dir.getParent()).getParent();
-		images_path=parentpath+"/data/core/vr/images_hires/";
-		 System.out.println(images_path);
-		
-		 
-		 images_path="/home/user/workspace/jat/data/core/vr/images_hires/";
-		//images_path = FileUtil.getClassFilePath("jat.core.vr", thisClassName)
-			//	+ "images_hires/";
-		Wavefront_path = FileUtil
-				.getClassFilePath("jat.core.vr", thisClassName)
-				+ "Wavefront\\";
-		Lightwave_path = FileUtil
-				.getClassFilePath("jat.core.vr", thisClassName)
-				+ "Lightwave\\";
-		ThreeDStudio_path = FileUtil.getClassFilePath("jat.core.vr",
-				thisClassName)
-				+ "3DStudio\\";
-		System.out.println(images_path);
+
+		FileUtil2 f = new FileUtil2();
+		String fs = FileUtil.file_separator();
+		images_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "images_hires" + fs;
+		//System.out.println(images_path);
+		Wavefront_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Wavefront" + fs;
+		Lightwave_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Lightwave" + fs;
+		ThreeDStudio_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "3DStudio" + fs;
 
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
@@ -224,8 +196,7 @@ public class Body3D extends TransformGroup {
 	 * @param beta
 	 * @param gamma
 	 */
-	public void set_pos_attitude(double x, double y, double z, double alpha,
-			double beta, double gamma) {
+	public void set_pos_attitude(double x, double y, double z, double alpha, double beta, double gamma) {
 		getTransform(Trans);
 		Trans.get(Vf);
 		VRot.x = alpha;
