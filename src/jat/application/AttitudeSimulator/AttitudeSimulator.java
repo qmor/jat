@@ -20,7 +20,6 @@
 
 package jat.application.AttitudeSimulator;
 
-import jat.core.GUI.JTextFieldPanel;
 import jat.core.attitude.DegToQuat;
 import jat.jat3D.util;
 
