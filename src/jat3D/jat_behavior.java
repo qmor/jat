@@ -25,7 +25,7 @@
  *  Change      :
  *  Description :   behavior related functions
  */
-package jat.core.jat3D;
+package jat3D;
 
 import com.sun.j3d.utils.behaviors.mouse.*;
 import javax.media.j3d.*;

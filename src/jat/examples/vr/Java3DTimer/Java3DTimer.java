@@ -22,6 +22,11 @@
 package jat.examples.vr.Java3DTimer;
 
 import jat.core.jat3D.*;
+import jat3D.Axis;
+import jat3D.ColorCube3D;
+import jat3D.jat_behavior;
+import jat3D.jat_light;
+import jat3D.jat_view;
 
 import java.awt.*;
 import java.applet.Applet;

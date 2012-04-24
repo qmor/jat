@@ -58,7 +58,7 @@
  * @version $Revision: 1 $
  */
 
-package jat.core.jat3D;
+package jat3D;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;

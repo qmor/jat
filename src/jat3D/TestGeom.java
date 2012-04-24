@@ -1,4 +1,4 @@
-package jat.core.jat3D;
+package jat3D;
 
 import javax.media.j3d.*;
 

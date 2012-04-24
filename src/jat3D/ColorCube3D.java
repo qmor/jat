@@ -19,41 +19,38 @@
  *
  */
 
-package jat.core.jat3D;
+package jat3D;
 
-import java.io.*;
-import java.applet.Applet;
-import com.sun.j3d.loaders.objectfile.ObjectFile;
-import com.sun.j3d.loaders.Scene;
+import javax.vecmath.Color3f;
 
+import com.sun.j3d.utils.geometry.*;
 
-/** WavefrontObject class
+/** Sphere class
  * @author Tobias Berthold
  */
-public class WavefrontObject extends Body3D
+public class ColorCube3D extends Body3D
 {
+	//float size=100.f;
 
-	public WavefrontObject(Applet myapplet, String filename, float scale)
+	/**
+	 * Constructor Sphere3D.
+	 * @param size size
+	 */
+	public ColorCube3D(float size)
 	{
-		super(myapplet);
-		this.scale = scale;
-		String fullname;
-		Scene s = null;
+//		this.size=size;
+		addChild(new ColorCube(size));
+	}
 
-//		int flags = ObjectFile.RESIZE;
-//		ObjectFile f =	new ObjectFile(flags);
-		ObjectFile f = new ObjectFile();
+	public ColorCube3D(double size)
+	{
+//		this.size=size;
+		addChild(new ColorCube(size));
+	}
 
-		filename = Wavefront_path + filename;
-		try
-		{
-			s = f.load(filename);
-		} catch (FileNotFoundException e)
-		{
-			System.err.println(e);
-			System.err.println("Exception loading file: " + e);
-			//System.exit(1);
-		}
-		addChild(s.getSceneGroup());
+	public ColorCube3D(float size, Color3f color, float x, float y, float z)
+	{
+		addChild(new ColorCube(size));
+		set_position(x, y, z);
 	}
 }

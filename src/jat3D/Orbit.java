@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.core.jat3D;
+package jat3D;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;

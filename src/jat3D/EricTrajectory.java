@@ -23,7 +23,7 @@
  *
  *
  */
-package jat.core.jat3D;
+package jat3D;
 
 import jat.core.util.*;
 

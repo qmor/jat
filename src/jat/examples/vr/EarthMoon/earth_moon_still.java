@@ -24,6 +24,17 @@ package jat.examples.vr.EarthMoon;
 import jat.core.cm.*;
 import jat.core.jat3D.*;
 import jat.core.util.*;
+import jat3D.CapturingCanvas3D;
+import jat3D.ColorCube3D;
+import jat3D.Colors;
+import jat3D.EricTrajectory;
+import jat3D.Orbit;
+import jat3D.Planet3D;
+import jat3D.RGBAxis3D;
+import jat3D.ThreeDStudioObject;
+import jat3D.jat_behavior;
+import jat3D.jat_light;
+import jat3D.jat_view;
 
 import java.awt.*;
 import java.applet.Applet;
