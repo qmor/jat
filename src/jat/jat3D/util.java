@@ -1,4 +1,4 @@
-package jat3D;
+package jat.jat3D;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;

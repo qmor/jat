@@ -19,7 +19,7 @@
  *
  */
 
-package jat3D;
+package jat.jat3D;
 
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;

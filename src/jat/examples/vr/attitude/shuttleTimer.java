@@ -23,14 +23,13 @@ package jat.examples.vr.attitude;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.attitude.eom.*;
-import jat.core.jat3D.*;
 import jat.core.util.*;
-import jat3D.Axis;
-import jat3D.CapturingCanvas3D;
-import jat3D.LightWaveObject;
-import jat3D.jat_behavior;
-import jat3D.jat_light;
-import jat3D.jat_view;
+import jat.jat3D.Axis;
+import jat.jat3D.CapturingCanvas3D;
+import jat.jat3D.LightWaveObject;
+import jat.jat3D.jat_behavior;
+import jat.jat3D.jat_light;
+import jat.jat3D.jat_view;
 
 import java.awt.*;
 import java.applet.Applet;

@@ -26,7 +26,7 @@
 *  Description :   
 */
 
-package jat3D;
+package jat.jat3D;
 
 import java.awt.event.*;
 import java.awt.AWTEvent;

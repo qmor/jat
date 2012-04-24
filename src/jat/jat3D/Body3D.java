@@ -19,7 +19,7 @@
  *
  */
 
-package jat3D;
+package jat.jat3D;
 
 import jat.core.math.matvec.data.VectorN;
 import jat.core.util.FileUtil;

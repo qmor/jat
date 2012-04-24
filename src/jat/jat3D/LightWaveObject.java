@@ -19,7 +19,7 @@
  *
  */
 
-package jat3D;
+package jat.jat3D;
 
 import java.applet.Applet;
 import com.sun.j3d.loaders.lw3d.Lw3dLoader;

@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat3D;
+package jat.jat3D;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
