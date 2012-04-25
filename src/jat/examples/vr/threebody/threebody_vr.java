@@ -25,7 +25,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.math.matvec.data.*;
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.Colors;
 import jat.jat3D.Planet3D;
@@ -100,7 +100,7 @@ public class threebody_vr extends Applet implements ActionListener, Printable
 		sun.set_position(0,0,20000);
 
 		BG_root.addChild(TG_scene);
-		BG_root.addChild(new Axis(10000.0f));
+		BG_root.addChild(new Axes3D(10000.0f));
 
 		// Lights
 		BG_root.addChild(jat_light.DirectionalLight(bounds));

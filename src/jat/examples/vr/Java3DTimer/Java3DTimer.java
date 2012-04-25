@@ -21,7 +21,7 @@
 
 package jat.examples.vr.Java3DTimer;
 
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.ColorCube3D;
 import jat.jat3D.jat_behavior;
 import jat.jat3D.jat_light;
@@ -49,7 +49,7 @@ public class Java3DTimer extends Applet
 	Point3d origin = new Point3d(0.0f, 0.0f, 0.0f);
 	BoundingSphere bounds = new BoundingSphere(origin, 1.e10); //100000000.0
 	ColorCube3D cube;
-	Axis axis;
+	Axes3D axis;
 	ControlPanel panel;
 
 	public Java3DTimer()
@@ -67,7 +67,7 @@ public class Java3DTimer extends Applet
 		BG_root.setBounds(bounds);
 		TG_scene = new TransformGroup();
 		TG_scene.addChild(cube = new ColorCube3D(1000.f));
-		TG_scene.addChild(axis = new Axis(1500.0f));
+		TG_scene.addChild(axis = new Axes3D(1500.0f));
 		BG_root.addChild(TG_scene);
 
 		// Lights

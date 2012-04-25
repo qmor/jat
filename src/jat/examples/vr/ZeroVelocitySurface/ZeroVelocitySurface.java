@@ -22,7 +22,7 @@
 package jat.examples.vr.ZeroVelocitySurface;
 
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.Colors;
 import jat.jat3D.Planet3D;
@@ -92,7 +92,7 @@ public class ZeroVelocitySurface extends Applet implements ActionListener
 		s.set_position(0,20000,0);
 
 		BG_root.addChild(TG_scene);
-		BG_root.addChild(new Axis(10000.0f));
+		BG_root.addChild(new Axes3D(10000.0f));
         BG_root.addChild(SF=new Surface3D());
 
 		// Lights

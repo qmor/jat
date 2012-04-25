@@ -23,7 +23,7 @@ package jat.examples.vr.shuttle;
 
 import jat.core.cm.*;
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.Colors;
 import jat.jat3D.LightWaveObject;
@@ -58,7 +58,7 @@ public class shuttle extends Applet implements ActionListener
 	RGBAxis3D axis;
 	LightWaveObject shuttle;
 	Orbit orb1;
-	Axis mainaxis, shuttleaxis;
+	Axes3D mainaxis, shuttleaxis;
 	public CapturingCanvas3D c;
 	Timer animControl;
 	int i;
@@ -85,7 +85,7 @@ public class shuttle extends Applet implements ActionListener
 		TG_scene.addChild(earth = new Planet3D(this, Planet3D.EARTH));
 		TG_scene.addChild(shuttle = new LightWaveObject(this, "SpaceShuttle.lws", 200.f));
 		//TG_scene.addChild(axis = new RGBAxis3D(15000.0f));
-		TG_scene.addChild(shuttleaxis = new Axis(10.0f));
+		TG_scene.addChild(shuttleaxis = new Axes3D(10.0f));
 		BG_root.addChild(TG_scene);
 		BG_root.addChild(orb1 = new Orbit(cm.earth_radius + 1000., 0., 22.0, 0.0, 0.0, 0.0, Colors.pink, steps));
 		i=1000;

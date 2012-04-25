@@ -23,7 +23,7 @@ package jat.examples.vr.PlanetGrid;
 
 import jat.core.cm.*;
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.Colors;
 import jat.jat3D.Orbit;
@@ -55,7 +55,7 @@ public class PlanetGrid extends Applet implements ActionListener
 	TransformGroup TG_scene;
 	Planet3D mars;
 	PlanetGrid3D PG;
-	Axis mainaxis;
+	Axes3D mainaxis;
 	Point3d origin = new Point3d(0.0f, 0.0f, 0.0f);
 	BoundingSphere bounds = new BoundingSphere(origin, 1.e10); //100000000.0
 	ControlPanel panel;
@@ -91,7 +91,7 @@ public class PlanetGrid extends Applet implements ActionListener
 		TG_scene = new TransformGroup();
 		TG_scene.addChild(mars = new Planet3D(this, Planet3D.MARS));
 		mars.set_attitude(Math.PI / 2., 0, 0);
-		TG_scene.addChild(mainaxis = new Axis(cm.mars_radius-1000.0f));
+		TG_scene.addChild(mainaxis = new Axes3D(cm.mars_radius-1000.0f));
 		//TG_scene.addChild(PG=  new PlanetGrid3D(cm.mars_radius+5.));
 		TG_scene.addChild(PG=  new PlanetGrid3D(cm.mars_radius+1.,5.,5.));
 		BG_root.addChild(TG_scene);

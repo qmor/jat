@@ -22,7 +22,7 @@
 package jat.examples.vr.attitude;
 
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.ColorCube3D;
 import jat.jat3D.jat_behavior;
@@ -45,7 +45,7 @@ public class Flexible extends Applet implements ActionListener
 	Point3d origin = new Point3d(0.0f, 0.0f, 0.0f);
 	BoundingSphere bounds = new BoundingSphere(origin, 1.e10); //100000000.0
 	ColorCube3D spacecraft1, spacecraft2;
-	Axis axis;
+	Axes3D axis;
 	ControlPanel panel;
 	public CapturingCanvas3D c;
 	double x_inc;
@@ -71,7 +71,7 @@ public class Flexible extends Applet implements ActionListener
 		TG_scene = new TransformGroup();
 		TG_scene.addChild(spacecraft1=new ColorCube3D(10000.f));
 		TG_scene.addChild(spacecraft2=new ColorCube3D(10000.f));
-		TG_scene.addChild(axis = new Axis(20000.0f));
+		TG_scene.addChild(axis = new Axes3D(20000.0f));
 		BG_root.addChild(TG_scene);
 
 		// Lights

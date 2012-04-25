@@ -24,7 +24,7 @@ package jat.examples.vr.attitude;
 import jat.core.algorithm.integrators.*;
 import jat.core.attitude.eom.*;
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.ColorCube3D;
 import jat.jat3D.jat_behavior;
@@ -74,7 +74,7 @@ public class AttitudeTimer extends Applet implements ActionListener
 		TG_scene = new TransformGroup();
 		TG_scene.addChild(spacecraft = new ColorCube3D(10000.f));
 		BG_root.addChild(TG_scene);
-		BG_root.addChild(new Axis(20000.0f));
+		BG_root.addChild(new Axes3D(20000.0f));
 
 		// Lights
 		BG_root.addChild(jat_light.DirectionalLight(bounds));

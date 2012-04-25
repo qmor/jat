@@ -22,7 +22,7 @@
 package jat.examples.vr.attitude;
 
 import jat.core.util.*;
-import jat.jat3D.Axis;
+import jat.jat3D.Axes3D;
 import jat.jat3D.CapturingCanvas3D;
 import jat.jat3D.ColorCube3D;
 import jat.jat3D.LightWaveObject;
@@ -69,7 +69,7 @@ public class attitude extends Applet
 		//TG_scene.addChild(shuttle = new LightWaveObject(this, "SpaceShuttle.lws", 1.f));
 		TG_scene.addChild(spacecraft = new ColorCube3D(10000.f));
 		BG_root.addChild(TG_scene);
-		BG_root.addChild(new Axis(20000.0f));
+		BG_root.addChild(new Axes3D(20000.0f));
 
 		// Lights
 		BG_root.addChild(jat_light.DirectionalLight(bounds));
