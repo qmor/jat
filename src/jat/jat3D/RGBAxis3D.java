@@ -20,75 +20,77 @@
  */
 package jat.jat3D;
 
+import java.awt.Font;
+
 import javax.media.j3d.*;
 import javax.vecmath.*;
 
 /**
  * @author Tobias Berthold
- *
+ * 
  */
-public class RGBAxis3D extends Body3D
-{
+public class RGBAxis3D extends Body3D {
 
-	float factor;
+	float axislength;
 	Shape3D s;
-
-	/** creates a 3D x-y-z axis object
+	TransformGroup axislabelTrans;
+	/**
+	 * creates a 3D x-y-z axis object
 	 */
-	public RGBAxis3D()
-	{
+	public RGBAxis3D() {
 		super();
-		factor = 15000.0f;
+		axislength = 15000.0f;
 		s = new Shape3D();
 		s.setGeometry(createGeometry());
 		addChild(s);
+		addChild(generateAxesLabels());
 	}
 
-	/** creates a 3D x-y-z axis object
-	 * @param factor size of the x-y-z axes
-	 *
+	/**
+	 * creates a 3D x-y-z axis object
+	 * 
+	 * @param axislength
+	 *            size of the x-y-z axes
+	 * 
 	 */
-	public RGBAxis3D(float factor)
-	{
-		this.factor = factor;
+	public RGBAxis3D(float axislength) {
+		this.axislength = axislength;
 		s = new Shape3D();
 		s.setGeometry(createGeometry());
 		addChild(s);
 	}
 
-	public RGBAxis3D(double factor)
-	{
-		this.factor = (float)factor;
+	public RGBAxis3D(double axislength) {
+		this.axislength = (float) axislength;
 		s = new Shape3D();
 		s.setGeometry(createGeometry());
 		addChild(s);
 	}
 
-	private Geometry createGeometry()
-	{
+	private Geometry createGeometry() {
 		IndexedLineArray axisLines = new IndexedLineArray(18, GeometryArray.COORDINATES | GeometryArray.COLOR_3, 30);
 
 		// create line for X axis
-		axisLines.setCoordinate(0, new Point3f(-1.0f * factor, 0.0f, 0.0f));
-		axisLines.setCoordinate(1, new Point3f(1.0f * factor, 0.0f, 0.0f));
-		axisLines.setCoordinate(2, new Point3f(0.9f * factor, 0.1f * factor, 0.1f * factor));
-		axisLines.setCoordinate(3, new Point3f(0.9f * factor, -0.1f * factor, 0.1f * factor));
-		axisLines.setCoordinate(4, new Point3f(0.9f * factor, 0.1f * factor, -0.1f * factor));
-		axisLines.setCoordinate(5, new Point3f(0.9f * factor, -0.1f * factor, -0.1f * factor));
+		axisLines.setCoordinate(0, new Point3f(-1.0f * axislength, 0.0f, 0.0f));
+		axisLines.setCoordinate(1, new Point3f(1.0f * axislength, 0.0f, 0.0f));
+		axisLines.setCoordinate(2, new Point3f(0.9f * axislength, 0.1f * axislength, 0.1f * axislength));
+		axisLines.setCoordinate(3, new Point3f(0.9f * axislength, -0.1f * axislength, 0.1f * axislength));
+		axisLines.setCoordinate(4, new Point3f(0.9f * axislength, 0.1f * axislength, -0.1f * axislength));
+		axisLines.setCoordinate(5, new Point3f(0.9f * axislength, -0.1f * axislength, -0.1f * axislength));
 		// create line for Y axis
-		axisLines.setCoordinate(6, new Point3f(0.0f, -1.0f * factor, 0.0f));
-		axisLines.setCoordinate(7, new Point3f(0.0f, 1.0f * factor, 0.0f));
-		axisLines.setCoordinate(8, new Point3f(0.1f * factor, 0.9f * factor, 0.1f * factor));
-		axisLines.setCoordinate(9, new Point3f(-0.1f * factor, 0.9f * factor, 0.1f * factor));
-		axisLines.setCoordinate(10, new Point3f(0.1f * factor, 0.9f * factor, -0.1f * factor));
-		axisLines.setCoordinate(11, new Point3f(-0.1f * factor, 0.9f * factor, -0.1f * factor));
+		axisLines.setCoordinate(6, new Point3f(0.0f, -1.0f * axislength, 0.0f));
+		axisLines.setCoordinate(7, new Point3f(0.0f, 1.0f * axislength, 0.0f));
+		axisLines.setCoordinate(8, new Point3f(0.1f * axislength, 0.9f * axislength, 0.1f * axislength));
+		axisLines.setCoordinate(9, new Point3f(-0.1f * axislength, 0.9f * axislength, 0.1f * axislength));
+		axisLines.setCoordinate(10, new Point3f(0.1f * axislength, 0.9f * axislength, -0.1f * axislength));
+		axisLines.setCoordinate(11, new Point3f(-0.1f * axislength, 0.9f * axislength, -0.1f * axislength));
 		// create line for Z axis
-		axisLines.setCoordinate(12, new Point3f(0.0f, 0.0f, -1.0f * factor));
-		axisLines.setCoordinate(13, new Point3f(0.0f, 0.0f, 1.0f * factor));
-		axisLines.setCoordinate(14, new Point3f(0.1f * factor, 0.1f * factor, 0.9f * factor));
-		axisLines.setCoordinate(15, new Point3f(-0.1f * factor, 0.1f * factor, 0.9f * factor));
-		axisLines.setCoordinate(16, new Point3f(0.1f * factor, -0.1f * factor, 0.9f * factor));
-		axisLines.setCoordinate(17, new Point3f(-0.1f * factor, -0.1f * factor, 0.9f * factor));
+		axisLines.setCoordinate(12, new Point3f(0.0f, 0.0f, -1.0f * axislength));
+		axisLines.setCoordinate(13, new Point3f(0.0f, 0.0f, 1.0f * axislength));
+		axisLines.setCoordinate(14, new Point3f(0.1f * axislength, 0.1f * axislength, 0.9f * axislength));
+		axisLines.setCoordinate(15, new Point3f(-0.1f * axislength, 0.1f * axislength, 0.9f * axislength));
+		axisLines.setCoordinate(16, new Point3f(0.1f * axislength, -0.1f * axislength, 0.9f * axislength));
+		axisLines.setCoordinate(17, new Point3f(-0.1f * axislength, -0.1f * axislength, 0.9f * axislength));
 
 		axisLines.setCoordinateIndex(0, 0);
 		axisLines.setCoordinateIndex(1, 1);
@@ -164,6 +166,38 @@ public class RGBAxis3D extends Body3D
 		return axisLines;
 
 	} // end of Axis createGeometry()
+
+	public TransformGroup generateAxesLabels() {
+		TransformGroup axislabelTrans = new TransformGroup();
+
+		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 1000000), new FontExtrusion());
+
+		float axeslength=axislength;
+		float i_xaxes=1000f;
+		float i_yaxes=1000f;
+		// X-Axis Label
+//		Text3D xfont = new Text3D(font3d, new String("X"), new Point3f((i_xaxes + axeslength + 0.5f),
+//				(i_yaxes - 0.25f), 0.0f));
+//		Shape3D xshape = new Shape3D(xfont);
+		Text3D xfont = new Text3D(font3d, new String("X"), new Point3f(axislength,axislength,0));
+		Shape3D xshape = new Shape3D(xfont);
+
+		// Y-Axis Label
+		Text3D yfont = new Text3D(font3d, new String("Y"), new Point3f((i_xaxes - 0.25f),
+				(i_yaxes + axeslength + 0.5f), 0.0f));
+		Shape3D yshape = new Shape3D(yfont);
+
+		// Z-Axis Label
+		Text3D zfont = new Text3D(font3d, new String("Z"), new Point3f((i_xaxes - 0.5f), (i_yaxes - 0.5f),
+				(axeslength + 0.5f)));
+		Shape3D zshape = new Shape3D(zfont);
+
+		axislabelTrans.addChild(xshape);
+		axislabelTrans.addChild(yshape);
+		axislabelTrans.addChild(zshape);
+
+		return axislabelTrans;
+	} // End generateAxesLabels
 
 } // end of class Axis
 

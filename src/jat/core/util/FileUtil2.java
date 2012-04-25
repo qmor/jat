@@ -65,7 +65,7 @@ public class FileUtil2 {
 			// System.out.println(numberSplit[i]);
 			root_path = root_path + numberSplit[i] + "/";
 			i++;
-		} while (!(numberSplit[i].equals("jat")) && !(numberSplit[i].equals("jatdevelop")));
+		} while (!(numberSplit[i].equals("jat")) && !(numberSplit[i].equals("jatdevelop"))&& !(numberSplit[i].equals("jatexperimental")));
 
 		root_path = root_path + "jat" + "/";
 
