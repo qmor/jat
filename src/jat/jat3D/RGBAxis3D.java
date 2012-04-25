@@ -170,7 +170,7 @@ public class RGBAxis3D extends Body3D {
 	public TransformGroup generateAxesLabels() {
 		TransformGroup axislabelTrans = new TransformGroup();
 
-		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 1000000), new FontExtrusion());
+		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 6000000), new FontExtrusion());
 
 		float axeslength=axislength;
 		float i_xaxes=1000f;
