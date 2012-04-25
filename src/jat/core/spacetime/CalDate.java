@@ -35,7 +35,11 @@ import java.io.*;
  */
 public class CalDate implements Serializable {
 
-    /** Year.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8297334516560701054L;
+	/** Year.
      */
     protected int Year;
     /** Month.
