@@ -95,7 +95,7 @@ public class Axes3D extends Body3D {
 		return b;
 	}
 
-	private Cone Arrowhead() {
+	private TransformGroup Arrowhead() {
 		Appearance appearance = new Appearance();
 		TransparencyAttributes ta = new TransparencyAttributes();
 		ta.setTransparencyMode(ta.BLENDED);
@@ -105,7 +105,17 @@ public class Axes3D extends Body3D {
 		ColoringAttributes ca = new ColoringAttributes(col, ColoringAttributes.NICEST);
 		appearance.setColoringAttributes(ca);
 		Cone cone = new Cone(10000000.f, 40000000f, appearance);
-		return cone;
+		TransformGroup tg = new TransformGroup();
+		Transform3D transform1 = new Transform3D();
+		Vector3f vector = new Vector3f(100000000.f, .0f, .0f);
+		transform1.setTranslation(vector);
+		Transform3D transform2 = new Transform3D();
+		transform2.rotZ(-Math.PI/2);
+		//Transform3D transform3= new Transform3D();
+		transform1.mul(transform2);
+		tg.setTransform(transform1);
+		tg.addChild(cone);
+		return tg;
 	}
 
 	// private
