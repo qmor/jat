@@ -51,13 +51,6 @@ public class Body3D extends TransformGroup {
 	static String images_path, Lightwave_path, Wavefront_path, ThreeDStudio_path;
 
 	public Body3D() {
-		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-	}
-
-	public Body3D(Applet myapplet) {
-		this.myapplet = myapplet;
-
 		FileUtil2 f = new FileUtil2();
 		String fs = FileUtil.file_separator();
 		images_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "images_hires" + fs;
@@ -65,12 +58,26 @@ public class Body3D extends TransformGroup {
 		Wavefront_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Wavefront" + fs;
 		Lightwave_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Lightwave" + fs;
 		ThreeDStudio_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "3DStudio" + fs;
-
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-
-		// add();
 	}
+
+//	public Body3D(Applet myapplet) {
+//		this.myapplet = myapplet;
+//
+//		FileUtil2 f = new FileUtil2();
+//		String fs = FileUtil.file_separator();
+//		images_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "images_hires" + fs;
+//		//System.out.println(images_path);
+//		Wavefront_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Wavefront" + fs;
+//		Lightwave_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Lightwave" + fs;
+//		ThreeDStudio_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "3DStudio" + fs;
+//
+//		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+//		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+//
+//		// add();
+//	}
 
 	// Methods to be implemented in subclasses
 	// abstract public void add();
