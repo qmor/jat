@@ -39,7 +39,6 @@ import javax.vecmath.Vector3f;
  * 
  * @author Tobias Berthold
  */
-// Temporarily renamed class Body3D to ABody3D because of difficulties with CVS
 
 // abstract public class body3D extends TransformGroup
 public class Body3D extends TransformGroup {

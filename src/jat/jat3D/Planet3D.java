@@ -24,6 +24,11 @@ package jat.jat3D;
 import jat.core.cm.*;
 
 import java.applet.Applet;
+import java.awt.Button;
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.image.ImageObserver;
+
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
 import com.sun.j3d.utils.image.TextureLoader;
@@ -32,7 +37,7 @@ import com.sun.j3d.utils.geometry.*;
 /** Planet class
  * @author Tobias Berthold
  */
-public class Planet3D extends Body3D
+public class Planet3D extends Body3D implements ImageObserver
 {
 	public static final int MERCURY = 1, VENUS = 2, EARTH = 3, MARS = 4, JUPITER = 5, MOON = 11;
 	float radius;
@@ -107,7 +112,10 @@ public class Planet3D extends Body3D
 			app = createMatAppear_planet(Planetcolor, Colors.white, 10.0f);
 		} else
 		{
-			TextureLoader tex = new TextureLoader(Texturefilename, myapplet);
+
+			Button b=new Button();
+			//TextureLoader tex = new TextureLoader(Texturefilename, myapplet);
+			TextureLoader tex = new TextureLoader(Texturefilename,b );
 			TextureAttributes ta = new TextureAttributes();
 			ta.setTextureMode(TextureAttributes.MODULATE);
 			app = createMatAppear_planet(Colors.white, Colors.white, 10.0f);
@@ -135,5 +143,11 @@ public class Planet3D extends Body3D
 		material.setEmissiveColor(0.1f, 0.1f, 0.1f);
 		appear.setMaterial(material);
 		return appear;
+	}
+
+	@Override
+	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
