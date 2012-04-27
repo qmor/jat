@@ -21,11 +21,8 @@
 
 package jat.jat3D;
 
-import java.applet.Applet;
-
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import com.sun.j3d.loaders.Scene;
 import com.mnstarfire.loaders3d.Inspector3DS;
 
 /** 3DStudio Object class
@@ -36,13 +33,11 @@ public class ThreeDStudioObject extends Body3D
 	Sphere3D left, right;
 	Cylinder3D lc,rc;
 
-	public ThreeDStudioObject(Applet myapplet, String filename, float scale)
+	public ThreeDStudioObject( String filename, float scale)
 	{
-		super(myapplet);
+		super();
 		super.scale = scale;
 		String fullname;
-		Scene s = null;
-
 		// Construct the Lw3d loader and load the file
 		fullname = ThreeDStudio_path + filename;
 		System.out.println(fullname);

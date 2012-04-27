@@ -21,10 +21,10 @@
 
 package jat.jat3D;
 
-import java.io.*;
-import java.applet.Applet;
-import com.sun.j3d.loaders.objectfile.ObjectFile;
+import java.io.FileNotFoundException;
+
 import com.sun.j3d.loaders.Scene;
+import com.sun.j3d.loaders.objectfile.ObjectFile;
 
 
 /** WavefrontObject class
@@ -33,11 +33,10 @@ import com.sun.j3d.loaders.Scene;
 public class WavefrontObject extends Body3D
 {
 
-	public WavefrontObject(Applet myapplet, String filename, float scale)
+	public WavefrontObject(String filename, float scale)
 	{
-		super(myapplet);
+		super();
 		this.scale = scale;
-		String fullname;
 		Scene s = null;
 
 //		int flags = ObjectFile.RESIZE;

@@ -21,10 +21,9 @@
 
 package jat.jat3D;
 
-import java.applet.Applet;
-import com.sun.j3d.loaders.lw3d.Lw3dLoader;
 import com.sun.j3d.loaders.Loader;
 import com.sun.j3d.loaders.Scene;
+import com.sun.j3d.loaders.lw3d.Lw3dLoader;
 
 /** LightWaveObject class
  * @author Tobias Berthold
@@ -32,9 +31,9 @@ import com.sun.j3d.loaders.Scene;
 public class LightWaveObject extends Body3D
 {
 
-	public LightWaveObject(Applet myapplet, String filename, float scale)
+	public LightWaveObject( String filename, float scale)
 	{
-		super(myapplet);
+		super();
 		this.scale = scale;
 		String fullname;
 		Scene s = null;

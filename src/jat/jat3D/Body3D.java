@@ -47,7 +47,7 @@ public class Body3D extends TransformGroup {
 	Vector3d VRot = new Vector3d();
 	Transform3D Trans = new Transform3D();
 	double scale = 1.0; // scale factor for 3D objects
-	Applet myapplet;
+	//Applet myapplet;
 	static String images_path, Lightwave_path, Wavefront_path, ThreeDStudio_path;
 
 	public Body3D() {

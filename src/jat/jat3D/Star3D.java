@@ -21,13 +21,17 @@
 
 package jat.jat3D;
 
-import jat.core.cm.*;
+import java.awt.Button;
 
-import java.applet.Applet;
-import javax.media.j3d.*;
+import jat.core.cm.cm;
+
+import javax.media.j3d.Appearance;
+import javax.media.j3d.Material;
+import javax.media.j3d.TextureAttributes;
 import javax.vecmath.Color3f;
+
+import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
-import com.sun.j3d.utils.geometry.*;
 
 /** Planet class
  * @author Tobias Berthold
@@ -38,11 +42,13 @@ public class Star3D extends Body3D
 	String Texturefilename;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
+	Button b; // for ImageObserver if applet not used
 
-	public Star3D(Applet myapplet, float scale)
+	public Star3D( float scale)
 	{
-		super(myapplet);
+		super();
 		this.scale = scale;
+		b=new Button();
 		Texturefilename = images_path + "sun.jpg";
 		radius = (float) cm.sun_radius;
 		Starcolor = Colors.blue;
@@ -53,7 +59,7 @@ public class Star3D extends Body3D
 		}
 		else
 		{
-			TextureLoader tex = new TextureLoader(Texturefilename, myapplet);
+			TextureLoader tex = new TextureLoader(Texturefilename, b);
 			TextureAttributes ta = new TextureAttributes();
 			ta.setTextureMode(TextureAttributes.MODULATE);
 			app = createMatAppear_star(Colors.white, Colors.white, 10.0f);
