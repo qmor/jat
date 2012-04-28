@@ -21,6 +21,10 @@
 
 package jat.jat3D;
 
+import java.io.IOException;
+
+import jat.core.astronomy.StarCatalog;
+
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
@@ -46,8 +50,28 @@ public class StarsBackground3D extends BranchGroup {
 		super();
 		Starcolor = Colors.blue;
 
-		//addChild(createBackGraph());
-		addChild(createPointCloud());
+		addChild(createStarSphere());
+
+	}
+
+	private BranchGroup createStarSphere(){
+
+		BranchGroup bg = new BranchGroup();
+
+		StarCatalog s;
+		try {
+			s = new StarCatalog();
+			System.out.println(s.size()+" stars loaded");
+		} catch (IOException e) {
+			System.out.println("Problem loading star database");
+			e.printStackTrace();
+		}
+
+
+		
+		PointArray starfield = new PointArray(20000, PointArray.COORDINATES | PointArray.COLOR_3);
+
+		return bg;
 
 	}
 
