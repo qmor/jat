@@ -1,27 +1,6 @@
-/* JAT: Java Astrodynamics Toolkit
- *
- * Copyright (c) 2002 National Aeronautics and Space Administration and the Center for Space Research (CSR),
- * The University of Texas at Austin. All rights reserved.
- *
- * This file is part of JAT. JAT is free software; you can
- * redistribute it and/or modify it under the terms of the
- * NASA Open Source Agreement
- * 
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * NASA Open Source Agreement for more details.
- *
- * You should have received a copy of the NASA Open Source Agreement
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
+
 
 package jat.jat3D;
-
-import java.io.IOException;
 
 import jat.core.astronomy.StarCatalog;
 
@@ -31,7 +10,6 @@ import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.PointArray;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.TransformGroup;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
@@ -45,6 +23,7 @@ public class StarsBackground3D extends BranchGroup {
 	String Texturefilename;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
+	public StarCatalog s;
 
 	public StarsBackground3D(float scale) {
 		super();
@@ -54,21 +33,13 @@ public class StarsBackground3D extends BranchGroup {
 
 	}
 
-	private BranchGroup createStarSphere(){
+	private BranchGroup createStarSphere() {
 
 		BranchGroup bg = new BranchGroup();
 
-		StarCatalog s;
-		try {
-			s = new StarCatalog();
-			System.out.println(s.size()+" stars loaded");
-		} catch (IOException e) {
-			System.out.println("Problem loading star database");
-			e.printStackTrace();
-		}
+		s = new StarCatalog();
+		s.load();
 
-
-		
 		PointArray starfield = new PointArray(20000, PointArray.COORDINATES | PointArray.COLOR_3);
 
 		return bg;
