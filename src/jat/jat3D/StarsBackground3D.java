@@ -1,8 +1,11 @@
-
-
 package jat.jat3D;
 
 import jat.core.astronomy.StarCatalog;
+import jat.core.astronomy.Stardata;
+import jat.core.astronomy.atest;
+import jat.core.math.CoordTransform;
+import jat.core.math.matvec.data.VectorN;
+import jat.core.math.MathUtils;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
@@ -12,6 +15,7 @@ import javax.media.j3d.PointArray;
 import javax.media.j3d.Shape3D;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * Planet class
@@ -23,24 +27,50 @@ public class StarsBackground3D extends BranchGroup {
 	String Texturefilename;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
-	public StarCatalog s;
+	public atest s;
 
-	public StarsBackground3D(float scale) {
+	public StarsBackground3D(float radius) {
 		super();
+		this.radius=radius;
 		Starcolor = Colors.blue;
 
 		addChild(createStarSphere());
-
+		// addChild(createPointCloud());
 	}
 
-	private BranchGroup createStarSphere() {
+	public BranchGroup createStarSphere() {
 
 		BranchGroup bg = new BranchGroup();
 
-		s = new StarCatalog();
+		s = new atest();
 		s.load();
 
-		PointArray starfield = new PointArray(20000, PointArray.COORDINATES | PointArray.COLOR_3);
+		PointArray starfield = new PointArray(99, PointArray.COORDINATES | PointArray.COLOR_3);
+		float[] point = new float[3];
+		float[] brightness = new float[3];
+		Stardata sd;
+		for (int i = 0; i < 99; i++) {
+			// for (int i = 0; i < manystardata.size(); i++)
+			sd = (Stardata) s.manystardata.get(i);
+
+			System.out.println(sd.ProperName + " " + sd.RA + " " + sd.dec);
+			VectorN point3 = CoordTransform.Spherical_to_Cartesian_deg(radius, sd.RA/MathUtils.DEG2RAD, sd.dec/MathUtils.DEG2RAD);
+
+			// point[0] = 1;
+			// point[1] = 1;
+			// point[2] = 1;
+			// point[0] *= 1.e8;
+			// point[1] *= 1.e8;
+			// point[2] *= 1.e8;
+			starfield.setCoordinate(i, point3.x);
+			// final float mag = rand.nextFloat();
+			final float mag = 1.f;
+			brightness[0] = mag;
+			brightness[1] = mag;
+			brightness[2] = mag;
+			starfield.setColor(i, brightness);
+		}
+		bg.addChild(new Shape3D(starfield));
 
 		return bg;
 

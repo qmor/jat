@@ -12,13 +12,16 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class StarCatalog {
 	
-	public List manystardata;
-
+	public int a;
+	//public List manystardata;
+/*
 	public StarCatalog() {
-		manystardata = new ArrayList();
+		//manystardata = new ArrayList();
 
 	}
-
+*/
+	
+	/*
 	public void load() {
 		FileUtil2 f = new FileUtil2();
 		String fs = FileUtil.file_separator();
@@ -32,7 +35,7 @@ public class StarCatalog {
 				for (int i = 0; i < nextLine.length; i++)
 					System.out.print(nextLine[i] + " | ");
 				System.out.println();
-				manystardata.add(new onestardata(nextLine[6], Double.parseDouble(nextLine[7]), Double
+				manystardata.add(new Stardata(nextLine[6], Double.parseDouble(nextLine[7]), Double
 						.parseDouble(nextLine[8])));
 			}
 		} catch (IOException e) {
@@ -42,13 +45,13 @@ public class StarCatalog {
 
 	}
 
-
-
+*/
+/*
 	public int size() {
 		return manystardata.size();
 	}
-
-	public static void main(String[] args) throws IOException {
+*/
+	//public static void main(String[] args) {
 
 		// manystardata.add(new onestardata("a", 1., 1.));
 		// manystardata.add(new onestardata("b", 2., 3.));
@@ -63,5 +66,5 @@ public class StarCatalog {
 		 * 
 		 * System.out.println(t.ProperName + " " + t.RA + " " + t.dec); }
 		 */
-	}
+	//}
 }
