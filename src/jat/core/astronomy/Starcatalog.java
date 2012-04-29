@@ -1,5 +1,4 @@
 package jat.core.astronomy;
-
 import jat.core.util.FileUtil;
 import jat.core.util.FileUtil2;
 
@@ -10,19 +9,15 @@ import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class StarCatalog {
+public class Starcatalog {
+	public List manystardata;
 	
 	public int a;
-	//public List manystardata;
-/*
-	public StarCatalog() {
-		//manystardata = new ArrayList();
-
-	}
-*/
 	
-	/*
+	
 	public void load() {
+		manystardata = new ArrayList();
+
 		FileUtil2 f = new FileUtil2();
 		String fs = FileUtil.file_separator();
 		String star_data_file = f.root_path + "data" + fs + "core" + fs + "astronomy" + fs + "hyg_100.csv";
@@ -32,9 +27,9 @@ public class StarCatalog {
 			reader = new CSVReader(new FileReader(star_data_file));
 			reader.readNext(); // read over header line
 			while ((nextLine = reader.readNext()) != null) {
-				for (int i = 0; i < nextLine.length; i++)
-					System.out.print(nextLine[i] + " | ");
-				System.out.println();
+		//		for (int i = 0; i < nextLine.length; i++)
+		//			System.out.print(nextLine[i] + " | ");
+		//		System.out.println();
 				manystardata.add(new Stardata(nextLine[6], Double.parseDouble(nextLine[7]), Double
 						.parseDouble(nextLine[8])));
 			}
@@ -45,26 +40,5 @@ public class StarCatalog {
 
 	}
 
-*/
-/*
-	public int size() {
-		return manystardata.size();
-	}
-*/
-	//public static void main(String[] args) {
-
-		// manystardata.add(new onestardata("a", 1., 1.));
-		// manystardata.add(new onestardata("b", 2., 3.));
-		// onestardata t = (onestardata) manystardata.get(1);
-		// System.out.println(t.ProperName);
-
-		/*
-		 * StarCatalog s = new StarCatalog();
-		 * 
-		 * onestardata t; for (int i = 0; i < manystardata.size(); i++) { t =
-		 * (onestardata) manystardata.get(i);
-		 * 
-		 * System.out.println(t.ProperName + " " + t.RA + " " + t.dec); }
-		 */
-	//}
+	
 }
