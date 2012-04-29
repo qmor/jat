@@ -17,6 +17,7 @@
 
 package jat.core.util;
 
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -28,7 +29,7 @@ public class FileUtil2 {
 
 	public String root_path;
 	public String current_path ;
-
+	public String fs=File.separator;
 	public FileUtil2() {
 		current_path=find_current_path();
 		root_path=find_root();

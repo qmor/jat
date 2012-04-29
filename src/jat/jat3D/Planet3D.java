@@ -22,24 +22,31 @@
 package jat.jat3D;
 
 import jat.core.cm.cm;
+import jat.core.util.FileUtil2;
 
 import java.awt.Button;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 
 import javax.media.j3d.Appearance;
+import javax.media.j3d.ImageComponent2D;
 import javax.media.j3d.Material;
+import javax.media.j3d.Texture;
+import javax.media.j3d.Texture2D;
 import javax.media.j3d.TextureAttributes;
+import javax.media.j3d.Transform3D;
 import javax.vecmath.Color3f;
 
+import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 
-/** Planet class
+/**
+ * Planet class
+ * 
  * @author Tobias Berthold
  */
-public class Planet3D extends Body3D implements ImageObserver
-{
+public class Planet3D extends Body3D implements ImageObserver {
 	public static final int MERCURY = 1, VENUS = 2, EARTH = 3, MARS = 4, JUPITER = 5, MOON = 11;
 	float radius;
 	String Texturefilename;
@@ -47,102 +54,132 @@ public class Planet3D extends Body3D implements ImageObserver
 	Color3f Planetcolor; // planet color if texture not found
 	int divisions = 60; // number of divisions for sphere
 	Button b; // for ImageObserver if applet not used
-	
+	Appearance appear;
+
 	// TODO : make divisions a parameter
 
 	/**
-	 * @param myapplet Applet as ImageObserver
+	 * @param myapplet
+	 *            Applet as ImageObserver
 	 * @param planet_number
 	 * @param scale
 	 */
-	public Planet3D( int planet_number, float scale)
-	{
+	public Planet3D(int planet_number, float scale) {
 		super.scale = scale;
-		b=new Button();
+		b = new Button();
 		CreatePlanet(planet_number);
 	}
 
-//	public Planet3D(Applet myapplet, int planet_number, float scale)
-//	{
-//		super(myapplet);
-//		super.scale = scale;
-//		CreatePlanet(myapplet, planet_number);
-//	}
+	// public Planet3D(Applet myapplet, int planet_number, float scale)
+	// {
+	// super(myapplet);
+	// super.scale = scale;
+	// CreatePlanet(myapplet, planet_number);
+	// }
 
-	
-//	public Planet3D(Applet myapplet, int planet_number)
-//	{
-//		super(myapplet);
-//		CreatePlanet(myapplet, planet_number);
-//
-//	}
+	// public Planet3D(Applet myapplet, int planet_number)
+	// {
+	// super(myapplet);
+	// CreatePlanet(myapplet, planet_number);
+	//
+	// }
 
 	// had to create this to have code that is common to different constructors.
 	// Is there a better way?
-	private void CreatePlanet( int planet_number)
-	{
+	private void CreatePlanet(int planet_number) {
 
-		switch (planet_number)
-		{
-			case MERCURY :
-				Texturefilename = images_path + "mercury.jpg";
-				radius = (float)cm.mercury_radius;
-				Planetcolor = Colors.red;
-				break;
-			case VENUS :
-				Texturefilename = images_path + "venus.jpg";
-				radius = (float)cm.venus_radius;
-				Planetcolor = Colors.green;
-				break;
-			case EARTH :
-				Texturefilename = images_path + "earth.jpg";
-				radius = (float)cm.earth_radius;
-				Planetcolor = Colors.blue;
-				break;
-			case MARS :
-				Texturefilename = images_path + "mars.jpg";
-				radius = (float)cm.mars_radius;
-				Planetcolor = Colors.blue;
-				break;
-			case JUPITER :
-				Texturefilename = images_path + "jupiter.jpg";
-				radius = (float)cm.jupiter_radius;
-				Planetcolor = Colors.blue;
-				break;
-			case MOON :
-				Texturefilename = images_path + "moon.jpg";
-				radius = (float)cm.moon_radius;
-				Planetcolor = Colors.blue;
-				break;
+		switch (planet_number) {
+		case MERCURY:
+			Texturefilename = images_path + "mercury.jpg";
+			radius = (float) cm.mercury_radius;
+			Planetcolor = Colors.red;
+			break;
+		case VENUS:
+			Texturefilename = images_path + "venus.jpg";
+			radius = (float) cm.venus_radius;
+			Planetcolor = Colors.green;
+			break;
+		case EARTH:
+			Texturefilename = images_path + "earth.jpg";
+			radius = (float) cm.earth_radius;
+			Planetcolor = Colors.blue;
+			break;
+		case MARS:
+			Texturefilename = images_path + "mars.jpg";
+			radius = (float) cm.mars_radius;
+			Planetcolor = Colors.blue;
+			break;
+		case JUPITER:
+			Texturefilename = images_path + "jupiter.jpg";
+			radius = (float) cm.jupiter_radius;
+			Planetcolor = Colors.blue;
+			break;
+		case MOON:
+			Texturefilename = images_path + "moon.jpg";
+			radius = (float) cm.moon_radius;
+			Planetcolor = Colors.blue;
+			break;
 		}
 
-		if (Texturefilename == null)
-		{
+		if (Texturefilename == null) {
 			app = createMatAppear_planet(Planetcolor, Colors.white, 10.0f);
-		} else
-		{
+		} else {
 
-			//TextureLoader tex = new TextureLoader(Texturefilename, myapplet);
-			TextureLoader tex = new TextureLoader(Texturefilename,b );
-			TextureAttributes ta = new TextureAttributes();
-			ta.setTextureMode(TextureAttributes.MODULATE);
-			app = createMatAppear_planet(Colors.white, Colors.white, 10.0f);
-			app.setTextureAttributes(ta);
-			app.setTexture(tex.getTexture());
+			appear = createTwistAppearance();
+
+			// //TextureLoader tex = new TextureLoader(Texturefilename,
+			// myapplet);
+			// TextureLoader tex = new TextureLoader(Texturefilename,b );
+			// TextureAttributes ta = new TextureAttributes();
+			// ta.setTextureMode(TextureAttributes.MODULATE);
+			// app = createMatAppear_planet(Colors.white, Colors.white, 10.0f);
+			// app.setTextureAttributes(ta);
+			// app.setTexture(tex.getTexture());
 		}
 
-		//TG_plan.addChild( createLabel( szName, 1.2f, 1.2f, 0 ) );
-		addChild(
-			new Sphere(
-				radius,
-				Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS,
-				divisions,
-				app));
-		set_scale(scale);				
+		// TG_plan.addChild( createLabel( szName, 1.2f, 1.2f, 0 ) );
+		addChild(new Sphere(radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, divisions, appear));
+
+		Transform3D transform2 = new Transform3D();
+		transform2.rotX(Math.PI/2);
+		setTransform(transform2);
+		
+		
+		
+		//addChild(new Sphere(radius, Primitive.GENERATE_TEXTURE_COORDS, appear));
+		set_scale(scale);
+
 	}
 
-	protected static Appearance createMatAppear_planet(Color3f dColor, Color3f sColor, float shine)
-	{
+	Appearance createTwistAppearance() {
+
+		FileUtil2 f = new FileUtil2();
+
+		Appearance twistAppear = new Appearance();
+
+		// String filename =
+		// f.current_path+"learn"+f.fs+"java3D"+f.fs+"sun"+f.fs+"texture"+f.fs+"earth.jpg";
+		// System.out.println("attempt to load texture from file: " + filename);
+		TextureLoader loader = new TextureLoader(Texturefilename, b);
+		ImageComponent2D image = loader.getImage();
+
+		if (image == null) {
+			System.out.println("load failed for texture: " + Texturefilename);
+		}
+
+		Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
+		texture.setImage(0, image);
+		texture.setEnable(true);
+
+		texture.setMagFilter(Texture.BASE_LEVEL_LINEAR);
+		texture.setMinFilter(Texture.BASE_LEVEL_LINEAR);
+
+		twistAppear.setTexture(texture);
+
+		return twistAppear;
+	}
+
+	protected static Appearance createMatAppear_planet(Color3f dColor, Color3f sColor, float shine) {
 		Appearance appear = new Appearance();
 		Material material = new Material();
 		material.setDiffuseColor(dColor);
