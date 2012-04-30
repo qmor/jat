@@ -22,6 +22,8 @@ import java.awt.Font;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 
+import com.sun.j3d.utils.geometry.Cone;
+
 /**
  * @author Tobias Berthold
  * 
@@ -38,14 +40,11 @@ public class RGBAxes3D extends Body3D {
 	public RGBAxes3D() {
 		super();
 		axislength = 15000.0f;
-		s = new Shape3D();
-		s.setGeometry(createGeometry());
-		addChild(s);
-		addChild(generateAxesLabels());
+		common_to_all_constructors();
 	}
 
 	/**
-	 * creates a 3D x-y-z axis object
+	 * creates a RGB-colored 3D x-y-z axis object
 	 * 
 	 * @param axislength
 	 *            size of the x-y-z axes
@@ -53,16 +52,20 @@ public class RGBAxes3D extends Body3D {
 	 */
 	public RGBAxes3D(float axislength) {
 		this.axislength = axislength;
-		s = new Shape3D();
-		s.setGeometry(createGeometry());
-		addChild(s);
+		common_to_all_constructors();
 	}
 
 	public RGBAxes3D(double axislength) {
 		this.axislength = (float) axislength;
+		common_to_all_constructors();
+	}
+
+	void common_to_all_constructors() {
 		s = new Shape3D();
 		s.setGeometry(createGeometry());
 		addChild(s);
+		addChild(Arrowhead(Colors.red));	
+		addChild(generateAxesLabels());
 	}
 
 	private Geometry createGeometry() {
@@ -105,14 +108,37 @@ public class RGBAxes3D extends Body3D {
 
 	} // end of Axis createGeometry()
 
+	private TransformGroup Arrowhead(Color3f col) {
+		// X axis
+		Appearance appearance = new Appearance();
+		TransparencyAttributes ta = new TransparencyAttributes();
+		ta.setTransparencyMode(ta.BLENDED);
+		ta.setTransparency(0.5f);
+		appearance.setTransparencyAttributes(ta);
+		// Color3f col = new Color3f(0.0f, 0.0f, 1.0f);
+		ColoringAttributes ca = new ColoringAttributes(col, ColoringAttributes.NICEST);
+		appearance.setColoringAttributes(ca);
+		Cone cone = new Cone(axislength / 40, axislength / 10, appearance);
+		TransformGroup tg = new TransformGroup();
+		Transform3D transform1 = new Transform3D();
+		Vector3f vector = new Vector3f(axislength, .0f, .0f);
+		transform1.setTranslation(vector);
+		Transform3D transform2 = new Transform3D();
+		transform2.rotZ(-Math.PI / 2);
+		transform1.mul(transform2);
+		tg.setTransform(transform1);
+		tg.addChild(cone);
+		return tg;
+	}
+
 	public TransformGroup generateAxesLabels() {
 		TransformGroup axislabelTrans = new TransformGroup();
 
 		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 6), new FontExtrusion());
 
 		float axeslength = axislength;
-		float i_xaxes = 1000f;
-		float i_yaxes = 1000f;
+		float i_xaxes = axislength;
+		float i_yaxes = axislength;
 		// X-Axis Label
 		// Text3D xfont = new Text3D(font3d, new String("X"), new
 		// Point3f((i_xaxes + axeslength + 0.5f),

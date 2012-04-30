@@ -3,8 +3,6 @@ package org.math.plot.canvas;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.Timer;
-
 import org.math.plot.plotObjects.*;
 import org.math.plot.plots.*;
 import org.math.plot.render.*;

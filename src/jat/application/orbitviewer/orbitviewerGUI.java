@@ -18,7 +18,6 @@
 package jat.application.orbitviewer;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,11 +27,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
+
 import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JSplitPane;
 
 public class orbitviewerGUI extends JApplet {
 	private static final long serialVersionUID = 1321470082814219656L;

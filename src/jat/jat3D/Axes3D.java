@@ -43,7 +43,6 @@ public class Axes3D extends Body3D {
 		super();
 		length = 15000.0f;
 		s = new Shape3D();
-		s.setGeometry(createGeometry());
 		addChild(s);
 	}
 
@@ -99,7 +98,7 @@ public class Axes3D extends Body3D {
 		// X axis
 		Appearance appearance = new Appearance();
 		TransparencyAttributes ta = new TransparencyAttributes();
-		ta.setTransparencyMode(ta.BLENDED);
+		ta.setTransparencyMode(TransparencyAttributes.BLENDED);
 		ta.setTransparency(0.5f);
 		appearance.setTransparencyAttributes(ta);
 		Color3f col = new Color3f(0.0f, 0.0f, 1.0f);
@@ -118,6 +117,8 @@ public class Axes3D extends Body3D {
 		return tg;
 	}
 
+
+	/*
 	// private
 
 	private Geometry createGeometry() {
@@ -183,5 +184,8 @@ public class Axes3D extends Body3D {
 		return axisLines;
 
 	} // end of Axis createGeometry()
+
+*/
+
 
 } // end of class Axis
