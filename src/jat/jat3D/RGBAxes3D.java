@@ -72,19 +72,18 @@ public class RGBAxes3D extends Body3D {
 		axisLines.setCoordinate(0, new Point3f(0.0f * axislength, 0.0f, 0.0f));
 		axisLines.setCoordinate(1, new Point3f(1.0f * axislength, 0.0f, 0.0f));
 		// create line for Y axis
-		axisLines.setCoordinate(2, new Point3f(0.0f, -1.0f * axislength, 0.0f));
+		axisLines.setCoordinate(2, new Point3f(0.0f, 0.0f * axislength, 0.0f));
 		axisLines.setCoordinate(3, new Point3f(0.0f, 1.0f * axislength, 0.0f));
 		// create line for Z axis
-		axisLines.setCoordinate(4, new Point3f(0.0f, 0.0f, -1.0f * axislength));
+		axisLines.setCoordinate(4, new Point3f(0.0f, 0.0f, 0.0f * axislength));
 		axisLines.setCoordinate(5, new Point3f(0.0f, 0.0f, 1.0f * axislength));
 
 		axisLines.setCoordinateIndex(0, 0);
 		axisLines.setCoordinateIndex(1, 1);
-		axisLines.setCoordinateIndex(0, 0);
 		axisLines.setCoordinateIndex(2, 2);
-		axisLines.setCoordinateIndex(4, 3);
-		axisLines.setCoordinateIndex(5, 1);
-		axisLines.setCoordinateIndex(6, 4);
+		axisLines.setCoordinateIndex(3, 3);
+		axisLines.setCoordinateIndex(4, 4);
+		axisLines.setCoordinateIndex(5, 5);
 
 		Color3f colors[] = new Color3f[6];
 		for (int i = 0; i < 2; i++)
@@ -98,10 +97,9 @@ public class RGBAxes3D extends Body3D {
 		axisLines.setColorIndex(0, 0);
 		axisLines.setColorIndex(1, 1);
 		axisLines.setColorIndex(2, 2);
-		axisLines.setColorIndex(3, 1);
-		axisLines.setColorIndex(4, 3);
-		axisLines.setColorIndex(5, 1);
-		axisLines.setColorIndex(6, 4);
+		axisLines.setColorIndex(3, 3);
+		axisLines.setColorIndex(4, 4);
+		axisLines.setColorIndex(5, 5);
 
 		return axisLines;
 
@@ -110,7 +108,7 @@ public class RGBAxes3D extends Body3D {
 	public TransformGroup generateAxesLabels() {
 		TransformGroup axislabelTrans = new TransformGroup();
 
-		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 6000000), new FontExtrusion());
+		Font3D font3d = new Font3D(new Font("Display", Font.PLAIN, 6), new FontExtrusion());
 
 		float axeslength = axislength;
 		float i_xaxes = 1000f;
