@@ -17,7 +17,6 @@
 
 package jat.core.astronomy;
 
-import jat.core.util.FileUtil;
 import jat.core.util.FileUtil2;
 
 import java.io.FileReader;
@@ -37,7 +36,7 @@ public class Starcatalog {
 		manystardata = new ArrayList();
 
 		FileUtil2 f = new FileUtil2();
-		String fs = FileUtil.file_separator();
+		String fs = f.fs;
 		String star_data_file = f.root_path + "data" + fs + "core" + fs + "astronomy" + fs + "hyg_100.csv";
 		String[] nextLine;
 		CSVReader reader;
