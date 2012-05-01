@@ -58,8 +58,8 @@ public class orbitviewermain {
 
 		theFrame.setSize(appletwidth, appletheight);
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-		theFrame.setLocation((d.width - theFrame.getSize().width) / 2,
-				(d.height - theFrame.getSize().height) / 2);
+		//theFrame.setLocation((d.width - theFrame.getSize().width) / 2,
+			//	(d.height - theFrame.getSize().height) / 2);
 		theFrame.setVisible(true);
 	}// End of main()
 
