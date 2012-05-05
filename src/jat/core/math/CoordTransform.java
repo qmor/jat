@@ -57,6 +57,9 @@ public class CoordTransform {
 		return Spherical_to_Cartesian_rad(r, MathUtils.DEG2RAD * theta, MathUtils.DEG2RAD * phi);
 	}
 
+
+	//Test: (1.5,1.5,1) -> r=2.345207879911715, theta=1.1302856637901981, phi=0.7853981633974483
+	
 	public static Vector3f Cartesian_to_Spherical(Vector3f coord) {
 		// r, theta, phi
 		if (coord.x == 0)
@@ -65,8 +68,8 @@ public class CoordTransform {
 		Vector3f out = new Vector3f();
 
 		out.x = (float) Math.sqrt((coord.x * coord.x) + (coord.y * coord.y) + (coord.z * coord.z));
-		out.y = (float) Math.acos(coord.y / coord.x);
-		out.z = (float) Math.atan(coord.z / coord.x);
+		out.y = (float) Math.acos(coord.z / out.x);
+		out.z = (float) Math.atan(coord.y / coord.x);
 		if (coord.x < 0)
 			out.y += Math.PI;
 
