@@ -19,39 +19,37 @@
  *
  */
 
-package jat.jat3D;
+package jat.jat3D.loader;
 
-import java.io.FileNotFoundException;
+import jat.jat3D.Body3D;
 
+import com.sun.j3d.loaders.Loader;
 import com.sun.j3d.loaders.Scene;
-import com.sun.j3d.loaders.objectfile.ObjectFile;
+import com.sun.j3d.loaders.lw3d.Lw3dLoader;
 
-
-/** WavefrontObject class
+/** LightWaveObject class
  * @author Tobias Berthold
  */
-public class WavefrontObject extends Body3D
+public class LightWaveObject extends Body3D
 {
 
-	public WavefrontObject(String filename, float scale)
+	public LightWaveObject( String filename, float scale)
 	{
 		super();
 		this.scale = scale;
+		String fullname;
 		Scene s = null;
 
-//		int flags = ObjectFile.RESIZE;
-//		ObjectFile f =	new ObjectFile(flags);
-		ObjectFile f = new ObjectFile();
-
-		filename = Wavefront_path + filename;
+		// Construct the Lw3d loader and load the file
+		fullname = Lightwave_path + filename;
+		System.out.println(fullname);
+		Loader lw3dLoader = new Lw3dLoader(Loader.LOAD_ALL);
 		try
 		{
-			s = f.load(filename);
-		} catch (FileNotFoundException e)
+			s = lw3dLoader.load(fullname);
+		} catch (Exception e)
 		{
-			System.err.println(e);
 			System.err.println("Exception loading file: " + e);
-			//System.exit(1);
 		}
 		addChild(s.getSceneGroup());
 	}

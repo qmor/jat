@@ -19,7 +19,12 @@
  *
  */
 
-package jat.jat3D;
+package jat.jat3D.loader;
+
+import jat.jat3D.Body3D;
+import jat.jat3D.Colors;
+import jat.jat3D.Cylinder3D;
+import jat.jat3D.Sphere3D;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;

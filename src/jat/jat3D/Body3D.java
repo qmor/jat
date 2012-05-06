@@ -46,9 +46,12 @@ public class Body3D extends TransformGroup {
 	Vector3d Vd = new Vector3d();
 	Vector3d VRot = new Vector3d();
 	Transform3D Trans = new Transform3D();
-	double scale = 1.0; // scale factor for 3D objects
+	protected double scale = 1.0; // scale factor for 3D objects
 	//Applet myapplet;
-	static String images_path, Lightwave_path, Wavefront_path, ThreeDStudio_path;
+	static String images_path;
+	protected static String Lightwave_path;
+	protected static String Wavefront_path;
+	protected static String ThreeDStudio_path;
 
 	public Body3D() {
 		FileUtil2 f = new FileUtil2();
