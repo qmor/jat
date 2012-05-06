@@ -161,8 +161,7 @@ public class jat_MouseZoom extends MouseBehavior {
 							break;
 						evt = (MouseEvent) mouseq.remove(0);
 						// consolodate MOUSE_DRAG events
-						while ((evt.getID() == MouseEvent.MOUSE_DRAGGED) && !mouseq.isEmpty()
-								&& (((MouseEvent) mouseq.get(0)).getID() == MouseEvent.MOUSE_DRAGGED)) {
+						while ((evt.getID() == MouseEvent.MOUSE_DRAGGED) && !mouseq.isEmpty() && (((MouseEvent) mouseq.get(0)).getID() == MouseEvent.MOUSE_DRAGGED)) {
 							evt = (MouseEvent) mouseq.remove(0);
 						}
 					}
@@ -196,10 +195,10 @@ public class jat_MouseZoom extends MouseBehavior {
 					// translation.z = dy*z_factor;
 
 					float zoom;
-					if(dy>0)
-					zoom= 1.1f;
+					if (dy > 0)
+						zoom = 0.9f;
 					else
-						zoom= 0.9f;
+						zoom = 1.1f;
 					// transformX.set(translation);
 					myvpt = myvp.getViewPlatformTransform();
 					Transform3D Trans = new Transform3D();
@@ -207,7 +206,7 @@ public class jat_MouseZoom extends MouseBehavior {
 					Vector3f v = new Vector3f();
 					Trans.get(v);
 					util.print("v", v);
-					Point3d p=new Point3d();
+					Point3d p = new Point3d();
 					p.x = zoom * v.x;
 					p.y = zoom * v.y;
 					p.z = zoom * v.z;
