@@ -1,4 +1,4 @@
-package jat.jat3D;
+package jat.jat3D.behavior;
 
 import jat.jat3D.CoordTransform3D;
 

@@ -6,6 +6,9 @@ import java.awt.GraphicsEnvironment;
 import javax.media.j3d.GraphicsConfigTemplate3D;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 public class util {
 
@@ -22,17 +25,27 @@ public class util {
 
 	public boolean check_for_Java3D_b() {
 
-		try
+		try {
+			GraphicsConfigTemplate3D gconfigTemplate = new GraphicsConfigTemplate3D();
+			GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+					.getBestConfiguration(gconfigTemplate);
+		} catch (Error e) // You shouldn't normally catch java.lang.Error...
+							// this is an exception
 		{
-		   GraphicsConfigTemplate3D gconfigTemplate = new GraphicsConfigTemplate3D();
-		   GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(gconfigTemplate);
-		}
-		catch (Error e) // You shouldn't normally catch java.lang.Error... this is an exception
-		{
-		   System.out.println("Java3D binaries not installed");
+			System.out.println("Java3D binaries not installed");
 			return false;
 		}
 		return true;
+	}
+
+	public static void print(String title, Vector3f v) {
+		System.out.println(title);
+		System.out.println(v.x + " " + v.y + " " + v.z );
+	}
+
+	public static void print(String title, Point3d p) {
+		System.out.println(title);
+		System.out.println(p.x + " " + p.y + " " + p.z );
 	}
 
 	public static void print(String title, Matrix4f mat) {
@@ -54,7 +67,5 @@ public class util {
 		System.out.println(mat.m20 + " " + mat.m21 + " " + mat.m22 + " " + mat.m23);
 		System.out.println(mat.m30 + " " + mat.m31 + " " + mat.m32 + " " + mat.m33);
 		System.out.println();
-	}	
+	}
 }
-
-
