@@ -205,12 +205,12 @@ public class jat_MouseZoom extends MouseBehavior {
 					myvpt.getTransform(Trans);
 					Vector3f v = new Vector3f();
 					Trans.get(v);
-					util.print("v", v);
+					//util.print("v", v);
 					Point3d p = new Point3d();
 					p.x = zoom * v.x;
 					p.y = zoom * v.y;
 					p.z = zoom * v.z;
-					util.print("p", p);
+					//util.print("p", p);
 					Transform3D lookAt = new Transform3D();
 					lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 					lookAt.invert();
