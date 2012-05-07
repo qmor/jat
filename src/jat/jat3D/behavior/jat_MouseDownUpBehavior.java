@@ -1,5 +1,7 @@
 package jat.jat3D.behavior;
 
+import jat.jat3D.JatPlot3D;
+
 import java.awt.event.*;
 import java.awt.AWTEvent;
 import javax.media.j3d.*;
@@ -17,9 +19,14 @@ public class jat_MouseDownUpBehavior extends Behavior {
 	WakeupCriterion[] wu2 = { wu1 };
 	WakeupCondition wu = new WakeupOr(wu2);
 	public ViewingPlatform myvp;
+	JatPlot3D jatPlot3D;
 
 	public jat_MouseDownUpBehavior(Bounds bound) {
 		this.setSchedulingBounds(bound);
+	}
+
+	public jat_MouseDownUpBehavior(JatPlot3D jatPlot3D) {
+		this.jatPlot3D = jatPlot3D;
 	}
 
 	public void setViewingPlatform(ViewingPlatform myvp) {
@@ -68,7 +75,8 @@ public class jat_MouseDownUpBehavior extends Behavior {
 					myvp.getViewPlatformTransform().getTransform(tf);
 					Vector3f vf = new Vector3f();
 					tf.get(vf);
-					System.out.println("distance from center "+vf.length());
+					System.out.println("distance from center " + vf.length());
+					jatPlot3D.adjustbox();
 					// Set wakeup criteria for next time
 					wakeupOn(wu);
 					break;

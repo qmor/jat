@@ -5,7 +5,7 @@ import javax.media.j3d.IndexedLineArray;
 import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 
-public class BoundingBox3D extends BranchGroup{
+public class BoundingBox3D extends Body3D{
 	public float lo = -.5f, hi = .5f;
 
 	public BoundingBox3D(float size) {
@@ -57,6 +57,4 @@ public class BoundingBox3D extends BranchGroup{
 		addChild(new Shape3D(xCube));
 	}
 
-	
-		
 }

@@ -29,7 +29,10 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
 	private SimpleUniverse universe;
+	public BranchGroup sceneBranchGroup;
 	private Bounds bounds;
+	protected BodyGroup3D bbox;
+	BoundingBox3D box;
 
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
@@ -113,7 +116,8 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseZoom.setSchedulingBounds(bounds);
 		bg.addChild(mouseZoom);
 
-		jat_MouseDownUpBehavior mouseDnUp = new jat_MouseDownUpBehavior(bounds);
+		jat_MouseDownUpBehavior mouseDnUp = new jat_MouseDownUpBehavior(this);
+		mouseDnUp.setSchedulingBounds(bounds);
 		bg.addChild(mouseDnUp);
 
 		mouseRotate.setViewingPlatform(myvp);
@@ -204,6 +208,21 @@ public abstract class JatPlot3D extends Canvas3D {
 		Vector3f vf = new Vector3f();
 		tf.get(vf);
 		return vf;
+	}
+
+	public void adjustbox() {
+		boolean changed=true;
+		float new_size=1.f;
+		float new_distance = get_vp_t().length();
+		if (new_distance < 10)
+			new_size = 1.f;
+		if (new_distance >= 10)
+			new_size = 10.f;
+		if (changed) {
+			BodyGroup3D.remove(sceneBranchGroup, "Box");
+			bbox = new BodyGroup3D(new BoundingBox3D(new_size), "Box");
+			sceneBranchGroup.addChild(bbox);
+		}
 	}
 
 }
