@@ -1,8 +1,9 @@
 package jat.jat3D;
 
+import jat.jat3D.behavior.jat_MouseDownUpBehavior;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
-import jat.jat3D.behavior.jat_MouseDownUpBehavior;
+
 import javax.media.j3d.AmbientLight;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
@@ -16,8 +17,6 @@ import javax.media.j3d.View;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-
-//import org.freehep.j3d.plot.PlotKeyNavigatorBehavior;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.universe.SimpleUniverse;
@@ -35,6 +34,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected BodyGroup3D bbox;
 	private float current_distance;
 	BoundingBox3D box;
+	public AxisBuilder xAxis;
 
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
@@ -209,14 +209,14 @@ public abstract class JatPlot3D extends Canvas3D {
 			tf.set(.1);
 			scene.setTransform(tf);
 			// and move viewer closer
-			Vector3f v = get_vp_t();
-			
+			Vector3f v = get_vp_t();			
 			Point3d p=new Point3d(v.x /10,v.y /10,v.z /10);
 			Transform3D lookAt = new Transform3D();
 			lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 			lookAt.invert();
 			universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
-
+			xAxis.setLabel("hello");
+			xAxis.apply();
 			current_distance = new_distance;
 		}
 		if (new_distance < 10 && current_distance > 10) {
