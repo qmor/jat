@@ -32,6 +32,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	public BranchGroup sceneBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bbox;
+	private float current_distance;
 	BoundingBox3D box;
 
 	protected JatPlot3D() {
@@ -56,6 +57,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		lookAt.lookAt(new Point3d(1.5, 1.5, 1), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 		myvp.getViewPlatformTransform().setTransform(lookAt);
+		current_distance = get_vp_t().length();
 
 		if (parallelProjection) {
 			setProjectionPolicy(universe, parallelProjection);
@@ -211,9 +213,18 @@ public abstract class JatPlot3D extends Canvas3D {
 	}
 
 	public void adjustbox() {
-		boolean changed=true;
-		float new_size=1.f;
+		boolean changed = false;
 		float new_distance = get_vp_t().length();
+
+		if (new_distance > 10 && current_distance < 10) {
+			changed = true;
+			System.out.println("nd>10 cd<10");
+		}
+		if (new_distance < 10 && current_distance > 10) {
+			changed = true;
+			System.out.println("nd<10 cd>10");
+		}
+		float new_size = 1.f;
 		if (new_distance < 10)
 			new_size = 1.f;
 		if (new_distance >= 10)
@@ -222,6 +233,7 @@ public abstract class JatPlot3D extends Canvas3D {
 			BodyGroup3D.remove(sceneBranchGroup, "Box");
 			bbox = new BodyGroup3D(new BoundingBox3D(new_size), "Box");
 			sceneBranchGroup.addChild(bbox);
+			current_distance=new_distance;
 		}
 	}
 

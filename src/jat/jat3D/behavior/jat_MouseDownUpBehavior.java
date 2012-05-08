@@ -60,6 +60,7 @@ public class jat_MouseDownUpBehavior extends Behavior {
 	 * Process a mouse up or down event
 	 */
 	void processSwitchEvent(AWTEvent[] events) {
+
 		for (int i = 0; i < events.length; ++i) {
 			if (events[i] instanceof MouseEvent) {
 				MouseEvent event = (MouseEvent) events[i];
