@@ -4,7 +4,6 @@ import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 import jat.jat3D.behavior.jat_MouseDownUpBehavior;
 import javax.media.j3d.AmbientLight;
-import javax.media.j3d.Behavior;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
@@ -29,7 +28,9 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
 	private SimpleUniverse universe;
+	protected TransformGroup scene;
 	public BranchGroup sceneBranchGroup;
+	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bbox;
 	private float current_distance;
@@ -45,8 +46,8 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		ViewingPlatform myvp = universe.getViewingPlatform();
 
-		Node plot = createPlot();
-		BranchGroup scene = defineMouseBehaviour(plot, myvp);
+		Node myScene = createScene();
+		BranchGroup scene = defineMouseBehaviour(myScene, myvp);
 		setupLights(scene); // Surface plot wants an extra light
 		scene.compile();
 
@@ -71,7 +72,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		if (!init)
 			init();
 		super.addNotify(); // must call for Java3D to operate properly when
-							// overriding
+		// overriding
 	}
 
 	public boolean getParallelProjection() {
@@ -88,7 +89,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	/**
 	 * Override to provide plot content
 	 */
-	protected abstract Node createPlot();
+	protected abstract Node createScene();
 
 	/**
 	 * Override to provide different mouse behaviour
@@ -125,22 +126,6 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseRotate.setViewingPlatform(myvp);
 		mouseZoom.setViewingPlatform(myvp);
 		mouseDnUp.setViewingPlatform(myvp);
-
-		// Set initial transformation
-		// Transform3D trans = createDefaultOrientation();
-		// objTransform.setTransform(trans);
-
-		// Behavior keyBehavior = new PlotKeyNavigatorBehavior(objTransform,
-		// .1f, 10f);
-		// objTransform.addChild(keyBehavior);
-		// keyBehavior.setSchedulingBounds(bounds);
-
-		// set up a rotation animating behavior
-		// rotator = setupZRotator(dynamicXform);
-		// rotator.setSchedulingBounds(bounds);
-		// rotator.setEnable(false);
-		// dynamicXform.addChild(rotator);
-
 		return bg;
 	}
 
@@ -213,28 +198,46 @@ public abstract class JatPlot3D extends Canvas3D {
 	}
 
 	public void adjustbox() {
+		Transform3D tf = new Transform3D();
 		boolean changed = false;
 		float new_distance = get_vp_t().length();
 
 		if (new_distance > 10 && current_distance < 10) {
 			changed = true;
 			System.out.println("nd>10 cd<10");
+			// shrink scene
+			tf.set(.1);
+			scene.setTransform(tf);
+			// and move viewer closer
+			Vector3f v = get_vp_t();
+			
+			Point3d p=new Point3d(v.x /10,v.y /10,v.z /10);
+			Transform3D lookAt = new Transform3D();
+			lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+			lookAt.invert();
+			universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
+
+			current_distance = new_distance;
 		}
 		if (new_distance < 10 && current_distance > 10) {
 			changed = true;
 			System.out.println("nd<10 cd>10");
+			tf.set(.1);
+			scene.setTransform(tf);
+			current_distance = new_distance;
 		}
-		float new_size = 1.f;
-		if (new_distance < 10)
-			new_size = 1.f;
-		if (new_distance >= 10)
-			new_size = 10.f;
-		if (changed) {
-			BodyGroup3D.remove(sceneBranchGroup, "Box");
-			bbox = new BodyGroup3D(new BoundingBox3D(new_size), "Box");
-			sceneBranchGroup.addChild(bbox);
-			current_distance=new_distance;
-		}
+
+		// float new_size = 1.f;
+		// if (new_distance < 10)
+		// new_size = 1.f;
+		// if (new_distance >= 10)
+		// new_size = 10.f;
+		// if (changed) {
+		// BodyGroup3D.remove(sceneBranchGroup, "Box");
+		// bbox = new BodyGroup3D(new BoundingBox3D(new_size), "Box");
+		// sceneBranchGroup.addChild(bbox);
+		// current_distance = new_distance;
+		// }
 	}
 
 }
