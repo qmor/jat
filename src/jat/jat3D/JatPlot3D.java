@@ -33,9 +33,11 @@ public abstract class JatPlot3D extends Canvas3D {
 	private Bounds bounds;
 	protected BodyGroup3D bbox;
 	private float current_distance;
-	BoundingBox3D box;
 	public AxisBuilder xAxis;
-
+	private int zoom_state = 0;
+	public jat_MouseZoom mouseZoom;
+	
+	
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
 	}
@@ -114,7 +116,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseTranslate.setSchedulingBounds(bounds);
 		bg.addChild(mouseTranslate);
 
-		jat_MouseZoom mouseZoom = new jat_MouseZoom();
+		mouseZoom = new jat_MouseZoom();
 		mouseZoom.setTransformGroup(objTransform);
 		mouseZoom.setSchedulingBounds(bounds);
 		bg.addChild(mouseZoom);
@@ -198,46 +200,41 @@ public abstract class JatPlot3D extends Canvas3D {
 	}
 
 	public void adjustbox() {
-		Transform3D tf = new Transform3D();
 		boolean changed = false;
 		float new_distance = get_vp_t().length();
 
 		if (new_distance > 10 && current_distance < 10) {
 			changed = true;
+			zoom_state += 1;
 			System.out.println("nd>10 cd<10");
-			// shrink scene
-			tf.set(.1);
-			scene.setTransform(tf);
-			// and move viewer closer
-			Vector3f v = get_vp_t();			
-			Point3d p=new Point3d(v.x /10,v.y /10,v.z /10);
-			Transform3D lookAt = new Transform3D();
-			lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-			lookAt.invert();
-			universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
-			xAxis.setLabel("hello");
-			xAxis.apply();
 			current_distance = new_distance;
 		}
 		if (new_distance < 10 && current_distance > 10) {
 			changed = true;
+			zoom_state -= 1;
 			System.out.println("nd<10 cd>10");
-			tf.set(.1);
-			scene.setTransform(tf);
 			current_distance = new_distance;
 		}
 
-		// float new_size = 1.f;
-		// if (new_distance < 10)
-		// new_size = 1.f;
-		// if (new_distance >= 10)
-		// new_size = 10.f;
-		// if (changed) {
-		// BodyGroup3D.remove(sceneBranchGroup, "Box");
-		// bbox = new BodyGroup3D(new BoundingBox3D(new_size), "Box");
-		// sceneBranchGroup.addChild(bbox);
-		// current_distance = new_distance;
-		// }
+		if (changed)
+			new_box();
+	}
+
+	void new_box() {
+		float factor = (float)Math.pow(10, -zoom_state);
+		Transform3D tf = new Transform3D();
+		// scale scene to fit inside box
+		tf.set(factor);
+		scene.setTransform(tf);
+		// and move viewer accordingly
+		Vector3f v = get_vp_t();
+		Point3d p = new Point3d(v.x / 10, v.y / 10, v.z / 10);
+		Transform3D lookAt = new Transform3D();
+		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+		lookAt.invert();
+		universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
+		xAxis.setLabel("X 10^" + zoom_state + " km");
+		xAxis.apply();
 	}
 
 }
