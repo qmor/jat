@@ -243,10 +243,6 @@ public class jat_MouseRotate extends MouseBehavior {
 				if (!reset) {
 					x_angle = dx * x_factor;
 					y_angle = dy * y_factor;
-					// System.out.println("x_angle "+x_angle+"y_angle "+y_angle);
-
-					// transformX.rotX(x_angle);
-					// transformY.rotY(x_angle);
 					transformZ.rotZ(x_angle);
 
 					transformGroup.getTransform(currXform);
@@ -277,43 +273,21 @@ public class jat_MouseRotate extends MouseBehavior {
 					transformGroup.setTransform(currXform);
 
 					// The view position
-					// myvpt = sp.myvpt;
 					myvpt = myvp.getViewPlatformTransform();
 					Transform3D Trans = new Transform3D();
 					myvpt.getTransform(Trans);
 
 					Vector3f v_current_cart = new Vector3f();
 					Trans.get(v_current_cart);
-					// System.out.println("cart before: " + v_current_cart.x +
-					// " " + v_current_cart.y + " "
-					// + v_current_cart.z);
 
 					Vector3f v_current_spher;
 					v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
-					// System.out.println("spher before: " + v_current_spher.x +
-					// " " + v_current_spher.y + " "
-					// + v_current_spher.z);
 
 					v_current_spher.y -= y_angle;
-					// System.out.println("spher after: " + v_current_spher.x +
-					// " " + v_current_spher.y + " "
-					// + v_current_spher.z);
-
-					// Vector3d v = CoordTransform.Spherical_to_Cartesian(new
-					// Vector3d(2, i / 100., 45.));
-					// Vector3d v = CoordTransform.Spherical_to_Cartesian(new
-					// Vector3d(v_current_spher.x, v_current_spher.y,
-					// v_current_spher.z));
 					Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
-					// System.out.println("cart after : " + v.x + " " + v.y +
-					// " " + v.z);
-					// System.out.println();
 
 					Transform3D lookAt = new Transform3D();
 					lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-					// lookAt.lookAt(new Point3d(v_current_cart.x,
-					// v_current_cart.y, v_current_cart.z), new Point3d(0.0,
-					// 0.0, 0.0), new Vector3d(0, 0, 1.0));
 					lookAt.invert();
 
 					myvpt.setTransform(lookAt);

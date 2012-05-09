@@ -5,6 +5,7 @@ import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 
 import javax.media.j3d.AmbientLight;
+import javax.media.j3d.Behavior;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
@@ -17,6 +18,7 @@ import javax.media.j3d.View;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
+
 
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.universe.SimpleUniverse;
@@ -36,8 +38,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	public AxisBuilder xAxis;
 	private int zoom_state = 0;
 	public jat_MouseZoom mouseZoom;
-	
-	
+
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
 	}
@@ -128,6 +129,11 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseRotate.setViewingPlatform(myvp);
 		mouseZoom.setViewingPlatform(myvp);
 		mouseDnUp.setViewingPlatform(myvp);
+
+		Behavior keyBehavior = new PlotKeyNavigatorBehavior(objTransform, .1f, 10f);
+		objTransform.addChild(keyBehavior);
+		keyBehavior.setSchedulingBounds(bounds);
+
 		return bg;
 	}
 
@@ -203,17 +209,15 @@ public abstract class JatPlot3D extends Canvas3D {
 		boolean changed = false;
 		float new_distance = get_vp_t().length();
 
-		if (new_distance > 10 && current_distance < 10) {
+		if (new_distance > 10) {
 			changed = true;
 			zoom_state += 1;
 			System.out.println("nd>10 cd<10");
-			current_distance = new_distance;
 		}
-		if (new_distance < 10 && current_distance > 10) {
+		if (new_distance < .1) {
 			changed = true;
 			zoom_state -= 1;
-			System.out.println("nd<10 cd>10");
-			current_distance = new_distance;
+			System.out.println("nd>10 cd<10");
 		}
 
 		if (changed)
@@ -221,14 +225,14 @@ public abstract class JatPlot3D extends Canvas3D {
 	}
 
 	void new_box() {
-		float factor = (float)Math.pow(10, -zoom_state);
+		float factor = (float) Math.pow(10, zoom_state);
 		Transform3D tf = new Transform3D();
 		// scale scene to fit inside box
-		tf.set(factor);
+		tf.set(1 / factor);
 		scene.setTransform(tf);
 		// and move viewer accordingly
 		Vector3f v = get_vp_t();
-		Point3d p = new Point3d(v.x / 10, v.y / 10, v.z / 10);
+		Point3d p = new Point3d(v.x * factor, v.y * factor, v.z * factor);
 		Transform3D lookAt = new Transform3D();
 		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
@@ -238,3 +242,16 @@ public abstract class JatPlot3D extends Canvas3D {
 	}
 
 }
+
+// if (new_distance > 10 && current_distance < 10) {
+// changed = true;
+// zoom_state += 1;
+// System.out.println("nd>10 cd<10");
+// current_distance = new_distance;
+// }
+// if (new_distance < 10 && current_distance > 10) {
+// changed = true;
+// zoom_state -= 1;
+// System.out.println("nd<10 cd>10");
+// current_distance = new_distance;
+// }
