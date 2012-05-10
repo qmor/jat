@@ -70,7 +70,8 @@ public class PlotKeyBehavior extends Behavior {
 			move(0f, 1f, 0f, shift);
 			break;
 		case KeyEvent.VK_LEFT:
-			move(-1f, 0f, 0f, shift);
+			jat_rotate(1,2,3);
+			//move(-1f, 0f, 0f, shift);
 			break;
 		case KeyEvent.VK_RIGHT:
 			move(1f, 0f, 0f, shift);
@@ -118,7 +119,7 @@ public class PlotKeyBehavior extends Behavior {
 
 	private void jat_rotate(float x, float y, float z) {
 			double x_angle = 0.1;
-			double y_angle = 0.1;
+			double y_angle = 0.01;
 			
 						
 			transformZ.rotZ(x_angle);

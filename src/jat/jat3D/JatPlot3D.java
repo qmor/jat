@@ -126,14 +126,14 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseDnUp.setSchedulingBounds(bounds);
 		bg.addChild(mouseDnUp);
 
-		Behavior keyBehavior = new PlotKeyBehavior(objTransform, .1f, 10f);
+		PlotKeyBehavior keyBehavior = new PlotKeyBehavior(objTransform, .1f, 10f);
 		keyBehavior.setSchedulingBounds(bounds);
 		bg.addChild(keyBehavior);
 
 		mouseRotate.setViewingPlatform(myvp);
 		mouseZoom.setViewingPlatform(myvp);
 		mouseDnUp.setViewingPlatform(myvp);
-		//keyBehavior.setViewingPlatform(myvp);
+		keyBehavior.setViewingPlatform(myvp);
 		
 		return bg;
 	}
