@@ -26,7 +26,6 @@ import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 
 import javax.media.j3d.AmbientLight;
-import javax.media.j3d.Behavior;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
@@ -40,7 +39,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
-
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import com.sun.j3d.utils.universe.ViewingPlatform;
@@ -50,7 +48,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
 	private SimpleUniverse universe;
-	protected TransformGroup scene;
+	public TransformGroup scene;
 	public BranchGroup sceneBranchGroup;
 	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
@@ -59,6 +57,8 @@ public abstract class JatPlot3D extends Canvas3D {
 	public AxisBuilder xAxis;
 	private int zoom_state = 0;
 	public jat_MouseZoom mouseZoom;
+	ViewingPlatform myvp;
+	TransformGroup myvpt;
 
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
@@ -69,13 +69,14 @@ public abstract class JatPlot3D extends Canvas3D {
 		universe = new SimpleUniverse(this);
 
 		ViewingPlatform myvp = universe.getViewingPlatform();
+		myvpt = myvp.getViewPlatformTransform();
 
 		Node myScene = createScene();
-		BranchGroup scene = defineMouseBehaviour(myScene, myvp);
-		setupLights(scene); // Surface plot wants an extra light
-		scene.compile();
+		BranchGroup mouseGroup = defineMouseBehaviour(myScene, myvp);
+		setupLights(mouseGroup); // Surface plot wants an extra light
+		mouseGroup.compile();
 
-		universe.addBranchGraph(scene);
+		universe.addBranchGraph(mouseGroup);
 
 		// look at the right spot
 		Transform3D lookAt = new Transform3D();
@@ -147,15 +148,15 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseDnUp.setSchedulingBounds(bounds);
 		bg.addChild(mouseDnUp);
 
-		PlotKeyBehavior keyBehavior = new PlotKeyBehavior(objTransform, .1f, 10f);
+		PlotKeyBehavior keyBehavior = new PlotKeyBehavior(this);
 		keyBehavior.setSchedulingBounds(bounds);
 		bg.addChild(keyBehavior);
 
 		mouseRotate.setViewingPlatform(myvp);
 		mouseZoom.setViewingPlatform(myvp);
 		mouseDnUp.setViewingPlatform(myvp);
-		keyBehavior.setViewingPlatform(myvp);
-		
+		// keyBehavior.setViewingPlatform(myvp);
+
 		return bg;
 	}
 
@@ -263,17 +264,54 @@ public abstract class JatPlot3D extends Canvas3D {
 		xAxis.apply();
 	}
 
-}
+	public void jat_zoom(float dy) {
+		float zoom;
+		if (dy > 0)
+			zoom = 0.96f;
+		else
+			zoom = 1.04f;
+		Transform3D Trans = new Transform3D();
+		myvpt.getTransform(Trans);
+		Vector3f v = new Vector3f();
+		Trans.get(v);
+		// util.print("v", v);
+		Point3d p = new Point3d();
+		p.x = zoom * v.x;
+		p.y = zoom * v.y;
+		p.z = zoom * v.z;
+		// util.print("p", p);
+		Transform3D lookAt = new Transform3D();
+		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+		lookAt.invert();
+		update_user();
+		myvpt.setTransform(lookAt);
+	}
 
-// if (new_distance > 10 && current_distance < 10) {
-// changed = true;
-// zoom_state += 1;
-// System.out.println("nd>10 cd<10");
-// current_distance = new_distance;
-// }
-// if (new_distance < 10 && current_distance > 10) {
-// changed = true;
-// zoom_state -= 1;
-// System.out.println("nd<10 cd>10");
-// current_distance = new_distance;
-// }
+	public void jat_rotate(float x_angle, float y_angle) {
+		// The view position
+		// myvpt = myvp.getViewPlatformTransform();
+		Transform3D Trans = new Transform3D();
+		myvpt.getTransform(Trans);
+
+		Vector3f v_current_cart = new Vector3f();
+		Trans.get(v_current_cart);
+
+		Vector3f v_current_spher;
+		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
+
+		v_current_spher.y -= y_angle;
+		v_current_spher.z -= x_angle;
+		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
+
+		Transform3D lookAt = new Transform3D();
+		lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+		lookAt.invert();
+
+		myvpt.setTransform(lookAt);
+	}
+
+	// Override if output desired
+	public void update_user() {
+	}
+
+}

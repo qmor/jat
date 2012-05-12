@@ -21,6 +21,7 @@
 package jat.jat3D.behavior;
 
 import jat.jat3D.CoordTransform3D;
+import jat.jat3D.JatPlot3D;
 
 import java.awt.event.KeyEvent;
 
@@ -56,8 +57,8 @@ public class PlotKeyBehavior extends Behavior {
 	private float angle;
 	Transform3D transformZ = new Transform3D();
 	Transform3D currXform = new Transform3D();
-	public ViewingPlatform myvp;
-	public TransformGroup myvpt;
+	// public ViewingPlatform myvp;
+	JatPlot3D jatPlot3D;
 
 	public PlotKeyBehavior(TransformGroup transformGroup, float moveStep, float rotStep) {
 		super();
@@ -69,14 +70,22 @@ public class PlotKeyBehavior extends Behavior {
 		this.angle = (float) Math.toRadians(rotStep);
 	}
 
+	public PlotKeyBehavior(JatPlot3D jatPlot3D) {
+		super();
+		this.init = new Transform3D();
+		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
+		this.jatPlot3D = jatPlot3D;
+		this.transformGroup = jatPlot3D.scene;
+	}
+
 	public void initialize() {
 		wakeupOn(wup);
 		transformGroup.getTransform(init);
 	}
 
-	public void setViewingPlatform(ViewingPlatform myvp) {
-		this.myvp = myvp;
-	}
+	// public void setViewingPlatform(ViewingPlatform myvp) {
+	// this.myvp = myvp;
+	// }
 
 	public void processStimulus(java.util.Enumeration criteria) {
 		KeyEvent event = (KeyEvent) (wup.getAWTEvent())[0];
@@ -85,16 +94,16 @@ public class PlotKeyBehavior extends Behavior {
 
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
-			jat_rotate(0, .02f);
+			jatPlot3D.jat_rotate(0, .02f);
 			break;
 		case KeyEvent.VK_DOWN:
-			jat_rotate(0, -.02f);
+			jatPlot3D.jat_rotate(0, -.02f);
 			break;
 		case KeyEvent.VK_LEFT:
-			jat_rotate(-.02f, 0);
+			jatPlot3D.jat_rotate(-.02f, 0);
 			break;
 		case KeyEvent.VK_RIGHT:
-			jat_rotate(.02f, 0);
+			jatPlot3D.jat_rotate(.02f, 0);
 			break;
 		case KeyEvent.VK_PAGE_UP:
 			move(0f, 0f, 1f, shift);
@@ -107,11 +116,11 @@ public class PlotKeyBehavior extends Behavior {
 			break;
 		case KeyEvent.VK_EQUALS:
 			System.out.println("plus pressed");
-			jat_zoom(1);
+			jatPlot3D.jat_zoom(1);
 			break;
 		case KeyEvent.VK_MINUS:
 			System.out.println("minus pressed");
-			jat_zoom(-1);
+			jatPlot3D.jat_zoom(-1);
 			break;
 		}
 		wakeupOn(wup);
@@ -146,90 +155,5 @@ public class PlotKeyBehavior extends Behavior {
 		transformGroup.setTransform(tgr);
 	}
 
-	private void jat_zoom(float dy) {
-
-		float zoom;
-		if (dy > 0)
-			zoom = 0.9f;
-		else
-			zoom = 1.1f;
-		myvpt = myvp.getViewPlatformTransform();
-		Transform3D Trans = new Transform3D();
-		myvpt.getTransform(Trans);
-		Vector3f v = new Vector3f();
-		Trans.get(v);
-		// util.print("v", v);
-		Point3d p = new Point3d();
-		p.x = zoom * v.x;
-		p.y = zoom * v.y;
-		p.z = zoom * v.z;
-		// util.print("p", p);
-		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-		lookAt.invert();
-
-		myvpt.setTransform(lookAt);
-
-	}
-
-	private void jat_rotate(float x_angle, float y_angle) {
-		// double x_angle = 0.1;
-		// double y_angle = 0.01;
-
-		transformZ.rotZ(x_angle);
-
-		transformGroup.getTransform(currXform);
-
-		Matrix4d mat = new Matrix4d();
-		// Remember old matrix
-		currXform.get(mat);
-
-		// Translate to origin
-		currXform.setTranslation(new Vector3d(0.0, 0.0, 0.0));
-
-		// if (invert) {
-		// currXform.mul(currXform, transformX);
-		// currXform.mul(currXform, transformY);
-		// currXform.mul(currXform, transformZ);
-		// } else {
-		// currXform.mul(transformZ, currXform);
-		currXform.mul(transformZ);
-		// currXform.mul(transform_axis, currXform);
-		// currXform.mul(transform_axis);
-		// }
-
-		// Set old translation back
-		Vector3d translation = new Vector3d(mat.m03, mat.m13, mat.m23);
-		currXform.setTranslation(translation);
-
-		// Update xform
-		transformGroup.setTransform(currXform);
-
-		// The view position
-		myvpt = myvp.getViewPlatformTransform();
-		Transform3D Trans = new Transform3D();
-		myvpt.getTransform(Trans);
-
-		Vector3f v_current_cart = new Vector3f();
-		Trans.get(v_current_cart);
-
-		Vector3f v_current_spher;
-		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
-
-		v_current_spher.y -= y_angle;
-		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
-
-		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-		lookAt.invert();
-
-		myvpt.setTransform(lookAt);
-
-		// transformChanged(currXform);
-
-		// if (callback != null)
-		// callback.transformChanged(MouseBehaviorCallback.ROTATE, currXform);
-
-	}
 
 }

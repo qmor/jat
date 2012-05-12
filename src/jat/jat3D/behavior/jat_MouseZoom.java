@@ -245,9 +245,9 @@ public class jat_MouseZoom extends MouseBehavior {
 						// currXform.mul(transformX, currXform);
 					}
 
-					transformGroup.setTransform(currXform);
+					//transformGroup.setTransform(currXform);
 
-					transformChanged(currXform);
+					//transformChanged(currXform);
 
 					if (callback != null)
 						callback.transformChanged(MouseBehaviorCallback.ZOOM, currXform);

@@ -87,16 +87,16 @@ public class jat_MouseDownUpBehavior extends Behavior {
 				if (event.getID() == MouseEvent.MOUSE_PRESSED) {
 					// default
 					// Set wakeup criteria for next time
-					System.out.println("mouse pressed");
+					//System.out.println("mouse pressed");
 					wakeupOn(w);
 					break;
 				} else if (event.getID() == MouseEvent.MOUSE_RELEASED) {
-					System.out.println("mouse released");
+					//System.out.println("mouse released");
 					Transform3D tf = new Transform3D();
 					myvp.getViewPlatformTransform().getTransform(tf);
 					Vector3f vf = new Vector3f();
 					tf.get(vf);
-					System.out.println("distance from center " + vf.length());
+					//System.out.println("distance from center " + vf.length());
 					jatPlot3D.adjustbox();
 					// Set wakeup criteria for next time
 					wakeupOn(wu);
