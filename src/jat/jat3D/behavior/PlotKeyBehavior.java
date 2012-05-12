@@ -115,11 +115,11 @@ public class PlotKeyBehavior extends Behavior {
 			transformGroup.setTransform(init);
 			break;
 		case KeyEvent.VK_EQUALS:
-			System.out.println("plus pressed");
+			//System.out.println("plus pressed");
 			jatPlot3D.jat_zoom(1);
 			break;
 		case KeyEvent.VK_MINUS:
-			System.out.println("minus pressed");
+			//System.out.println("minus pressed");
 			jatPlot3D.jat_zoom(-1);
 			break;
 		}

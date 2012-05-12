@@ -22,13 +22,21 @@
 
 package jat.jat3D.behavior;
 
-import jat.jat3D.util;
+import jat.jat3D.JatPlot3D;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.util.Enumeration;
+
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.media.j3d.WakeupCriterion;
+import javax.media.j3d.WakeupOnAWTEvent;
+import javax.media.j3d.WakeupOnBehaviorPost;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
@@ -44,16 +52,26 @@ public class jat_MouseZoom extends MouseBehavior {
 
 	float z_factor = .004f;
 	Vector3d translation = new Vector3d();
-	public ViewingPlatform myvp;
-	public TransformGroup myvpt;
+	//public ViewingPlatform myvp;
+	//public TransformGroup myvpt;
+	JatPlot3D jatPlot3D;
 
 	private MouseBehaviorCallback callback = null;
 
-	public jat_MouseZoom(ViewingPlatform myvp) {
+//	public jat_MouseZoom(ViewingPlatform myvp) {
+//		super(0);
+//		this.myvp = myvp;
+//	}
+
+	public jat_MouseZoom(JatPlot3D jatPlot3D) {
 		super(0);
-		this.myvp = myvp;
+		this.jatPlot3D = jatPlot3D;
+
 	}
 
+	
+	
+	
 	/**
 	 * Creates a zoom behavior given the transform group.
 	 * 
@@ -133,9 +151,9 @@ public class jat_MouseZoom extends MouseBehavior {
 		super(c, flags);
 	}
 
-	public void setViewingPlatform(ViewingPlatform myvp) {
-		this.myvp = myvp;
-	}
+	// public void setViewingPlatform(ViewingPlatform myvp) {
+	// this.myvp = myvp;
+	// }
 
 	public void initialize() {
 		super.initialize();
@@ -214,8 +232,12 @@ public class jat_MouseZoom extends MouseBehavior {
 				if (!reset) {
 					transformGroup.getTransform(currXform);
 
-					// translation.z = dy*z_factor;
+					
+					
+					jatPlot3D.jat_zoom(dy);
 
+					// translation.z = dy*z_factor;
+/*
 					float zoom;
 					if (dy > 0)
 						zoom = 0.9f;
@@ -248,7 +270,7 @@ public class jat_MouseZoom extends MouseBehavior {
 					//transformGroup.setTransform(currXform);
 
 					//transformChanged(currXform);
-
+*/
 					if (callback != null)
 						callback.transformChanged(MouseBehaviorCallback.ZOOM, currXform);
 
