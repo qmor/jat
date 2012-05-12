@@ -22,7 +22,18 @@ import javax.media.j3d.SceneGraphObject;
 
 public class BodyGroup3D extends BranchGroup {
 
+	public BodyGroup3D() {
+		super();
+		setCapability(BranchGroup.ALLOW_DETACH);
+		setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+	}
 
+	/**
+	 * @param b body to add
+	 * @param name name of added body; used if body is removed
+	 */
 	public BodyGroup3D(Body3D b, String name) {
 		super();
 		setUserData(name);
@@ -33,6 +44,7 @@ public class BodyGroup3D extends BranchGroup {
 		addChild(b);
 	}
 	
+
 	public void add(Body3D b) {
 		addChild(b);
 	}

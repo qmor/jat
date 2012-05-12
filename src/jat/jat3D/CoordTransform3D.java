@@ -19,6 +19,8 @@
 
 package jat.jat3D;
 
+import jat.core.math.MathUtilsAPL;
+
 import javax.vecmath.Vector3f;
 
 public class CoordTransform3D {
@@ -28,15 +30,13 @@ public class CoordTransform3D {
 	public static Vector3f Cartesian_to_Spherical(Vector3f coord) {
 		// r, theta, phi
 		if (coord.x == 0)
-			;
-		// coord.x = Math.e.FLT_EPSILON;
+			
+		 coord.x = MathUtilsAPL.MACHEPS;
 		Vector3f out = new Vector3f();
 	
 		out.x = (float) Math.sqrt((coord.x * coord.x) + (coord.y * coord.y) + (coord.z * coord.z));
 		out.y = (float) Math.acos(coord.z / out.x);
-		out.z = (float) Math.atan(coord.y / coord.x);
-		if (coord.x < 0)
-			out.y += Math.PI;
+		out.z = (float) Math.atan2((double)coord.y , (double)coord.x);
 	
 		return out;
 	}

@@ -15,13 +15,12 @@
    limitations under the License.
  */
 
-
 // Original Code:
 // Copyright (c) 2007 Sun Microsystems, Inc. All rights reserved.
 
 package jat.jat3D.behavior;
 
-import jat.jat3D.CoordTransform3D;
+import jat.jat3D.JatPlot3D;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -33,10 +32,6 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOnBehaviorPost;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
@@ -71,8 +66,12 @@ public class jat_MouseRotate extends MouseBehavior {
 	public TransformGroup myvpt;
 	int i = 0;
 	private MouseBehaviorCallback callback = null;
+	private JatPlot3D jatPlot3D;
 
-	// private solarsystemplot sp;
+	public jat_MouseRotate(JatPlot3D jatPlot3D) {
+		super(0);
+		this.jatPlot3D = jatPlot3D;
+	}
 
 	/**
 	 * Creates a rotate behavior given the transform group.
@@ -125,7 +124,6 @@ public class jat_MouseRotate extends MouseBehavior {
 	public jat_MouseRotate(Component c) {
 		super(c, 0);
 		transformZ = new Transform3D();
-		// this.sp = (solarsystemplot) c;
 
 	}
 
@@ -264,7 +262,8 @@ public class jat_MouseRotate extends MouseBehavior {
 				if (!reset) {
 					x_angle = dx * x_factor;
 					y_angle = dy * y_factor;
-					transformZ.rotZ(x_angle);
+					jatPlot3D.jat_rotate((float)x_angle,(float)y_angle);
+					/*transformZ.rotZ(x_angle);
 
 					transformGroup.getTransform(currXform);
 
@@ -314,7 +313,7 @@ public class jat_MouseRotate extends MouseBehavior {
 					myvpt.setTransform(lookAt);
 
 					transformChanged(currXform);
-
+*/
 					if (callback != null)
 						callback.transformChanged(MouseBehaviorCallback.ROTATE, currXform);
 				} else {

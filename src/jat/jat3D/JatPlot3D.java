@@ -21,7 +21,6 @@
 package jat.jat3D;
 
 import jat.jat3D.behavior.PlotKeyBehavior;
-import jat.jat3D.behavior.jat_MouseDownUpBehavior;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 
@@ -53,7 +52,6 @@ public abstract class JatPlot3D extends Canvas3D {
 	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bbox;
-	private float current_distance;
 	public AxisBuilder xAxis;
 	private int zoom_state = 0;
 	public jat_MouseZoom mouseZoom;
@@ -83,7 +81,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		lookAt.lookAt(new Point3d(1.5, 1.5, 1), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 		myvp.getViewPlatformTransform().setTransform(lookAt);
-		current_distance = get_vp_t().length();
+		//float current_distance = get_vp_t().length();
 
 		if (parallelProjection) {
 			setProjectionPolicy(universe, parallelProjection);
@@ -129,7 +127,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		objTransform.addChild(scene);
 		bg.addChild(objTransform);
 
-		jat_MouseRotate mouseRotate = new jat_MouseRotate();
+		jat_MouseRotate mouseRotate = new jat_MouseRotate(this);
 		mouseRotate.setTransformGroup(objTransform);
 		mouseRotate.setSchedulingBounds(bounds);
 		bg.addChild(mouseRotate);
@@ -307,11 +305,14 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		Vector3f v_current_spher;
 		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
+		util.print("view spher", v_current_spher);
 
 		v_current_spher.y -= y_angle;
 		v_current_spher.z -= x_angle;
 		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
 
+		util.print("view cart", v);
+		
 		Transform3D lookAt = new Transform3D();
 		lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();

@@ -1,28 +1,23 @@
 /* JAT: Java Astrodynamics Toolkit
- *
- * Copyright (c) 2002 National Aeronautics and Space Administration and the Center for Space Research (CSR),
- * The University of Texas at Austin. All rights reserved.
- *
- * This file is part of JAT. JAT is free software; you can
- * redistribute it and/or modify it under the terms of the
- * NASA Open Source Agreement
  * 
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * NASA Open Source Agreement for more details.
- *
- * You should have received a copy of the NASA Open Source Agreement
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
+  Copyright 2012 Tobias Berthold
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
  */
 
 package jat.jat3D;
 
 import jat.core.cm.cm;
-import jat.core.util.FileUtil2;
 
 import java.awt.Button;
 import java.awt.Image;
@@ -33,16 +28,14 @@ import javax.media.j3d.ImageComponent2D;
 import javax.media.j3d.Material;
 import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
-import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Color3f;
 
-import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 
 /**
- * Planet class
+ * Planet3D class
  * 
  * @author Tobias Berthold
  */
@@ -56,36 +49,12 @@ public class Planet3D extends Body3D implements ImageObserver {
 	Button b; // for ImageObserver if applet not used
 	Appearance appear;
 
-	// TODO : make divisions a parameter
-
-	/**
-	 * @param myapplet
-	 *            Applet as ImageObserver
-	 * @param planet_number
-	 * @param scale
-	 */
 	public Planet3D(int planet_number, float scale) {
 		super.scale = scale;
 		b = new Button();
 		CreatePlanet(planet_number);
 	}
 
-	// public Planet3D(Applet myapplet, int planet_number, float scale)
-	// {
-	// super(myapplet);
-	// super.scale = scale;
-	// CreatePlanet(myapplet, planet_number);
-	// }
-
-	// public Planet3D(Applet myapplet, int planet_number)
-	// {
-	// super(myapplet);
-	// CreatePlanet(myapplet, planet_number);
-	//
-	// }
-
-	// had to create this to have code that is common to different constructors.
-	// Is there a better way?
 	private void CreatePlanet(int planet_number) {
 
 		switch (planet_number) {
@@ -125,41 +94,23 @@ public class Planet3D extends Body3D implements ImageObserver {
 			app = createMatAppear_planet(Planetcolor, Colors.white, 10.0f);
 		} else {
 
-			appear = createTwistAppearance();
-
-			// //TextureLoader tex = new TextureLoader(Texturefilename,
-			// myapplet);
-			// TextureLoader tex = new TextureLoader(Texturefilename,b );
-			// TextureAttributes ta = new TextureAttributes();
-			// ta.setTextureMode(TextureAttributes.MODULATE);
-			// app = createMatAppear_planet(Colors.white, Colors.white, 10.0f);
-			// app.setTextureAttributes(ta);
-			// app.setTexture(tex.getTexture());
+			appear = createAppearance();
 		}
 
-		// TG_plan.addChild( createLabel( szName, 1.2f, 1.2f, 0 ) );
 		addChild(new Sphere(radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, divisions, appear));
 
 		Transform3D transform2 = new Transform3D();
 		transform2.rotX(Math.PI/2);
 		setTransform(transform2);
-		
-		
-		
-		//addChild(new Sphere(radius, Primitive.GENERATE_TEXTURE_COORDS, appear));
+				
 		set_scale(scale);
 
 	}
 
-	Appearance createTwistAppearance() {
+	Appearance createAppearance() {
 
-		FileUtil2 f = new FileUtil2();
+		Appearance planetAppear = new Appearance();
 
-		Appearance twistAppear = new Appearance();
-
-		// String filename =
-		// f.current_path+"learn"+f.fs+"java3D"+f.fs+"sun"+f.fs+"texture"+f.fs+"earth.jpg";
-		// System.out.println("attempt to load texture from file: " + filename);
 		TextureLoader loader = new TextureLoader(Texturefilename, b);
 		ImageComponent2D image = loader.getImage();
 
@@ -174,9 +125,9 @@ public class Planet3D extends Body3D implements ImageObserver {
 		texture.setMagFilter(Texture.BASE_LEVEL_LINEAR);
 		texture.setMinFilter(Texture.BASE_LEVEL_LINEAR);
 
-		twistAppear.setTexture(texture);
+		planetAppear.setTexture(texture);
 
-		return twistAppear;
+		return planetAppear;
 	}
 
 	protected static Appearance createMatAppear_planet(Color3f dColor, Color3f sColor, float shine) {

@@ -25,7 +25,6 @@ import javax.media.j3d.GraphicsConfigTemplate3D;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public class util {
@@ -35,7 +34,7 @@ public class util {
 		try {
 			Class.forName("javax.media.j3d.J3DBuffer");
 		} catch (final ClassNotFoundException e) {
-			// Your logic here
+			// 
 			return false;
 		}
 		return true;
