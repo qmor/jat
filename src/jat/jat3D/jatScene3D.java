@@ -19,15 +19,24 @@ package jat.jat3D;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.SceneGraphObject;
+import javax.media.j3d.TransformGroup;
 
-public class BodyGroup3D extends BranchGroup {
+public class jatScene3D extends TransformGroup {
+	public BranchGroup jatBranchGroup;
 
-	public BodyGroup3D() {
+	public jatScene3D() {
 		super();
-		setCapability(BranchGroup.ALLOW_DETACH);
-		setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+		setCapability(TransformGroup.ALLOW_CHILDREN_READ);
+		setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+		jatBranchGroup = new BranchGroup();
+		jatBranchGroup.setCapability(BranchGroup.ALLOW_DETACH);
+		jatBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		jatBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		jatBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		addChild(jatBranchGroup);
 	}
 
 	/**
@@ -36,34 +45,20 @@ public class BodyGroup3D extends BranchGroup {
 	 * @param name
 	 *            name of added body; used if body is removed
 	 */
-	public BodyGroup3D(Body3D b, String name) {
-		super();
-		setUserData(name);
-		setCapability(BranchGroup.ALLOW_DETACH);
-		setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-		addChild(b);
-	}
-
 	public void add(Body3D b, String name) {
 		BranchGroup bg = new BranchGroup();
-		setUserData(name);
+		bg.setUserData(name);
 		bg.setCapability(BranchGroup.ALLOW_DETACH);
 		bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		bg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		bg.addChild(b);
-		addChild(bg);
-	}
-
-	public void add(Body3D b) {
-		addChild(b);
+		jatBranchGroup.addChild(bg);
 	}
 
 	public void remove(String name) {
 		try {
-			java.util.Enumeration enum1 = getAllChildren();
+			java.util.Enumeration enum1 = jatBranchGroup.getAllChildren();
 			int index = 0;
 
 			while (enum1.hasMoreElements() != false) {
@@ -72,7 +67,7 @@ public class BodyGroup3D extends BranchGroup {
 
 				if (userData instanceof String && ((String) userData).compareTo(name) == 0) {
 					System.out.println("Removing: " + sgObject.getUserData());
-					removeChild(index);
+					jatBranchGroup.removeChild(index);
 				}
 				index++;
 			}
@@ -80,24 +75,5 @@ public class BodyGroup3D extends BranchGroup {
 			// the scenegraph may not have yet been synchronized...
 		}
 	}
-
-	public static void remove(BranchGroup parent, String name) {
-		try {
-			java.util.Enumeration enum1 = parent.getAllChildren();
-			int index = 0;
-
-			while (enum1.hasMoreElements() != false) {
-				SceneGraphObject sgObject = (SceneGraphObject) enum1.nextElement();
-				Object userData = sgObject.getUserData();
-
-				if (userData instanceof String && ((String) userData).compareTo(name) == 0) {
-					System.out.println("Removing: " + sgObject.getUserData());
-					parent.removeChild(index);
-				}
-				index++;
-			}
-		} catch (Exception e) {
-			// the scenegraph may not have yet been synchronized...
-		}
-	}
+	
 }

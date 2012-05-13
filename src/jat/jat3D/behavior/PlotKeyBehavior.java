@@ -75,7 +75,7 @@ public class PlotKeyBehavior extends Behavior {
 		this.init = new Transform3D();
 		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
 		this.jatPlot3D = jatPlot3D;
-		this.transformGroup = jatPlot3D.scene;
+		this.transformGroup = jatPlot3D.sceneTG;
 	}
 
 	public void initialize() {

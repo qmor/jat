@@ -47,11 +47,13 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
 	private SimpleUniverse universe;
-	public TransformGroup scene;
-	public BranchGroup sceneBranchGroup;
+	public TransformGroup sceneTG;
+	//public BranchGroup sceneBranchGroup;
 	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bbox;
+	//protected BodyGroup3D jatScene;
+	public jatScene3D jatScene;
 	public AxisBuilder xAxis;
 	private int zoom_state = 0;
 	public jat_MouseZoom mouseZoom;
@@ -256,7 +258,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		Transform3D tf = new Transform3D();
 		// scale scene to fit inside box
 		tf.set(1 / tf_factor);
-		scene.setTransform(tf);
+		sceneTG.setTransform(tf);
 		// and move viewer accordingly
 		Vector3f v = get_vp_t();
 		Point3d p = new Point3d(v.x *factor, v.y *factor, v.z *factor);
