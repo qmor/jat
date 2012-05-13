@@ -49,9 +49,9 @@ public abstract class JatPlot3D extends Canvas3D {
 	private SimpleUniverse universe;
 	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
-	protected BodyGroup3D bbox;
+	protected BodyGroup3D bboxgroup;
+	public BoundingBox3D bbox;
 	public jatScene3D jatScene;
-	public AxisBuilder xAxis;
 	protected int exponent = 0;
 	public jat_MouseZoom mouseZoom;
 	ViewingPlatform myvp;
@@ -264,8 +264,8 @@ public abstract class JatPlot3D extends Canvas3D {
 		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 		universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
-		xAxis.setLabel("X 10^" + exponent + " km");
-		xAxis.apply();
+		bbox.xAxis.setLabel("X 10^" + exponent + " km");
+		bbox.xAxis.apply();
 	}
 
 	public void jat_zoom(float dy) {
@@ -320,7 +320,11 @@ public abstract class JatPlot3D extends Canvas3D {
 		myvpt.setTransform(lookAt);
 	}
 
-	// Override if output desired
+	/**
+	 * This function is to be overridden by the class that is derived from JatPlot3D. 
+	 * For example, to generate output in the user interface. JatPlot3D is the base class, 
+	 * and it does not know about the GUI elements that a user of it might implement.  
+	 */
 	public void update_user() {
 	}
 

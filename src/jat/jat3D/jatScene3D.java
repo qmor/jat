@@ -21,8 +21,16 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.TransformGroup;
 
+/**
+ * The class that holds all of the JAT scene elements. Allows dynamic addition
+ * and removal of elements, as well as scaling.
+ * 
+ * @author Tobias Berthold
+ * 
+ * 
+ */
 public class jatScene3D extends TransformGroup {
-	public BranchGroup jatBranchGroup;
+	private BranchGroup jatBranchGroup;
 
 	public jatScene3D() {
 		super();
@@ -40,10 +48,12 @@ public class jatScene3D extends TransformGroup {
 	}
 
 	/**
+	 * Add an element to the scene
 	 * @param b
 	 *            body to add
 	 * @param name
-	 *            name of added body; used if body is removed
+	 *            name of added body; is used to identify the body if and when
+	 *            removed
 	 */
 	public void add(Body3D b, String name) {
 		BranchGroup bg = new BranchGroup();
@@ -56,6 +66,12 @@ public class jatScene3D extends TransformGroup {
 		jatBranchGroup.addChild(bg);
 	}
 
+	/**
+	 * Remove an element from the scene
+	 * 
+	 * @param name
+	 *            Name of element to be removed
+	 */
 	public void remove(String name) {
 		try {
 			java.util.Enumeration enum1 = jatBranchGroup.getAllChildren();
@@ -75,5 +91,5 @@ public class jatScene3D extends TransformGroup {
 			// the scenegraph may not have yet been synchronized...
 		}
 	}
-	
+
 }

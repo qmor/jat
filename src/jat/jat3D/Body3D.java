@@ -52,10 +52,10 @@ public class Body3D extends TransformGroup {
 	public Body3D() {
 		FileUtil2 f = new FileUtil2();
 		String fs = f.fs;
-		images_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "images_hires" + fs;
-		Wavefront_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Wavefront" + fs;
-		Lightwave_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "Lightwave" + fs;
-		ThreeDStudio_path = f.root_path + "data" + fs + "core" + fs + "vr" + fs + "3DStudio" + fs;
+		images_path = f.root_path + "data" + fs + "jat3D" + fs + "images_hires" + fs;
+		Wavefront_path = f.root_path + "data" + fs + "jat3D" + fs + "Wavefront" + fs;
+		Lightwave_path = f.root_path + "data" + fs + "jat3D" + fs + "Lightwave" + fs;
+		ThreeDStudio_path = f.root_path + "data" + fs + "jat3D" + fs + "3DStudio" + fs;
 		// System.out.println(images_path);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);

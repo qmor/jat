@@ -1,22 +1,18 @@
 /* JAT: Java Astrodynamics Toolkit
- *
- * Copyright (c) 2002 National Aeronautics and Space Administration and the Center for Space Research (CSR),
- * The University of Texas at Austin. All rights reserved.
- *
- * This file is part of JAT. JAT is free software; you can
- * redistribute it and/or modify it under the terms of the
- * NASA Open Source Agreement
  * 
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * NASA Open Source Agreement for more details.
- *
- * You should have received a copy of the NASA Open Source Agreement
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
+  Copyright 2012 Tobias Berthold
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
  */
 
 package jat.jat3D;
@@ -25,15 +21,16 @@ import javax.vecmath.Color3f;
 
 import com.sun.j3d.utils.geometry.*;
 
-/** Sphere class
+
+/**
  * @author Tobias Berthold
+ * Generic color cube
+ *
  */
 public class ColorCube3D extends Body3D
 {
-	//float size=100.f;
-
 	/**
-	 * Constructor Sphere3D.
+	 * Constructor.
 	 * @param size size
 	 */
 	public ColorCube3D(float size)

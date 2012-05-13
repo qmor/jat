@@ -27,9 +27,17 @@ import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 
 public class BoundingBox3D extends Body3D{
-	public float lo = -.5f, hi = .5f;
+	float boxsize = 1.f;
+	float lo = -boxsize/2; //-.5f
+	float hi = boxsize/2;    //.5f;
+	public AxisBuilder xAxis;
+	private AxisBuilder yAxis;
+	private ZAxisBuilder zAxis;
+	public String xAxisLabel = "X [10^0 km]";
+	private String yAxisLabel = "Y Axis";
+	private String zAxisLabel = "Z Axis";	 
 
-	public BoundingBox3D(float size) {
+	public BoundingBox3D(float size, int exponent) {
 		IndexedLineArray xCube = new IndexedLineArray(8, IndexedLineArray.COORDINATES, 24);
 		lo=-size/2;
 		hi=size/2;
@@ -76,6 +84,31 @@ public class BoundingBox3D extends Body3D{
 		setCapability(BranchGroup.ALLOW_DETACH);
 		setUserData("BoundingBox");
 		addChild(new Shape3D(xCube));
+		
+		double[] tick = { 0, boxsize / 4f, boxsize / 2f, 3 * boxsize / 4f, boxsize };
+		String[] labels = { String.valueOf(-boxsize / 2f), String.valueOf(-boxsize / 4f), "0",
+				String.valueOf(3 * -boxsize / 4f), String.valueOf(boxsize / 2f) };
+		xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
+		yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
+		zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
+		xAxis.lo = -boxsize / 2f;
+		xAxis.hi = boxsize / 2f;
+		yAxis.lo = -boxsize / 2f;
+		yAxis.hi = boxsize / 2f;
+		zAxis.lo = -boxsize / 2f;
+		zAxis.hi = boxsize / 2f;
+		xAxis.setLabel("X 10^" + exponent + " km");
+		xAxis.apply();
+
+		xAxis.apply();
+		yAxis.apply();
+		zAxis.apply();
+
+		addChild(xAxis.getNode());
+		addChild(yAxis.getNode());
+		addChild(zAxis.getNode());
+
+	
 	}
 
 }
