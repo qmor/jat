@@ -20,7 +20,7 @@
 
 package jat.jat3D;
 
-import jat.jat3D.behavior.PlotKeyBehavior;
+import jat.jat3D.behavior.jat_KeyBehavior;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 
@@ -47,15 +47,12 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
 	private SimpleUniverse universe;
-	public TransformGroup sceneTG;
-	//public BranchGroup sceneBranchGroup;
 	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bbox;
-	//protected BodyGroup3D jatScene;
 	public jatScene3D jatScene;
 	public AxisBuilder xAxis;
-	private int zoom_state = 0;
+	protected int exponent = 0;
 	public jat_MouseZoom mouseZoom;
 	ViewingPlatform myvp;
 	TransformGroup myvpt;
@@ -83,12 +80,11 @@ public abstract class JatPlot3D extends Canvas3D {
 		lookAt.lookAt(new Point3d(1.5, 1.5, 1), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 		myvp.getViewPlatformTransform().setTransform(lookAt);
-		//float current_distance = get_vp_t().length();
 
 		if (parallelProjection) {
 			setProjectionPolicy(universe, parallelProjection);
 		}
-
+		zoomScene();
 		init = true;
 	}
 
@@ -149,14 +145,9 @@ public abstract class JatPlot3D extends Canvas3D {
 		// mouseDnUp.setSchedulingBounds(bounds);
 		// bg.addChild(mouseDnUp);
 
-		PlotKeyBehavior keyBehavior = new PlotKeyBehavior(this);
+		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(this);
 		keyBehavior.setSchedulingBounds(bounds);
 		bg.addChild(keyBehavior);
-
-		mouseRotate.setViewingPlatform(myvp);
-		// mouseZoom.setViewingPlatform(myvp);
-		// mouseDnUp.setViewingPlatform(myvp);
-		// keyBehavior.setViewingPlatform(myvp);
 
 		return bg;
 	}
@@ -235,38 +226,45 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		if (new_distance > 10) {
 			changed = true;
-			zoom_state += 1;
-			//System.out.println("nd>10 cd<10");
+			exponent += 1;
+			// System.out.println("nd>10 cd<10");
 		}
 		if (new_distance < 1) {
 			changed = true;
-			zoom_state -= 1;
-			//System.out.println("nd>10 cd<10");
+			exponent -= 1;
+			// System.out.println("nd>10 cd<10");
 		}
 
 		if (changed)
 			new_box(new_distance);
 	}
 
+	void zoomScene() {
+		// scale scene to fit inside box
+		Transform3D tf = new Transform3D();
+		tf.set(1 / (float) Math.pow(10, exponent));
+		jatScene.setTransform(tf);
+	}
+
 	void new_box(float new_distance) {
-		float tf_factor = (float) Math.pow(10, zoom_state);
+		float tf_factor = (float) Math.pow(10, exponent);
 		float factor;
-		if(new_distance>10.f)
+		if (new_distance > 10.f)
 			factor = 0.1f;
 		else
 			factor = 10.f;
 		Transform3D tf = new Transform3D();
 		// scale scene to fit inside box
 		tf.set(1 / tf_factor);
-		sceneTG.setTransform(tf);
+		jatScene.setTransform(tf);
 		// and move viewer accordingly
 		Vector3f v = get_vp_t();
-		Point3d p = new Point3d(v.x *factor, v.y *factor, v.z *factor);
+		Point3d p = new Point3d(v.x * factor, v.y * factor, v.z * factor);
 		Transform3D lookAt = new Transform3D();
 		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 		universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
-		xAxis.setLabel("X 10^" + zoom_state + " km");
+		xAxis.setLabel("X 10^" + exponent + " km");
 		xAxis.apply();
 	}
 
@@ -291,9 +289,9 @@ public abstract class JatPlot3D extends Canvas3D {
 		lookAt.invert();
 		update_user();
 		myvpt.setTransform(lookAt);
-		//if (get_vp_t().length() > 10.f) {
-			adjustbox();
-		//}
+		// if (get_vp_t().length() > 10.f) {
+		adjustbox();
+		// }
 	}
 
 	public void jat_rotate(float x_angle, float y_angle) {
@@ -307,14 +305,14 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		Vector3f v_current_spher;
 		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
-		util.print("view spher", v_current_spher);
+		// util.print("view spher", v_current_spher);
 
 		v_current_spher.y -= y_angle;
 		v_current_spher.z -= x_angle;
 		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
 
-		util.print("view cart", v);
-		
+		// util.print("view cart", v);
+
 		Transform3D lookAt = new Transform3D();
 		lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
 		lookAt.invert();

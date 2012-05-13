@@ -49,7 +49,7 @@ import com.sun.j3d.utils.universe.ViewingPlatform;
  * @version $Id: PlotKeyNavigatorBehavior.java 8584 2006-08-10 23:06:37Z duns $
  * 
  */
-public class PlotKeyBehavior extends Behavior {
+public class jat_KeyBehavior extends Behavior {
 	private Transform3D init, tgr;
 	public TransformGroup transformGroup;
 	private WakeupOnAWTEvent wup;
@@ -57,10 +57,9 @@ public class PlotKeyBehavior extends Behavior {
 	private float angle;
 	Transform3D transformZ = new Transform3D();
 	Transform3D currXform = new Transform3D();
-	// public ViewingPlatform myvp;
 	JatPlot3D jatPlot3D;
 
-	public PlotKeyBehavior(TransformGroup transformGroup, float moveStep, float rotStep) {
+	public jat_KeyBehavior(TransformGroup transformGroup, float moveStep, float rotStep) {
 		super();
 		this.tgr = new Transform3D();
 		this.init = new Transform3D();
@@ -70,12 +69,12 @@ public class PlotKeyBehavior extends Behavior {
 		this.angle = (float) Math.toRadians(rotStep);
 	}
 
-	public PlotKeyBehavior(JatPlot3D jatPlot3D) {
+	public jat_KeyBehavior(JatPlot3D jatPlot3D) {
 		super();
 		this.init = new Transform3D();
 		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
 		this.jatPlot3D = jatPlot3D;
-		this.transformGroup = jatPlot3D.sceneTG;
+		this.transformGroup = jatPlot3D.jatScene;
 	}
 
 	public void initialize() {
