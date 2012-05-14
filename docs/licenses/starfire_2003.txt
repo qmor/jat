@@ -1,0 +1,8 @@
+http://www.mnstarfire.com/download/inspector3ds.html
+
+License:
+This code is being provided as a service to the Java 3D community.  It may be
+used and improved royalty free.  It may not be modified and sold.  All rights
+are reserved by the author, John Wright, and Starfire Research.  We are asking
+for a "donation" of $10 to help defray the cost of development and
+distribution. 
