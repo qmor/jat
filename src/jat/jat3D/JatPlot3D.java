@@ -20,6 +20,8 @@
 
 package jat.jat3D;
 
+import jat.core.cm.Constants;
+import jat.core.cm.cm;
 import jat.jat3D.behavior.jat_KeyBehavior;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
@@ -84,7 +86,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		if (parallelProjection) {
 			setProjectionPolicy(universe, parallelProjection);
 		}
-		zoomScene();
+		zoomScene(1.f / (float) Math.pow(10, exponent));
 		init = true;
 	}
 
@@ -239,11 +241,14 @@ public abstract class JatPlot3D extends Canvas3D {
 			new_box(new_distance);
 	}
 
-	void zoomScene() {
+	void zoomScene(float scale) {
 		// scale scene to fit inside box
-		Transform3D tf = new Transform3D();
-		tf.set(1 / (float) Math.pow(10, exponent));
-		jatScene.setTransform(tf);
+		Transform3D tscale = new Transform3D();
+		tscale.set(scale);
+		Transform3D trot=new Transform3D();		
+		trot.rotX(-cm.Rad(Constants.eps));
+		tscale.mul(trot);
+		jatScene.setTransform(tscale);
 	}
 
 	void new_box(float new_distance) {
@@ -253,10 +258,12 @@ public abstract class JatPlot3D extends Canvas3D {
 			factor = 0.1f;
 		else
 			factor = 10.f;
-		Transform3D tf = new Transform3D();
-		// scale scene to fit inside box
-		tf.set(1 / tf_factor);
-		jatScene.setTransform(tf);
+//		Transform3D tf = new Transform3D();
+//		// scale scene to fit inside box
+//		tf.set(1 / tf_factor);
+//		jatScene.setTransform(tf);
+		
+		zoomScene(1.f / tf_factor);
 		// and move viewer accordingly
 		Vector3f v = get_vp_t();
 		Point3d p = new Point3d(v.x * factor, v.y * factor, v.z * factor);
