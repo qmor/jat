@@ -27,17 +27,15 @@ import jat.core.plotutil.*;
 /**
  * @author Tobias Berthold
  * 
- * Lambert Targeting example
+ *         Lambert Targeting example
  * 
  */
-public class Lambert_test implements Printable
-{
+public class Lambert_test implements Printable {
 	SinglePlot traj_plot = new SinglePlot();
 	private int plotnum = 0;
 
 	/** Creates a new instance of TwoBodyExample */
-	public Lambert_test()
-	{
+	public Lambert_test() {
 		// set up the trajectory plot
 		traj_plot.setTitle("Lambert Targeting");
 		traj_plot.plot.setXLabel("x (km)");
@@ -45,17 +43,18 @@ public class Lambert_test implements Printable
 	}
 
 	/**
-	 * Implements the Printable interface to get the data out of the propagator and pass it to the plot. This method is
-	 * executed by the propagator at each integration step.
+	 * Implements the Printable interface to get the data out of the propagator
+	 * and pass it to the plot. This method is executed by the propagator at
+	 * each integration step.
 	 * 
 	 * @param t
 	 *            Time.
 	 * @param y
 	 *            Data array.
 	 */
-	public void print(double t, double[] y)
-	{
-		// handle the first variable for plotting - this is a little mystery but it works
+	public void print(double t, double[] y) {
+		// handle the first variable for plotting - this is a little mystery but
+		// it works
 		boolean first = true;
 		if (t == 0.0)
 			first = false;
@@ -66,17 +65,16 @@ public class Lambert_test implements Printable
 		// System.out.println(t+" "+y[0]+" "+y[1]);
 	}
 
-	public static void main(String[] args)
-	{
-		double muforthisproblem=1.*Constants.mu;
-		double tof=50000.;
-		
-		System.out.println("mu="+muforthisproblem);
-		
+	public static void main(String[] args) {
+		double muforthisproblem = 1. * Constants.mu;
+		double tof = 50000.;
+
+		System.out.println("mu=" + muforthisproblem);
+
 		Lambert_test x = new Lambert_test();
 		// create a TwoBody orbit using orbit elements
-		TwoBody initpos = new TwoBody(muforthisproblem,40000.0, 0., 0.0, 0.0, 0., 0.0);
-		TwoBody finalpos = new TwoBody(muforthisproblem,80000.0, 0., 0.0, 0.0, 0.0, 120.0);
+		TwoBody initpos = new TwoBody(muforthisproblem, 40000.0, 0., 0.0, 0.0, 0., 0.0);
+		TwoBody finalpos = new TwoBody(muforthisproblem, 80000.0, 0., 0.0, 0.0, 0.0, 120.0);
 
 		// propagate the orbits for plotting
 		initpos.propagate(0., initpos.period(), x, true);
@@ -89,21 +87,28 @@ public class Lambert_test implements Printable
 		VectorN v0 = initpos.getV();
 		VectorN rf = finalpos.getR();
 		VectorN vf = finalpos.getV();
-		
+
 		initpos.print("initpos");
-		
+
 		Lambert lambert = new Lambert(muforthisproblem);
-		//double totaldv = lambert.compute(r0, v0, rf, vf,initpos.period()/1.5 );
-		double totaldv = lambert.compute(r0, v0, rf, vf,tof );
+		// double totaldv = lambert.compute(r0, v0, rf, vf,initpos.period()/1.5
+		// );
+		double totaldv;
+		try {
+			totaldv = lambert.compute(r0, v0, rf, vf, tof);
+		} catch (LambertException e) {
+			totaldv = -1;
+			e.printStackTrace();
+		}
 
 		// apply the first delta-v
 		VectorN dv0 = lambert.deltav0;
 		v0 = v0.plus(dv0);
 		System.out.println("tof = " + lambert.tof);
-		TwoBody chaser = new TwoBody(muforthisproblem,r0, v0);
+		TwoBody chaser = new TwoBody(muforthisproblem, r0, v0);
 		chaser.print("chaser orbit");
 		chaser.propagate(0.0, tof, x, true);
-	
+
 		// Plotting
 		x.traj_plot.plot.setMarksStyle("dots", 3);
 		x.traj_plot.plot.addPoint(3, initpos.getR().x[0], initpos.getR().x[1], false);
@@ -117,6 +122,6 @@ public class Lambert_test implements Printable
 		x.traj_plot.plot.setXRange(-size, size);
 		x.traj_plot.plot.setYRange(-size, size);
 
-		System.out.println("Total delta-v: "+totaldv);
+		System.out.println("Total delta-v: " + totaldv);
 	}
 }

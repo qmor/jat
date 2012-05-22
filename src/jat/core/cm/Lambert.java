@@ -17,21 +17,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+// 2012: add exception management
+
 package jat.core.cm;
+
 import jat.core.algorithm.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.*;
 
 /**
  * <P>
- * The Lambert class provides the means to solve Lambert's problem.
- * Ref: Vallado
- * @author 
+ * The Lambert class provides the means to solve Lambert's problem. Ref: Vallado
+ * 
+ * @author
  * @version 1.0
  */
 
-public class Lambert implements ScalarFunction
-{
+public class Lambert implements ScalarFunction {
 
 	private double s = 0.0;
 	private double c = 0.0;
@@ -39,93 +42,92 @@ public class Lambert implements ScalarFunction
 	private double mu = 0.0;
 	private boolean aflag = false;
 	private boolean bflag = false;
-	public boolean debug_print=false;
+	public boolean debug_print = false;
 
-	/** Contains the computed initial delta-v.
+	/**
+	 * Contains the computed initial delta-v.
 	 */
 	public VectorN deltav0;
-	/** Contains the computed final delta-v.
+	/**
+	 * Contains the computed final delta-v.
 	 */
 	public VectorN deltavf;
 
 	/** time of flight */
 	public double tof;
 
-	
-	public void reset()
-	{
+	public void reset() {
 		s = 0.0;
 		c = 0.0;
 		aflag = false;
 		bflag = false;
-		debug_print=false;
-	}
-	
-	
-    /** Constructor with mu
-     * @param mu mu of the central body
-     */
-	public Lambert(double mu)
-	{
-		this.mu=mu;
+		debug_print = false;
 	}
 
-	private double getalpha(double a)
-	{
+	/**
+	 * Constructor with mu
+	 * 
+	 * @param mu
+	 *            mu of the central body
+	 */
+	public Lambert(double mu) {
+		this.mu = mu;
+	}
+
+	private double getalpha(double a) {
 		double alpha = 2.0 * Math.asin(Math.sqrt(s / (2.0 * a)));
-		if (this.aflag)
-		{
+		if (this.aflag) {
 			alpha = 2.0 * Constants.pi - alpha;
 		}
 		return alpha;
 	}
 
-	private double getbeta(double a)
-	{
+	private double getbeta(double a) {
 		double beta = 2.0 * Math.asin(Math.sqrt((s - c) / (2.0 * a)));
-		if (this.bflag)
-		{
+		if (this.bflag) {
 			beta = -1.0 * beta;
 		}
 		return beta;
 	}
 
-	private double getdt(double a, double alpha, double beta)
-	{
+	private double getdt(double a, double alpha, double beta) {
 		double sa = Math.sin(alpha);
 		double sb = Math.sin(beta);
-		double dt =
-			Math.pow(a, 1.5) * (alpha - sa - beta + sb) / Math.sqrt(mu);
+		double dt = Math.pow(a, 1.5) * (alpha - sa - beta + sb) / Math.sqrt(mu);
 		return dt;
 	}
 
-	/** Evaluate the delta-t function f
-	 * @param a semi-major axis.
+	/**
+	 * Evaluate the delta-t function f
+	 * 
+	 * @param a
+	 *            semi-major axis.
 	 * @return
 	 */
-	public double evaluate(double a)
-	{
+	public double evaluate(double a) {
 		double alpha = getalpha(a);
 		double beta = getbeta(a);
 		double out = dt - getdt(a, alpha, beta);
 		return out;
 	}
 
-	/** Computes the delta-v's required to go from r0,v0 to rf,vf.
-         * @return Total delta-v (magnitude) required.
-         * @param dt Time of flight
-         * @param r0 Initial position vector.
-         * @param v0 Initial velocity vector.
-         * @param rf Desired final position vector.
-         * @param vf Desired final velocity vector.
-         */
-	public double compute(
-		VectorN r0,
-		VectorN v0,
-		VectorN rf,
-		VectorN vf,
-		double dt)
-	{
+	/**
+	 * Computes the delta-v's required to go from r0,v0 to rf,vf.
+	 * 
+	 * @return Total delta-v (magnitude) required.
+	 * @param dt
+	 *            Time of flight
+	 * @param r0
+	 *            Initial position vector.
+	 * @param v0
+	 *            Initial velocity vector.
+	 * @param rf
+	 *            Desired final position vector.
+	 * @param vf
+	 *            Desired final velocity vector.
+	 * @throws LambertException 
+	 */
+	public double compute(VectorN r0, VectorN v0, VectorN rf, VectorN vf, double dt) throws LambertException {
 		reset();
 		double tp = 0.0;
 
@@ -137,74 +139,65 @@ public class Lambert implements ScalarFunction
 		this.c = dr.mag();
 		this.s = (magr0 + magrf + c) / 2.0;
 		double amin = s / 2.0;
-		if(debug_print)
+		if (debug_print)
 			System.out.println("amin = " + amin);
 
 		double dtheta = Math.acos(r0.dotProduct(rf) / (magr0 * magrf));
 
-		//dtheta = 2.0 * Constants.pi - dtheta;
+		// dtheta = 2.0 * Constants.pi - dtheta;
 
-		if(debug_print)
+		if (debug_print)
 			System.out.println("dtheta = " + dtheta);
 
-		if (dtheta < Constants.pi)
-		{
-			tp =
-				Math.sqrt(2.0 / (mu))
-					* (Math.pow(s, 1.5) - Math.pow(s - c, 1.5))
-					/ 3.0;
+		if (dtheta < Constants.pi) {
+			tp = Math.sqrt(2.0 / (mu)) * (Math.pow(s, 1.5) - Math.pow(s - c, 1.5)) / 3.0;
 		}
-		if (dtheta > Constants.pi)
-		{
-			tp =
-				Math.sqrt(2.0 / (mu))
-					* (Math.pow(s, 1.5) + Math.pow(s - c, 1.5))
-					/ 3.0;
+		if (dtheta > Constants.pi) {
+			tp = Math.sqrt(2.0 / (mu)) * (Math.pow(s, 1.5) + Math.pow(s - c, 1.5)) / 3.0;
 			this.bflag = true;
 		}
-		
-		if(debug_print)
+
+		if (debug_print)
 			System.out.println("tp = " + tp);
 
 		double betam = getbeta(amin);
 		double tm = getdt(amin, Constants.pi, betam);
 
-		if(debug_print)
+		if (debug_print)
 			System.out.println("tm = " + tm);
 
-		if (dtheta == Constants.pi)
-		{
+		if (dtheta == Constants.pi) {
 			System.out.println(" dtheta = 180.0. Do a Hohmann");
-			System.exit(0);
+			throw new LambertException();
+			//System.exit(0);
 		}
 
 		double ahigh = 1000.0 * amin;
 		double npts = 3000.0;
-		//this.dt = (2.70-0.89)*86400;
-		if(debug_print)
+		// this.dt = (2.70-0.89)*86400;
+		if (debug_print)
 			System.out.println("dt = " + dt);
 
-		if(debug_print)
+		if (debug_print)
 			System.out.println("************************************************");
 
-		if (this.dt < tp)
-		{
+		if (this.dt < tp) {
 			System.out.println(" No elliptical path possible ");
-			System.exit(0);
+			throw new LambertException();
+			//System.exit(0);
 		}
 
-		if (this.dt > tm)
-		{
+		if (this.dt > tm) {
 			this.aflag = true;
 		}
 
 		double fm = evaluate(amin);
 		double ftemp = evaluate(ahigh);
 
-		if ((fm * ftemp) >= 0.0)
-		{
+		if ((fm * ftemp) >= 0.0) {
 			System.out.println(" initial guesses do not bound ");
-			System.exit(0);
+			throw new LambertException();
+			//System.exit(0);
 		}
 
 		ZeroFinder regfalsi = new ZeroFinder(this, 10000, 1.0E-6, 1.0E-15);
@@ -227,13 +220,12 @@ public class Lambert implements ScalarFunction
 		newv0.x[2] = (rf.x[2] - f * r0.x[2]) / g;
 
 		this.deltav0 = newv0.minus(v0);
-		if(debug_print)
+		if (debug_print)
 			this.deltav0.print("deltav-0");
 
 		double dv0 = deltav0.mag();
 
-		double fdot =
-			-1.0 * (Math.sqrt(mu * sma) / (magr0 * magrf)) * Math.sin(de);
+		double fdot = -1.0 * (Math.sqrt(mu * sma) / (magr0 * magrf)) * Math.sin(de);
 		double gdot = 1.0 - (sma / magrf) * (1.0 - Math.cos(de));
 
 		newvf.x[0] = fdot * r0.x[0] + gdot * newv0.x[0];
@@ -242,33 +234,25 @@ public class Lambert implements ScalarFunction
 
 		this.deltavf = vf.minus(newvf);
 		double dvf = deltavf.mag();
-		if(debug_print)
+		if (debug_print)
 			this.deltavf.print("deltav-f");
 
 		double totaldv = dv0 + dvf;
 
 		this.tof = dt;
 
-		if(debug_print)
-			System.out.println(
-			"dt = "
-				+ dt
-				+ " dv0 = "
-				+ dv0
-				+ " dvf = "
-				+ dvf
-				+ " total dv = "
-				+ totaldv
-				+ " sma = "
-				+ sma);
+		if (debug_print)
+			System.out.println("dt = " + dt + " dv0 = " + dv0 + " dvf = " + dvf + " total dv = " + totaldv + " sma = " + sma);
 		return totaldv;
 	}
 
-	/** Test case.
-	 * @param args arguments (none).
+	/**
+	 * Test case.
+	 * 
+	 * @param args
+	 *            arguments (none).
 	 */
-	public static void main(String args[])
-	{
+	public static void main(String args[]) {
 		LinePrinter lp = new LinePrinter();
 
 		TwoBody elem0 = new TwoBody(40000.0, 0.2, 0.0, 0.0, 45.0, 0.0);
@@ -286,7 +270,12 @@ public class Lambert implements ScalarFunction
 		VectorN vf = elemf.getV();
 
 		Lambert lambert = new Lambert(Constants.mu);
-		double totaldv = lambert.compute(r0, v0, rf, vf, (2.70 - 0.89) * 86400);
+		try {
+			double totaldv = lambert.compute(r0, v0, rf, vf, (2.70 - 0.89) * 86400);
+		} catch (LambertException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 }

@@ -27,14 +27,12 @@ import jat.core.plotutil.*;
 /**
  * @author Tobias Berthold Lambert Targeting example
  */
-public class earth_mars implements Printable
-{
+public class earth_mars implements Printable {
 	SinglePlot traj_plot = new SinglePlot();
 	private int plotnum = 0;
 
 	/** Creates a new instance of TwoBodyExample */
-	public earth_mars()
-	{
+	public earth_mars() {
 		// set up the trajectory plot
 		traj_plot.setTitle("Lambert Targeting");
 		traj_plot.plot.setXLabel("x (km)");
@@ -42,14 +40,18 @@ public class earth_mars implements Printable
 	}
 
 	/**
-	 * Implements the Printable interface to get the data out of the propagator and pass it to the plot. This method is
-	 * executed by the propagator at each integration step.
-	 * @param t Time.
-	 * @param y Data array.
+	 * Implements the Printable interface to get the data out of the propagator
+	 * and pass it to the plot. This method is executed by the propagator at
+	 * each integration step.
+	 * 
+	 * @param t
+	 *            Time.
+	 * @param y
+	 *            Data array.
 	 */
-	public void print(double t, double[] y)
-	{
-		// handle the first variable for plotting - this is a little mystery but it works
+	public void print(double t, double[] y) {
+		// handle the first variable for plotting - this is a little mystery but
+		// it works
 		boolean first = true;
 		if (t == 0.0)
 			first = false;
@@ -60,20 +62,18 @@ public class earth_mars implements Printable
 		// System.out.println(t+" "+y[0]+" "+y[1]);
 	}
 
-	public static void main(String[] args)
-	{
-		double muforthisproblem = Constants.GM_Sun/1.e9;
+	public static void main(String[] args) {
+		double muforthisproblem = Constants.GM_Sun / 1.e9;
 		double tof = 220. * 86400.0;
 		System.out.println("mu=" + muforthisproblem);
 
 		earth_mars x = new earth_mars();
 		// create a TwoBody orbit using orbit elements
-		TwoBody initpos = new TwoBody(muforthisproblem, cm.earth_moon_elements );
-		TwoBody finalpos = new TwoBody(muforthisproblem,cm.mars_elements);
+		TwoBody initpos = new TwoBody(muforthisproblem, cm.earth_moon_elements);
+		TwoBody finalpos = new TwoBody(muforthisproblem, cm.mars_elements);
 		initpos.setTa(-90.);
 		finalpos.setTa(130.);
-		
-		
+
 		// propagate the orbits for plotting
 		initpos.propagate(0., initpos.period(), x, true);
 		x.plotnum++;
@@ -86,7 +86,13 @@ public class earth_mars implements Printable
 		VectorN vf = finalpos.getV();
 		initpos.print("initpos");
 		Lambert lambert = new Lambert(muforthisproblem);
-		double totaldv = lambert.compute(r0, v0, rf, vf, tof);
+		double totaldv;
+		try {
+			totaldv = lambert.compute(r0, v0, rf, vf, tof);
+		} catch (LambertException e) {
+			totaldv = -1;
+			e.printStackTrace();
+		}
 		// apply the first delta-v
 		VectorN dv0 = lambert.deltav0;
 		v0 = v0.plus(dv0);
@@ -106,6 +112,6 @@ public class earth_mars implements Printable
 		int size = 300000000;
 		x.traj_plot.plot.setXRange(-size, size);
 		x.traj_plot.plot.setYRange(-size, size);
-		System.out.println("Total delta-v = " + totaldv+" km/s");
+		System.out.println("Total delta-v = " + totaldv + " km/s");
 	}
 }

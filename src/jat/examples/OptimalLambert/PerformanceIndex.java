@@ -28,99 +28,94 @@ import jat.core.math.matvec.data.VectorN;
 
 /**
  * @author Tobias Berthold
- *
+ * 
  */
-public class PerformanceIndex implements ScalarfromArrayFunction
-{
+public class PerformanceIndex implements ScalarfromArrayFunction {
 	Lambert earth_mars;
-	DecimalFormat Jf; // formatting  
+	DecimalFormat Jf; // formatting
 	NumberFormat itf;
 	double tf_var;
 	double alow, ahigh, astep;
 
-	public PerformanceIndex( Lambert earth_mars)
-	{
+	public PerformanceIndex(Lambert earth_mars) {
 		this.earth_mars = earth_mars;
-		Jf = (DecimalFormat)NumberFormat.getInstance();
+		Jf = (DecimalFormat) NumberFormat.getInstance();
 		Jf.applyPattern(" ###.##;-###.##");
 		Jf.setMinimumFractionDigits(2);
 		Jf.setMinimumIntegerDigits(4);
 		// Integers
 		itf = NumberFormat.getInstance();
-		itf.setMinimumIntegerDigits(6);	
+		itf.setMinimumIntegerDigits(6);
 	}
 
-	// Performance index to be minimized is the penalty function: delta-v   
-	public double evaluate(double[] x_search)
-	{
+	// Performance index to be minimized is the penalty function: delta-v
+	public double evaluate(double[] x_search) {
 		// compute parameters for current guess
-		double muforthisproblem = Constants.GM_Sun/1.e9;
-		TwoBody elem0 = new TwoBody(muforthisproblem, cm.earth_moon_elements );
-		TwoBody elemf = new TwoBody(muforthisproblem,cm.mars_elements);
+		double muforthisproblem = Constants.GM_Sun / 1.e9;
+		TwoBody elem0 = new TwoBody(muforthisproblem, cm.earth_moon_elements);
+		TwoBody elemf = new TwoBody(muforthisproblem, cm.mars_elements);
 		elem0.setTa(x_search[1]);
 		elemf.setTa(x_search[2]);
-		
+
 		VectorN r0 = elem0.getR();
 		VectorN v0 = elem0.getV();
 		VectorN rf = elemf.getR();
 		VectorN vf = elemf.getV();
-		double dt=x_search[0];
-		
-		return earth_mars.compute(r0, v0, rf, vf, dt);
+		double dt = x_search[0];
+		double totaldv;
+		try {
+			totaldv = earth_mars.compute(r0, v0, rf, vf, dt);
+		} catch (LambertException e) {
+			totaldv = -1;
+			e.printStackTrace();
+		}
+		return totaldv;
 	}
 
-	public void initgrid(double d, double e, double f)
-	{
-		alow=d;
-		ahigh=e; 
-		astep=f;		
+	public void initgrid(double d, double e, double f) {
+		alow = d;
+		ahigh = e;
+		astep = f;
 	}
-	
-	void print_header()
-	{
-		
+
+	void print_header() {
+
 		System.out.print("x1 / x0 ");
-		for (double x = alow; x < ahigh; x += astep)
-		{
+		for (double x = alow; x < ahigh; x += astep) {
 			System.out.print(" " + Jf.format(x));
 		}
 		System.out.println();
 	}
-	
-	void create_grid()
-	{
+
+	void create_grid() {
 		double[] x_search = new double[3];
 		double result;
 
-		x_search[2]=120.;
-		for (x_search[1] = -100.; x_search[1] <= -80; x_search[1] += 10.)
-		{
-			//System.out.print(Jf.format(x_search[0])+" ");
+		x_search[2] = 120.;
+		for (x_search[1] = -100.; x_search[1] <= -80; x_search[1] += 10.) {
+			// System.out.print(Jf.format(x_search[0])+" ");
 			System.out.print(" " + Jf.format(x_search[1]));
-			for (x_search[0] = alow; x_search[0] < ahigh; x_search[0] += astep)
-			{
+			for (x_search[0] = alow; x_search[0] < ahigh; x_search[0] += astep) {
 				result = evaluate(x_search);
 				System.out.print(" " + Jf.format(result));
 			}
 			System.out.println();
 		}
 	}
-	
-	void create_combinations()
-	{
-		double a,b;
-		double[] x_search = new double[3];
-		double result=0.;
 
-		//for (x_search[1] = -99.; x_search[1] < -80; x_search[1] += 1.)
-		for (b = -90.; b < -70; b += 10.)
-		{
-			//for (x_search[0] = alow; x_search[0] < ahigh; x_search[0] += astep)
-			for (a = alow; a < ahigh;  a+= astep)
-			{
-				x_search[0]=a;
-				x_search[1]=b;
-				x_search[2]=130.;
+	void create_combinations() {
+		double a, b;
+		double[] x_search = new double[3];
+		double result = 0.;
+
+		// for (x_search[1] = -99.; x_search[1] < -80; x_search[1] += 1.)
+		for (b = -90.; b < -70; b += 10.) {
+			// for (x_search[0] = alow; x_search[0] < ahigh; x_search[0] +=
+			// astep)
+			for (a = alow; a < ahigh; a += astep) {
+				x_search[0] = a;
+				x_search[1] = b;
+				x_search[2] = 130.;
 				System.out.print("" + Jf.format(x_search[0]));
 				System.out.print(" " + Jf.format(x_search[1]));
 				System.out.print(" " + Jf.format(x_search[2]));
@@ -129,5 +124,5 @@ public class PerformanceIndex implements ScalarfromArrayFunction
 			}
 		}
 	}
-	
+
 }
