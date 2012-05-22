@@ -67,12 +67,18 @@
 
 package jat.core.ephemeris;
 
+import jat.core.math.matvec.data.VectorN;
+import jat.core.spacetime.Time;
+import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil2;
 import java.io.*;
 
 public class DE405APL {
 
-	static final double au = 149597870.691; // Length of an A.U., in km
+	public final static int EARTH = 3;
+	public final static int MARS = 4;
+	
+	//static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon
 	static int interval_duration = 32; // duration of interval section in
 										// ascpxxxx.txt files
@@ -279,8 +285,8 @@ public class DE405APL {
 			for (k = 1; k <= number_of_coefs[i]; k++)
 				ephemeris_r[j] = ephemeris_r[j] + coef[j][k] * position_poly[k];
 
-			/* Convert from km to A.U. */
-			ephemeris_r[j] = ephemeris_r[j] / au;
+			/* DON'T Convert from km to A.U. */
+			//ephemeris_r[j] = ephemeris_r[j] / au;
 		}
 
 		/* Calculate the Chebyshev velocity polynomials */
@@ -303,8 +309,8 @@ public class DE405APL {
 			 */
 			ephemeris_rprime[j] = ephemeris_rprime[j] * (2.0 * number_of_coef_sets[i] / interval_duration);
 
-			/* Convert from km to A.U. */
-			ephemeris_rprime[j] = ephemeris_rprime[j] / au;
+			/* DON'T Convert from km to A.U. */
+			//ephemeris_rprime[j] = ephemeris_rprime[j] / au;
 
 		}
 
@@ -327,7 +333,8 @@ public class DE405APL {
 	void get_ephemeris_coefficients(double jultime) {
 
 		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
-		String filename = DE405_path + " ", line = " ";
+		String filename=null;
+		String line = " ";
 
 		try {
 
@@ -409,6 +416,11 @@ public class DE405APL {
 				records = 230;
 			}
 
+			if(filename==null){
+				System.out.println("Time period unavailable");
+				System.exit(0);
+			}
+			
 			FileReader file = new FileReader(filename);
 			BufferedReader buff = new BufferedReader(file);
 
@@ -474,6 +486,65 @@ public class DE405APL {
 		}
 
 	}
+	
+		
+	
+	public VectorN get_planet_posvel(int body_number, double jd)
+	{		
+		double daysec = 3600. * 24.;
+		double[] posvel = new double[6];
+		
+		planetary_ephemeris(jd);
+		posvel[0] = planet_r[body_number][1];
+		posvel[1] = planet_r[body_number][2];
+		posvel[2] = planet_r[body_number][3];
+		posvel[3] = planet_rprime[body_number][1] / daysec;
+		posvel[4] = planet_rprime[body_number][2] / daysec;
+		posvel[5] = planet_rprime[body_number][3] / daysec;
+		
+		VectorN out = new VectorN(posvel);
+		return out;
+	}
+	
+
+	public VectorN get_planet_pos(int body_number, Time t)
+	{
+		get_planet_posvel(body_number, t.jd_tt());
+		double[] vel = new double[3];
+		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+
+		planetary_ephemeris(jultime);
+		vel[0] = planet_r[body_number][1];
+		vel[1] = planet_r[body_number][2];
+		vel[2] = planet_r[body_number][3];
+		
+		VectorN out = new VectorN(vel);
+
+		return out;
+	}
+
+	
+	
+	public VectorN get_planet_vel(int body_number, Time t)
+	{
+		double daysec = 3600. * 24.;
+		get_planet_posvel(body_number, t.jd_tt());
+		double[] vel = new double[3];
+		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+
+		planetary_ephemeris(jultime);
+		vel[0] = planet_rprime[body_number][1] / daysec;
+		vel[1] = planet_rprime[body_number][2] / daysec;
+		vel[2] = planet_rprime[body_number][3] / daysec;
+		
+		VectorN out = new VectorN(vel);
+
+		return out;
+	}
+
+	
+	
+	
 
 	public static void main(String args[]) {
 
