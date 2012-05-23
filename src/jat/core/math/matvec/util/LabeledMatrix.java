@@ -24,12 +24,11 @@ public class LabeledMatrix extends Matrix {
 
 	String[] RowLabels;
 	String[] ColumnLabels;
-	
-		
+
 	public LabeledMatrix(int m, int n) {
 		super(m, n);
-		RowLabels=new String[m];
-		ColumnLabels=new String[m];	
+		RowLabels = new String[m];
+		ColumnLabels = new String[m];
 	}
 
 	public LabeledMatrix(int n) {
@@ -65,6 +64,27 @@ public class LabeledMatrix extends Matrix {
 	public LabeledMatrix(double[] vals, int m) {
 		super(vals, m);
 		// TODO Auto-generated constructor stub
+	}
+
+	public void print() {
+
+		int width = 8;
+		int precision = 2;
+		String format = "%" + width + "." + precision + "f";
+
+		System.out.println(format);
+
+		System.out.println(this.m + " X " + this.n + " Matrix:");
+		for (int i = 0; i < this.m; i++) {
+			System.out.println("");
+			for (int j = 0; j < this.n; j++) {
+				//System.out.printf("%7.2f", this.A[i][j]);
+				System.out.printf(format, this.A[i][j]);
+			}
+		}
+		System.out.println();
+		System.out.println("-------------");
+		System.out.println(format);
 	}
 
 }
