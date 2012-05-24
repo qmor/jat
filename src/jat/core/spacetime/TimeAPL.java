@@ -17,6 +17,10 @@
 
 package jat.core.spacetime;
 
+import jat.core.cm.cm;
+
+import java.util.Calendar;
+
 public class TimeAPL extends Time {
 
 	public TimeAPL() {
@@ -41,5 +45,20 @@ public class TimeAPL extends Time {
 	public static double minus(TimeAPL t1, TimeAPL t2) {
 		return t1.jd_tt() - t2.jd_tt();
 	}
+
+	public Calendar getCalendar() {
+		Calendar cal = cm.JD_to_Calendar(jd_tt());
+		return cal;
+	}
+	
+	public void print(){
+		String dateformat = "%tD";
+
+		String.format(dateformat, getCalendar());
+
+		System.out.println(String.format(dateformat, getCalendar()));
+	}
+	
+	
 
 }

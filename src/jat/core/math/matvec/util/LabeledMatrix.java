@@ -22,9 +22,13 @@ import jat.core.math.matvec.data.VectorN;
 
 public class LabeledMatrix extends Matrix {
 
-	String[] RowLabels;
-	String[] ColumnLabels;
+	public String cornerlabel;
+	public String[] RowLabels;
+	public String[] ColumnLabels;
 
+	public String rowlabelformat;
+	public String collabelformat;
+	
 	public LabeledMatrix(int m, int n) {
 		super(m, n);
 		RowLabels = new String[m];
@@ -68,23 +72,47 @@ public class LabeledMatrix extends Matrix {
 
 	public void print() {
 
-		int width = 8;
+		int width = 9;
 		int precision = 2;
-		String format = "%" + width + "." + precision + "f";
-
-		System.out.println(format);
-
+		String numberformat = "%" + width + "." + precision + "f";
+		rowlabelformat = "%" + width + "s";
+		collabelformat = "%" + width + "s";
 		System.out.println(this.m + " X " + this.n + " Matrix:");
-		for (int i = 0; i < this.m; i++) {
-			System.out.println("");
-			for (int j = 0; j < this.n; j++) {
-				//System.out.printf("%7.2f", this.A[i][j]);
-				System.out.printf(format, this.A[i][j]);
-			}
+
+		System.out.printf(collabelformat, cornerlabel);
+		for (int j = 0; j < this.n; j++) {
+			System.out.printf(collabelformat, ColumnLabels[j]);
 		}
 		System.out.println();
-		System.out.println("-------------");
-		System.out.println(format);
+		for (int i = 0; i < this.m; i++) {
+			System.out.printf(rowlabelformat,RowLabels[i]);
+			for (int j = 0; j < this.n; j++) {
+				System.out.printf(numberformat, this.A[i][j]);
+			}
+			
+			System.out.println();
+		}
+		System.out.println();
+
+	}
+
+	public static void main(String args[]) {
+
+		int rows = 6;
+		int cols = 4;
+		LabeledMatrix A = new LabeledMatrix(rows, cols);
+
+		A.cornerlabel="row/col";
+		for (int i = 0; i < rows; i++) {
+			A.RowLabels[i] = new String("row" + (i+1));
+			for (int j = 0; j < cols; j++) {
+				A.ColumnLabels[j]=new String("col"+(j+1));
+				A.A[i][j] = i * 10 + j + 11;
+			}
+		}
+
+		A.print();
+
 	}
 
 }
