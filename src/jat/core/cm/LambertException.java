@@ -17,6 +17,12 @@
 
 package jat.core.cm;
 
-public class LambertException extends Exception{
+public class LambertException extends Exception {
+
+	public String message;
+
+	public LambertException(String message) {
+		this.message = message;
+	}
 
 }

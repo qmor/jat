@@ -167,8 +167,8 @@ public class Lambert implements ScalarFunction {
 			System.out.println("tm = " + tm);
 
 		if (dtheta == Constants.pi) {
-			System.out.println(" dtheta = 180.0. Do a Hohmann");
-			throw new LambertException();
+			//System.out.println(" dtheta = 180.0. Do a Hohmann");
+			throw new LambertException("dtheta = 180.0. Do a Hohmann");
 			//System.exit(0);
 		}
 
@@ -182,8 +182,8 @@ public class Lambert implements ScalarFunction {
 			System.out.println("************************************************");
 
 		if (this.dt < tp) {
-			System.out.println(" No elliptical path possible ");
-			throw new LambertException();
+			//System.out.println("No elliptical path possible ");
+			throw new LambertException("No elliptical path possible ");
 			//System.exit(0);
 		}
 
@@ -195,8 +195,8 @@ public class Lambert implements ScalarFunction {
 		double ftemp = evaluate(ahigh);
 
 		if ((fm * ftemp) >= 0.0) {
-			System.out.println(" initial guesses do not bound ");
-			throw new LambertException();
+			//System.out.println(" initial guesses do not bound ");
+			throw new LambertException(" initial guesses do not bound ");
 			//System.exit(0);
 		}
 
