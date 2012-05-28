@@ -64,8 +64,8 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				bcoord[bcur].x = x + xBinWidth / 2.f;
 				bcoord[bcur].y = y + yBinWidth / 2.f;
 				z1 = bcoord[bcur].z = data.zAt(k, l);
-				if (z1 == 0.0)
-					bcoord[bcur].z = 1.0;
+//				if (z1 == 0.0)
+//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k, l);
 				//V.x[bcur] = z1;
 				bcur++;
@@ -74,8 +74,8 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				bcoord[bcur].x = x + xBinWidth / 2.f;
 				bcoord[bcur].y = y + 1.5f * xBinWidth;
 				z2 = bcoord[bcur].z = data.zAt(k, l + 1);
-				if (z2 == 0.0)
-					bcoord[bcur].z = 1.0;
+//				if (z2 == 0.0)
+//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k, l + 1);
 				//V.x[bcur] = z2;
 				bcur++;
@@ -84,8 +84,8 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				bcoord[bcur].x = x + 1.5f * xBinWidth;
 				bcoord[bcur].y = y + 1.5f * yBinWidth;
 				z3 = bcoord[bcur].z = data.zAt(k + 1, l + 1);
-				if (z3 == 0.0)
-					bcoord[bcur].z = 1.0;
+//				if (z3 == 0.0)
+//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k + 1, l + 1);
 				//V.x[bcur] = z3;
 				bcur++;
@@ -94,8 +94,8 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				bcoord[bcur].x = x + 1.5f * xBinWidth;
 				bcoord[bcur].y = y + yBinWidth / 2.f;
 				z4 = bcoord[bcur].z = data.zAt(k + 1, l);
-				if (z4 == 0.0)
-					bcoord[bcur].z = 1.0;
+//				if (z4 == 0.0)
+//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k + 1, l);
 				//V.x[bcur] = z4;
 				bcur++;
