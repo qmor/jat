@@ -48,7 +48,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	private static final long serialVersionUID = 160335685072272523L;
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
-	private SimpleUniverse universe;
+	public SimpleUniverse universe;
 	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bboxgroup;

@@ -20,7 +20,6 @@
 
 package jat.jat3D.behavior;
 
-import jat.jat3D.CoordTransform3D;
 import jat.jat3D.JatPlot3D;
 
 import java.awt.event.KeyEvent;
@@ -29,12 +28,7 @@ import javax.media.j3d.Behavior;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupOnAWTEvent;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-
-import com.sun.j3d.utils.universe.ViewingPlatform;
 
 /**
  * A behaviour for 3d plots which defines certain keyboard events This is used
