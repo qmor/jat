@@ -82,6 +82,8 @@ public class SpherePlot3D extends Plot {
 		for (int i = 0; i < dimx - 1; i++) {
 			for (int j = 0; j < dimy - 1; j++) {
 				// System.out.println(i + " " + j + " " + " " + r[i][j][0]);
+				if(i==dimx/2 && j==dimy/2-9)
+					draw.setColor(Color.LIGHT_GRAY);
 				draw.fillPolygon(0.2f, r[i][j], r[i + 1][j], r[i + 1][j + 1],
 						r[i][j + 1]);
 			}
