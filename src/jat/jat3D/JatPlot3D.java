@@ -23,7 +23,6 @@ package jat.jat3D;
 import jat.core.cm.Constants;
 import jat.core.cm.cm;
 import jat.jat3D.behavior.jat_KeyBehavior;
-import jat.jat3D.behavior.jat_KeyBehavior_Translate;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 
@@ -60,8 +59,8 @@ public abstract class JatPlot3D extends Canvas3D {
 	public jat_MouseZoom mouseZoom;
 	ViewingPlatform myvp;
 	TransformGroup myvpt;
-	public Switch s;
-	
+	public Switch keyBehaviorSwitch;
+
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
 	}
@@ -149,54 +148,26 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseZoom.setSchedulingBounds(bounds);
 		bg.addChild(mouseZoom);
 
-		// jat_MouseDownUpBehavior mouseDnUp = new
-		// jat_MouseDownUpBehavior(this);
-		// mouseDnUp.setSchedulingBounds(bounds);
-		// bg.addChild(mouseDnUp);
-
+		// Switch for default keyboard behavior, add more children for your own
+		// keyboard behavior
+		keyBehaviorSwitch = new Switch();
+		keyBehaviorSwitch.setCapability(Switch.ALLOW_SWITCH_WRITE);
 		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(this);
 		keyBehavior.setSchedulingBounds(bounds);
-		jat_KeyBehavior_Translate keyBehavior_t = new jat_KeyBehavior_Translate(this);
-		keyBehavior_t.setSchedulingBounds(bounds);
+		keyBehaviorSwitch.addChild(keyBehavior);
+		keyBehaviorSwitch.setWhichChild(0);
+		bg.addChild(keyBehaviorSwitch);
 
-		s = new Switch();
-		s.setCapability(Switch.ALLOW_SWITCH_WRITE);
-		s.addChild(keyBehavior);
-		s.addChild(keyBehavior_t);
-		s.setWhichChild(0);
-		bg.addChild(s);
-
-
-		addBehavior(bg);
-
-		// jatScene3D js = new jatScene3D();
-		//
-		// System.out.println("key add 1");
-		// js.add(keyBehavior, "key_plotview");
-		//
-		// bg.addChild(js);
-		//
-		// System.out.println("key remove");
-		// js.remove("key_plotview");
-		//
-		// System.out.println("key add 1");
-		// js.add(keyBehavior, "key_plotview");
-
-		// jat_KeyBehavior keyBehavior2 = new jat_KeyBehavior(this);
-		// js.add(keyBehavior2, "key_plotview2");
-
-		// js.remove("key_plotview2");
-
-		// js.add(keyBehavior, "key_plotview");
+		addBehavior();
 
 		return bg;
 	}
 
 	/**
-	 * Override to add your own mouse and keyboard behavior
+	 * Override to add your own mouse and keyboard behavior-or not
 	 */
 
-	void addBehavior(BranchGroup bg) {
+	public void addBehavior() {
 	}
 
 	protected void setupLights(BranchGroup root) {

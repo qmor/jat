@@ -1,12 +1,19 @@
 package jat.jat3D.FreeHEP;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
-
+import javax.media.j3d.Appearance;
+import javax.media.j3d.Geometry;
+import javax.media.j3d.Material;
 import javax.media.j3d.Node;
-import com.sun.j3d.utils.geometry.*;
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.PolygonAttributes;
+import javax.media.j3d.Shape3D;
+import javax.vecmath.Color3b;
+import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3f;
+
+import com.sun.j3d.utils.geometry.GeometryInfo;
+import com.sun.j3d.utils.geometry.NormalGenerator;
+import com.sun.j3d.utils.geometry.Stripifier;
 
 /**
  * @author Joy Kyriakopulos (joyk@fnal.gov)
@@ -40,8 +47,8 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 		int nYbins = data.yBins();
 		float xBinWidth = 1.f / nXbins;
 		float yBinWidth = 1.f / nYbins;
-		float x, y, z;
-		int i, j, k, l;
+		float x, y;
+		int i, k, l;
 
 		Point3d bcoord[] = new Point3d[((int) nXbins - 1) * ((int) nYbins - 1) * 4];
 		Color3b bcolor[] = new Color3b[((int) nXbins - 1) * ((int) nYbins - 1) * 4];
@@ -53,8 +60,6 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 
 		// Fill bcoord array with points that compose the surface
 
-		//VectorN V = new VectorN(324);
-		// Matrix A = new Matrix(nXbins - 1);
 		double z1, z2, z3, z4;
 		int bcur = 0;
 		for (k = 0, x = -.5f; k < (int) nXbins - 1; k++, x += xBinWidth) {
@@ -64,40 +69,28 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				bcoord[bcur].x = x + xBinWidth / 2.f;
 				bcoord[bcur].y = y + yBinWidth / 2.f;
 				z1 = bcoord[bcur].z = data.zAt(k, l);
-//				if (z1 == 0.0)
-//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k, l);
-				//V.x[bcur] = z1;
 				bcur++;
 
 				// Next point in y direction
 				bcoord[bcur].x = x + xBinWidth / 2.f;
 				bcoord[bcur].y = y + 1.5f * xBinWidth;
 				z2 = bcoord[bcur].z = data.zAt(k, l + 1);
-//				if (z2 == 0.0)
-//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k, l + 1);
-				//V.x[bcur] = z2;
 				bcur++;
 
 				// Next point diagonally
 				bcoord[bcur].x = x + 1.5f * xBinWidth;
 				bcoord[bcur].y = y + 1.5f * yBinWidth;
 				z3 = bcoord[bcur].z = data.zAt(k + 1, l + 1);
-//				if (z3 == 0.0)
-//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k + 1, l + 1);
-				//V.x[bcur] = z3;
 				bcur++;
 
 				// Next point in x direction
 				bcoord[bcur].x = x + 1.5f * xBinWidth;
 				bcoord[bcur].y = y + yBinWidth / 2.f;
 				z4 = bcoord[bcur].z = data.zAt(k + 1, l);
-//				if (z4 == 0.0)
-//					bcoord[bcur].z = 1.0;
 				bcolor[bcur] = data.colorAt(k + 1, l);
-				//V.x[bcur] = z4;
 				bcur++;
 
 				if (z1 < 0.1 || z2 < 0 || z3 < 0 || z4 < 0) {
@@ -117,7 +110,6 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 		}
 		System.out.println("bcur " + bcur);
 
-		//V.print();
 		// System.out.print("debug3:");
 
 		// We make a GeometryInfo object so that normals can be generated
