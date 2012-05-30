@@ -18,6 +18,7 @@
 package jat.jat3D;
 
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Node;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.TransformGroup;
 
@@ -66,6 +67,17 @@ public class jatScene3D extends TransformGroup {
 		jatBranchGroup.addChild(bg);
 	}
 
+	public void add(Node n, String name) {
+		BranchGroup bg = new BranchGroup();
+		bg.setUserData(name);
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		bg.addChild(n);
+		jatBranchGroup.addChild(bg);
+	}
+
 	/**
 	 * Remove an element from the scene
 	 * 
@@ -83,6 +95,7 @@ public class jatScene3D extends TransformGroup {
 
 				if (userData instanceof String && ((String) userData).compareTo(name) == 0) {
 					System.out.println("Removing: " + sgObject.getUserData());
+					jatBranchGroup.detach();
 					jatBranchGroup.removeChild(index);
 				}
 				index++;

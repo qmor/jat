@@ -23,6 +23,7 @@ package jat.jat3D;
 import jat.core.cm.Constants;
 import jat.core.cm.cm;
 import jat.jat3D.behavior.jat_KeyBehavior;
+import jat.jat3D.behavior.jat_KeyBehavior_Translate;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
 
@@ -33,6 +34,7 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Node;
+import javax.media.j3d.Switch;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
@@ -58,7 +60,8 @@ public abstract class JatPlot3D extends Canvas3D {
 	public jat_MouseZoom mouseZoom;
 	ViewingPlatform myvp;
 	TransformGroup myvpt;
-
+	public Switch s;
+	
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
 	}
@@ -72,7 +75,7 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		Node myScene = createScene();
 		BranchGroup mouseGroup = defineMouseBehaviour(myScene, myvp);
-		setupLights(mouseGroup); // Surface plot wants an extra light
+		setupLights(mouseGroup);
 		mouseGroup.compile();
 
 		universe.addBranchGraph(mouseGroup);
@@ -119,6 +122,10 @@ public abstract class JatPlot3D extends Canvas3D {
 	 */
 	protected BranchGroup defineMouseBehaviour(Node scene, ViewingPlatform myvp) {
 		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		Bounds bounds = getDefaultBounds();
 
 		TransformGroup objTransform = new TransformGroup();
@@ -149,9 +156,47 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(this);
 		keyBehavior.setSchedulingBounds(bounds);
-		bg.addChild(keyBehavior);
+		jat_KeyBehavior_Translate keyBehavior_t = new jat_KeyBehavior_Translate(this);
+		keyBehavior_t.setSchedulingBounds(bounds);
+
+		s = new Switch();
+		s.setCapability(Switch.ALLOW_SWITCH_WRITE);
+		s.addChild(keyBehavior);
+		s.addChild(keyBehavior_t);
+		s.setWhichChild(1);
+		bg.addChild(s);
+
+
+		addBehavior(bg);
+
+		// jatScene3D js = new jatScene3D();
+		//
+		// System.out.println("key add 1");
+		// js.add(keyBehavior, "key_plotview");
+		//
+		// bg.addChild(js);
+		//
+		// System.out.println("key remove");
+		// js.remove("key_plotview");
+		//
+		// System.out.println("key add 1");
+		// js.add(keyBehavior, "key_plotview");
+
+		// jat_KeyBehavior keyBehavior2 = new jat_KeyBehavior(this);
+		// js.add(keyBehavior2, "key_plotview2");
+
+		// js.remove("key_plotview2");
+
+		// js.add(keyBehavior, "key_plotview");
 
 		return bg;
+	}
+
+	/**
+	 * Override to add your own mouse and keyboard behavior
+	 */
+
+	void addBehavior(BranchGroup bg) {
 	}
 
 	protected void setupLights(BranchGroup root) {
@@ -245,7 +290,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		// scale scene to fit inside box
 		Transform3D tscale = new Transform3D();
 		tscale.set(scale);
-		Transform3D trot=new Transform3D();		
+		Transform3D trot = new Transform3D();
 		trot.rotX(-cm.Rad(Constants.eps));
 		tscale.mul(trot);
 		jatScene.setTransform(tscale);
@@ -258,11 +303,11 @@ public abstract class JatPlot3D extends Canvas3D {
 			factor = 0.1f;
 		else
 			factor = 10.f;
-//		Transform3D tf = new Transform3D();
-//		// scale scene to fit inside box
-//		tf.set(1 / tf_factor);
-//		jatScene.setTransform(tf);
-		
+		// Transform3D tf = new Transform3D();
+		// // scale scene to fit inside box
+		// tf.set(1 / tf_factor);
+		// jatScene.setTransform(tf);
+
 		zoomScene(1.f / tf_factor);
 		// and move viewer accordingly
 		Vector3f v = get_vp_t();
@@ -327,10 +372,30 @@ public abstract class JatPlot3D extends Canvas3D {
 		myvpt.setTransform(lookAt);
 	}
 
+	public void jat_translate(float x, float y, float z) {
+		Transform3D Trans = new Transform3D();
+		myvpt.getTransform(Trans);
+
+		Vector3f v = new Vector3f();
+		Trans.get(v);
+		Point3d p = new Point3d();
+		p.x = v.x + x;
+		p.y = v.y + y;
+		p.z = v.z + z;
+		// util.print("p", p);
+		Transform3D lookAt = new Transform3D();
+		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+		lookAt.invert();
+		update_user();
+		myvpt.setTransform(lookAt);
+
+	}
+
 	/**
-	 * This function is to be overridden by the class that is derived from JatPlot3D. 
-	 * For example, to generate output in the user interface. JatPlot3D is the base class, 
-	 * and it does not know about the GUI elements that a user of it might implement.  
+	 * This function is to be overridden by the class that is derived from
+	 * JatPlot3D. For example, to generate output in the user interface.
+	 * JatPlot3D is the base class, and it does not know about the GUI elements
+	 * that a user of it might implement.
 	 */
 	public void update_user() {
 	}
