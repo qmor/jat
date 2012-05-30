@@ -163,7 +163,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		s.setCapability(Switch.ALLOW_SWITCH_WRITE);
 		s.addChild(keyBehavior);
 		s.addChild(keyBehavior_t);
-		s.setWhichChild(1);
+		s.setWhichChild(0);
 		bg.addChild(s);
 
 
