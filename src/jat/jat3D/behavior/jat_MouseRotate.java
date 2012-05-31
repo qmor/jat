@@ -20,7 +20,7 @@
 
 package jat.jat3D.behavior;
 
-import jat.jat3D.JatPlot3D;
+import jat.jat3D.plot3D.JatPlot3D;
 
 import java.awt.AWTEvent;
 import java.awt.Component;

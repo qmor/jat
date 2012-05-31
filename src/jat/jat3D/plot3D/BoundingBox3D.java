@@ -19,7 +19,9 @@
 // http://java.freehep.org/freehep-java3d/license.html
 
 
-package jat.jat3D;
+package jat.jat3D.plot3D;
+
+import jat.jat3D.Body3D;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.IndexedLineArray;

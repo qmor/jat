@@ -18,32 +18,29 @@
 // Original Code under LGPL
 // http://java.freehep.org/freehep-java3d/license.html
 
-package jat.jat3D;
-import javax.media.j3d.*;
-import javax.vecmath.*;
+package jat.jat3D.plot3D;
+
+import java.text.NumberFormat;
 
 
-public class YAxisBuilder extends AxisBuilder
-{	
-
-	public YAxisBuilder()
-	{
-	}
-	public YAxisBuilder(String label, String[] tickLabels, double[] tickLocations)
-	{
-		setLabel(label);
-		setTickLabels(tickLabels);
-		setTickLocations(tickLocations);
-	}
-	public Node getNode()
-	{
-		Transform3D t3d = new Transform3D();
-		t3d.set(1/scale,new Vector3f(lo,-hi,lo));
-		Transform3D rot = new Transform3D();
-		rot.rotZ(Math.PI/2);
-		t3d.mul(rot);
-		TransformGroup tg = new TransformGroup(t3d);
-		tg.addChild(super.getNode());
-		return tg;		
-	}
+final class DoubleNumberFormatter
+{
+   DoubleNumberFormatter(int power)
+   {
+	   if (formatter == null)
+		   formatter = NumberFormat.getInstance();
+	   this.power = power;
+   }
+   void setFractionDigits(int fractDigits)
+   {
+	   formatter.setMinimumFractionDigits(fractDigits);
+	   formatter.setMaximumFractionDigits(fractDigits);
+   }
+   String format(final double d)
+   {
+	   return formatter.format(power != 0 ? d / Math.pow(10.0, power) : d);
+   }
+   private static NumberFormat formatter = null;
+   private int power;
 }
+

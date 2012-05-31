@@ -20,7 +20,8 @@
 
 
 
-package jat.jat3D;
+package jat.jat3D.plot3D;
+
 import java.awt.Font;
 import javax.media.j3d.*;
 import javax.vecmath.*;

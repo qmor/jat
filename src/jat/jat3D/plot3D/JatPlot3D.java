@@ -18,10 +18,14 @@
 // Original Code under LGPL
 // http://java.freehep.org/freehep-java3d/license.html
 
-package jat.jat3D;
+package jat.jat3D.plot3D;
 
 import jat.core.cm.Constants;
 import jat.core.cm.cm;
+import jat.jat3D.BodyGroup3D;
+import jat.jat3D.CoordTransform3D;
+import jat.jat3D.jatScene3D;
+import jat.jat3D.util;
 import jat.jat3D.behavior.jat_KeyBehavior;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
