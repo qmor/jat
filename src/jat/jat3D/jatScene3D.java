@@ -20,6 +20,7 @@ package jat.jat3D;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.SceneGraphObject;
+import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 
 /**
@@ -32,9 +33,11 @@ import javax.media.j3d.TransformGroup;
  */
 public class jatScene3D extends TransformGroup {
 	private BranchGroup jatBranchGroup;
+	public Transform3D InitialRotation;
 
 	public jatScene3D() {
 		super();
+		InitialRotation=new Transform3D();
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
@@ -45,11 +48,13 @@ public class jatScene3D extends TransformGroup {
 		jatBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		jatBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		jatBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		jatBranchGroup.setUserData("jatBranchGroup");
 		addChild(jatBranchGroup);
 	}
 
 	/**
 	 * Add an element to the scene
+	 * 
 	 * @param b
 	 *            body to add
 	 * @param name

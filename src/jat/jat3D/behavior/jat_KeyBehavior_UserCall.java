@@ -20,37 +20,22 @@
 
 package jat.jat3D.behavior;
 
-import jat.jat3D.plot3D.JatPlot3D;
-
 import java.awt.event.KeyEvent;
 
 import javax.media.j3d.Behavior;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupOnAWTEvent;
 
-public class jat_KeyBehavior_Translate extends Behavior {
-	public TransformGroup transformGroup;
+public class jat_KeyBehavior_UserCall extends Behavior {
 	private WakeupOnAWTEvent wup;
-	Transform3D transformZ = new Transform3D();
-	Transform3D currXform = new Transform3D();
-	JatPlot3D jatPlot3D;
 
-
-	public jat_KeyBehavior_Translate(JatPlot3D jatPlot3D) {
+	public jat_KeyBehavior_UserCall() {
 		super();
 		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
-		this.jatPlot3D = jatPlot3D;
-		this.transformGroup = jatPlot3D.jatScene;
 	}
 
 	public void initialize() {
 		wakeupOn(wup);
 	}
-
-	// public void setViewingPlatform(ViewingPlatform myvp) {
-	// this.myvp = myvp;
-	// }
 
 	public void processStimulus(java.util.Enumeration criteria) {
 		KeyEvent event = (KeyEvent) (wup.getAWTEvent())[0];
@@ -58,17 +43,16 @@ public class jat_KeyBehavior_Translate extends Behavior {
 
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
-			jatPlot3D.jat_translate(0f, 0f, .05f);
+			keyup();
 			break;
 		case KeyEvent.VK_DOWN:
-			jatPlot3D.jat_translate(0f, 0f, -.05f);
+			keydown();
 			break;
 		case KeyEvent.VK_LEFT:
-			jatPlot3D.jat_translate(-.05f, 0f, 0f);
+			keyleft();
 			break;
 		case KeyEvent.VK_RIGHT:
-			jatPlot3D.jat_translate(.05f, 0f, 0f);
-			//System.out.println("right");
+			keyright();
 			break;
 		default:
 			break;
@@ -76,4 +60,9 @@ public class jat_KeyBehavior_Translate extends Behavior {
 		wakeupOn(wup);
 	}
 
+	public void keyup(){}
+	public void keydown(){}
+	public void keyleft(){}
+	public void keyright(){}
+	
 }

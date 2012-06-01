@@ -20,8 +20,6 @@
 
 package jat.jat3D.plot3D;
 
-import jat.core.cm.Constants;
-import jat.core.cm.cm;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.CoordTransform3D;
 import jat.jat3D.jatScene3D;
@@ -264,10 +262,8 @@ public abstract class JatPlot3D extends Canvas3D {
 	void zoomScene(float scale) {
 		// scale scene to fit inside box
 		Transform3D tscale = new Transform3D();
-		tscale.set(scale);
-		Transform3D trot = new Transform3D();
-		trot.rotX(-cm.Rad(Constants.eps));
-		tscale.mul(trot);
+		tscale.set(scale);		
+		tscale.mul(jatScene.InitialRotation);
 		jatScene.setTransform(tscale);
 	}
 
