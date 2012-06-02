@@ -263,6 +263,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		// scale scene to fit inside box
 		Transform3D tscale = new Transform3D();
 		tscale.set(scale);		
+		//tscale.setTranslation(new Vector3f(0,0,-.5f));
 		tscale.mul(jatScene.InitialRotation);
 		jatScene.setTransform(tscale);
 	}
@@ -274,11 +275,8 @@ public abstract class JatPlot3D extends Canvas3D {
 			factor = 0.1f;
 		else
 			factor = 10.f;
-		// Transform3D tf = new Transform3D();
-		// // scale scene to fit inside box
-		// tf.set(1 / tf_factor);
-		// jatScene.setTransform(tf);
 
+		// scale scene to fit inside box
 		zoomScene(1.f / tf_factor);
 		// and move viewer accordingly
 		Vector3f v = get_vp_t();

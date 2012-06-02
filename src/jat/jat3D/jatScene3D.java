@@ -22,6 +22,7 @@ import javax.media.j3d.Node;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Vector3f;
 
 /**
  * The class that holds all of the JAT scene elements. Allows dynamic addition
@@ -34,10 +35,12 @@ import javax.media.j3d.TransformGroup;
 public class jatScene3D extends TransformGroup {
 	private BranchGroup jatBranchGroup;
 	public Transform3D InitialRotation;
+	public Vector3f InitialTranslation;
 
 	public jatScene3D() {
 		super();
 		InitialRotation=new Transform3D();
+		InitialTranslation=new Vector3f();
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
