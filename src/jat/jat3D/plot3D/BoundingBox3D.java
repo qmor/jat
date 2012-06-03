@@ -30,7 +30,8 @@ import javax.vecmath.Point3d;
 public class BoundingBox3D extends Body3D {
 	public final static int NUMERIC = 0;
 	public final static int DATE = 1;
-	float boxsize;
+	public float lo;
+	public float hi;
 	public AxisBuilder xAxis;
 	private AxisBuilder yAxis;
 	private ZAxisBuilder zAxis;
@@ -38,13 +39,12 @@ public class BoundingBox3D extends Body3D {
 	private String yAxisLabel = "Y Axis";
 	private String zAxisLabel = "Z Axis";
 
-	public BoundingBox3D(float boxsize) {
+	public BoundingBox3D(float lo, float hi) {
 
-		this.boxsize = boxsize;
+		this.lo = lo;
+		this.hi = hi;
 
 		IndexedLineArray xCube = new IndexedLineArray(8, IndexedLineArray.COORDINATES, 24);
-		float lo = -boxsize / 2;
-		float hi = boxsize / 2;
 
 		// Set coordinates for the cube //
 		xCube.setCoordinate(0, new Point3d(lo, hi, lo));
@@ -90,40 +90,42 @@ public class BoundingBox3D extends Body3D {
 		addChild(new Shape3D(xCube));
 	}
 
+	// public void createAxes(int exponent) {
+	//
+	// // Axes labels and tick marks
+	// float range = hi - lo;
+	// float[] pos = { lo, lo + range / 4, lo + range / 2, lo + 3 * range / 4,
+	// hi };
+	// String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]),
+	// String.valueOf(pos[2]), String.valueOf(pos[3]), String.valueOf(pos[4]) };
+	//
+	// xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
+	// yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
+	// zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
+	// xAxis.lo = -boxsize / 2f;
+	// xAxis.hi = boxsize / 2f;
+	// yAxis.lo = -boxsize / 2f;
+	// yAxis.hi = boxsize / 2f;
+	// zAxis.lo = -boxsize / 2f;
+	// zAxis.hi = boxsize / 2f;
+	// xAxis.setLabel("X 10^" + exponent + " km");
+	//
+	// xAxis.apply();
+	// yAxis.apply();
+	// zAxis.apply();
+	//
+	// addChild(xAxis.getNode());
+	// addChild(yAxis.getNode());
+	// addChild(zAxis.getNode());
+	//
+	// }
+
 	public void createAxes(int exponent) {
 
 		// Axes labels and tick marks
-
-		double[] tick = { 0, boxsize / 4f, boxsize / 2f, 3 * boxsize / 4f, boxsize };
-		String[] labels = { String.valueOf(-boxsize / 2f), String.valueOf(-boxsize / 4f), "0", String.valueOf(3 * -boxsize / 4f), String.valueOf(boxsize / 2f) };
-		xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
-		yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
-		zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
-		xAxis.lo = -boxsize / 2f;
-		xAxis.hi = boxsize / 2f;
-		yAxis.lo = -boxsize / 2f;
-		yAxis.hi = boxsize / 2f;
-		zAxis.lo = -boxsize / 2f;
-		zAxis.hi = boxsize / 2f;
-		xAxis.setLabel("X 10^" + exponent + " km");
-
-		xAxis.apply();
-		yAxis.apply();
-		zAxis.apply();
-
-		addChild(xAxis.getNode());
-		addChild(yAxis.getNode());
-		addChild(zAxis.getNode());
-
-	}
-
-	public void createAxes(float lo, float hi, int exponent) {
-
-		// Axes labels and tick marks
-
-		double[] tick = { 0, boxsize / 4f, boxsize / 2f, 3 * boxsize / 4f, boxsize };
 		float range = hi - lo;
-		float[] pos = {lo,lo+range/4, lo+range/2,lo+3*range/4,hi};
+		double[] tick = { 0, range / 4f, range / 2f, 3 * range / 4f, range };
+		float[] pos = { lo, lo + range / 4, lo + range / 2, lo + 3 * range / 4, hi };
 		String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]), String.valueOf(pos[2]), String.valueOf(pos[3]), String.valueOf(pos[4]) };
 		xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
 		yAxis = new YAxisBuilder(yAxisLabel, labels, tick);

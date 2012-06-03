@@ -1,5 +1,7 @@
 package jat.examples.Lambert;
 
+import java.io.IOException;
+
 import jat.core.cm.Constants;
 import jat.core.cm.Lambert;
 import jat.core.cm.LambertException;
@@ -9,7 +11,7 @@ import jat.core.spacetime.Time;
 
 public class mars_odyssey {
 
-	public void make_lambert() {
+	public void make_lambert() throws IOException {
 		DE405APL my_eph = new DE405APL();
 		// Mars Odyssey Mission
 
@@ -45,7 +47,11 @@ public class mars_odyssey {
 	public static void main(String args[]) {
 
 		mars_odyssey p = new mars_odyssey();
-		p.make_lambert();
+		try {
+			p.make_lambert();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

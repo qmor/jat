@@ -17,6 +17,8 @@
 
 package jat.examples.ephemeris;
 
+import java.io.IOException;
+
 import jat.core.ephemeris.DE405APL;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
@@ -27,16 +29,21 @@ public class ephemerisAPL
     {
         Time mytime=new Time(2002, 2, 17, 12, 0, 0);
 		DE405APL ephem = new DE405APL();
-        VectorN rv=ephem.get_planet_posvel(DE405APL.MARS, mytime.jd_tt());
+        VectorN rv;
+		try {
+			rv = ephem.get_planet_posvel(DE405APL.MARS, mytime.jd_tt());
+	        System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
+	        System.out.println("x= "+rv.get(0)+" km");
+	        System.out.println("y= "+rv.get(1)+" km");
+	        System.out.println("z= "+rv.get(2)+" km");
+	        System.out.println("The velocity of Mars on 10-17-2002 at 12:00pm was ");
+	        System.out.println("vx= "+rv.get(3)+" km/s");
+	        System.out.println("vy= "+rv.get(4)+" km/s");
+	        System.out.println("vz= "+rv.get(5)+" km/s");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
-        System.out.println("x= "+rv.get(0)+" km");
-        System.out.println("y= "+rv.get(1)+" km");
-        System.out.println("z= "+rv.get(2)+" km");
-        System.out.println("The velocity of Mars on 10-17-2002 at 12:00pm was ");
-        System.out.println("vx= "+rv.get(3)+" km/s");
-        System.out.println("vy= "+rv.get(4)+" km/s");
-        System.out.println("vz= "+rv.get(5)+" km/s");
 
     }
 }

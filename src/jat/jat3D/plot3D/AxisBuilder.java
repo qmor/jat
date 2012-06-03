@@ -27,8 +27,8 @@ import javax.vecmath.*;
 
 public class AxisBuilder
 {
-	public float lo=-.5f,hi=.5f; // coordinates of the box 
-	//public float lo=-5f,hi=5f; // coordinates of the box 
+	public float lo=-.5f; // coordinates of the box 
+	public float hi=.5f; // coordinates of the box 
 	
 	private String labelText;
 	private Font3D labelFont = defaultLabelFont;

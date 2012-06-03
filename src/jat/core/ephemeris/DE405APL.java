@@ -77,8 +77,8 @@ public class DE405APL {
 
 	public final static int EARTH = 3;
 	public final static int MARS = 4;
-	
-	//static final double au = 149597870.691; // Length of an A.U., in km
+
+	// static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon
 	static int interval_duration = 32; // duration of interval section in
 										// ascpxxxx.txt files
@@ -147,8 +147,9 @@ public class DE405APL {
 	 * Geocentric Moon = 10, Sun = 11.
 	 * 
 	 * @param jultime
+	 * @throws IOException
 	 */
-	void planetary_ephemeris(double jultime) {
+	void planetary_ephemeris(double jultime) throws IOException {
 
 		int i = 0, j = 0;
 		double[] ephemeris_r = new double[4];
@@ -192,8 +193,9 @@ public class DE405APL {
 	 * @param i
 	 * @param ephemeris_r
 	 * @param ephemeris_rprime
+	 * @throws IOException
 	 */
-	void get_planet_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[]) {
+	void get_planet_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[]) throws IOException {
 
 		int interval = 0, numbers_to_skip = 0, pointer = 0, j = 0, k = 0, subinterval = 0;
 
@@ -286,7 +288,7 @@ public class DE405APL {
 				ephemeris_r[j] = ephemeris_r[j] + coef[j][k] * position_poly[k];
 
 			/* DON'T Convert from km to A.U. */
-			//ephemeris_r[j] = ephemeris_r[j] / au;
+			// ephemeris_r[j] = ephemeris_r[j] / au;
 		}
 
 		/* Calculate the Chebyshev velocity polynomials */
@@ -310,7 +312,7 @@ public class DE405APL {
 			ephemeris_rprime[j] = ephemeris_rprime[j] * (2.0 * number_of_coef_sets[i] / interval_duration);
 
 			/* DON'T Convert from km to A.U. */
-			//ephemeris_rprime[j] = ephemeris_rprime[j] / au;
+			// ephemeris_rprime[j] = ephemeris_rprime[j] / au;
 
 		}
 
@@ -329,11 +331,12 @@ public class DE405APL {
 	 * Tested and verified 7-16-99.
 	 * 
 	 * @param jultime
+	 * @throws IOException
 	 */
-	void get_ephemeris_coefficients(double jultime) {
+	void get_ephemeris_coefficients(double jultime) throws IOException {
 
 		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
-		String filename=null;
+		String filename = null;
 		String line = " ";
 
 		try {
@@ -416,11 +419,11 @@ public class DE405APL {
 				records = 230;
 			}
 
-			if(filename==null){
+			if (filename == null) {
 				System.out.println("Time period unavailable");
 				System.exit(0);
 			}
-			
+
 			FileReader file = new FileReader(filename);
 			BufferedReader buff = new BufferedReader(file);
 
@@ -479,21 +482,16 @@ public class DE405APL {
 
 			buff.close();
 
-		} catch (IOException e) {
-			System.out.println("Error = " + e.toString());
 		} catch (StringIndexOutOfBoundsException e) {
 			System.out.println("String index out of bounds at i = " + i);
 		}
 
 	}
-	
-		
-	
-	public VectorN get_planet_posvel(int body_number, double jd)
-	{		
+
+	public VectorN get_planet_posvel(int body_number, double jd) throws IOException {
 		double daysec = 3600. * 24.;
 		double[] posvel = new double[6];
-		
+
 		planetary_ephemeris(jd);
 		posvel[0] = planet_r[body_number][1];
 		posvel[1] = planet_r[body_number][2];
@@ -501,14 +499,12 @@ public class DE405APL {
 		posvel[3] = planet_rprime[body_number][1] / daysec;
 		posvel[4] = planet_rprime[body_number][2] / daysec;
 		posvel[5] = planet_rprime[body_number][3] / daysec;
-		
+
 		VectorN out = new VectorN(posvel);
 		return out;
 	}
-	
 
-	public VectorN get_planet_pos(int body_number, Time t)
-	{
+	public VectorN get_planet_pos(int body_number, Time t) throws IOException {
 		get_planet_posvel(body_number, t.jd_tt());
 		double[] vel = new double[3];
 		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
@@ -517,16 +513,13 @@ public class DE405APL {
 		vel[0] = planet_r[body_number][1];
 		vel[1] = planet_r[body_number][2];
 		vel[2] = planet_r[body_number][3];
-		
+
 		VectorN out = new VectorN(vel);
 
 		return out;
 	}
 
-	
-	
-	public VectorN get_planet_vel(int body_number, Time t)
-	{
+	public VectorN get_planet_vel(int body_number, Time t) throws IOException {
 		double daysec = 3600. * 24.;
 		get_planet_posvel(body_number, t.jd_tt());
 		double[] vel = new double[3];
@@ -536,15 +529,11 @@ public class DE405APL {
 		vel[0] = planet_rprime[body_number][1] / daysec;
 		vel[1] = planet_rprime[body_number][2] / daysec;
 		vel[2] = planet_rprime[body_number][3] / daysec;
-		
+
 		VectorN out = new VectorN(vel);
 
 		return out;
 	}
-
-	
-	
-	
 
 	public static void main(String args[]) {
 
@@ -560,7 +549,12 @@ public class DE405APL {
 		 * positions into the array "planet_r", and planetary velocities into
 		 * the array "planet_rprime".
 		 */
-		testBody.planetary_ephemeris(jultime);
+		try {
+			testBody.planetary_ephemeris(jultime);
+		} catch (IOException e) {
+			System.out.println("exception caught in DE405APL main:");
+			e.printStackTrace();
+		}
 
 		/* The following simply sends the output to the screen */
 		for (i = 1; i <= 11; i++) {

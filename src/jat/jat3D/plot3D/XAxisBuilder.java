@@ -39,21 +39,10 @@ public class XAxisBuilder extends AxisBuilder
 		setTickLabels(tickLabels);
 		setTickLocations(tickLocations);
 	}
+
 	public Node getNode()
 	{
 		
-//		TransformGroup tg = new TransformGroup();
-//
-//		Transform3D transform1 = new Transform3D();
-//		Vector3f vector = new Vector3f(1.5f, .0f, .0f);
-//		transform1.setTranslation(vector);
-//
-//		Transform3D transform2 = new Transform3D();
-//		transform2.rotZ(-Math.PI/2);
-//		transform1.mul(transform2);
-//
-//		tg.setTransform(transform1);
-//		tg.addChild(super.getNode());
 		
 		Transform3D t3d = new Transform3D();
 		t3d.set(1/scale,new Vector3f(lo,-hi,lo));
