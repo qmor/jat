@@ -19,7 +19,6 @@
 // http://java.freehep.org/freehep-java3d/license.html
 
 
-
 package jat.jat3D.plot3D;
 
 import java.awt.Font;

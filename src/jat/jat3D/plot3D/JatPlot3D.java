@@ -52,7 +52,6 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected boolean init = false;
 	protected boolean parallelProjection = false;
 	public SimpleUniverse universe;
-	public BranchGroup boxBranchGroup;
 	private Bounds bounds;
 	protected BodyGroup3D bboxgroup;
 	public BoundingBox3D bbox;
@@ -263,7 +262,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		// scale scene to fit inside box
 		Transform3D tscale = new Transform3D();
 		tscale.set(scale);		
-		tscale.setTranslation(new Vector3f(0,0,-.5f));
+		tscale.setTranslation(jatScene.InitialTranslation);
 		tscale.mul(jatScene.InitialRotation);
 		jatScene.setTransform(tscale);
 	}

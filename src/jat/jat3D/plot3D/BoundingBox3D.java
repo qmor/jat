@@ -18,7 +18,6 @@
 // Original Code under LGPL
 // http://java.freehep.org/freehep-java3d/license.html
 
-
 package jat.jat3D.plot3D;
 
 import jat.jat3D.Body3D;
@@ -28,22 +27,25 @@ import javax.media.j3d.IndexedLineArray;
 import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 
-public class BoundingBox3D extends Body3D{
-	float boxsize = 1.f;
-	float lo = -boxsize/2; //-.5f
-	float hi = boxsize/2;    //.5f;
+public class BoundingBox3D extends Body3D {
+	public final static int NUMERIC = 0;
+	public final static int DATE = 1;
+	float boxsize;
 	public AxisBuilder xAxis;
 	private AxisBuilder yAxis;
 	private ZAxisBuilder zAxis;
 	public String xAxisLabel = "X [10^0 km]";
 	private String yAxisLabel = "Y Axis";
-	private String zAxisLabel = "Z Axis";	 
+	private String zAxisLabel = "Z Axis";
 
-	public BoundingBox3D(float size, int exponent) {
+	public BoundingBox3D(float boxsize) {
+
+		this.boxsize = boxsize;
+
 		IndexedLineArray xCube = new IndexedLineArray(8, IndexedLineArray.COORDINATES, 24);
-		lo=-size/2;
-		hi=size/2;
-		
+		float lo = -boxsize / 2;
+		float hi = boxsize / 2;
+
 		// Set coordinates for the cube //
 		xCube.setCoordinate(0, new Point3d(lo, hi, lo));
 		xCube.setCoordinate(1, new Point3d(hi, hi, lo));
@@ -86,10 +88,14 @@ public class BoundingBox3D extends Body3D{
 		setCapability(BranchGroup.ALLOW_DETACH);
 		setUserData("BoundingBox");
 		addChild(new Shape3D(xCube));
-		
+	}
+
+	public void createAxes(int exponent) {
+
+		// Axes labels and tick marks
+
 		double[] tick = { 0, boxsize / 4f, boxsize / 2f, 3 * boxsize / 4f, boxsize };
-		String[] labels = { String.valueOf(-boxsize / 2f), String.valueOf(-boxsize / 4f), "0",
-				String.valueOf(3 * -boxsize / 4f), String.valueOf(boxsize / 2f) };
+		String[] labels = { String.valueOf(-boxsize / 2f), String.valueOf(-boxsize / 4f), "0", String.valueOf(3 * -boxsize / 4f), String.valueOf(boxsize / 2f) };
 		xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
 		yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
 		zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
@@ -100,7 +106,6 @@ public class BoundingBox3D extends Body3D{
 		zAxis.lo = -boxsize / 2f;
 		zAxis.hi = boxsize / 2f;
 		xAxis.setLabel("X 10^" + exponent + " km");
-		xAxis.apply();
 
 		xAxis.apply();
 		yAxis.apply();
@@ -110,7 +115,35 @@ public class BoundingBox3D extends Body3D{
 		addChild(yAxis.getNode());
 		addChild(zAxis.getNode());
 
-	
+	}
+
+	public void createAxes(float lo, float hi, int exponent) {
+
+		// Axes labels and tick marks
+
+		double[] tick = { 0, boxsize / 4f, boxsize / 2f, 3 * boxsize / 4f, boxsize };
+		float range = hi - lo;
+		float[] pos = {lo,lo+range/4, lo+range/2,lo+3*range/4,hi};
+		String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]), String.valueOf(pos[2]), String.valueOf(pos[3]), String.valueOf(pos[4]) };
+		xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
+		yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
+		zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
+		xAxis.lo = lo;
+		xAxis.hi = hi;
+		yAxis.lo = lo;
+		yAxis.hi = hi;
+		zAxis.lo = lo;
+		zAxis.hi = hi;
+		xAxis.setLabel("X 10^" + exponent + " km");
+
+		xAxis.apply();
+		yAxis.apply();
+		zAxis.apply();
+
+		addChild(xAxis.getNode());
+		addChild(yAxis.getNode());
+		addChild(zAxis.getNode());
+
 	}
 
 }
