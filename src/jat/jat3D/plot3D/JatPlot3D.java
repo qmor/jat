@@ -61,6 +61,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	ViewingPlatform myvp;
 	TransformGroup myvpt;
 	public Switch keyBehaviorSwitch;
+	public jat_MouseRotate mouseRotate;
 
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
@@ -134,8 +135,12 @@ public abstract class JatPlot3D extends Canvas3D {
 		objTransform.addChild(scene);
 		bg.addChild(objTransform);
 
-		jat_MouseRotate mouseRotate = new jat_MouseRotate(this);
-		mouseRotate.setTransformGroup(objTransform);
+		mouseRotate = new jat_MouseRotate(this);
+		mouseRotate.setViewingPlatform(myvp);
+		float x, y, z;
+		// if ((bbox.hi + bbox.lo) != 0.)
+		x = y=z=(bbox.hi + bbox.lo) / 2;
+		mouseRotate.setViewingCenter(new Point3d(x, y, z));
 		mouseRotate.setSchedulingBounds(bounds);
 		bg.addChild(mouseRotate);
 
@@ -261,7 +266,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	void zoomScene(float scale) {
 		// scale scene to fit inside box
 		Transform3D tscale = new Transform3D();
-		tscale.set(scale);		
+		tscale.set(scale);
 		tscale.setTranslation(jatScene.InitialTranslation);
 		tscale.mul(jatScene.InitialRotation);
 		jatScene.setTransform(tscale);

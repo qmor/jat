@@ -20,6 +20,8 @@
 
 package jat.jat3D.behavior;
 
+import jat.jat3D.CoordTransform3D;
+import jat.jat3D.util;
 import jat.jat3D.plot3D.JatPlot3D;
 
 import java.awt.AWTEvent;
@@ -32,6 +34,9 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOnBehaviorPost;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
@@ -41,13 +46,15 @@ import com.sun.j3d.utils.universe.ViewingPlatform;
  * MouseRotate is a Java3D behavior object that lets users control the rotation
  * of an object via a mouse.
  * <p>
- * To use this utility, first create a transform group that this rotate behavior
- * will operate on. Then, <blockquote>
+ * In JAT, it works a bit different from the typical use. Instead of rotating
+ * the scene, it moves the viewing platform in orbits around the scene, while
+ * always looking at the scene, with the z-direction being up. Then,
+ * <blockquote>
  * 
  * <pre>
  * 
  * MouseRotate behavior = new MouseRotate();
- * behavior.setTransformGroup(objTrans);
+ * behavior.setViewingPlatform(ViewingPlatform myvp);
  * objTrans.addChild(behavior);
  * behavior.setSchedulingBounds(bounds);
  * 
@@ -61,16 +68,20 @@ public class jat_MouseRotate extends MouseBehavior {
 	double x_angle, y_angle;
 	double x_factor = .01;
 	double y_factor = .01;
-	Transform3D transformZ;
 	public ViewingPlatform myvp;
-	public TransformGroup myvpt;
 	int i = 0;
 	private MouseBehaviorCallback callback = null;
-	private JatPlot3D jatPlot3D;
+	Point3d viewingCenter=new Point3d(0,0,0);
 
-	public jat_MouseRotate(JatPlot3D jatPlot3D) {
-		super(0);
-		this.jatPlot3D = jatPlot3D;
+	// private JatPlot3D jatPlot3D;
+	//
+	// public jat_MouseRotate(JatPlot3D jatPlot3D) {
+	// super(0);
+	// this.jatPlot3D = jatPlot3D;
+	// }
+
+	public void setViewingCenter(Point3d viewingCenter) {
+		this.viewingCenter = viewingCenter;
 	}
 
 	/**
@@ -86,7 +97,6 @@ public class jat_MouseRotate extends MouseBehavior {
 	public jat_MouseRotate(ViewingPlatform myvp) {
 		super(0);
 		this.myvp = myvp;
-		transformZ = new Transform3D();
 	}
 
 	/**
@@ -94,7 +104,6 @@ public class jat_MouseRotate extends MouseBehavior {
 	 **/
 	public jat_MouseRotate() {
 		super(0);
-		transformZ = new Transform3D();
 	}
 
 	/**
@@ -123,7 +132,6 @@ public class jat_MouseRotate extends MouseBehavior {
 	 */
 	public jat_MouseRotate(Component c) {
 		super(c, 0);
-		transformZ = new Transform3D();
 
 	}
 
@@ -254,7 +262,8 @@ public class jat_MouseRotate extends MouseBehavior {
 			if ((id == MouseEvent.MOUSE_DRAGGED) && !evt.isMetaDown() && !evt.isAltDown()) {
 				x = evt.getX();
 				y = evt.getY();
-				// System.out.println("x "+x+"y "+y);;
+				//System.out.println("x " + x + "y " + y);
+				
 
 				dx = x - x_last;
 				dy = y - y_last;
@@ -262,58 +271,9 @@ public class jat_MouseRotate extends MouseBehavior {
 				if (!reset) {
 					x_angle = dx * x_factor;
 					y_angle = dy * y_factor;
-					jatPlot3D.jat_rotate((float)x_angle,(float)y_angle);
-					/*transformZ.rotZ(x_angle);
 
-					transformGroup.getTransform(currXform);
+					jat_rotate((float) x_angle, (float) y_angle);
 
-					Matrix4d mat = new Matrix4d();
-					// Remember old matrix
-					currXform.get(mat);
-
-					// Translate to origin
-					currXform.setTranslation(new Vector3d(0.0, 0.0, 0.0));
-
-					if (invert) {
-						// currXform.mul(currXform, transformX);
-						// currXform.mul(currXform, transformY);
-						// currXform.mul(currXform, transformZ);
-					} else {
-						// currXform.mul(transformZ, currXform);
-						currXform.mul(transformZ);
-						// currXform.mul(transform_axis, currXform);
-						// currXform.mul(transform_axis);
-					}
-
-					// Set old translation back
-					Vector3d translation = new Vector3d(mat.m03, mat.m13, mat.m23);
-					currXform.setTranslation(translation);
-
-					// Update xform
-					transformGroup.setTransform(currXform);
-
-					// The view position
-					myvpt = myvp.getViewPlatformTransform();
-					Transform3D Trans = new Transform3D();
-					myvpt.getTransform(Trans);
-
-					Vector3f v_current_cart = new Vector3f();
-					Trans.get(v_current_cart);
-
-					Vector3f v_current_spher;
-					v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
-
-					v_current_spher.y -= y_angle;
-					Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
-
-					Transform3D lookAt = new Transform3D();
-					lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-					lookAt.invert();
-
-					myvpt.setTransform(lookAt);
-
-					transformChanged(currXform);
-*/
 					if (callback != null)
 						callback.transformChanged(MouseBehaviorCallback.ROTATE, currXform);
 				} else {
@@ -328,6 +288,52 @@ public class jat_MouseRotate extends MouseBehavior {
 			}
 		}
 		// System.out.println("leave doProcess");
+	}
+
+	
+	float last_theta, last_phi;
+	
+	public void jat_rotate(float x_angle, float y_angle) {
+		// The view position
+		TransformGroup myvpt = myvp.getViewPlatformTransform();
+		Transform3D Trans = new Transform3D();
+		myvpt.getTransform(Trans);
+
+		
+		last_phi-=x_angle;
+		last_theta-=y_angle;
+
+		//Vector3f v_pos_on_sphere;
+		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(new Vector3f(3,last_theta,last_phi));
+		v.x+=viewingCenter.x/2;
+		v.y+=viewingCenter.y/2;
+		v.z+=viewingCenter.z/2;
+
+		Transform3D lookAt = new Transform3D();
+		lookAt.lookAt(new Point3d(v.x, v.y, v.z), viewingCenter, new Vector3d(0, 0, 1.0));
+		lookAt.invert();
+
+		myvpt.setTransform(lookAt);
+		
+		
+//		Vector3f v_current_cart = new Vector3f();
+//		Trans.get(v_current_cart);
+//
+//		Vector3f v_current_spher;
+//		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
+//		util.print("view spher", v_current_spher);
+//
+//		v_current_spher.y -= y_angle;
+//		v_current_spher.z -= x_angle;
+//		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
+//
+//		// util.print("view cart", v);
+//
+//		Transform3D lookAt = new Transform3D();
+//		lookAt.lookAt(new Point3d(v.x, v.y, v.z), viewingCenter, new Vector3d(0, 0, 1.0));
+//		lookAt.invert();
+//
+//		myvpt.setTransform(lookAt);
 	}
 
 	/**
