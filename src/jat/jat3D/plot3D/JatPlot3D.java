@@ -40,6 +40,7 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
 import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -140,7 +141,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		float x, y, z;
 		// if ((bbox.hi + bbox.lo) != 0.)
 		x = y=z=(bbox.hi + bbox.lo) / 2;
-		mouseRotate.setViewingCenter(new Point3d(x, y, z));
+		mouseRotate.setViewingCenter(new Point3f(x, y, z));
 		mouseRotate.setSchedulingBounds(bounds);
 		bg.addChild(mouseRotate);
 

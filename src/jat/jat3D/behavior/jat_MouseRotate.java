@@ -35,6 +35,7 @@ import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOnBehaviorPost;
 import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -71,7 +72,7 @@ public class jat_MouseRotate extends MouseBehavior {
 	public ViewingPlatform myvp;
 	int i = 0;
 	private MouseBehaviorCallback callback = null;
-	Point3d viewingCenter=new Point3d(0,0,0);
+	Point3f viewingCenter = new Point3f(0, 0, 0);
 
 	// private JatPlot3D jatPlot3D;
 	//
@@ -80,7 +81,7 @@ public class jat_MouseRotate extends MouseBehavior {
 	// this.jatPlot3D = jatPlot3D;
 	// }
 
-	public void setViewingCenter(Point3d viewingCenter) {
+	public void setViewingCenter(Point3f viewingCenter) {
 		this.viewingCenter = viewingCenter;
 	}
 
@@ -240,7 +241,8 @@ public class jat_MouseRotate extends MouseBehavior {
 							break;
 						evt = (MouseEvent) mouseq.remove(0);
 						// consolidate MOUSE_DRAG events
-						while ((evt.getID() == MouseEvent.MOUSE_DRAGGED) && !mouseq.isEmpty() && (((MouseEvent) mouseq.get(0)).getID() == MouseEvent.MOUSE_DRAGGED)) {
+						while ((evt.getID() == MouseEvent.MOUSE_DRAGGED) && !mouseq.isEmpty()
+								&& (((MouseEvent) mouseq.get(0)).getID() == MouseEvent.MOUSE_DRAGGED)) {
 							evt = (MouseEvent) mouseq.remove(0);
 						}
 					}
@@ -262,8 +264,7 @@ public class jat_MouseRotate extends MouseBehavior {
 			if ((id == MouseEvent.MOUSE_DRAGGED) && !evt.isMetaDown() && !evt.isAltDown()) {
 				x = evt.getX();
 				y = evt.getY();
-				//System.out.println("x " + x + "y " + y);
-				
+				// System.out.println("x " + x + "y " + y);
 
 				dx = x - x_last;
 				dy = y - y_last;
@@ -290,50 +291,65 @@ public class jat_MouseRotate extends MouseBehavior {
 		// System.out.println("leave doProcess");
 	}
 
-	
-	float last_theta, last_phi;
-	
+	//float last_theta, last_phi;
+
 	public void jat_rotate(float x_angle, float y_angle) {
-		// The view position
+		// The view platform
 		TransformGroup myvpt = myvp.getViewPlatformTransform();
 		Transform3D Trans = new Transform3D();
 		myvpt.getTransform(Trans);
 
-		
-		last_phi-=x_angle;
-		last_theta-=y_angle;
+		// the current Cartesian view position in space
+		Vector3f v_current_cart1 = new Vector3f();
+		Trans.get(v_current_cart1);
 
-		//Vector3f v_pos_on_sphere;
-		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(new Vector3f(3,last_theta,last_phi));
-		v.x+=viewingCenter.x/2;
-		v.y+=viewingCenter.y/2;
-		v.z+=viewingCenter.z/2;
+		// the current Cartesian view position relative to the sphere
+		Vector3f v_current_cart2 = new Vector3f();
+		v_current_cart2.x = v_current_cart1.x - viewingCenter.x;
+		v_current_cart2.y = v_current_cart1.y - viewingCenter.y;
+		v_current_cart2.z = v_current_cart1.z - viewingCenter.z;
+
+		// the current spherical view position relative to the sphere
+		Vector3f v_current_sphere;
+		v_current_sphere = CoordTransform3D.Cartesian_to_Spherical(v_current_cart2);
+		// util.print("view sphere", v_current_sphere);
+
+		// the new spherical view position relative to the sphere
+		v_current_sphere.y -= y_angle;
+		v_current_sphere.z -= x_angle;
+
+		// the new Cartesian view position relative to the sphere
+		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_sphere);
+
+		// the new Cartesian view position in space		
+		v.x += viewingCenter.x ;
+		v.y += viewingCenter.y ;
+		v.z += viewingCenter.z ;
 
 		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(new Point3d(v.x, v.y, v.z), viewingCenter, new Vector3d(0, 0, 1.0));
+		lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(viewingCenter), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 
 		myvpt.setTransform(lookAt);
-		
-		
-//		Vector3f v_current_cart = new Vector3f();
-//		Trans.get(v_current_cart);
-//
-//		Vector3f v_current_spher;
-//		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
-//		util.print("view spher", v_current_spher);
-//
-//		v_current_spher.y -= y_angle;
-//		v_current_spher.z -= x_angle;
-//		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
-//
-//		// util.print("view cart", v);
-//
-//		Transform3D lookAt = new Transform3D();
-//		lookAt.lookAt(new Point3d(v.x, v.y, v.z), viewingCenter, new Vector3d(0, 0, 1.0));
-//		lookAt.invert();
-//
-//		myvpt.setTransform(lookAt);
+
+
+//		last_phi -= x_angle;
+//		last_theta -= y_angle;
+
+
+//		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(new Vector3f(3, last_theta, last_phi));
+
+		// Vector3f v =
+		// CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
+		//
+		// // util.print("view cart", v);
+		//
+		// Transform3D lookAt = new Transform3D();
+		// lookAt.lookAt(new Point3d(v.x, v.y, v.z), viewingCenter, new
+		// Vector3d(0, 0, 1.0));
+		// lookAt.invert();
+		//
+		// myvpt.setTransform(lookAt);
 	}
 
 	/**
