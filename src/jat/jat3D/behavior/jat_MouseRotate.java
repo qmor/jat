@@ -21,8 +21,6 @@
 package jat.jat3D.behavior;
 
 import jat.jat3D.CoordTransform3D;
-import jat.jat3D.util;
-import jat.jat3D.plot3D.JatPlot3D;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -73,13 +71,12 @@ public class jat_MouseRotate extends MouseBehavior {
 	int i = 0;
 	private MouseBehaviorCallback callback = null;
 	Point3f viewingCenter = new Point3f(0, 0, 0);
+	jat_Rotate jat_rotate;
+	
 
-	// private JatPlot3D jatPlot3D;
-	//
-	// public jat_MouseRotate(JatPlot3D jatPlot3D) {
-	// super(0);
-	// this.jatPlot3D = jatPlot3D;
-	// }
+//	public void setJat_rotate(jat_Rotate jat_rotate) {
+//		this.jat_rotate = jat_rotate;
+//	}
 
 	public void setViewingCenter(Point3f viewingCenter) {
 		this.viewingCenter = viewingCenter;
@@ -273,7 +270,7 @@ public class jat_MouseRotate extends MouseBehavior {
 					x_angle = dx * x_factor;
 					y_angle = dy * y_factor;
 
-					jat_rotate((float) x_angle, (float) y_angle);
+					jat_Rotate.jat_rotate((float) x_angle, (float) y_angle, myvp, viewingCenter);
 
 					if (callback != null)
 						callback.transformChanged(MouseBehaviorCallback.ROTATE, currXform);

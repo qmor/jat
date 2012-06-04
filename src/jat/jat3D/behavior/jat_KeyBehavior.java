@@ -28,7 +28,10 @@ import javax.media.j3d.Behavior;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupOnAWTEvent;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import com.sun.j3d.utils.universe.ViewingPlatform;
 
 /**
  * A behaviour for 3d plots which defines certain keyboard events This is used
@@ -44,22 +47,33 @@ import javax.vecmath.Vector3f;
  * 
  */
 public class jat_KeyBehavior extends Behavior {
-	private Transform3D init, tgr;
+	private Transform3D init;
 	public TransformGroup transformGroup;
 	private WakeupOnAWTEvent wup;
-	private float step;
 	private float angle;
 	Transform3D transformZ = new Transform3D();
 	Transform3D currXform = new Transform3D();
 	JatPlot3D jatPlot3D;
+	public ViewingPlatform myvp;
+	Point3f viewingCenter = new Point3f(0, 0, 0);
+
+	
+	public void setViewingCenter(Point3f viewingCenter) {
+		this.viewingCenter = viewingCenter;
+	}
+
+	public void setViewingPlatform(ViewingPlatform myvp) {
+		this.myvp = myvp;
+	}
+
+	
 
 	public jat_KeyBehavior(TransformGroup transformGroup, float moveStep, float rotStep) {
 		super();
-		this.tgr = new Transform3D();
+		new Transform3D();
 		this.init = new Transform3D();
 		this.transformGroup = transformGroup;
 		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
-		this.step = moveStep;
 		this.angle = (float) Math.toRadians(rotStep);
 	}
 
@@ -87,22 +101,23 @@ public class jat_KeyBehavior extends Behavior {
 
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
-			jatPlot3D.jat_rotate(0, .02f);
+			jat_Rotate.jat_rotate(0, .02f, myvp, viewingCenter);
+			//jatPlot3D.jat_rotate(0, .02f);
 			break;
 		case KeyEvent.VK_DOWN:
-			jatPlot3D.jat_rotate(0, -.02f);
+			jat_Rotate.jat_rotate(0, -.02f, myvp, viewingCenter);
 			break;
 		case KeyEvent.VK_LEFT:
-			jatPlot3D.jat_rotate(-.02f, 0);
+			jat_Rotate.jat_rotate(-.02f, 0, myvp, viewingCenter);
 			break;
 		case KeyEvent.VK_RIGHT:
-			jatPlot3D.jat_rotate(.02f, 0);
+			jat_Rotate.jat_rotate(.02f, 0, myvp, viewingCenter);
 			break;
 		case KeyEvent.VK_PAGE_UP:
-			move(0f, 0f, 1f, shift);
+			//move(0f, 0f, 1f, shift);
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
-			move(0f, 0f, -1f, shift);
+			//move(0f, 0f, -1f, shift);
 			break;
 		case KeyEvent.VK_HOME:
 			transformGroup.setTransform(init);
@@ -118,35 +133,5 @@ public class jat_KeyBehavior extends Behavior {
 		}
 		wakeupOn(wup);
 	}
-
-	private void move(float x, float y, float z, boolean shift) {
-		if (!shift)
-			translate(x * step, y * step, z * step);
-		else
-			rotate(x * angle, y * angle, z * angle);
-	}
-
-	private void translate(float x, float y, float z) {
-		Transform3D tr = new Transform3D();
-		Vector3f vec = new Vector3f(x, y, z);
-		tr.setTranslation(vec);
-		transformGroup.getTransform(tgr);
-		tgr.mul(tr);
-		transformGroup.setTransform(tgr);
-	}
-
-	private void rotate(float x, float y, float z) {
-		Transform3D tr = new Transform3D();
-		if (x != 0)
-			tr.rotX(x);
-		if (y != 0)
-			tr.rotY(y);
-		if (z != 0)
-			tr.rotZ(z);
-		transformGroup.getTransform(tgr);
-		tgr.mul(tr);
-		transformGroup.setTransform(tgr);
-	}
-
 
 }
