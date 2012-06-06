@@ -43,27 +43,51 @@ public class jat_Zoom {
 		super();
 		this.jatplot3d = jatplot3d;
 		myvp = jatplot3d.universe.getViewingPlatform();
+		this.viewingCenter=jatplot3d.viewingCenter;
 	}
 
 	public void jat_zoom(float dy) {
-		// The view platform
-		TransformGroup myvpt = myvp.getViewPlatformTransform();
-		Transform3D Trans = new Transform3D();
-		myvpt.getTransform(Trans);
 
+		// The zoom factor
 		float zoom;
 		if (dy > 0)
 			zoom = 0.96f;
 		else
 			zoom = 1.04f;
-		Vector3f v = new Vector3f();
-		Trans.get(v);
+
+		// The view platform
+		TransformGroup myvpt = myvp.getViewPlatformTransform();
+		Transform3D Trans = new Transform3D();
+		myvpt.getTransform(Trans);
+		
+		
+		// the view platform position, including displacement
+		Vector3f vabs = new Vector3f();
+		Trans.get(vabs);
 		// util.print("v", v);
+		
+
+		// the view platform position, relative to viewing center
+		Vector3f v = new Vector3f();
+		v.x=vabs.x-viewingCenter.x;
+		v.y=vabs.y-viewingCenter.y;
+		v.z=vabs.z-viewingCenter.z;
+		
+
+		// zoom in or our view platform, relative
 		Point3d p = new Point3d();
 		p.x = zoom * v.x;
 		p.y = zoom * v.y;
 		p.z = zoom * v.z;
 		// util.print("p", p);
+
+		// get new absolute view platform position
+		p.x+=viewingCenter.x;
+		p.y+=viewingCenter.y;
+		p.z+=viewingCenter.z;
+		
+		
+		
 		Transform3D lookAt = new Transform3D();
 		lookAt.lookAt(p, new Point3d(viewingCenter), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
