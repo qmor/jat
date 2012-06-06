@@ -21,6 +21,7 @@
 package jat.jat3D.behavior;
 
 import jat.jat3D.CoordTransform3D;
+import jat.jat3D.plot3D.JatPlot3D;
 
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -31,20 +32,30 @@ import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.universe.ViewingPlatform;
 
+/**
+ * jat_Rotate is a Java3D behavior object that lets users control the rotation
+ * of an object via a mouse or keyboard.
+ * <p>
+ * In JAT, it works a bit different from the typical use. Instead of rotating
+ * the scene, it moves the viewing platform in orbits around the scene, while
+ * always looking at the scene, with the z-direction being up. Then,
+ */
 public class jat_Rotate {
 	double x_angle, y_angle;
 	double x_factor = .01;
 	double y_factor = .01;
 	public ViewingPlatform myvp;
 	Point3f viewingCenter = new Point3f(0, 0, 0);
+	JatPlot3D jatplot3d;
 
-	public jat_Rotate(ViewingPlatform myvp, Point3f viewingCenter) {
+	public jat_Rotate(JatPlot3D jatplot3d) {
 		super();
-		this.myvp = myvp;
-		this.viewingCenter = viewingCenter;
+		this.jatplot3d = jatplot3d;
+		myvp = jatplot3d.universe.getViewingPlatform();
+		this.viewingCenter=jatplot3d.viewingCenter;
 	}
 
-	public static void jat_rotate(float x_angle, float y_angle, ViewingPlatform myvp, Point3f viewingCenter) {
+	public  void jat_rotate(float x_angle, float y_angle) {
 		// The view platform
 		TransformGroup myvpt = myvp.getViewPlatformTransform();
 		Transform3D Trans = new Transform3D();

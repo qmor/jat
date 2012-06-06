@@ -21,12 +21,13 @@
 package jat.jat3D.plot3D;
 
 import jat.jat3D.BodyGroup3D;
-import jat.jat3D.CoordTransform3D;
 import jat.jat3D.jatScene3D;
 import jat.jat3D.util;
 import jat.jat3D.behavior.jat_KeyBehavior;
 import jat.jat3D.behavior.jat_MouseRotate;
 import jat.jat3D.behavior.jat_MouseZoom;
+import jat.jat3D.behavior.jat_Rotate;
+import jat.jat3D.behavior.jat_Zoom;
 
 import javax.media.j3d.AmbientLight;
 import javax.media.j3d.BoundingSphere;
@@ -57,14 +58,15 @@ public abstract class JatPlot3D extends Canvas3D {
 	protected BodyGroup3D bboxgroup;
 	public BoundingBox3D bbox;
 	public jatScene3D jatScene;
-	protected int exponent = 0;
-	public jat_MouseZoom mouseZoom;
-	ViewingPlatform myvp;
+	public int exponent = 0;
+	public ViewingPlatform myvp;
 	TransformGroup myvpt;
+	public jat_MouseZoom mouseZoom;
 	public Switch keyBehaviorSwitch;
 	public jat_MouseRotate mouseRotate;
 	public Point3f viewingCenter = new Point3f(0, 0, 0);
 
+	
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
 	}
@@ -77,7 +79,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		myvpt = myvp.getViewPlatformTransform();
 
 		Node myScene = createScene();
-		BranchGroup mouseGroup = defineMouseBehaviour(myScene, myvp);
+		BranchGroup mouseGroup = defineMouseBehaviour(myScene);
 		setupLights(mouseGroup);
 		mouseGroup.compile();
 
@@ -123,7 +125,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	/**
 	 * Override to provide different mouse behaviour
 	 */
-	protected BranchGroup defineMouseBehaviour(Node scene, ViewingPlatform myvp) {
+	protected BranchGroup defineMouseBehaviour(Node scene) {
 		BranchGroup bg = new BranchGroup();
 		bg.setCapability(BranchGroup.ALLOW_DETACH);
 		bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
@@ -137,10 +139,13 @@ public abstract class JatPlot3D extends Canvas3D {
 		objTransform.addChild(scene);
 		bg.addChild(objTransform);
 
-		mouseRotate = new jat_MouseRotate(this);
-		mouseRotate.setViewingPlatform(myvp);
+		
+		
+		jat_Rotate jat_rotate=new jat_Rotate(this);
+		mouseRotate = new jat_MouseRotate(jat_rotate);
+		//mouseRotate.setViewingPlatform(myvp);
 		float x, y, z;
-		x = y=z=(bbox.hi + bbox.lo) / 2;
+		x = y = z = (bbox.hi + bbox.lo) / 2;
 		mouseRotate.setViewingCenter(new Point3f(x, y, z));
 		mouseRotate.setSchedulingBounds(bounds);
 		bg.addChild(mouseRotate);
@@ -150,8 +155,9 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseTranslate.setSchedulingBounds(bounds);
 		bg.addChild(mouseTranslate);
 
-		mouseZoom = new jat_MouseZoom(this);
-		mouseZoom.setTransformGroup(objTransform);
+		jat_Zoom jat_zoom=new jat_Zoom(this);
+		mouseZoom = new jat_MouseZoom(jat_zoom);
+		//mouseZoom.setTransformGroup(objTransform);
 		mouseZoom.setSchedulingBounds(bounds);
 		bg.addChild(mouseZoom);
 
@@ -159,11 +165,11 @@ public abstract class JatPlot3D extends Canvas3D {
 		// keyboard behavior
 		keyBehaviorSwitch = new Switch();
 		keyBehaviorSwitch.setCapability(Switch.ALLOW_SWITCH_WRITE);
-		
-		//Default ket behavior
-		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(this);
+
+		// Default ket behavior
+		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(jat_zoom,jat_rotate);
 		keyBehavior.setViewingPlatform(myvp);
-		x = y=z=(bbox.hi + bbox.lo) / 2;
+		x = y = z = (bbox.hi + bbox.lo) / 2;
 		keyBehavior.setViewingCenter(new Point3f(x, y, z));
 		keyBehavior.setSchedulingBounds(bounds);
 		keyBehaviorSwitch.addChild(keyBehavior);
@@ -250,26 +256,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		return vf;
 	}
 
-	public void adjustbox() {
-		boolean changed = false;
-		float new_distance = get_vp_t().length();
-
-		if (new_distance > 10) {
-			changed = true;
-			exponent += 1;
-			// System.out.println("nd>10 cd<10");
-		}
-		if (new_distance < 1) {
-			changed = true;
-			exponent -= 1;
-			// System.out.println("nd>10 cd<10");
-		}
-
-		if (changed)
-			new_box(new_distance);
-	}
-
-	void zoomScene(float scale) {
+	public void zoomScene(float scale) {
 		// scale scene to fit inside box
 		Transform3D tscale = new Transform3D();
 		tscale.set(scale);
@@ -278,78 +265,101 @@ public abstract class JatPlot3D extends Canvas3D {
 		jatScene.setTransform(tscale);
 	}
 
-	void new_box(float new_distance) {
-		float tf_factor = (float) Math.pow(10, exponent);
-		float factor;
-		if (new_distance > 10.f)
-			factor = 0.1f;
-		else
-			factor = 10.f;
+	
+	// public void adjustbox() {
+	// boolean changed = false;
+	// float new_distance = get_vp_t().length();
+	//
+	// if (new_distance > 10) {
+	// changed = true;
+	// exponent += 1;
+	// // System.out.println("nd>10 cd<10");
+	// }
+	// if (new_distance < 1) {
+	// changed = true;
+	// exponent -= 1;
+	// // System.out.println("nd>10 cd<10");
+	// }
+	//
+	// if (changed)
+	// new_box(new_distance);
+	// }
 
-		// scale scene to fit inside box
-		zoomScene(1.f / tf_factor);
-		// and move viewer accordingly
-		Vector3f v = get_vp_t();
-		Point3d p = new Point3d(v.x * factor, v.y * factor, v.z * factor);
-		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-		lookAt.invert();
-		universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
-		bbox.xAxis.setLabel("X 10^" + exponent + " km");
-		bbox.xAxis.apply();
-	}
+	
+	// void new_box(float new_distance) {
+	// float tf_factor = (float) Math.pow(10, exponent);
+	// float factor;
+	// if (new_distance > 10.f)
+	// factor = 0.1f;
+	// else
+	// factor = 10.f;
+	//
+	// // scale scene to fit inside box
+	// zoomScene(1.f / tf_factor);
+	// // and move viewer accordingly
+	// Vector3f v = get_vp_t();
+	// Point3d p = new Point3d(v.x * factor, v.y * factor, v.z * factor);
+	// Transform3D lookAt = new Transform3D();
+	// lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+	// lookAt.invert();
+	// universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
+	// bbox.xAxis.setLabel("X 10^" + exponent + " km");
+	// bbox.xAxis.apply();
+	// }
 
-	public void jat_zoom(float dy) {
-		float zoom;
-		if (dy > 0)
-			zoom = 0.96f;
-		else
-			zoom = 1.04f;
-		Transform3D Trans = new Transform3D();
-		myvpt.getTransform(Trans);
-		Vector3f v = new Vector3f();
-		Trans.get(v);
-		// util.print("v", v);
-		Point3d p = new Point3d();
-		p.x = zoom * v.x;
-		p.y = zoom * v.y;
-		p.z = zoom * v.z;
-		// util.print("p", p);
-		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-		lookAt.invert();
-		update_user();
-		myvpt.setTransform(lookAt);
-		// if (get_vp_t().length() > 10.f) {
-		adjustbox();
-		// }
-	}
+	// public void jat_zoom(float dy) {
+	// float zoom;
+	// if (dy > 0)
+	// zoom = 0.96f;
+	// else
+	// zoom = 1.04f;
+	// Transform3D Trans = new Transform3D();
+	// myvpt.getTransform(Trans);
+	// Vector3f v = new Vector3f();
+	// Trans.get(v);
+	// // util.print("v", v);
+	// Point3d p = new Point3d();
+	// p.x = zoom * v.x;
+	// p.y = zoom * v.y;
+	// p.z = zoom * v.z;
+	// // util.print("p", p);
+	// Transform3D lookAt = new Transform3D();
+	// lookAt.lookAt(p, new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
+	// lookAt.invert();
+	// update_user();
+	// myvpt.setTransform(lookAt);
+	// // if (get_vp_t().length() > 10.f) {
+	// adjustbox();
+	// // }
+	// }
 
-	public void jat_rotate(float x_angle, float y_angle) {
-		// The view position
-		// myvpt = myvp.getViewPlatformTransform();
-		Transform3D Trans = new Transform3D();
-		myvpt.getTransform(Trans);
-
-		Vector3f v_current_cart = new Vector3f();
-		Trans.get(v_current_cart);
-
-		Vector3f v_current_spher;
-		v_current_spher = CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
-		// util.print("view spher", v_current_spher);
-
-		v_current_spher.y -= y_angle;
-		v_current_spher.z -= x_angle;
-		Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
-
-		// util.print("view cart", v);
-
-		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1.0));
-		lookAt.invert();
-
-		myvpt.setTransform(lookAt);
-	}
+	// public void jat_rotate(float x_angle, float y_angle) {
+	// // The view position
+	// // myvpt = myvp.getViewPlatformTransform();
+	// Transform3D Trans = new Transform3D();
+	// myvpt.getTransform(Trans);
+	//
+	// Vector3f v_current_cart = new Vector3f();
+	// Trans.get(v_current_cart);
+	//
+	// Vector3f v_current_spher;
+	// v_current_spher =
+	// CoordTransform3D.Cartesian_to_Spherical(v_current_cart);
+	// // util.print("view spher", v_current_spher);
+	//
+	// v_current_spher.y -= y_angle;
+	// v_current_spher.z -= x_angle;
+	// Vector3f v = CoordTransform3D.Spherical_to_Cartesian(v_current_spher);
+	//
+	// // util.print("view cart", v);
+	//
+	// Transform3D lookAt = new Transform3D();
+	// lookAt.lookAt(new Point3d(v.x, v.y, v.z), new Point3d(0.0, 0.0, 0.0), new
+	// Vector3d(0, 0, 1.0));
+	// lookAt.invert();
+	//
+	// myvpt.setTransform(lookAt);
+	// }
 
 	public void jat_translate(float x, float y, float z) {
 		Transform3D Trans = new Transform3D();

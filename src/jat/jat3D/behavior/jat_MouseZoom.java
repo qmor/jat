@@ -22,8 +22,6 @@
 
 package jat.jat3D.behavior;
 
-import jat.jat3D.plot3D.JatPlot3D;
-
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
@@ -34,13 +32,10 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOnBehaviorPost;
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
-import com.sun.j3d.utils.universe.ViewingPlatform;
 
 /**
  * MouseZoom is a Java3D behavior object that lets users control the Z axis
@@ -54,18 +49,15 @@ public class jat_MouseZoom extends MouseBehavior {
 	Vector3d translation = new Vector3d();
 	//public ViewingPlatform myvp;
 	//public TransformGroup myvpt;
-	JatPlot3D jatPlot3D;
-
+	//JatPlot3D jatPlot3D;
+	jat_Zoom jat_zoom;
+	
 	private MouseBehaviorCallback callback = null;
 
-//	public jat_MouseZoom(ViewingPlatform myvp) {
-//		super(0);
-//		this.myvp = myvp;
-//	}
 
-	public jat_MouseZoom(JatPlot3D jatPlot3D) {
+	public jat_MouseZoom(jat_Zoom jat_zoom) {
 		super(0);
-		this.jatPlot3D = jatPlot3D;
+		this.jat_zoom = jat_zoom;
 
 	}
 
@@ -234,7 +226,7 @@ public class jat_MouseZoom extends MouseBehavior {
 
 					
 					
-					jatPlot3D.jat_zoom(dy);
+					jat_zoom.jat_zoom(dy);
 
 					// translation.z = dy*z_factor;
 /*

@@ -53,11 +53,21 @@ public class jat_KeyBehavior extends Behavior {
 	private float angle;
 	Transform3D transformZ = new Transform3D();
 	Transform3D currXform = new Transform3D();
-	JatPlot3D jatPlot3D;
+	JatPlot3D jatplot3d;
 	public ViewingPlatform myvp;
 	Point3f viewingCenter = new Point3f(0, 0, 0);
-
+	jat_Zoom jat_zoom;
+	jat_Rotate jat_rotate;
 	
+		
+	public jat_KeyBehavior(jat_Zoom jat_zoom,jat_Rotate jat_rotate) {
+		super();
+		this.jat_zoom = jat_zoom;
+		this.jat_rotate = jat_rotate;
+		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
+		this.jatplot3d=jat_zoom.jatplot3d;
+	}
+
 	public void setViewingCenter(Point3f viewingCenter) {
 		this.viewingCenter = viewingCenter;
 	}
@@ -65,8 +75,6 @@ public class jat_KeyBehavior extends Behavior {
 	public void setViewingPlatform(ViewingPlatform myvp) {
 		this.myvp = myvp;
 	}
-
-	
 
 	public jat_KeyBehavior(TransformGroup transformGroup, float moveStep, float rotStep) {
 		super();
@@ -81,13 +89,13 @@ public class jat_KeyBehavior extends Behavior {
 		super();
 		this.init = new Transform3D();
 		this.wup = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
-		this.jatPlot3D = jatPlot3D;
+		this.jatplot3d = jatPlot3D;
 		this.transformGroup = jatPlot3D.jatScene;
 	}
 
 	public void initialize() {
 		wakeupOn(wup);
-		transformGroup.getTransform(init);
+		//transformGroup.getTransform(init);
 	}
 
 	// public void setViewingPlatform(ViewingPlatform myvp) {
@@ -101,34 +109,34 @@ public class jat_KeyBehavior extends Behavior {
 
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
-			jat_Rotate.jat_rotate(0, .02f, myvp, viewingCenter);
-			//jatPlot3D.jat_rotate(0, .02f);
+			jat_rotate.jat_rotate(0, -.02f);
+			// jatPlot3D.jat_rotate(0, .02f);
 			break;
 		case KeyEvent.VK_DOWN:
-			jat_Rotate.jat_rotate(0, -.02f, myvp, viewingCenter);
+			jat_rotate.jat_rotate(0, .02f);
 			break;
 		case KeyEvent.VK_LEFT:
-			jat_Rotate.jat_rotate(-.02f, 0, myvp, viewingCenter);
+			jat_rotate.jat_rotate(-.02f, 0);
 			break;
 		case KeyEvent.VK_RIGHT:
-			jat_Rotate.jat_rotate(.02f, 0, myvp, viewingCenter);
+			jat_rotate.jat_rotate(.02f, 0);
 			break;
 		case KeyEvent.VK_PAGE_UP:
-			//move(0f, 0f, 1f, shift);
+			// move(0f, 0f, 1f, shift);
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
-			//move(0f, 0f, -1f, shift);
+			// move(0f, 0f, -1f, shift);
 			break;
 		case KeyEvent.VK_HOME:
 			transformGroup.setTransform(init);
 			break;
 		case KeyEvent.VK_EQUALS:
-			//System.out.println("plus pressed");
-			jatPlot3D.jat_zoom(1);
+			// System.out.println("plus pressed");
+			jat_zoom.jat_zoom(1);
 			break;
 		case KeyEvent.VK_MINUS:
-			//System.out.println("minus pressed");
-			jatPlot3D.jat_zoom(-1);
+			// System.out.println("minus pressed");
+			jat_zoom.jat_zoom(-1);
 			break;
 		}
 		wakeupOn(wup);

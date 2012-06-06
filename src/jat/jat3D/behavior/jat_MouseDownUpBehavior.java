@@ -97,7 +97,7 @@ public class jat_MouseDownUpBehavior extends Behavior {
 					Vector3f vf = new Vector3f();
 					tf.get(vf);
 					//System.out.println("distance from center " + vf.length());
-					jatPlot3D.adjustbox();
+					//jatPlot3D.adjustbox();
 					// Set wakeup criteria for next time
 					wakeupOn(wu);
 					break;
