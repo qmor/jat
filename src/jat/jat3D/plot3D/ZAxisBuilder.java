@@ -37,7 +37,7 @@ public class ZAxisBuilder extends AxisBuilder
 	public Node getNode()
 	{
 		Transform3D t3d = new Transform3D();
-		t3d.set(1/scale,new Vector3f(lo,-hi,lo));
+		t3d.set(1/scale,new Vector3f(lo,lo,lo));
 		Transform3D rot = new Transform3D();
 		rot.rotY(-Math.PI/2);
 		t3d.mul(rot);

@@ -45,7 +45,8 @@ public class XAxisBuilder extends AxisBuilder
 				
 		Transform3D t3d = new Transform3D();
 		//t3d.set(1/scale,new Vector3f(lo,-hi,lo));
-		t3d.set(1/scale,new Vector3f(0,0,0));
+		//t3d.set(1/scale,new Vector3f(lo,-hi,lo));
+		t3d.set(1/scale,new Vector3f(lo,lo,lo));
 		//Transform3D trans = new Transform3D();
 		//trans.setTranslation(new Vector3f(0,-1,2));
 		//t3d.mul(trans);
