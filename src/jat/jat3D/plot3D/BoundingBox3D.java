@@ -27,6 +27,20 @@ import javax.media.j3d.IndexedLineArray;
 import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 
+/**
+ * @author Tobias Berthold
+ * 
+ * BoundingBox3D: an adaption of the bounding box in FreeHEP. The feature of 
+ * infinite zoom is added. Every time the observer moves to a position 10 times further or
+ * 1/10 closer, the box is updated in that the axes are scaled by a factor of 10. However, 
+ * instead of creating a box that is 10 times larger or smaller, the whole scene is shrunk or
+ * enlarged by a factor of 10, and the box always remains the same size. This prevents the 
+ * problem that would be caused by having to have fonts that have sizes that don't exist.
+ * 
+ * Coordinates: The over-arching premise of plot3D is that the origin (0,0,0) of the coordinates for
+ * OpenGL is always, always at the zero (0,0,0) of the bounding box.
+ *
+ */
 public class BoundingBox3D extends Body3D {
 	public final static int NUMERIC = 0;
 	public final static int DATE = 1;
@@ -90,35 +104,6 @@ public class BoundingBox3D extends Body3D {
 		addChild(new Shape3D(xCube));
 	}
 
-	// public void createAxes(int exponent) {
-	//
-	// // Axes labels and tick marks
-	// float range = hi - lo;
-	// float[] pos = { lo, lo + range / 4, lo + range / 2, lo + 3 * range / 4,
-	// hi };
-	// String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]),
-	// String.valueOf(pos[2]), String.valueOf(pos[3]), String.valueOf(pos[4]) };
-	//
-	// xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
-	// yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
-	// zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
-	// xAxis.lo = -boxsize / 2f;
-	// xAxis.hi = boxsize / 2f;
-	// yAxis.lo = -boxsize / 2f;
-	// yAxis.hi = boxsize / 2f;
-	// zAxis.lo = -boxsize / 2f;
-	// zAxis.hi = boxsize / 2f;
-	// xAxis.setLabel("X 10^" + exponent + " km");
-	//
-	// xAxis.apply();
-	// yAxis.apply();
-	// zAxis.apply();
-	//
-	// addChild(xAxis.getNode());
-	// addChild(yAxis.getNode());
-	// addChild(zAxis.getNode());
-	//
-	// }
 
 	public void createAxes(int exponent) {
 

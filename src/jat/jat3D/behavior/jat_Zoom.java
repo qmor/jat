@@ -29,8 +29,15 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
 import com.sun.j3d.utils.universe.ViewingPlatform;
 
+/**
+ * @author Tobias Berthold
+ *
+ * jat_Zoom is called by mouse as well as keyboard-driven (or future input device) 
+ * zoom requests.  
+ */
 public class jat_Zoom {
 	double x_angle, y_angle;
 	double x_factor = .01;
@@ -38,6 +45,8 @@ public class jat_Zoom {
 	public ViewingPlatform myvp;
 	Point3f viewingCenter = new Point3f(0, 0, 0);
 	JatPlot3D jatplot3d;
+
+	private MouseBehaviorCallback callback = null;
 
 	public jat_Zoom(JatPlot3D jatplot3d) {
 		super();
@@ -96,6 +105,10 @@ public class jat_Zoom {
 		// if (get_vp_t().length() > 10.f) {
 		adjustbox();
 		// }
+
+		//if (callback != null)
+			//callback.transformChanged(MouseBehaviorCallback.ZOOM, currXform);	
+	
 	}
 
 	public void adjustbox() {
@@ -137,5 +150,25 @@ public class jat_Zoom {
 		jatplot3d.bbox.xAxis.setLabel("X 10^" + jatplot3d.exponent + " km");
 		jatplot3d.bbox.xAxis.apply();
 	}
+
+
+
+	/**
+	 * Users can overload this method which is called every time the Behavior
+	 * updates the 
+	 * 
+	 * Default implementation does nothing
+	 */
+	public void viewChanged(Transform3D transform) {
+	}
+
+	/**
+	 * The transformChanged method in the callback class will be called every
+	 * time the transform is updated
+	 */
+	public void setupCallback(MouseBehaviorCallback callback) {
+		this.callback = callback;
+	}
+
 
 }
