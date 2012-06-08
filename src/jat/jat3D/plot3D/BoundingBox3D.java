@@ -34,11 +34,14 @@ import javax.vecmath.Point3d;
  * infinite zoom is added. Every time the observer moves to a position 10 times further or
  * 1/10 closer, the box is updated in that the axes are scaled by a factor of 10. However, 
  * instead of creating a box that is 10 times larger or smaller, the whole scene is shrunk or
- * enlarged by a factor of 10, and the box always remains the same size. This prevents the 
- * problem that would be caused by having to have fonts that have sizes that don't exist.
+ * enlarged by a factor of 10 while the axes labels are modified to reflect the new scale.
+ * The box always remains the same size. This prevents the problem that would be caused by 
+ * calling up fonts of sizes that don't exist.
  * 
  * Coordinates: The over-arching premise of plot3D is that the origin (0,0,0) of the coordinates for
  * OpenGL is always, always at the zero (0,0,0) of the bounding box.
+ * The data are always normalized to 1, and the box size is always 1. The ticks go from any number to
+ * that number plus one, and the axis label indicates the maximum, the exponent, and the unit. 
  *
  */
 public class BoundingBox3D extends Body3D {
@@ -50,8 +53,8 @@ public class BoundingBox3D extends Body3D {
 	private AxisBuilder yAxis;
 	private ZAxisBuilder zAxis;
 	public String xAxisLabel = "X [10^0 km]";
-	private String yAxisLabel = "Y Axis";
-	private String zAxisLabel = "Z Axis";
+	public String yAxisLabel = "Y Axis";
+	public String zAxisLabel = "Z Axis";
 
 	public BoundingBox3D(float lo, float hi) {
 
@@ -121,7 +124,7 @@ public class BoundingBox3D extends Body3D {
 		yAxis.hi = hi;
 		zAxis.lo = lo;
 		zAxis.hi = hi;
-		xAxis.setLabel("X 10^" + exponent + " km");
+		//xAxis.setLabel("X 10^" + exponent + " km");
 
 		xAxis.apply();
 		yAxis.apply();
