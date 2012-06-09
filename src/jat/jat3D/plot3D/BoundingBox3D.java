@@ -30,19 +30,23 @@ import javax.vecmath.Point3d;
 /**
  * @author Tobias Berthold
  * 
- * BoundingBox3D: an adaption of the bounding box in FreeHEP. The feature of 
- * infinite zoom is added. Every time the observer moves to a position 10 times further or
- * 1/10 closer, the box is updated in that the axes are scaled by a factor of 10. However, 
- * instead of creating a box that is 10 times larger or smaller, the whole scene is shrunk or
- * enlarged by a factor of 10 while the axes labels are modified to reflect the new scale.
- * The box always remains the same size. This prevents the problem that would be caused by 
- * calling up fonts of sizes that don't exist.
+ *         BoundingBox3D: an adaption of the bounding box in FreeHEP. The
+ *         feature of infinite zoom is added. Every time the observer moves to a
+ *         position 10 times further or 1/10 closer, the box is updated in that
+ *         the axes are scaled by a factor of 10. However, instead of creating a
+ *         box that is 10 times larger or smaller, the whole scene is shrunk or
+ *         enlarged by a factor of 10 while the axes labels are modified to
+ *         reflect the new scale. The box always remains the same size. This
+ *         prevents the problem that would be caused by calling up fonts of
+ *         sizes that don't exist.
  * 
- * Coordinates: The over-arching premise of plot3D is that the origin (0,0,0) of the coordinates for
- * OpenGL is always, always at the zero (0,0,0) of the bounding box.
- * The data are always normalized to 1, and the box size is always 1. The ticks go from any number to
- * that number plus one, and the axis label indicates the maximum, the exponent, and the unit. 
- *
+ *         Coordinates: The over-arching premise of plot3D is that the origin
+ *         (0,0,0) of the coordinates for OpenGL is always, always at the zero
+ *         (0,0,0) of the bounding box. The data are always normalized to 1, and
+ *         the box size is always 1. The ticks go from any number to that number
+ *         plus one, and the axis label indicates the maximum, the exponent, and
+ *         the unit.
+ * 
  */
 public class BoundingBox3D extends Body3D {
 	public final static int NUMERIC = 0;
@@ -51,10 +55,11 @@ public class BoundingBox3D extends Body3D {
 	public float hi;
 	public AxisBuilder xAxis;
 	private AxisBuilder yAxis;
-	private ZAxisBuilder zAxis;
-	public String xAxisLabel = "X [10^0 km]";
-	public String yAxisLabel = "Y Axis";
-	public String zAxisLabel = "Z Axis";
+	public ZAxisBuilder zAxis;
+	public String xAxisLabel = "X";
+	public String yAxisLabel = "Y";
+	public String zAxisLabel = "Z";
+	public String exponentPart;
 
 	public BoundingBox3D(float lo, float hi) {
 
@@ -107,7 +112,6 @@ public class BoundingBox3D extends Body3D {
 		addChild(new Shape3D(xCube));
 	}
 
-
 	public void createAxes(int exponent) {
 
 		// Axes labels and tick marks
@@ -115,16 +119,16 @@ public class BoundingBox3D extends Body3D {
 		double[] tick = { 0, range / 4f, range / 2f, 3 * range / 4f, range };
 		float[] pos = { lo, lo + range / 4, lo + range / 2, lo + 3 * range / 4, hi };
 		String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]), String.valueOf(pos[2]), String.valueOf(pos[3]), String.valueOf(pos[4]) };
-		xAxis = new XAxisBuilder(xAxisLabel, labels, tick);
-		yAxis = new YAxisBuilder(yAxisLabel, labels, tick);
-		zAxis = new ZAxisBuilder(zAxisLabel, labels, tick);
+		setExponentPart(exponent);
+		xAxis = new XAxisBuilder(xAxisLabel + exponentPart, labels, tick);
+		yAxis = new YAxisBuilder(yAxisLabel + exponentPart, labels, tick);
+		zAxis = new ZAxisBuilder(zAxisLabel + exponentPart, labels, tick);
 		xAxis.lo = lo;
 		xAxis.hi = hi;
 		yAxis.lo = lo;
 		yAxis.hi = hi;
 		zAxis.lo = lo;
 		zAxis.hi = hi;
-		//xAxis.setLabel("X 10^" + exponent + " km");
 
 		xAxis.apply();
 		yAxis.apply();
@@ -134,6 +138,24 @@ public class BoundingBox3D extends Body3D {
 		addChild(yAxis.getNode());
 		addChild(zAxis.getNode());
 
+	}
+
+	public void setLabels(int exponent) {
+		setExponentPart(exponent);
+		xAxis.setLabel(xAxisLabel + exponentPart);
+		yAxis.setLabel(yAxisLabel + exponentPart);
+		zAxis.setLabel(zAxisLabel + exponentPart);
+
+		xAxis.apply();
+		yAxis.apply();
+		zAxis.apply();
+
+	}
+
+	public void setExponentPart(int exponent) {
+		// Why a separate method for this? To prevent creating the same string
+		// three times
+		exponentPart = new String("  [10^" + exponent + "]");
 	}
 
 }

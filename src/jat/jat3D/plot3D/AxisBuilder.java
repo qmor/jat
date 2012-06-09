@@ -27,8 +27,8 @@ import javax.vecmath.*;
 
 public class AxisBuilder
 {
-	public float lo=-.5f; // coordinates of the box 
-	public float hi=.5f; // coordinates of the box 
+	public float lo; // coordinates of the box 
+	public float hi; // coordinates of the box 
 	
 	private String labelText;
 	private Font3D labelFont = defaultLabelFont;
@@ -47,7 +47,7 @@ public class AxisBuilder
 	protected static float tickOffSet = 0.06f*scale;
 	protected static float labelOffSet = 0.12f*scale;
 
-	private static final Font3D defaultLabelFont = new Font3D(new Font("DIALOG",Font.BOLD,16),null);
+	private static final Font3D defaultLabelFont = new Font3D(new Font("DIALOG",Font.PLAIN,14),null);
 	private static final Font3D defaultTickFont = new Font3D(new Font("DIALOG",Font.PLAIN,12),null);
 
 	private static Color3f white = new Color3f(1,1,1);
