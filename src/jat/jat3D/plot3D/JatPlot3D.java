@@ -63,6 +63,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	TransformGroup myvpt;
 	public jat_MouseZoom mouseZoom;
 	public Switch keyBehaviorSwitch;
+	public Switch flightSelectorSwitch;
 	public jat_MouseRotate mouseRotate;
 	public Point3f viewingCenter = new Point3f(0, 0, 0);
 
