@@ -32,7 +32,7 @@ public class Marker3D extends Body3D {
 		super();
 		s=new Sphere3D(.1f, Colors.red, 0, 0, 0);
 		addChild(s);
-		addChild(new Line3D(new Point3f(0,0,-1),new Point3f(0,0,1)));
+		addChild(new Line3D(new Point3f(0,0,-1.1f),new Point3f(0,0,1.1f),Colors.blue));
 		
 		
 	}
