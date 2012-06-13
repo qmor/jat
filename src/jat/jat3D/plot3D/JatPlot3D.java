@@ -66,7 +66,7 @@ public abstract class JatPlot3D extends Canvas3D {
 	public Switch flightSelectorSwitch;
 	public jat_MouseRotate mouseRotate;
 	public Point3f viewingCenter = new Point3f(0, 0, 0);
-
+	public Point3d initialViewingPosition=new Point3d(2, 2, 1);
 	
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
@@ -86,9 +86,9 @@ public abstract class JatPlot3D extends Canvas3D {
 
 		universe.addBranchGraph(mouseGroup);
 
-		// look at the right spot
+		// Set initial viewing position and center
 		Transform3D lookAt = new Transform3D();
-		lookAt.lookAt(new Point3d(2, 2, 1), new Point3d(viewingCenter), new Vector3d(0, 0, 1.0));
+		lookAt.lookAt(initialViewingPosition, new Point3d(viewingCenter), new Vector3d(0, 0, 1.0));
 		lookAt.invert();
 		myvp.getViewPlatformTransform().setTransform(lookAt);
 
