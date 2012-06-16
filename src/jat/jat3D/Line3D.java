@@ -32,37 +32,14 @@ public class Line3D extends BranchGroup {
 
 	public Line3D() {
 		this(new Point3f(0, 0, 0), new Point3f(1, 1, 1));
-		// super();
-		// p1 = new Point3f(0, 0, 0);
-		// p2 = new Point3f(1, 1, 1);
-		// a.setCoordinate(0, p1);
-		// a.setCoordinate(1, p2);
-		// a.setColor(0, col1);
-		// a.setColor(1, col2);
-		// common_to_all_constructors();
 	}
 
 	public Line3D(Point3f p1, Point3f p2) {
-
 		this(p1,p2,col1,col2);
-		// super();
-		// a.setCoordinate(0, x1);
-		// a.setCoordinate(1, x2);
-		// a.setColor(0, col1);
-		// a.setColor(1, col2);
-		// common_to_all_constructors();
 	}
 
 	public Line3D(float x1, float x2, float x3) {
 		this(new Point3f(0, 0, 0), new Point3f(x1, x2, x3),col1,col2);
-		// super();
-		// p1 = new Point3f(0, 0, 0);
-		// p2 = new Point3f(x1, x2, x3);
-		// a.setCoordinate(0, p1);
-		// a.setCoordinate(1, p2);
-		// a.setColor(0, Colors.gold);
-		// a.setColor(1, Colors.gray);
-		// common_to_all_constructors();
 	}
 
 	public Line3D(Point3f p1, Point3f p2, Color3f col1) {
@@ -80,11 +57,11 @@ public class Line3D extends BranchGroup {
 		addChild(new Shape3D(a));
 	}
 
-	void common_to_all_constructors() {
-		setCapability(BranchGroup.ALLOW_DETACH);
-		setUserData("Line");
-		addChild(new Shape3D(a));
-	}
+	// void common_to_all_constructors() {
+	// setCapability(BranchGroup.ALLOW_DETACH);
+	// setUserData("Line");
+	// addChild(new Shape3D(a));
+	// }
 
 	public void change(int i) {
 		p1 = new Point3f(0, 0, i);

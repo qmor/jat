@@ -21,23 +21,21 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 
 public class LabeledMatrix extends Matrix {
-
+	private static final long serialVersionUID = -2882712126083407423L;
 	public String cornerlabel;
 	public String[] RowLabels;
 	public String[] ColumnLabels;
-
 	public String rowlabelformat;
 	public String collabelformat;
-	
+
 	public LabeledMatrix(int m, int n) {
 		super(m, n);
-		RowLabels = new String[m];
-		ColumnLabels = new String[m];
+		defaultLabels();
 	}
 
 	public LabeledMatrix(int n) {
 		super(n);
-		// TODO Auto-generated constructor stub
+		defaultLabels();
 	}
 
 	public LabeledMatrix(Matrix in) {
@@ -70,6 +68,16 @@ public class LabeledMatrix extends Matrix {
 		// TODO Auto-generated constructor stub
 	}
 
+	private void defaultLabels() {
+		RowLabels = new String[m];
+		ColumnLabels = new String[n];
+		cornerlabel = "r/c";
+		for (int i = 0; i < m; i++)
+			RowLabels[i] = "" + i;
+		for (int j = 0; j < n; j++)
+			ColumnLabels[j] = "" + j;
+	}
+
 	public void print() {
 
 		int width = 9;
@@ -85,11 +93,11 @@ public class LabeledMatrix extends Matrix {
 		}
 		System.out.println();
 		for (int i = 0; i < this.m; i++) {
-			System.out.printf(rowlabelformat,RowLabels[i]);
+			System.out.printf(rowlabelformat, RowLabels[i]);
 			for (int j = 0; j < this.n; j++) {
 				System.out.printf(numberformat, this.A[i][j]);
 			}
-			
+
 			System.out.println();
 		}
 		System.out.println();
@@ -102,11 +110,11 @@ public class LabeledMatrix extends Matrix {
 		int cols = 4;
 		LabeledMatrix A = new LabeledMatrix(rows, cols);
 
-		A.cornerlabel="row/col";
+		A.cornerlabel = "row/col";
 		for (int i = 0; i < rows; i++) {
-			A.RowLabels[i] = new String("row" + (i+1));
+			A.RowLabels[i] = new String("row" + (i + 1));
 			for (int j = 0; j < cols; j++) {
-				A.ColumnLabels[j]=new String("col"+(j+1));
+				A.ColumnLabels[j] = new String("col" + (j + 1));
 				A.A[i][j] = i * 10 + j + 11;
 			}
 		}
