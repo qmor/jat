@@ -15,15 +15,27 @@
    limitations under the License.
  */
 
-package jat.core.cm;
+package jat.examples.PorkChopPlot;
 
-public class LambertException extends Exception {
+import jat.core.cm.porkChopPlot;
+import jat.core.ephemeris.DE405APL;
+import jat.core.spacetime.TimeAPL;
 
-	private static final long serialVersionUID = 4272283778292845958L;
-	public String message;
+import java.io.IOException;
 
-	public LambertException(String message) {
-		this.message = "Lambert "+message;
+public class pcplot_text {
+
+	public static void main(String args[]) {
+
+		TimeAPL search_depart_time_start = new TimeAPL(2003, 5, 1, 1, 1, 1);
+		TimeAPL search_arrival_time_start = new TimeAPL(2003, 12, 1, 1, 1, 1);
+
+		porkChopPlot p = new porkChopPlot(DE405APL.EARTH, DE405APL.MARS);
+		try {
+			p.make_porkchop_plot(search_depart_time_start, search_arrival_time_start, 500, 10);
+			p.A.print();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
 }

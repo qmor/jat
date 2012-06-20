@@ -122,7 +122,7 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				}
 			}
 		}
-		System.out.println("bcur " + bcur);
+		//System.out.println("bcur " + bcur);
 
 		// System.out.print("debug3:");
 

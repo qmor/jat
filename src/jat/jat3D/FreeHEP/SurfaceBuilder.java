@@ -30,7 +30,7 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 	 */
 	public Node buildContent(NormalizedBinned2DData data) {
 		shape = createShape();
-		shape.setCapability(shape.ALLOW_GEOMETRY_WRITE);
+		shape.setCapability(Shape3D.ALLOW_GEOMETRY_WRITE);
 		shape.setGeometry(buildGeometry(data));
 
 		return shape;
@@ -108,7 +108,7 @@ public class SurfaceBuilder extends AbstractPlotBuilder {
 				}
 			}
 		}
-		System.out.println("bcur " + bcur);
+		//System.out.println("bcur " + bcur);
 
 		// System.out.print("debug3:");
 
