@@ -17,7 +17,7 @@
 
 package jat.jat3D;
 
-import jat.core.astronomy.Starcatalog;
+import jat.core.astronomy.StarCatalog;
 import jat.core.astronomy.Stardata;
 import jat.core.math.CoordTransform;
 import jat.core.math.MathUtils;
@@ -42,7 +42,7 @@ public class StarsBackground3D extends BranchGroup {
 	String Texturefilename;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
-	public Starcatalog s;
+	public StarCatalog s;
 
 	public StarsBackground3D(float radius) {
 		super();
@@ -57,7 +57,7 @@ public class StarsBackground3D extends BranchGroup {
 
 		BranchGroup bg = new BranchGroup();
 
-		s = new Starcatalog();
+		s = new StarCatalog();
 		s.load();
 
 		PointArray starfield = new PointArray(99, PointArray.COORDINATES | PointArray.COLOR_3);
