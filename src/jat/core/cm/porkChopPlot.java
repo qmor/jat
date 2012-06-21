@@ -28,7 +28,8 @@ public class porkChopPlot {
 	public double maxtotaldv;
 	int departure_planet, arrival_planet;
 	public int steps;
-		
+	public float step_size;
+	
 	public porkChopPlot(int departure_planet, int arrival_planet) {
 		super();
 		this.departure_planet = departure_planet;
@@ -39,6 +40,8 @@ public class porkChopPlot {
 			int steps) throws IOException {
 		double totaldv;
 		this.steps=steps;
+		step_size = 1.f / steps;
+
 		DE405APL my_eph = new DE405APL();
 		TimeAPL search_depart_time = new TimeAPL(search_depart_time_start.mjd_utc());
 		TimeAPL search_arrival_time = new TimeAPL(search_arrival_time_start.mjd_utc());
