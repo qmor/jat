@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class porkChopPlot {
 	public LabeledMatrix A;
-	public double maxtotaldv;
+	public double mintotaldv,maxtotaldv;	
 	int departure_planet, arrival_planet;
 	public int steps;
 	public float step_size;
@@ -55,6 +55,8 @@ public class porkChopPlot {
 		// search_arrival_time_start.print();
 
 		A = new LabeledMatrix(steps, steps);
+
+		mintotaldv=1e9;
 		maxtotaldv = 0;
 
 		A.cornerlabel = "Dep / Arr";
@@ -68,16 +70,11 @@ public class porkChopPlot {
 				double tof = TimeAPL.minus(search_arrival_time, search_depart_time) * 86400.0;
 
 				Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
-//				VectorN r0 = my_eph.get_planet_pos(DE405APL.EARTH, search_depart_time);
-//				VectorN v0 = my_eph.get_planet_vel(DE405APL.EARTH, search_depart_time);
 				VectorN r0 = my_eph.get_planet_pos(departure_planet, search_depart_time);
-				VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);
-				
+				VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);				
 				// r0.print("r0");
 				// v0.print("v0");
 				// System.out.println("orbital velocity of earth " + v0.mag());
-//				VectorN rf = my_eph.get_planet_pos(DE405APL.MARS, search_arrival_time);
-//				VectorN vf = my_eph.get_planet_vel(DE405APL.MARS, search_arrival_time);
 				VectorN rf = my_eph.get_planet_pos(arrival_planet, search_arrival_time);
 				VectorN vf = my_eph.get_planet_vel(arrival_planet, search_arrival_time);
 				// rf.print("rf");
@@ -93,6 +90,8 @@ public class porkChopPlot {
 				}
 				if (totaldv > maxtotaldv)
 					maxtotaldv = totaldv;
+				if (totaldv >0 && totaldv< mintotaldv)
+					mintotaldv = totaldv;
 				// lambert.deltav0.print("deltav0");
 				// lambert.deltavf.print("deltavf");
 				// System.out.println("Total DeltaV " + totaldv);
