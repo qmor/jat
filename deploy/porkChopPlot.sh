@@ -1,4 +1,6 @@
 #!/bin/bash
+# To run from within Eclipse, use Run->External Tools->External Tools Configurations and add this shell script.
+
 
 export LD_LIBRARY_PATH=/usr/lib/jni
 
