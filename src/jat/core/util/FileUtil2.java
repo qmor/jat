@@ -21,20 +21,19 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * @author Tobias Berthold
- * File Utilities
+ * @author Tobias Berthold File Utilities
  * 
  */
 public class FileUtil2 {
 
 	public String root_path;
-	public String current_path ;
-	public String fs=File.separator;
-	public FileUtil2() {
-		current_path=find_current_path();
-		root_path=find_root();
-	}
+	public String current_path;
+	public String fs = File.separator;
 
+	public FileUtil2() {
+		current_path = find_current_path2();
+		root_path = find_root();
+	}
 
 	public String find_data_folder() {
 
@@ -42,21 +41,19 @@ public class FileUtil2 {
 	}
 
 	/**
-	 * @return path to root
-	 * Finds the path to the root of the project. Starts with the path 
-	 * of the class from which it is called, strips everything after  it
-	 * finds the string "jat" or "jatdevelop".
-	 * Works with an open folder structure or inside a jar file,
-	 * on a local hard disk as well as on the Internet. 
+	 * @return path to root Finds the path to the root of the project. Starts
+	 *         with the path of the class from which it is called, strips
+	 *         everything after it finds the string "jat" or "jatdevelop". Works
+	 *         with an open folder structure or inside a jar file, on a local
+	 *         hard disk as well as on the Internet.
 	 */
 	public String find_root() {
 
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		URL url = classLoader.getResource("");
 		// System.out.println(url.getPath());
 		String current_path = url.getPath();
-		//System.out.println(current_path);
+		// System.out.println(current_path);
 
 		String[] numberSplit = current_path.split("/");
 
@@ -66,22 +63,50 @@ public class FileUtil2 {
 			// System.out.println(numberSplit[i]);
 			root_path = root_path + numberSplit[i] + "/";
 			i++;
-		} while (!(numberSplit[i].equals("jat")) && !(numberSplit[i].equals("jatdevelop"))&& !(numberSplit[i].equals("jatexperimental")));
+		} while (!(numberSplit[i].equals("jat")) && !(numberSplit[i].equals("jatdevelop"))
+				&& !(numberSplit[i].equals("jatexperimental")));
 
 		root_path = root_path + "jat" + "/";
 
-		//System.out.println(root_path);
+		// System.out.println(root_path);
 
 		return (root_path);
 	}
 
+	public String find_current_path2() {
+
+		try {
+
+			System.out.println("root path: "+root_path);
+
+			// URL helpURL2 = new URL(fileName);
+			ResourceLoader c = new ResourceLoader();
+			URL url = c.loadURL(this.getClass(), ".");
+			System.out.println(url.getPath());
+
+			// displayURL(helpURL2, editorPane, relative_path);
+
+		} catch (Exception e) {
+			System.err.println("Couldn't find current path");
+			System.exit(0);
+		}
+		return "";
+	}
+/*
 	public String find_current_path() {
 
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		URL url = classLoader.getResource("");
-		// System.out.println(url.getPath());
-		String current_path = url.getPath();
+		if (url == null) {
+			System.out.println("Failed to get current path in FileUtil2");
+			System.exit(1);
+		} else {
+			System.out.println(url.getPath());
+			String current_path = url.getPath();
+		}
 		return current_path;
 	}
+
+*/
+
 }
