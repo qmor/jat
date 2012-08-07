@@ -22,7 +22,7 @@
 package jat.jat3D;
 
 import jat.core.math.matvec.data.VectorN;
-import jat.core.util.FileUtil2;
+import jat.core.util.PathUtil;
 
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -50,7 +50,7 @@ public class Body3D extends TransformGroup {
 	protected static String ThreeDStudio_path;
 
 	public Body3D() {
-		FileUtil2 f = new FileUtil2();
+		PathUtil f = new PathUtil();
 		String fs = f.fs;
 		images_path = f.root_path + "data" + fs + "jat3D" + fs + "images_hires" + fs;
 		Wavefront_path = f.root_path + "data" + fs + "jat3D" + fs + "Wavefront" + fs;

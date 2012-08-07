@@ -17,22 +17,34 @@
 
 package jat.core.util;
 
+import java.applet.Applet;
 import java.io.File;
 import java.net.URL;
 
 /**
- * @author Tobias Berthold 
- * File Utilities
+ * @author Tobias Berthold File Utilities
  * 
  */
-public class FileUtil2 {
+public class PathUtil {
 
 	public String root_path;
-	//public String current_path;
+	public String current_path;
 	public String fs = File.separator;
 
-	public FileUtil2() {
-		//current_path = find_current_path2();
+	public PathUtil() {
+		root_path = find_root();
+	}
+
+	public PathUtil(Applet myapplet) {
+
+		current_path =find_current_path(myapplet);
+
+		// current_path =
+		// myapplet.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+
+		System.out.print("<PathUtil 1> ");
+		System.out.println(current_path);
+
 		root_path = find_root();
 	}
 
@@ -50,12 +62,14 @@ public class FileUtil2 {
 	 */
 	public String find_root() {
 
-		String resource_path = FileUtil2.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-
+		String resource_path = PathUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		// System.out.print("<PathUtil 2> ");
+		// System.out.println(resource_path);
 		String[] numberSplit = resource_path.split("/");
 
 		String root_path = "/";
 		int i = 1;
+		// go back in the directory tree until you find "jat" or others
 		do {
 			// System.out.println(numberSplit[i]);
 			root_path = root_path + numberSplit[i] + "/";
@@ -65,53 +79,24 @@ public class FileUtil2 {
 
 		root_path = root_path + "jat" + "/";
 
-		System.out.println(root_path);
+		// System.out.println(root_path);
 
 		return (root_path);
 	}
 
-//	public String find_current_path2() {
-//
-//		try {
-//
-//
-//			//System.out.println("path: "+path);
-//			System.out.println("root path: "+root_path);
-//
-//			// URL helpURL2 = new URL(fileName);
-//			ResourceLoader c = new ResourceLoader();
-//			URL url = c.loadURL(this.getClass(), ".");
-//			System.out.println(url.getPath());
-//
-//			// displayURL(helpURL2, editorPane, relative_path);
-//
-//		} catch (Exception e) {
-//			System.err.println("Couldn't find current path in jat.core.util.FileUtil2");
-//			System.exit(0);
-//		}
-//		return "";
-//	}
-/*
-	public String find_current_path() {
+	public String find_current_path(Applet a) {
 
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		URL url = classLoader.getResource("");
-		if (url == null) {
-			System.out.println("Failed to get current path in FileUtil2");
-			System.exit(1);
-		} else {
-			System.out.println(url.getPath());
-			String current_path = url.getPath();
+		try {
+			ResourceLoader c = new ResourceLoader();
+			URL url = c.loadURL(a.getClass(), ".");
+			// System.out.println(url.getPath());
+			return url.getPath();
+
+		} catch (Exception e) {
+			System.err.println("Couldn't find current path in jat.core.util.PathUtil");
+			System.exit(0);
+			return "";
 		}
-		return current_path;
 	}
 
-*/
-
 }
-
-
-//ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-//URL url = classLoader.getResource("");
-//String current_path = url.getPath();
-// System.out.println(url.getPath());

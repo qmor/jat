@@ -70,7 +70,7 @@ package jat.core.ephemeris;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
-import jat.core.util.FileUtil2;
+import jat.core.util.PathUtil;
 import java.io.*;
 
 public class DE405APL {
@@ -131,12 +131,12 @@ public class DE405APL {
 	 */
 	double[][] planet_r = new double[12][4];
 	double[][] planet_rprime = new double[12][4];
-	FileUtil2 f;
+	PathUtil f;
 	String DE405_path;
 
 	public DE405APL() {
 
-		f = new FileUtil2();
+		f = new PathUtil();
 		DE405_path = f.root_path + f.fs + "data" + f.fs + "core" + f.fs + "ephemeris" + f.fs + "DE405data" + f.fs;
 	}
 

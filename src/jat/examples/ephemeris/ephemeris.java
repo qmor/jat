@@ -32,7 +32,7 @@ import jat.core.ephemeris.DE405;
 import jat.core.ephemeris.DE405_Body;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
-import jat.core.util.FileUtil2;
+import jat.core.util.PathUtil;
 
 /**
  * @author Tobias Berthold
@@ -44,7 +44,7 @@ public class ephemeris
     {
         //double jd=cm.juliandate(2002, 2, 17, 12, 0, 0);
         Time mytime=new Time(2002, 2, 17, 12, 0, 0);
-        FileUtil2 f=new FileUtil2();
+        PathUtil f=new PathUtil();
 		String fs = f.fs;
         System.out.println(f.root_path);
         String DE405_data_folder=f.root_path+"data"+fs+"core"+fs+"ephemeris"+fs+"DE405data"+fs;

@@ -22,7 +22,7 @@ import jat.core.ephemeris.DE405_Body;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
-import jat.core.util.FileUtil2;
+import jat.core.util.PathUtil;
 
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineStripArray;
@@ -61,7 +61,7 @@ public class Ephemeris3D extends Body3D {
 		this.jd = jd_start;
 		this.steps = days;
 
-		FileUtil2 f = new FileUtil2();
+		PathUtil f = new PathUtil();
 		String fs = FileUtil.file_separator();
 		String DE405_data_folder = f.root_path + "data" + fs + "core" + fs + "ephemeris" + fs + "DE405data" + fs;
 		my_eph = new DE405(DE405_data_folder);
