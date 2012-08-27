@@ -28,14 +28,14 @@ import javax.swing.JOptionPane;
 
 public class pcplot_Jat3D_Events implements ActionListener {
 
-	pcplot_Jat3D_GUI pcpGUI;
-	pcplot_Jat3D_main main;
+	PorkChopPlot_GUI pcpGUI;
+	PorkChopPlot_main main;
 
-	public pcplot_Jat3D_Events(pcplot_Jat3D_GUI pcpGUI) {
+	public pcplot_Jat3D_Events(PorkChopPlot_GUI pcpGUI) {
 		this.pcpGUI = pcpGUI;
 	}
 
-	public void setMain(pcplot_Jat3D_main main) {
+	public void setMain(PorkChopPlot_main main) {
 		this.main = main;
 	}
 

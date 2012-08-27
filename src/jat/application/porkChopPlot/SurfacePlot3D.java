@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 
 public class SurfacePlot3D extends JatPlot3D {
 	private static final long serialVersionUID = 4491485448719846256L;
-	private pcplot_Jat3D_main main;
+	private PorkChopPlot_main main;
 	public pcplot_Jat3D_Data pcplot_data;
 	NormalizedBinned2DData ndata;
 	public SurfaceBuilder builder;
@@ -45,9 +45,9 @@ public class SurfacePlot3D extends JatPlot3D {
 	public boolean logZscaling = false;
 	public Switch flightSelectorSwitch;
 	public Marker3D m;
-	public pcplot_jat3D_KeyBehavior keyBehavior_u;
+	public PorkChopPlot_KeyBehavior keyBehavior_u;
 
-	public SurfacePlot3D(pcplot_Jat3D_main main) {
+	public SurfacePlot3D(PorkChopPlot_main main) {
 		super();
 		initialViewingPosition.x = -.5;
 		initialViewingPosition.y = -1;
@@ -152,7 +152,7 @@ public class SurfacePlot3D extends JatPlot3D {
 		keyBehavior_t.setSchedulingBounds(getDefaultBounds());
 		keyBehaviorSwitch.addChild(keyBehavior_t);
 		// pcplot_Jat3D_main main = null;
-		keyBehavior_u = new pcplot_jat3D_KeyBehavior(main);
+		keyBehavior_u = new PorkChopPlot_KeyBehavior(main);
 		keyBehavior_u.setSchedulingBounds(getDefaultBounds());
 		keyBehaviorSwitch.addChild(keyBehavior_u);
 	}

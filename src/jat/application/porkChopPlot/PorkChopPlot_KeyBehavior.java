@@ -21,13 +21,13 @@ import jat.jat3D.behavior.jat_KeyBehavior_UserCall;
 
 import javax.vecmath.Point3d;
 
-public class pcplot_jat3D_KeyBehavior extends jat_KeyBehavior_UserCall {
+public class PorkChopPlot_KeyBehavior extends jat_KeyBehavior_UserCall {
 	Point3d r;
-	private pcplot_Jat3D_main main;
+	private PorkChopPlot_main main;
 	public int x_index, y_index;
 
 
-	public pcplot_jat3D_KeyBehavior(pcplot_Jat3D_main main) {
+	public PorkChopPlot_KeyBehavior(PorkChopPlot_main main) {
 		this.main = main;
 		r = new Point3d();
 	}

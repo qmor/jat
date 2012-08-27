@@ -23,18 +23,18 @@ import java.awt.Container;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
-public class pcplot_Jat3D_main extends JApplet {
-	public pcplot_Jat3D_main() {
+public class PorkChopPlot_main extends JApplet {
+	public PorkChopPlot_main() {
 	}
 	private static final long serialVersionUID = 1122861326294482666L;
 	static int appletwidth = 900; // Width of Applet
 	static int appletheight = 700;
 	public SurfacePlot3D surf;
-	pcplot_Jat3D_GUI pcpGUI;
+	PorkChopPlot_GUI pcpGUI;
 	Container level1_Pane;
 
 	public void init() {
-		pcpGUI = new pcplot_Jat3D_GUI();
+		pcpGUI = new PorkChopPlot_GUI();
 		pcpGUI.pcpE.setMain(this);
 		surf = new SurfacePlot3D(this);
 
@@ -45,12 +45,12 @@ public class pcplot_Jat3D_main extends JApplet {
 
 
 	public static void main(String[] args) {
-		pcplot_Jat3D_main pApplet = new pcplot_Jat3D_main();
+		PorkChopPlot_main pApplet = new PorkChopPlot_main();
 		JFrame pFrame = new JFrame();
 		// Initialize the applet
 		pApplet.init();
 
-		// sFrame.setTitle("Solar System");
+		pFrame.setTitle("Optimal Launch Date Finder");
 		pFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// When running this file as a stand-alone app, add the applet to
