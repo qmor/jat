@@ -26,12 +26,12 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-public class pcplot_Jat3D_Events implements ActionListener {
+public class PorkChopPlot_Events implements ActionListener {
 
 	PorkChopPlot_GUI pcpGUI;
 	PorkChopPlot_main main;
 
-	public pcplot_Jat3D_Events(PorkChopPlot_GUI pcpGUI) {
+	public PorkChopPlot_Events(PorkChopPlot_GUI pcpGUI) {
 		this.pcpGUI = pcpGUI;
 	}
 

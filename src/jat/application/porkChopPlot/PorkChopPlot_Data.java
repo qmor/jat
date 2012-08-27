@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import javax.vecmath.Color3b;
 
-public class pcplot_Jat3D_Data implements Binned2DData {
+public class PorkChopPlot_Data implements Binned2DData {
 	private int xBins;
 	private int yBins;
 	private Rainbow rainbow = new Rainbow(0, 100);
@@ -38,7 +38,7 @@ public class pcplot_Jat3D_Data implements Binned2DData {
 	int dep_year = 2003, dep_month = 1, dep_day = 1;
 	int arr_year = 2003, arr_month = 7, arr_day = 1;
 
-	public pcplot_Jat3D_Data() throws IOException {
+	public PorkChopPlot_Data() throws IOException {
 
 		TimeAPL search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
 		TimeAPL search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);

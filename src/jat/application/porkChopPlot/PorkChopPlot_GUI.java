@@ -37,7 +37,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
 public class PorkChopPlot_GUI extends JPanel {
 	private static final long serialVersionUID = 7907463395861359469L;
-	pcplot_Jat3D_Events pcpE;
+	PorkChopPlot_Events pcpE;
 	private JPanel SearchIntervalPanel;
 	private JPanel MissionSelectPanel;
 	private JPanel DatesPanel;
@@ -66,7 +66,7 @@ public class PorkChopPlot_GUI extends JPanel {
 	public JButton btnStep;
 
 	public PorkChopPlot_GUI() {
-		pcpE = new pcplot_Jat3D_Events(this);
+		pcpE = new PorkChopPlot_Events(this);
 		SearchIntervalPanel = new JPanel();
 		MissionSelectPanel = new JPanel();
 		DatesPanel = new JPanel();

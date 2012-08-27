@@ -35,10 +35,10 @@ import javax.media.j3d.Node;
 import javax.media.j3d.Switch;
 import javax.swing.JOptionPane;
 
-public class SurfacePlot3D extends JatPlot3D {
+public class PorkChopPlot_Plot extends JatPlot3D {
 	private static final long serialVersionUID = 4491485448719846256L;
 	private PorkChopPlot_main main;
-	public pcplot_Jat3D_Data pcplot_data;
+	public PorkChopPlot_Data pcplot_data;
 	NormalizedBinned2DData ndata;
 	public SurfaceBuilder builder;
 	public Node plot;
@@ -47,7 +47,7 @@ public class SurfacePlot3D extends JatPlot3D {
 	public Marker3D m;
 	public PorkChopPlot_KeyBehavior keyBehavior_u;
 
-	public SurfacePlot3D(PorkChopPlot_main main) {
+	public PorkChopPlot_Plot(PorkChopPlot_main main) {
 		super();
 		initialViewingPosition.x = -.5;
 		initialViewingPosition.y = -1;
@@ -60,7 +60,7 @@ public class SurfacePlot3D extends JatPlot3D {
 		jatScene = new jatScene3D();
 
 		try {
-			pcplot_data = new pcplot_Jat3D_Data();
+			pcplot_data = new PorkChopPlot_Data();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "DE405 Ephemeris data file not found.");
 			e.printStackTrace();
@@ -128,7 +128,7 @@ public class SurfacePlot3D extends JatPlot3D {
 		return g;
 	}
 
-	public void setData(pcplot_Jat3D_Data data) {
+	public void setData(PorkChopPlot_Data data) {
 		this.pcplot_data = data;
 
 		System.out.println(pcplot_data.p.A.ColumnLabels[0]);

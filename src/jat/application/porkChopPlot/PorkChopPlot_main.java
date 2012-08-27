@@ -29,14 +29,14 @@ public class PorkChopPlot_main extends JApplet {
 	private static final long serialVersionUID = 1122861326294482666L;
 	static int appletwidth = 900; // Width of Applet
 	static int appletheight = 700;
-	public SurfacePlot3D surf;
+	public PorkChopPlot_Plot surf;
 	PorkChopPlot_GUI pcpGUI;
 	Container level1_Pane;
 
 	public void init() {
 		pcpGUI = new PorkChopPlot_GUI();
 		pcpGUI.pcpE.setMain(this);
-		surf = new SurfacePlot3D(this);
+		surf = new PorkChopPlot_Plot(this);
 
 		level1_Pane = getContentPane();
 		level1_Pane.add(pcpGUI, BorderLayout.WEST);
