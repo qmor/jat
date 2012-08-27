@@ -39,7 +39,7 @@ public class TwoBody implements Derivatives
 	private double raan; // right ascension of ascending node in radians
 	private double w; // argument of perigee in radians
 	private double ta; // true anomaly in radians
-	protected double mu = 398600.4415; // GM in km^3/s^2 (value from JGM-3
+	protected double mu = 398600.4415; // default: earth GM in km^3/s^2 (value from JGM-3
 	private double steps = 500.;
 
 	/** VectorN containing the position and velocity.
