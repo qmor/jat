@@ -35,12 +35,22 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	Color3f Color = Colors.pink;
 	private int steps = 500;
 	Constants c = new Constants();
+	double mu = Constants.GM_Sun / 1.e9;
+	VectorN r = new VectorN(100000000, 0, 0);
+	VectorN v = new VectorN(0, 30, 0);
 
 	public TwoBodyOrbit3D(double[] coords) {
 		this.coords = coords;
 	}
 
 	public TwoBodyOrbit3D() {
+		draw_orbit();
+	}
+
+	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v) {
+		this.mu = mu;
+		this.r = r;
+		this.v = v;
 		draw_orbit();
 	}
 
@@ -69,10 +79,6 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		z = new double[steps + 2];
 
 		// create a TwoBody orbit using orbit elements
-		double mu = Constants.GM_Sun / 1.e9;
-
-		VectorN r=new VectorN(100000000,0,0);
-		VectorN v=new VectorN(0,30,0);
 		TwoBody sat = new TwoBody(mu, r, v);
 
 		// sat.printElements("Orbit");
