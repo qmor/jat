@@ -17,6 +17,8 @@
 
 package jat.jat3D;
 
+import jat.core.cm.Constants;
+import jat.core.cm.cm;
 import jat.core.ephemeris.DE405;
 import jat.core.ephemeris.DE405_Body;
 import jat.core.math.matvec.data.VectorN;
@@ -42,8 +44,7 @@ public class Ephemeris3D extends Body3D {
 	DE405 my_eph;
 	double jd;
 	Shape3D s;
-
-	// Matrix MRot;
+	//Matrix MRot;
 
 	public Ephemeris3D(DE405_Body bod, double jd_start, double jd_end) {
 		// super(myapplet);
@@ -65,20 +66,20 @@ public class Ephemeris3D extends Body3D {
 		String fs = FileUtil.file_separator();
 		String DE405_data_folder = f.root_path + "data" + fs + "core" + fs + "ephemeris" + fs + "DE405data" + fs;
 		my_eph = new DE405(DE405_data_folder);
-		// MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
+		//MRot = new RotationMatrix(1, cm.Rad(Constants.eps));
 		draw();
 	}
 
 	private void draw() {
 		// double rv[];
-		VectorN rv;
+		VectorN r;
 		// Create coords array
 		coords = new double[steps * 3];
 		for (int k = 0; k < steps; k++) {
 			double mjd_tt = TimeUtils.JDtoMJD(jd);
 			// rv = MRot.times(new VectorN(my_eph.get_planet_pos(body,
 			// mjd_tt+k)));
-			rv = new VectorN(my_eph.get_planet_pos(body, mjd_tt + k));
+			r = new VectorN(my_eph.get_planet_pos(body, mjd_tt + k));
 			// System.out.println("The position is");
 			// System.out.println("x= " + rv[0] + " km");
 			// System.out.println("y= " + rv[1] + " km");
@@ -86,14 +87,22 @@ public class Ephemeris3D extends Body3D {
 			// coords[k * 3 + 0] = rv[0];
 			// coords[k * 3 + 1] = rv[1];
 			// coords[k * 3 + 2] = rv[1];
-			coords[k * 3 + 0] = rv.get(0);
-			coords[k * 3 + 1] = rv.get(1);
-			coords[k * 3 + 2] = rv.get(2);
+			double x, y, z, eps, c, s;
+			x = r.get(0);
+			y = r.get(1);
+			z = r.get(2);
+			eps = cm.Rad(Constants.eps);
+			c = Math.cos(eps);
+			s = Math.sin(eps);
+			coords[k * 3 + 0] = x;
+			coords[k * 3 + 1] = c*y+s*z;
+			coords[k * 3 + 2] = -s*y+c*z;
 		}
 		int num_vert = coords.length / 3;
 		int[] stripLengths = { num_vert };
 
-		LineStripArray myLines = new LineStripArray(num_vert, GeometryArray.COORDINATES | GeometryArray.COLOR_3, stripLengths);
+		LineStripArray myLines = new LineStripArray(num_vert, GeometryArray.COORDINATES | GeometryArray.COLOR_3,
+				stripLengths);
 		Color3f colors[] = new Color3f[num_vert];
 		for (int i = 0; i < num_vert; i++)
 			colors[i] = Color;
