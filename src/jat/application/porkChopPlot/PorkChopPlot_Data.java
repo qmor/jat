@@ -35,6 +35,7 @@ public class PorkChopPlot_Data implements Binned2DData {
 	TimeAPL search_depart_time_start;
 	TimeAPL search_arrival_time_start;
 	porkChopPlot p;
+	int departure_planet=DE405APL.EARTH, arrival_planet=DE405APL.MARS;
 	int dep_year = 2003, dep_month = 1, dep_day = 1;
 	int arr_year = 2003, arr_month = 7, arr_day = 1;
 
@@ -43,7 +44,7 @@ public class PorkChopPlot_Data implements Binned2DData {
 		TimeAPL search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
 		TimeAPL search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
 
-		p = new porkChopPlot(DE405APL.EARTH, DE405APL.MARS);
+		p = new porkChopPlot(departure_planet, arrival_planet);
 		p.make_porkchop_plot(search_depart_time_start, search_arrival_time_start, 500, 10);
 		update();
 	}

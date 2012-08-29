@@ -75,8 +75,11 @@ import java.io.*;
 
 public class DE405APL {
 
+	public final static int MERCURY = 1;
+	public final static int VENUS = 2;
 	public final static int EARTH = 3;
 	public final static int MARS = 4;
+	public final static int JUPITER = 5;
 
 	// static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon
