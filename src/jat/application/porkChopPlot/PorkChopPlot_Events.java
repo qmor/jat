@@ -58,13 +58,13 @@ public class PorkChopPlot_Events implements ActionListener {
 
 			// main.surf.pcplot_data = new pcplot_Jat3D_Data();
 
-			main.surf.pcplot_data.search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
-			main.surf.pcplot_data.search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
+			main.pcpPlot.pcplot_data.search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
+			main.pcpPlot.pcplot_data.search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
 
 			try {
-				main.surf.pcplot_data.p.make_porkchop_plot(main.surf.pcplot_data.search_depart_time_start,
-						main.surf.pcplot_data.search_arrival_time_start, days, steps);
-				main.surf.pcplot_data.update();
+				main.pcpPlot.pcplot_data.p.make_porkchop_plot(main.pcpPlot.pcplot_data.search_depart_time_start,
+						main.pcpPlot.pcplot_data.search_arrival_time_start, days, steps);
+				main.pcpPlot.pcplot_data.update();
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(main, "DE405 Ephemeris data file not found.");
 				e.printStackTrace();
@@ -73,8 +73,8 @@ public class PorkChopPlot_Events implements ActionListener {
 
 			// main.remove(main.surf);
 			// main.surf = new SurfacePlot3D();
-			main.surf.setData(main.surf.pcplot_data);
-			main.surf.keyBehavior_u.reset();
+			main.pcpPlot.setData(main.pcpPlot.pcplot_data);
+			main.pcpPlot.keyBehavior_u.reset();
 			// main.add(main.surf, BorderLayout.CENTER);
 			// main.revalidate();
 			main.repaint();
@@ -90,41 +90,41 @@ public class PorkChopPlot_Events implements ActionListener {
 		}
 
 		if (pcpGUI.rdbtnPlotRotate.isSelected()) {
-			main.surf.requestFocusInWindow();
-			main.surf.keyBehaviorSwitch.setWhichChild(0);
-			main.surf.flightSelectorSwitch.setWhichChild(0);
+			main.pcpPlot.requestFocusInWindow();
+			main.pcpPlot.keyBehaviorSwitch.setWhichChild(0);
+			main.pcpPlot.flightSelectorSwitch.setWhichChild(0);
 			main.pcpGUI.btnGoMin.setEnabled(false);
 			main.pcpGUI.btnStep.setEnabled(false);
 		}
 
 		if (pcpGUI.rdbtnFlightSelect.isSelected()) {
-			main.surf.requestFocusInWindow();
-			main.surf.keyBehaviorSwitch.setWhichChild(2);
-			main.surf.flightSelectorSwitch.setWhichChild(1);
-			main.surf.keyBehavior_u.updateMarker();
+			main.pcpPlot.requestFocusInWindow();
+			main.pcpPlot.keyBehaviorSwitch.setWhichChild(2);
+			main.pcpPlot.flightSelectorSwitch.setWhichChild(1);
+			main.pcpPlot.keyBehavior_u.updateMarker();
 			main.pcpGUI.btnGoMin.setEnabled(true);
 			main.pcpGUI.btnStep.setEnabled(true);
 		}
 	}
 
 	public void step() {
-		int x_index = main.surf.keyBehavior_u.x_index;
-		int y_index = main.surf.keyBehavior_u.y_index;
-		DataArraySearch d = new DataArraySearch(main.surf.pcplot_data.data, x_index, y_index);
+		int x_index = main.pcpPlot.keyBehavior_u.x_index;
+		int y_index = main.pcpPlot.keyBehavior_u.y_index;
+		DataArraySearch d = new DataArraySearch(main.pcpPlot.pcplot_data.data, x_index, y_index);
 		d.step();
-		main.surf.keyBehavior_u.x_index = d.x_index;
-		main.surf.keyBehavior_u.y_index = d.y_index;
-		main.surf.keyBehavior_u.updateMarker();
+		main.pcpPlot.keyBehavior_u.x_index = d.x_index;
+		main.pcpPlot.keyBehavior_u.y_index = d.y_index;
+		main.pcpPlot.keyBehavior_u.updateMarker();
 	}
 
 	public void goToMinimum() {
-		int x_index = main.surf.keyBehavior_u.x_index;
-		int y_index = main.surf.keyBehavior_u.y_index;
-		DataArraySearch d = new DataArraySearch(main.surf.pcplot_data.data, x_index, y_index);
+		int x_index = main.pcpPlot.keyBehavior_u.x_index;
+		int y_index = main.pcpPlot.keyBehavior_u.y_index;
+		DataArraySearch d = new DataArraySearch(main.pcpPlot.pcplot_data.data, x_index, y_index);
 		d.goToLocalMinimum();
-		main.surf.keyBehavior_u.x_index = d.x_index;
-		main.surf.keyBehavior_u.y_index = d.y_index;
-		main.surf.keyBehavior_u.updateMarker();
+		main.pcpPlot.keyBehavior_u.x_index = d.x_index;
+		main.pcpPlot.keyBehavior_u.y_index = d.y_index;
+		main.pcpPlot.keyBehavior_u.updateMarker();
 	}
 
 }

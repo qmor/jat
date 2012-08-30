@@ -24,32 +24,32 @@ import javax.swing.JApplet;
 import javax.swing.JFrame;
 
 public class PorkChopPlot_main extends JApplet {
-	public PorkChopPlot_main() {
-	}
 	private static final long serialVersionUID = 1122861326294482666L;
 	static int appletwidth = 900; // Width of Applet
 	static int appletheight = 700;
-	public PorkChopPlot_Plot surf;
-	PorkChopPlot_GUI pcpGUI;
+	public PorkChopPlot_GUI pcpGUI;
+	public PorkChopPlot_Plot pcpPlot;
 	Container level1_Pane;
+	PorkChopPlot_ReturnValue pReturn=new PorkChopPlot_ReturnValue();
+			
+	public PorkChopPlot_main() {
+	}
 
 	public void init() {
 		pcpGUI = new PorkChopPlot_GUI();
 		pcpGUI.pcpE.setMain(this);
-		surf = new PorkChopPlot_Plot(this);
+		pcpPlot = new PorkChopPlot_Plot(this);
 
 		level1_Pane = getContentPane();
 		level1_Pane.add(pcpGUI, BorderLayout.WEST);
-		level1_Pane.add(surf, BorderLayout.CENTER);
+		level1_Pane.add(pcpPlot, BorderLayout.CENTER);
 	}
-
 
 	public static void main(String[] args) {
 		PorkChopPlot_main pApplet = new PorkChopPlot_main();
-		JFrame pFrame = new JFrame();
-		// Initialize the applet
 		pApplet.init();
 
+		JFrame pFrame = new JFrame();
 		pFrame.setTitle("Optimal Launch Date Finder");
 		pFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -60,7 +60,7 @@ public class PorkChopPlot_main extends JApplet {
 		pFrame.setVisible(true);
 
 		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
-		 pApplet.surf.requestFocusInWindow();
+		pApplet.pcpPlot.requestFocusInWindow();
 
 		// sApplet.ssE.timer.start();
 
