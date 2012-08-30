@@ -25,11 +25,13 @@ import java.io.IOException;
 
 public class porkChopPlot {
 	public LabeledMatrix A;
-	public double mintotaldv,maxtotaldv;	
+	public double mintotaldv, maxtotaldv;
+	public double DepartureDate[];
+	public double ArrivalDate[];
 	int departure_planet, arrival_planet;
 	public int steps;
 	public float step_size;
-	
+
 	public porkChopPlot(int departure_planet, int arrival_planet) {
 		super();
 		this.departure_planet = departure_planet;
@@ -39,7 +41,7 @@ public class porkChopPlot {
 	public void make_porkchop_plot(TimeAPL search_depart_time_start, TimeAPL search_arrival_time_start, int days,
 			int steps) throws IOException {
 		double totaldv;
-		this.steps=steps;
+		this.steps = steps;
 		step_size = 1.f / steps;
 
 		DE405APL my_eph = new DE405APL();
@@ -55,23 +57,28 @@ public class porkChopPlot {
 		// search_arrival_time_start.print();
 
 		A = new LabeledMatrix(steps, steps);
-
-		mintotaldv=1e9;
+		DepartureDate = new double[steps];
+		ArrivalDate = new double[steps];
+		mintotaldv = 1e9;
 		maxtotaldv = 0;
 
 		A.cornerlabel = "Dep / Arr";
 		String dateformat = "%tD";
 		for (int i = 0; i < steps; i++) {
 			A.RowLabels[i] = String.format(dateformat, search_depart_time.getCalendar());
+			DepartureDate[i] = search_depart_time.mjd_utc();
+			//System.out.println(search_depart_time.mjd_utc());
 			for (int j = 0; j < steps; j++) {
 
 				A.ColumnLabels[j] = String.format(dateformat, search_arrival_time.getCalendar());
+				ArrivalDate[j]=search_arrival_time.mjd_utc();
+				//System.out.println(search_arrival_time.mjd_utc());
 
 				double tof = TimeAPL.minus(search_arrival_time, search_depart_time) * 86400.0;
 
 				Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
 				VectorN r0 = my_eph.get_planet_pos(departure_planet, search_depart_time);
-				VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);				
+				VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);
 				// r0.print("r0");
 				// v0.print("v0");
 				// System.out.println("orbital velocity of earth " + v0.mag());
@@ -90,7 +97,7 @@ public class porkChopPlot {
 				}
 				if (totaldv > maxtotaldv)
 					maxtotaldv = totaldv;
-				if (totaldv >0 && totaldv< mintotaldv)
+				if (totaldv > 0 && totaldv < mintotaldv)
 					mintotaldv = totaldv;
 				// lambert.deltav0.print("deltav0");
 				// lambert.deltavf.print("deltavf");
@@ -101,8 +108,7 @@ public class porkChopPlot {
 			search_arrival_time = new TimeAPL(search_arrival_time_start.mjd_utc());
 			search_depart_time.step_seconds(time_increment);
 		}
-		//A.print();
+		 //A.print();
 
 	}
 }
-
