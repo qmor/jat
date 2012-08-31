@@ -30,7 +30,7 @@ public class PorkChopPlot_main extends JApplet {
 	public PorkChopPlot_GUI pcpGUI;
 	public PorkChopPlot_Plot pcpPlot;
 	Container level1_Pane;
-	PorkChopPlot_ReturnValue pReturn=new PorkChopPlot_ReturnValue();
+	public PorkChopPlot_ReturnValue pReturn=new PorkChopPlot_ReturnValue();
 			
 	public PorkChopPlot_main() {
 	}

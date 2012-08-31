@@ -2,8 +2,8 @@ package jat.application.porkChopPlot;
 
 public class PorkChopPlot_ReturnValue {
 
-	double DepartureDate;
-	double ArrivalDate;
+	public double DepartureDate;
+	public double ArrivalDate;
 	
 }
 
