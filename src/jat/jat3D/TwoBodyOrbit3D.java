@@ -31,6 +31,7 @@ import javax.vecmath.*;
 public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	public double[] coords;
 	public double[] t, x, y, z;
+	double tof; // time of flight
 	int j = 0;
 	Color3f Color = Colors.pink;
 	private int steps = 500;
@@ -48,6 +49,14 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	}
 
 	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v) {
+		this.mu = mu;
+		this.r = r;
+		this.v = v;
+		draw_orbit();
+	}
+
+	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double tof) {
+		this.tof = tof;
 		this.mu = mu;
 		this.r = r;
 		this.v = v;
@@ -88,7 +97,8 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 
 		// propagate the orbit
 		// sat.propagate(0., tf, x, true);
-		sat.propagate(0., tf, this, true, steps);
+		//sat.propagate(0., tf, this, true, steps);
+		sat.propagate(0., tof, this, true, steps);
 
 		// Copy data into coords array
 		coords = new double[steps * 3];
