@@ -39,6 +39,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	double mu = Constants.GM_Sun / 1.e9;
 	VectorN r = new VectorN(100000000, 0, 0);
 	VectorN v = new VectorN(0, 30, 0);
+	TwoBody sat;
 
 	public TwoBodyOrbit3D(double[] coords) {
 		this.coords = coords;
@@ -52,6 +53,11 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		this.mu = mu;
 		this.r = r;
 		this.v = v;
+		// create a TwoBody orbit using orbit elements
+		sat = new TwoBody(mu, r, v);
+		// sat.printElements("Orbit");
+		// find out the period of the orbit
+		tof = sat.period();
 		draw_orbit();
 	}
 
@@ -60,13 +66,14 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		this.mu = mu;
 		this.r = r;
 		this.v = v;
+		// create a TwoBody orbit using orbit elements
+		sat = new TwoBody(mu, r, v);
 		draw_orbit();
 	}
 
 	public void print(double time, double[] pos) {
 		// also print to the screen for warm fuzzy feeling
-		// System.out.println(j+"  "+time + " " + pos[0] + " " + pos[1] + " " +
-		// pos[2]);
+		System.out.println(j + "  " + time + " " + pos[0] + " " + pos[1] + " " + pos[2]);
 		t[j] = time;
 		x[j] = pos[0];
 		y[j] = pos[1];
@@ -78,31 +85,20 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	}
 
 	private void draw_orbit() {
-		// int steps = 10000;
-		// number of steps in propagate in TwoBody should be made a parameter
-		coords = new double[3 * steps + 6];
 
 		t = new double[steps + 2];
 		x = new double[steps + 2];
 		y = new double[steps + 2];
 		z = new double[steps + 2];
 
-		// create a TwoBody orbit using orbit elements
-		TwoBody sat = new TwoBody(mu, r, v);
-
-		// sat.printElements("Orbit");
-
-		// find out the period of the orbit
-		double tf = sat.period();
-
-		// propagate the orbit
-		// sat.propagate(0., tf, x, true);
-		//sat.propagate(0., tf, this, true, steps);
+		// propagate the orbit, this will call print()
 		sat.propagate(0., tof, this, true, steps);
 
 		// Copy data into coords array
-		coords = new double[steps * 3];
-		for (int k = 0; k < steps; k++) {
+		// coords = new double[3 * steps + 6];
+		int count = j;
+		coords = new double[count * 3];
+		for (int k = 0; k < count; k++) {
 			coords[k * 3 + 0] = x[k];
 			coords[k * 3 + 1] = y[k];
 			coords[k * 3 + 2] = z[k];
