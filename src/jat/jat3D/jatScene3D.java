@@ -39,8 +39,8 @@ public class jatScene3D extends TransformGroup {
 
 	public jatScene3D() {
 		super();
-		InitialRotation=new Transform3D();
-		InitialTranslation=new Vector3f();
+		InitialRotation = new Transform3D();
+		InitialTranslation = new Vector3f();
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
@@ -65,6 +65,18 @@ public class jatScene3D extends TransformGroup {
 	 *            removed
 	 */
 	public void add(Body3D b, String name) {
+		BranchGroup bg = new BranchGroup();
+		bg.setUserData(name);
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		bg.addChild(b);
+		jatBranchGroup.addChild(bg);
+	}
+
+	public void add(Body3D b, Vector3f position, String name) {
+		b.set_position(position);
 		BranchGroup bg = new BranchGroup();
 		bg.setUserData(name);
 		bg.setCapability(BranchGroup.ALLOW_DETACH);

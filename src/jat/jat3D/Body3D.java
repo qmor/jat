@@ -132,6 +132,16 @@ public class Body3D extends TransformGroup {
 		setTransform(Trans);
 	}
 
+	public void set_position(Vector3f r) {		
+		getTransform(Trans);
+		Vd.x = r.x;
+		Vd.y = r.y;
+		Vd.z = r.z;
+		Trans.setTranslation(Vd);
+		Trans.setScale(scale);
+		setTransform(Trans);
+	}
+
 	public void set_position(Vector3d r) {
 		getTransform(Trans);
 		Vd.x = r.x;
@@ -198,6 +208,7 @@ public class Body3D extends TransformGroup {
 		Trans.setScale(scale);
 		setTransform(Trans);
 	}
+
 }
 
 // Transform3D T_3D = new Transform3D();
