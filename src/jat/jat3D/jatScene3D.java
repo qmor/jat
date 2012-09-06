@@ -115,7 +115,7 @@ public class jatScene3D extends TransformGroup {
 
 				if (userData instanceof String && ((String) userData).compareTo(name) == 0) {
 					System.out.println("Removing: " + sgObject.getUserData());
-					jatBranchGroup.detach();
+					//jatBranchGroup.detach();
 					jatBranchGroup.removeChild(index);
 				}
 				index++;
