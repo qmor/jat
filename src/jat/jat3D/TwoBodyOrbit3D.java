@@ -39,7 +39,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	double mu = Constants.GM_Sun / 1.e9;
 	VectorN r = new VectorN(100000000, 0, 0);
 	VectorN v = new VectorN(0, 30, 0);
-	TwoBody sat;
+	TwoBodyAPL sat;
 
 	public TwoBodyOrbit3D(double[] coords) {
 		this.coords = coords;
@@ -54,7 +54,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		this.r = r;
 		this.v = v;
 		// create a TwoBody orbit using orbit elements
-		sat = new TwoBody(mu, r, v);
+		sat = new TwoBodyAPL(mu, r, v);
 		// sat.printElements("Orbit");
 		// find out the period of the orbit
 		tof = sat.period();
@@ -67,7 +67,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		this.r = r;
 		this.v = v;
 		// create a TwoBody orbit using orbit elements
-		sat = new TwoBody(mu, r, v);
+		sat = new TwoBodyAPL(mu, r, v);
 		draw_orbit();
 	}
 
