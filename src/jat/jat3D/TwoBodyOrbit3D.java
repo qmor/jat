@@ -73,7 +73,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 
 	public void print(double time, double[] pos) {
 		// also print to the screen for warm fuzzy feeling
-		System.out.println(j + "  " + time + " " + pos[0] + " " + pos[1] + " " + pos[2]);
+		//System.out.println(j + "  " + time + " " + pos[0] + " " + pos[1] + " " + pos[2]);
 		t[j] = time;
 		x[j] = pos[0];
 		y[j] = pos[1];
@@ -82,6 +82,12 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		// coords[j + 1] = pos[1];
 		// coords[j + 2] = pos[2];
 		j++;
+	}
+
+	public VectorN getPosition(double time) {
+
+		sat.propagate(0., time);
+		return sat.getR();
 	}
 
 	private void draw_orbit() {

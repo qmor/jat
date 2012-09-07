@@ -56,9 +56,18 @@ public class TimeAPL extends Time {
 
 		String.format(dateformat, getCalendar());
 
-		System.out.println(String.format(dateformat, getCalendar()));
+		System.out.print(String.format(dateformat, getCalendar()));
+	}
+
+	public void printspace(){
+		print();
+		System.out.print(" ");
 	}
 	
+	public void println(){
+		print();
+		System.out.println();
 	
+	}
 
 }
