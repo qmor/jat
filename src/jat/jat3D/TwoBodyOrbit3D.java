@@ -20,6 +20,8 @@ package jat.jat3D;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.math.matvec.data.VectorN;
+import jat.jat3D.plot3D.Rainbow;
+import jat.jat3D.plot3D.Rainbow3f;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
@@ -33,13 +35,16 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	public double[] t, x, y, z;
 	double tof; // time of flight
 	int j = 0;
-	Color3f Color = Colors.pink;
+	// Color3f color = Colors.pink;
+	Color3f color;
+	Color3b colorb = new Color3b();
 	private int steps = 500;
 	Constants c = new Constants();
 	double mu = Constants.GM_Sun / 1.e9;
 	VectorN r = new VectorN(100000000, 0, 0);
 	VectorN v = new VectorN(0, 30, 0);
 	TwoBodyAPL sat;
+	private Rainbow3f rainbow = new Rainbow3f(0, 100);
 
 	public TwoBodyOrbit3D(double[] coords) {
 		this.coords = coords;
@@ -55,7 +60,6 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		this.v = v;
 		// create a TwoBody orbit using orbit elements
 		sat = new TwoBodyAPL(mu, r, v);
-		// sat.printElements("Orbit");
 		// find out the period of the orbit
 		tof = sat.period();
 		draw_orbit();
@@ -68,12 +72,25 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		this.v = v;
 		// create a TwoBody orbit using orbit elements
 		sat = new TwoBodyAPL(mu, r, v);
+		color = Colors.pink;
+		draw_orbit();
+	}
+
+	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double tof, Color3f color) {
+		this.tof = tof;
+		this.mu = mu;
+		this.r = r;
+		this.v = v;
+		// create a TwoBody orbit using orbit elements
+		sat = new TwoBodyAPL(mu, r, v);
+		this.color = color;
 		draw_orbit();
 	}
 
 	public void print(double time, double[] pos) {
 		// also print to the screen for warm fuzzy feeling
-		//System.out.println(j + "  " + time + " " + pos[0] + " " + pos[1] + " " + pos[2]);
+		// System.out.println(j + "  " + time + " " + pos[0] + " " + pos[1] +
+		// " " + pos[2]);
 		t[j] = time;
 		x[j] = pos[0];
 		y[j] = pos[1];
@@ -116,7 +133,10 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 				stripLengths);
 		Color3f colors[] = new Color3f[num_vert];
 		for (int i = 0; i < num_vert; i++)
-			colors[i] = Color;
+			 colors[i] = color;
+
+			//colors[i] = rainbow.colorFor(20);
+
 		myLines.setColors(0, colors);
 		myLines.setCoordinates(0, coords);
 
