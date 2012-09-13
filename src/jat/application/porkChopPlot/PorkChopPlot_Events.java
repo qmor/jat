@@ -98,12 +98,14 @@ public class PorkChopPlot_Events implements ActionListener {
 		}
 
 		if (pcpGUI.rdbtnFlightSelect.isSelected()) {
+			//System.out.println("flightselect");
 			main.pcpPlot.requestFocusInWindow();
 			main.pcpPlot.keyBehaviorSwitch.setWhichChild(2);
 			main.pcpPlot.flightSelectorSwitch.setWhichChild(1);
 			main.pcpPlot.keyBehavior_u.updateMarker();
 			main.pcpGUI.btnGoMin.setEnabled(true);
 			main.pcpGUI.btnStep.setEnabled(true);
+			//System.out.println("flightselect out");
 		}
 	}
 

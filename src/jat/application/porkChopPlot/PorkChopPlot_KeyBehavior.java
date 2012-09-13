@@ -78,10 +78,11 @@ public class PorkChopPlot_KeyBehavior extends jat_KeyBehavior_UserCall {
 		main.pcpGUI.field_selected_arrival_date.setText(main.pcpPlot.pcplot_data.p.A.ColumnLabels[y_index]);
 
 		// Keep selected dates as return value if package used in dialog
-		System.out.print("Dep ");
-		new TimeAPL(main.pcpPlot.pcplot_data.p.DepartureDate[x_index]).print();
-		System.out.print("Arr ");
-		new TimeAPL(main.pcpPlot.pcplot_data.p.ArrivalDate[y_index]).print();
+		// System.out.print("Dep ");
+		// new
+		// TimeAPL(main.pcpPlot.pcplot_data.p.DepartureDate[x_index]).print();
+		// System.out.print("Arr ");
+		// new TimeAPL(main.pcpPlot.pcplot_data.p.ArrivalDate[y_index]).print();
 		main.pReturn.DepartureDate = main.pcpPlot.pcplot_data.p.DepartureDate[x_index];
 		main.pReturn.ArrivalDate = main.pcpPlot.pcplot_data.p.ArrivalDate[y_index];
 	}
