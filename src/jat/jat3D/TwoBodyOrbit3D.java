@@ -62,6 +62,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		sat = new TwoBodyAPL(mu, r, v);
 		// find out the period of the orbit
 		tof = sat.period();
+		color = Colors.pink;
 		draw_orbit();
 	}
 
