@@ -18,10 +18,10 @@
 package jat.core.cm;
 
 import jat.core.algorithm.integrators.Printable;
+import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 
 public class TwoBodyAPL extends TwoBody {
-
 
 	public TwoBodyAPL(double mu, VectorN r, VectorN v) {
 		super(mu, r, v);
@@ -31,11 +31,8 @@ public class TwoBodyAPL extends TwoBody {
 		// TODO Auto-generated constructor stub
 	}
 
-	// modified so that it can be used repeatedly. Currently, propagates from
-	// last position, rather than from t0.
 	public void propagate(double t0, double tf, Printable pr, boolean print_switch) {
 		double[] temp = new double[6];
-		// this.ta = 0;
 
 		// Determine step size
 		double n = this.meanMotion();
@@ -99,7 +96,6 @@ public class TwoBodyAPL extends TwoBody {
 
 	public void propagate(double t0, double tf, Printable pr, boolean print_switch, double steps) {
 		double[] temp = new double[6];
-		//this.ta = 0;
 
 		this.steps = steps;
 
@@ -169,7 +165,7 @@ public class TwoBodyAPL extends TwoBody {
 
 	public void propagate(double t0, double tf) {
 		double[] temp = new double[6];
-		this.ta = 0;
+		// this.ta = 0;
 
 		// Determine step size
 		double n = this.meanMotion();
@@ -226,16 +222,79 @@ public class TwoBodyAPL extends TwoBody {
 		}
 	}
 
-	public double t_from_ta() {
+	public double[] randv(double ta)
+	{
+		double p = a * (1.0 - e * e);
+		double cta = Math.cos(ta);
+		double sta = Math.sin(ta);
+		double opecta = 1.0 + e * cta;
+		double sqmuop = Math.sqrt(this.mu / p);
 
-		// double e0=eccentricAnomaly();
+		VectorN xpqw = new VectorN(6);
+		xpqw.x[0] = p * cta / opecta;
+		xpqw.x[1] = p * sta / opecta;
+		xpqw.x[2] = 0.0;
+		xpqw.x[3] = -sqmuop * sta;
+		xpqw.x[4] = sqmuop * (e + cta);
+		xpqw.x[5] = 0.0;
+
+		Matrix cmat = PQW2ECI();
+
+		VectorN rpqw = new VectorN(xpqw.x[0], xpqw.x[1], xpqw.x[2]);
+		VectorN vpqw = new VectorN(xpqw.x[3], xpqw.x[4], xpqw.x[5]);
+
+		VectorN rijk = cmat.times(rpqw);
+		VectorN vijk = cmat.times(vpqw);
+
+		double[] out = new double[6];
+
+		for (int i = 0; i < 3; i++)
+		{
+			out[i] = rijk.x[i];
+			out[i + 3] = vijk.x[i];
+		}
+
+		return out;
+	}
+
+	public double eccentricAnomaly(double ta) {
+		double cta = Math.cos(ta);
+		double e0 = Math.acos((e + cta) / (1.0 + e * cta));
+		return e0;
+	}
+
+	public double meanAnomaly(double t) {
+
+		return 2. * Math.PI * t / period();
+	}
+
+	public double t_from_ta() {
 
 		double M = meanAnomaly();
 		double P = period();
-		
-		
-		return P*M/2./Math.PI;
-		
+
+		return P * M / 2. / Math.PI;
+
+	}
+
+	public double ta_from_t(double t) {
+
+		double M = meanAnomaly(t);
+		double ea = solveKepler(M, this.e);
+
+		double sinE = Math.sin(ea);
+		double cosE = Math.cos(ea);
+		double den = 1.0 - this.e * cosE;
+		double sqrome2 = Math.sqrt(1.0 - this.e * this.e);
+		double sinv = (sqrome2 * sinE) / den;
+		double cosv = (cosE - this.e) / den;
+
+		double ta = Math.atan2(sinv, cosv);
+		if (this.ta < 0.0) {
+			this.ta = this.ta + 2.0 * Constants.pi;
+		}
+
+		return ta;
 	}
 
 }

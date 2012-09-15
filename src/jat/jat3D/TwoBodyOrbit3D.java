@@ -80,7 +80,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		draw_orbit();
 	}
 
-	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double t0,double tf, Color3f color) {
+	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double t0, double tf, Color3f color) {
 		this.t0 = t0;
 		this.tf = tf;
 		this.mu = mu;
@@ -106,9 +106,10 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		j++;
 	}
 
-	public VectorN getPosition(double time) {
+	// public VectorN getPosition(double t0, double time) {
+	public VectorN getPosition(double ta) {
 
-		sat.propagate(0., time);
+		sat.setTa(ta);
 		return sat.getR();
 	}
 
@@ -138,9 +139,9 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 				stripLengths);
 		Color3f colors[] = new Color3f[num_vert];
 		for (int i = 0; i < num_vert; i++)
-			 colors[i] = color;
+			colors[i] = color;
 
-			//colors[i] = rainbow.colorFor(20);
+		// colors[i] = rainbow.colorFor(20);
 
 		myLines.setColors(0, colors);
 		myLines.setCoordinates(0, coords);
