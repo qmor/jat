@@ -22,18 +22,20 @@ import jat.core.math.matvec.data.VectorN;
 
 public class TwoBodyAPL extends TwoBody {
 
-	public TwoBodyAPL(double d, double e, double f, double g, double h, double i) {
-	}
 
 	public TwoBodyAPL(double mu, VectorN r, VectorN v) {
 		super(mu, r, v);
+	}
+
+	public TwoBodyAPL(double d, double e, double f, double g, double h, double i) {
+		// TODO Auto-generated constructor stub
 	}
 
 	// modified so that it can be used repeatedly. Currently, propagates from
 	// last position, rather than from t0.
 	public void propagate(double t0, double tf, Printable pr, boolean print_switch) {
 		double[] temp = new double[6];
-		//this.ta = 0;
+		// this.ta = 0;
 
 		// Determine step size
 		double n = this.meanMotion();
@@ -95,12 +97,11 @@ public class TwoBodyAPL extends TwoBody {
 		}
 	}
 
-	public void propagate(double t0, double tf, Printable pr, boolean print_switch, double steps)
-	{
+	public void propagate(double t0, double tf, Printable pr, boolean print_switch, double steps) {
 		double[] temp = new double[6];
-		this.ta = 0;
+		//this.ta = 0;
 
-		this.steps=steps;
+		this.steps = steps;
 
 		// Determine step size
 		double n = this.meanMotion();
@@ -129,14 +130,12 @@ public class TwoBodyAPL extends TwoBody {
 
 		double t = t0;
 
-		if (print_switch)
-		{
+		if (print_switch) {
 			temp = this.randv();
 			pr.print(t, temp);
 		}
 
-		while (t < tf)
-		{
+		while (t < tf) {
 			ma = ma + n * dt;
 			double ea = solveKepler(ma, this.e);
 
@@ -148,8 +147,7 @@ public class TwoBodyAPL extends TwoBody {
 			double cosv = (cosE - this.e) / den;
 
 			this.ta = Math.atan2(sinv, cosv);
-			if (this.ta < 0.0)
-			{
+			if (this.ta < 0.0) {
 				this.ta = this.ta + 2.0 * Constants.pi;
 			}
 
@@ -158,21 +156,18 @@ public class TwoBodyAPL extends TwoBody {
 			temp = this.randv();
 			this.rv = new VectorN(temp);
 
-			if (print_switch)
-			{
+			if (print_switch) {
 				pr.print(t, temp);
 			}
 
-			if ((t + dt) > tf)
-			{
+			if ((t + dt) > tf) {
 				dt = tf - t;
 			}
 
 		}
 	}
 
-	public void propagate(double t0, double tf)
-	{
+	public void propagate(double t0, double tf) {
 		double[] temp = new double[6];
 		this.ta = 0;
 
@@ -203,8 +198,7 @@ public class TwoBodyAPL extends TwoBody {
 
 		double t = t0;
 
-		while (t < tf)
-		{
+		while (t < tf) {
 			ma = ma + n * dt;
 			double ea = solveKepler(ma, this.e);
 
@@ -216,8 +210,7 @@ public class TwoBodyAPL extends TwoBody {
 			double cosv = (cosE - this.e) / den;
 
 			this.ta = Math.atan2(sinv, cosv);
-			if (this.ta < 0.0)
-			{
+			if (this.ta < 0.0) {
 				this.ta = this.ta + 2.0 * Constants.pi;
 			}
 
@@ -226,12 +219,23 @@ public class TwoBodyAPL extends TwoBody {
 			temp = this.randv();
 			this.rv = new VectorN(temp);
 
-			if ((t + dt) > tf)
-			{
+			if ((t + dt) > tf) {
 				dt = tf - t;
 			}
 
 		}
+	}
+
+	public double t_from_ta() {
+
+		// double e0=eccentricAnomaly();
+
+		double M = meanAnomaly();
+		double P = period();
+		
+		
+		return P*M/2./Math.PI;
+		
 	}
 
 }

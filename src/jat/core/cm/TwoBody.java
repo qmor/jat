@@ -33,11 +33,11 @@ import jat.core.math.matvec.data.*;
 public class TwoBody implements Derivatives
 {
 
-	private double a; // sma in km
+	protected double a; // sma in km
 	protected double e; // eccentricity
-	private double i; // inclination in radians
-	private double raan; // right ascension of ascending node in radians
-	private double w; // argument of perigee in radians
+	protected double i; // inclination in radians
+	protected double raan; // right ascension of ascending node in radians
+	protected double w; // argument of perigee in radians
 	protected double ta; // true anomaly in radians
 	protected double mu = 398600.4415; // default: earth GM in km^3/s^2 (value from JGM-3
 	protected double steps = 500.;
@@ -929,6 +929,3 @@ public class TwoBody implements Derivatives
 }
 
 
-// determine step size, default to 500 steps per orbit
-// TODO: number of steps in propagate in TwoBody should be made a parameter
-//double steps = 10000.;

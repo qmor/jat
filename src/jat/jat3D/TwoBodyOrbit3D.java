@@ -17,14 +17,15 @@
 
 package jat.jat3D;
 
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
+import jat.core.algorithm.integrators.Printable;
+import jat.core.cm.Constants;
+import jat.core.cm.TwoBodyAPL;
 import jat.core.math.matvec.data.VectorN;
-import jat.jat3D.plot3D.Rainbow;
-import jat.jat3D.plot3D.Rainbow3f;
-
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.LineStripArray;
+import javax.media.j3d.Shape3D;
+import javax.vecmath.Color3b;
+import javax.vecmath.Color3f;
 
 /**
  * @author Tobias Berthold
@@ -33,7 +34,8 @@ import javax.vecmath.*;
 public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	public double[] coords;
 	public double[] t, x, y, z;
-	double tof; // time of flight
+	double t0; // initial time
+	double tf; // final time
 	int j = 0;
 	// Color3f color = Colors.pink;
 	Color3f color;
@@ -44,7 +46,6 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	VectorN r = new VectorN(100000000, 0, 0);
 	VectorN v = new VectorN(0, 30, 0);
 	TwoBodyAPL sat;
-	private Rainbow3f rainbow = new Rainbow3f(0, 100);
 
 	public TwoBodyOrbit3D(double[] coords) {
 		this.coords = coords;
@@ -61,13 +62,15 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		// create a TwoBody orbit using orbit elements
 		sat = new TwoBodyAPL(mu, r, v);
 		// find out the period of the orbit
-		tof = sat.period();
+		tf = sat.period();
 		color = Colors.pink;
 		draw_orbit();
 	}
 
-	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double tof) {
-		this.tof = tof;
+	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double t0, double tf) {
+
+		this.t0 = t0;
+		this.tf = tf;
 		this.mu = mu;
 		this.r = r;
 		this.v = v;
@@ -77,8 +80,9 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		draw_orbit();
 	}
 
-	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double tof, Color3f color) {
-		this.tof = tof;
+	public TwoBodyOrbit3D(double mu, VectorN r, VectorN v, double t0,double tf, Color3f color) {
+		this.t0 = t0;
+		this.tf = tf;
 		this.mu = mu;
 		this.r = r;
 		this.v = v;
@@ -116,7 +120,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		z = new double[steps + 2];
 
 		// propagate the orbit, this will call print()
-		sat.propagate(0., tof, this, true, steps);
+		sat.propagate(t0, tf, this, true, steps);
 
 		// Copy data into coords array
 		// coords = new double[3 * steps + 6];

@@ -125,7 +125,7 @@ public class Lambert implements ScalarFunction {
 	 *            Desired final position vector.
 	 * @param vf
 	 *            Desired final velocity vector.
-	 * @throws LambertException 
+	 * @throws LambertException
 	 */
 	public double compute(VectorN r0, VectorN v0, VectorN rf, VectorN vf, double dt) throws LambertException {
 		reset();
@@ -167,9 +167,9 @@ public class Lambert implements ScalarFunction {
 			System.out.println("tm = " + tm);
 
 		if (dtheta == Constants.pi) {
-			//System.out.println(" dtheta = 180.0. Do a Hohmann");
+			// System.out.println(" dtheta = 180.0. Do a Hohmann");
 			throw new LambertException("dtheta = 180.0. Do a Hohmann");
-			//System.exit(0);
+			// System.exit(0);
 		}
 
 		double ahigh = 1000.0 * amin;
@@ -182,9 +182,9 @@ public class Lambert implements ScalarFunction {
 			System.out.println("************************************************");
 
 		if (this.dt < tp) {
-			//System.out.println("No elliptical path possible ");
+			// System.out.println("No elliptical path possible ");
 			throw new LambertException("No elliptical path possible ");
-			//System.exit(0);
+			// System.exit(0);
 		}
 
 		if (this.dt > tm) {
@@ -195,9 +195,9 @@ public class Lambert implements ScalarFunction {
 		double ftemp = evaluate(ahigh);
 
 		if ((fm * ftemp) >= 0.0) {
-			//System.out.println(" initial guesses do not bound ");
+			// System.out.println(" initial guesses do not bound ");
 			throw new LambertException(" initial guesses do not bound ");
-			//System.exit(0);
+			// System.exit(0);
 		}
 
 		ZeroFinder regfalsi = new ZeroFinder(this, 10000, 1.0E-6, 1.0E-15);
@@ -242,7 +242,8 @@ public class Lambert implements ScalarFunction {
 		this.tof = dt;
 
 		if (debug_print)
-			System.out.println("dt = " + dt + " dv0 = " + dv0 + " dvf = " + dvf + " total dv = " + totaldv + " sma = " + sma);
+			System.out.println("dt = " + dt + " dv0 = " + dv0 + " dvf = " + dvf + " total dv = " + totaldv + " sma = "
+					+ sma);
 		return totaldv;
 	}
 
@@ -272,8 +273,8 @@ public class Lambert implements ScalarFunction {
 		Lambert lambert = new Lambert(Constants.mu);
 		try {
 			double totaldv = lambert.compute(r0, v0, rf, vf, (2.70 - 0.89) * 86400);
+			System.out.println("Total delta-v: "+totaldv);
 		} catch (LambertException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
