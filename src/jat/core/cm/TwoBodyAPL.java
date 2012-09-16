@@ -28,75 +28,18 @@ public class TwoBodyAPL extends TwoBody {
 	}
 
 	public TwoBodyAPL(double d, double e, double f, double g, double h, double i) {
-		// TODO Auto-generated constructor stub
 	}
 
-	public void propagate(double t0, double tf, Printable pr, boolean print_switch) {
-		double[] temp = new double[6];
-
-		// Determine step size
-		double n = this.meanMotion();
-		double period = this.period();
-		double dt = period / steps;
-		if ((t0 + dt) > tf) // check to see if we're going past tf
-		{
-			dt = tf - t0;
-		}
-
-		// determine initial E and M
-		double sqrome2 = Math.sqrt(1.0 - this.e * this.e);
-		double cta = Math.cos(this.ta);
-		double sta = Math.sin(this.ta);
-		double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta);
-		double cose0 = (this.e + cta) / (1.0 + this.e * cta);
-		double e0 = Math.atan2(sine0, cose0);
-
-		double ma = e0 - this.e * Math.sin(e0);
-
-		// initialize t
-
-		double t = t0;
-
-		if (print_switch) {
-			temp = this.randv();
-			pr.print(t, temp);
-		}
-
-		while (t < tf) {
-			ma = ma + n * dt;
-			double ea = solveKepler(ma, this.e);
-
-			double sinE = Math.sin(ea);
-			double cosE = Math.cos(ea);
-			double den = 1.0 - this.e * cosE;
-
-			double sinv = (sqrome2 * sinE) / den;
-			double cosv = (cosE - this.e) / den;
-
-			this.ta = Math.atan2(sinv, cosv);
-			if (this.ta < 0.0) {
-				this.ta = this.ta + 2.0 * Constants.pi;
-			}
-
-			t = t + dt;
-
-			temp = this.randv();
-			this.rv = new VectorN(temp);
-
-			if (print_switch) {
-				pr.print(t, temp);
-			}
-
-			if ((t + dt) > tf) {
-				dt = tf - t;
-			}
-
-		}
-	}
+	/*
+	 * public VectorN position(double t) {
+	 * 
+	 * 
+	 * }
+	 */
 
 	public void propagate(double t0, double tf, Printable pr, boolean print_switch, double steps) {
 		double[] temp = new double[6];
-
+		double ta_save = this.ta;
 		this.steps = steps;
 
 		// Determine step size
@@ -161,69 +104,12 @@ public class TwoBodyAPL extends TwoBody {
 			}
 
 		}
+		// Reset everything to before
+		this.ta=ta_save;
+
 	}
 
-	public void propagate(double t0, double tf) {
-		double[] temp = new double[6];
-		// this.ta = 0;
-
-		// Determine step size
-		double n = this.meanMotion();
-		double period = this.period();
-		double dt = period / steps;
-		if ((t0 + dt) > tf) // check to see if we're going past tf
-		{
-			dt = tf - t0;
-		}
-
-		// determine initial E and M
-		double sqrome2 = Math.sqrt(1.0 - this.e * this.e);
-		double cta = Math.cos(this.ta);
-		double sta = Math.sin(this.ta);
-		double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta);
-		double cose0 = (this.e + cta) / (1.0 + this.e * cta);
-		double e0 = Math.atan2(sine0, cose0);
-
-		double ma = e0 - this.e * Math.sin(e0);
-
-		// determine sqrt(1+e/1-e)
-
-		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
-
-		// initialize t
-
-		double t = t0;
-
-		while (t < tf) {
-			ma = ma + n * dt;
-			double ea = solveKepler(ma, this.e);
-
-			double sinE = Math.sin(ea);
-			double cosE = Math.cos(ea);
-			double den = 1.0 - this.e * cosE;
-
-			double sinv = (sqrome2 * sinE) / den;
-			double cosv = (cosE - this.e) / den;
-
-			this.ta = Math.atan2(sinv, cosv);
-			if (this.ta < 0.0) {
-				this.ta = this.ta + 2.0 * Constants.pi;
-			}
-
-			t = t + dt;
-
-			temp = this.randv();
-			this.rv = new VectorN(temp);
-
-			if ((t + dt) > tf) {
-				dt = tf - t;
-			}
-
-		}
-	}
-
-	public double[] randv(double ta)
-	{
+	public double[] randv(double ta) {
 		double p = a * (1.0 - e * e);
 		double cta = Math.cos(ta);
 		double sta = Math.sin(ta);
@@ -248,8 +134,7 @@ public class TwoBodyAPL extends TwoBody {
 
 		double[] out = new double[6];
 
-		for (int i = 0; i < 3; i++)
-		{
+		for (int i = 0; i < 3; i++) {
 			out[i] = rijk.x[i];
 			out[i + 3] = vijk.x[i];
 		}
@@ -298,3 +183,87 @@ public class TwoBodyAPL extends TwoBody {
 	}
 
 }
+
+/*
+ * public void propagate(double t0, double tf) { double[] temp = new double[6];
+ * // this.ta = 0;
+ * 
+ * // Determine step size double n = this.meanMotion(); double period =
+ * this.period(); double dt = period / steps; if ((t0 + dt) > tf) // check to
+ * see if we're going past tf { dt = tf - t0; }
+ * 
+ * // determine initial E and M double sqrome2 = Math.sqrt(1.0 - this.e *
+ * this.e); double cta = Math.cos(this.ta); double sta = Math.sin(this.ta);
+ * double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta); double cose0 = (this.e
+ * + cta) / (1.0 + this.e * cta); double e0 = Math.atan2(sine0, cose0);
+ * 
+ * double ma = e0 - this.e * Math.sin(e0);
+ * 
+ * // determine sqrt(1+e/1-e)
+ * 
+ * double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
+ * 
+ * // initialize t
+ * 
+ * double t = t0;
+ * 
+ * while (t < tf) { ma = ma + n * dt; double ea = solveKepler(ma, this.e);
+ * 
+ * double sinE = Math.sin(ea); double cosE = Math.cos(ea); double den = 1.0 -
+ * this.e * cosE;
+ * 
+ * double sinv = (sqrome2 * sinE) / den; double cosv = (cosE - this.e) / den;
+ * 
+ * this.ta = Math.atan2(sinv, cosv); if (this.ta < 0.0) { this.ta = this.ta +
+ * 2.0 * Constants.pi; }
+ * 
+ * t = t + dt;
+ * 
+ * temp = this.randv(); this.rv = new VectorN(temp);
+ * 
+ * if ((t + dt) > tf) { dt = tf - t; }
+ * 
+ * } }
+ */
+
+/*
+ * public void propagate(double t0, double tf, Printable pr, boolean
+ * print_switch) { double[] temp = new double[6];
+ * 
+ * // Determine step size double n = this.meanMotion(); double period =
+ * this.period(); double dt = period / steps; if ((t0 + dt) > tf) // check to
+ * see if we're going past tf { dt = tf - t0; }
+ * 
+ * // determine initial E and M double sqrome2 = Math.sqrt(1.0 - this.e *
+ * this.e); double cta = Math.cos(this.ta); double sta = Math.sin(this.ta);
+ * double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta); double cose0 = (this.e
+ * + cta) / (1.0 + this.e * cta); double e0 = Math.atan2(sine0, cose0);
+ * 
+ * double ma = e0 - this.e * Math.sin(e0);
+ * 
+ * // initialize t
+ * 
+ * double t = t0;
+ * 
+ * if (print_switch) { temp = this.randv(); pr.print(t, temp); }
+ * 
+ * while (t < tf) { ma = ma + n * dt; double ea = solveKepler(ma, this.e);
+ * 
+ * double sinE = Math.sin(ea); double cosE = Math.cos(ea); double den = 1.0 -
+ * this.e * cosE;
+ * 
+ * double sinv = (sqrome2 * sinE) / den; double cosv = (cosE - this.e) / den;
+ * 
+ * this.ta = Math.atan2(sinv, cosv); if (this.ta < 0.0) { this.ta = this.ta +
+ * 2.0 * Constants.pi; }
+ * 
+ * t = t + dt;
+ * 
+ * temp = this.randv(); this.rv = new VectorN(temp);
+ * 
+ * if (print_switch) { pr.print(t, temp); }
+ * 
+ * if ((t + dt) > tf) { dt = tf - t; }
+ * 
+ * } }
+ */
