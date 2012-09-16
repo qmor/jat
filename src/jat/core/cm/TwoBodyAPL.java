@@ -22,24 +22,69 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 
 public class TwoBodyAPL extends TwoBody {
+	double initial_ta;
 
 	public TwoBodyAPL(double mu, VectorN r, VectorN v) {
 		super(mu, r, v);
+		initial_ta = ta;
 	}
 
 	public TwoBodyAPL(double d, double e, double f, double g, double h, double i) {
 	}
 
-	/*
-	 * public VectorN position(double t) {
-	 * 
-	 * 
-	 * }
-	 */
+	public VectorN position(double t) {
 
+		double[] temp = new double[6];
+
+		// Determine step size
+		double n = this.meanMotion();
+		double period = this.period();
+
+		// determine initial E and M
+		double sqrome2 = Math.sqrt(1.0 - this.e * this.e);
+		double cta = Math.cos(this.ta);
+		double sta = Math.sin(this.ta);
+		double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta);
+		double cose0 = (this.e + cta) / (1.0 + this.e * cta);
+		double e0 = Math.atan2(sine0, cose0);
+
+		double ma = e0 - this.e * Math.sin(e0);
+		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
+
+		ma = ma + n * t;
+		double ea = solveKepler(ma, this.e);
+
+		double sinE = Math.sin(ea);
+		double cosE = Math.cos(ea);
+		double den = 1.0 - this.e * cosE;
+
+		double sinv = (sqrome2 * sinE) / den;
+		double cosv = (cosE - this.e) / den;
+
+		this.ta = Math.atan2(sinv, cosv);
+		if (this.ta < 0.0) {
+			this.ta = this.ta + 2.0 * Constants.pi;
+		}
+
+		temp = this.randv();
+		this.rv = new VectorN(temp);
+
+		// Reset everything to before
+		this.ta = initial_ta;
+
+		VectorN out = new VectorN(3);
+		out.x[0] = temp[0];
+		out.x[1] = temp[1];
+		out.x[2] = temp[2];
+		//out.print("sat pos at t");
+		return out;
+
+	}
+
+	// propagates from whatever ta is starting from time t=0 relative to the starting point 
 	public void propagate(double t0, double tf, Printable pr, boolean print_switch, double steps) {
 		double[] temp = new double[6];
-		double ta_save = this.ta;
+		// double ta_save = this.ta;
 		this.steps = steps;
 
 		// Determine step size
@@ -105,7 +150,7 @@ public class TwoBodyAPL extends TwoBody {
 
 		}
 		// Reset everything to before
-		this.ta=ta_save;
+		this.ta = initial_ta;
 
 	}
 
