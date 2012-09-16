@@ -38,7 +38,6 @@ public class TwoBodyAPL extends TwoBody {
 
 		// Determine step size
 		double n = this.meanMotion();
-		double period = this.period();
 
 		// determine initial E and M
 		double sqrome2 = Math.sqrt(1.0 - this.e * this.e);
