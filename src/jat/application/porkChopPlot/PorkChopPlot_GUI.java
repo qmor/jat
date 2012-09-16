@@ -16,12 +16,14 @@
  */
 package jat.application.porkChopPlot;
 
+import jat.core.ephemeris.DE405_Enum_APL;
+
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -64,6 +66,11 @@ public class PorkChopPlot_GUI extends JPanel {
 	public JButton btnGoMin;
 	private JLabel lblNewLabel;
 	public JButton btnStep;
+	private JPanel PlanetSelectionPanel;
+	private JLabel lblDeparturePlanet;
+	public JComboBox comboDepartPlanet;
+	private JLabel lblArrivalPlanet;
+	public JComboBox comboArrivalPlanet;
 
 	public PorkChopPlot_GUI() {
 		pcpE = new PorkChopPlot_Events(this);
@@ -91,6 +98,22 @@ public class PorkChopPlot_GUI extends JPanel {
 		arrival_date_picker = JDateComponentFactory.createJDatePicker();
 		depart_date_picker.setTextEditable(true);
 		depart_date_picker.setShowYearButtons(true);
+		
+		PlanetSelectionPanel = new JPanel();
+		add(PlanetSelectionPanel);
+		PlanetSelectionPanel.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		lblDeparturePlanet = new JLabel("Departure Planet");
+		PlanetSelectionPanel.add(lblDeparturePlanet);
+		
+		comboDepartPlanet = new JComboBox(DE405_Enum_APL.name);
+		PlanetSelectionPanel.add(comboDepartPlanet);
+		
+		lblArrivalPlanet = new JLabel("Arrival Planet");
+		PlanetSelectionPanel.add(lblArrivalPlanet);
+		
+		comboArrivalPlanet = new JComboBox(DE405_Enum_APL.name);
+		PlanetSelectionPanel.add(comboArrivalPlanet);
 
 		add(SearchIntervalPanel);
 
