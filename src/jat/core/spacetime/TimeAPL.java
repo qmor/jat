@@ -42,6 +42,11 @@ public class TimeAPL extends Time {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * @param t1 later time
+	 * @param t2 earlier time
+	 * @return time difference in days
+	 */
 	public static double minus(TimeAPL t1, TimeAPL t2) {
 		return t1.jd_tt() - t2.jd_tt();
 	}

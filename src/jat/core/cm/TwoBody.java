@@ -38,7 +38,7 @@ public class TwoBody implements Derivatives
 	protected double i; // inclination in radians
 	protected double raan; // right ascension of ascending node in radians
 	protected double w; // argument of perigee in radians
-	protected double ta; // true anomaly in radians
+	public double ta; // true anomaly in radians
 	protected double mu = 398600.4415; // default: earth GM in km^3/s^2 (value from JGM-3
 	protected double steps = 500.;
 
@@ -218,11 +218,7 @@ public class TwoBody implements Derivatives
 	{
 		this.steps = steps;
 	}
-	
-	
-	
-	
-	
+		
 	
 	/** Copy a TwoBody orbit into a new TwoBody orbit.
 	 * @param p PrintWriter.
