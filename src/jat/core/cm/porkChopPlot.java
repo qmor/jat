@@ -32,14 +32,20 @@ public class porkChopPlot {
 	public int steps;
 	public float step_size;
 
-	public porkChopPlot(int departure_planet, int arrival_planet) {
-		super();
-		this.departure_planet = departure_planet;
-		this.arrival_planet = arrival_planet;
-	}
+	// public porkChopPlot(int departure_planet, int arrival_planet) {
+	// // super();
+	// this.departure_planet = departure_planet;
+	// this.arrival_planet = arrival_planet;
+	// }
+	//
+	// public void setPlanets(int departure_planet, int arrival_planet)
+	// {
+	// this.departure_planet = departure_planet;
+	// this.arrival_planet=arrival_planet;
+	// }
 
-	public void make_porkchop_plot(TimeAPL search_depart_time_start, TimeAPL search_arrival_time_start, int days,
-			int steps) throws IOException {
+	public void make_porkchop_plot(int departure_planet, int arrival_planet, TimeAPL search_depart_time_start,
+			TimeAPL search_arrival_time_start, int searchDays, int steps) throws IOException {
 		double totaldv;
 		this.steps = steps;
 		step_size = 1.f / steps;
@@ -47,7 +53,7 @@ public class porkChopPlot {
 		DE405APL my_eph = new DE405APL();
 		TimeAPL search_depart_time = new TimeAPL(search_depart_time_start.mjd_utc());
 		TimeAPL search_arrival_time = new TimeAPL(search_arrival_time_start.mjd_utc());
-		int search_time = 86400 * days;
+		int search_time = 86400 * searchDays;
 		int time_increment = search_time / steps;
 
 		// System.out.print(" days " + days);
@@ -67,12 +73,12 @@ public class porkChopPlot {
 		for (int i = 0; i < steps; i++) {
 			A.RowLabels[i] = String.format(dateformat, search_depart_time.getCalendar());
 			DepartureDate[i] = search_depart_time.mjd_utc();
-			//System.out.println(search_depart_time.mjd_utc());
+			// System.out.println(search_depart_time.mjd_utc());
 			for (int j = 0; j < steps; j++) {
 
 				A.ColumnLabels[j] = String.format(dateformat, search_arrival_time.getCalendar());
-				ArrivalDate[j]=search_arrival_time.mjd_utc();
-				//System.out.println(search_arrival_time.mjd_utc());
+				ArrivalDate[j] = search_arrival_time.mjd_utc();
+				// System.out.println(search_arrival_time.mjd_utc());
 
 				double tof = TimeAPL.minus(search_arrival_time, search_depart_time) * 86400.0;
 
@@ -108,7 +114,7 @@ public class porkChopPlot {
 			search_arrival_time = new TimeAPL(search_arrival_time_start.mjd_utc());
 			search_depart_time.step_seconds(time_increment);
 		}
-		 //A.print();
+		// A.print();
 
 	}
 }

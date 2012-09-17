@@ -60,23 +60,12 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 		jatScene = new jatScene3D();
 
 		try {
-			pcplot_data = new PorkChopPlot_Data();
+			pcplot_data = new PorkChopPlot_Data(main.params);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "DE405 Ephemeris data file not found.");
 			e.printStackTrace();
 			System.exit(0);
 		}
-
-
-		main.pcpGUI.depart_date_picker.getModel().setYear(pcplot_data.dep_year);
-		main.pcpGUI.depart_date_picker.getModel().setMonth(pcplot_data.dep_month);
-		main.pcpGUI.depart_date_picker.getModel().setDay(pcplot_data.dep_day);
-		main.pcpGUI.depart_date_picker.getModel().setSelected(true);
-
-		main.pcpGUI.arrival_date_picker.getModel().setYear(pcplot_data.arr_year);
-		main.pcpGUI.arrival_date_picker.getModel().setMonth(pcplot_data.arr_month);
-		main.pcpGUI.arrival_date_picker.getModel().setDay(pcplot_data.arr_day);
-		main.pcpGUI.arrival_date_picker.getModel().setSelected(true);
 
 		builder = new SurfaceBuilder();
 

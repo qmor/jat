@@ -71,8 +71,10 @@ public class PorkChopPlot_GUI extends JPanel {
 	public JComboBox comboDepartPlanet;
 	private JLabel lblArrivalPlanet;
 	public JComboBox comboArrivalPlanet;
+	PorkChopPlot_main main;
 
-	public PorkChopPlot_GUI() {
+	public PorkChopPlot_GUI(PorkChopPlot_main main) {
+		this.main = main;
 		pcpE = new PorkChopPlot_Events(this);
 		SearchIntervalPanel = new JPanel();
 		MissionSelectPanel = new JPanel();
@@ -82,36 +84,40 @@ public class PorkChopPlot_GUI extends JPanel {
 		IntervalPanel.setLayout(new GridLayout(2, 2, 5, 5));
 		KeyboardPanel = new JPanel();
 
-		SearchIntervalPanel.setBorder(new TitledBorder(null, "Search Interval", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		MissionSelectPanel.setBorder(new TitledBorder(null, "Flight Selection", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		KeyboardPanel.setBorder(new TitledBorder(null, "Keyboard Mode", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		SearchIntervalPanel.setBorder(new TitledBorder(null, "Search Interval", TitledBorder.LEADING, TitledBorder.TOP,
+				null, null));
+		MissionSelectPanel.setBorder(new TitledBorder(null, "Flight Selection", TitledBorder.LEADING, TitledBorder.TOP,
+				null, null));
+		KeyboardPanel.setBorder(new TitledBorder(null, "Keyboard Mode", TitledBorder.LEADING, TitledBorder.TOP, null,
+				null));
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		depart_date_picker = JDateComponentFactory.createJDatePicker();
-		//depart_date_picker = (JDatePickerImpl) JDateComponentFactory.createJDatePicker();
+		// depart_date_picker = (JDatePickerImpl)
+		// JDateComponentFactory.createJDatePicker();
 		depart_date_picker.setTextEditable(true);
 		depart_date_picker.setShowYearButtons(true);
-		//depart_date_picker.getModel().setYear(2012);
-		//depart_date_picker.getModel().setSelected(true);
+		// depart_date_picker.getModel().setYear(2012);
+		// depart_date_picker.getModel().setSelected(true);
 
 		arrival_date_picker = JDateComponentFactory.createJDatePicker();
 		depart_date_picker.setTextEditable(true);
 		depart_date_picker.setShowYearButtons(true);
-		
+
 		PlanetSelectionPanel = new JPanel();
 		add(PlanetSelectionPanel);
 		PlanetSelectionPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		lblDeparturePlanet = new JLabel("Departure Planet");
 		PlanetSelectionPanel.add(lblDeparturePlanet);
-		
+
 		comboDepartPlanet = new JComboBox(DE405_Enum_APL.name);
 		PlanetSelectionPanel.add(comboDepartPlanet);
-		
+
 		lblArrivalPlanet = new JLabel("Arrival Planet");
 		PlanetSelectionPanel.add(lblArrivalPlanet);
-		
+
 		comboArrivalPlanet = new JComboBox(DE405_Enum_APL.name);
 		PlanetSelectionPanel.add(comboArrivalPlanet);
 
@@ -129,7 +135,7 @@ public class PorkChopPlot_GUI extends JPanel {
 		DatesPanel.add(lblarrive);
 
 		DatesPanel.add((JComponent) arrival_date_picker);
-		
+
 		lblNewLabel = new JLabel("Interval");
 		DatesPanel.add(lblNewLabel);
 
@@ -151,14 +157,14 @@ public class PorkChopPlot_GUI extends JPanel {
 		SearchIntervalPanel.add(btn_make_plot);
 
 		btn_make_plot.addActionListener(pcpE);
-		
+
 		add(KeyboardPanel);
 		KeyboardPanel.setLayout(new BoxLayout(KeyboardPanel, BoxLayout.Y_AXIS));
-		
+
 		rdbtnPlotRotate = new JRadioButton("Plot Rotate/Zoom");
 		rdbtnPlotRotate.setSelected(true);
 		KeyboardPanel.add(rdbtnPlotRotate);
-		
+
 		rdbtnFlightSelect = new JRadioButton("Flight Select");
 		KeyboardPanel.add(rdbtnFlightSelect);
 
@@ -166,8 +172,7 @@ public class PorkChopPlot_GUI extends JPanel {
 		ButtonGroup group = new ButtonGroup();
 		group.add(rdbtnPlotRotate);
 		group.add(rdbtnFlightSelect);
-		
-		
+
 		add(MissionSelectPanel);
 		// MissionSelectPanel.setLayout(new BoxLayout(MissionSelectPanel,
 		// BoxLayout.Y_AXIS));
@@ -192,19 +197,32 @@ public class PorkChopPlot_GUI extends JPanel {
 
 		field_total_deltav = new JFormattedTextField();
 		MissionSelectPanel.add(field_total_deltav);
-		
+
 		btnGoMin = new JButton("Go To Minimum");
 		btnGoMin.setEnabled(false);
 		MissionSelectPanel.add(btnGoMin);
 		btnGoMin.addActionListener(pcpE);
-		
+
 		btnStep = new JButton("Step");
 		btnStep.setEnabled(false);
 		MissionSelectPanel.add(btnStep);
 		btnStep.addActionListener(pcpE);
-		
+
 		rdbtnPlotRotate.addActionListener(pcpE);
 		rdbtnFlightSelect.addActionListener(pcpE);
+
+		// set initial parameters
+		depart_date_picker.getModel().setYear(main.params.dep_year);
+		depart_date_picker.getModel().setMonth(main.params.dep_month);
+		depart_date_picker.getModel().setDay(main.params.dep_day);
+		depart_date_picker.getModel().setSelected(true);
+		arrival_date_picker.getModel().setYear(main.params.arr_year);
+		arrival_date_picker.getModel().setMonth(main.params.arr_month);
+		arrival_date_picker.getModel().setDay(main.params.arr_day);
+		arrival_date_picker.getModel().setSelected(true);
+		comboDepartPlanet.setSelectedIndex(main.params.departure_planet-1);
+		comboArrivalPlanet.setSelectedIndex(main.params.arrival_planet-1);
+
 	}
 
 	// private void JCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {

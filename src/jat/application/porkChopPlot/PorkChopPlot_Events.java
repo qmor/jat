@@ -52,18 +52,17 @@ public class PorkChopPlot_Events implements ActionListener {
 
 			// System.out.println(year+"/"+day);
 			Object sp2 = main.pcpGUI.spinner_days.getValue();
-			int days = Integer.parseInt(sp2.toString());
+			main.params.searchDays = Integer.parseInt(sp2.toString());
 			Object sp1 = main.pcpGUI.spinner_steps.getValue();
-			int steps = Integer.parseInt(sp1.toString());
+			main.params.steps = Integer.parseInt(sp1.toString());
 
-			// main.surf.pcplot_data = new pcplot_Jat3D_Data();
 
-			main.pcpPlot.pcplot_data.search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
-			main.pcpPlot.pcplot_data.search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
+			main.params.search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
+			main.params.search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
 
 			try {
-				main.pcpPlot.pcplot_data.p.make_porkchop_plot(main.pcpPlot.pcplot_data.search_depart_time_start,
-						main.pcpPlot.pcplot_data.search_arrival_time_start, days, steps);
+				main.pcpPlot.pcplot_data.p.make_porkchop_plot(main.params.departure_planet, main.params.arrival_planet,main.params.search_depart_time_start,
+						main.params.search_arrival_time_start, main.params.searchDays, main.params.steps);
 				main.pcpPlot.pcplot_data.update();
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(main, "DE405 Ephemeris data file not found.");
@@ -71,12 +70,10 @@ public class PorkChopPlot_Events implements ActionListener {
 				System.exit(0);
 			}
 
-			// main.remove(main.surf);
-			// main.surf = new SurfacePlot3D();
+
 			main.pcpPlot.setData(main.pcpPlot.pcplot_data);
 			main.pcpPlot.keyBehavior_u.reset();
-			// main.add(main.surf, BorderLayout.CENTER);
-			// main.revalidate();
+
 			main.repaint();
 
 		}

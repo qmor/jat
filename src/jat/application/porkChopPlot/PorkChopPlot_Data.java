@@ -18,8 +18,6 @@
 package jat.application.porkChopPlot;
 
 import jat.core.cm.porkChopPlot;
-import jat.core.ephemeris.DE405APL;
-import jat.core.spacetime.TimeAPL;
 import jat.jat3D.plot3D.Binned2DData;
 import jat.jat3D.plot3D.Rainbow;
 
@@ -32,20 +30,13 @@ public class PorkChopPlot_Data implements Binned2DData {
 	private int yBins;
 	private Rainbow rainbow = new Rainbow(0, 100);
 	public float[][] data;
-	TimeAPL search_depart_time_start;
-	TimeAPL search_arrival_time_start;
 	porkChopPlot p;
-	int departure_planet=DE405APL.EARTH, arrival_planet=DE405APL.MARS;
-	int dep_year = 2003, dep_month = 1, dep_day = 1;
-	int arr_year = 2003, arr_month = 7, arr_day = 1;
 
-	public PorkChopPlot_Data() throws IOException {
-
-		TimeAPL search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
-		TimeAPL search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
-
-		p = new porkChopPlot(departure_planet, arrival_planet);
-		p.make_porkchop_plot(search_depart_time_start, search_arrival_time_start, 500, 10);
+	public PorkChopPlot_Data(PorkChopPlot_Parameters params) throws IOException {
+		//p = new porkChopPlot(params.departure_planet, params.arrival_planet);
+		p = new porkChopPlot();
+		p.make_porkchop_plot(params.departure_planet, params.arrival_planet,params.search_depart_time_start, params.search_arrival_time_start, params.searchDays,
+				params.steps);
 		update();
 	}
 
@@ -86,7 +77,7 @@ public class PorkChopPlot_Data implements Binned2DData {
 	}
 
 	public float zMin() {
-		return (float)p.mintotaldv;
+		return (float) p.mintotaldv;
 	}
 
 	public float zMax() {

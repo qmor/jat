@@ -20,11 +20,10 @@ package jat.core.ephemeris;
 public class DE405_Enum_APL {
 
 	public enum body {
-		MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER;
+		MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO;
 	};
 
-	public static String[] name = { "MERCURY", "VENUS", "EARTH_MOON_BARY", "MARS", "JUPITER" };
+	public static String[] name = { "Mercury", "Venus", "Earth_Moon_Bary", "Mars", "Jupiter", "Saturn", "Uranus",
+			"Neptune", "Pluto" };
 
 }
-
-// MERCURY(1), VENUS(2), EARTH_MOON_BARY(3), MARS(4), JUPITER(5);
