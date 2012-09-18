@@ -28,9 +28,10 @@ public class porkChopPlot {
 	public double mintotaldv, maxtotaldv;
 	public double DepartureDate[];
 	public double ArrivalDate[];
-	int departure_planet, arrival_planet;
+	// int departure_planet, arrival_planet;
 	public int steps;
 	public float step_size;
+	DE405APL my_eph;
 
 	// public porkChopPlot(int departure_planet, int arrival_planet) {
 	// // super();
@@ -50,7 +51,7 @@ public class porkChopPlot {
 		this.steps = steps;
 		step_size = 1.f / steps;
 
-		DE405APL my_eph = new DE405APL();
+		my_eph = new DE405APL();
 		TimeAPL search_depart_time = new TimeAPL(search_depart_time_start.mjd_utc());
 		TimeAPL search_arrival_time = new TimeAPL(search_arrival_time_start.mjd_utc());
 		int search_time = 86400 * searchDays;
@@ -67,6 +68,9 @@ public class porkChopPlot {
 		ArrivalDate = new double[steps];
 		mintotaldv = 1e9;
 		maxtotaldv = 0;
+
+		System.out.println("dep planet " + departure_planet + " arr planet " + arrival_planet);
+		//callLambert(departure_planet, arrival_planet,search_depart_time, search_arrival_time);
 
 		A.cornerlabel = "Dep / Arr";
 		String dateformat = "%tD";
@@ -85,14 +89,16 @@ public class porkChopPlot {
 				Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
 				VectorN r0 = my_eph.get_planet_pos(departure_planet, search_depart_time);
 				VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);
-				// r0.print("r0");
-				// v0.print("v0");
-				// System.out.println("orbital velocity of earth " + v0.mag());
 				VectorN rf = my_eph.get_planet_pos(arrival_planet, search_arrival_time);
 				VectorN vf = my_eph.get_planet_vel(arrival_planet, search_arrival_time);
+				// r0.print("r0");
+				// v0.print("v0");
+				// System.out.println("orbital velocity of departure planet " +
+				// v0.mag());
 				// rf.print("rf");
 				// vf.print("vf");
-				// System.out.println("orbital velocity of Mars " + vf.mag());
+				// System.out.println("orbital velocity of arrival planet " +
+				// vf.mag());
 
 				try {
 					totaldv = lambert.compute(r0, v0, rf, vf, tof);
@@ -117,4 +123,30 @@ public class porkChopPlot {
 		// A.print();
 
 	}
+
+	public double callLambert(int departure_planet, int arrival_planet, TimeAPL search_depart_time,
+			TimeAPL search_arrival_time) {
+		double tof = TimeAPL.minus(search_arrival_time, search_depart_time) * 86400.0;
+		double totaldv = -1.;
+
+		Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
+
+		try {
+			VectorN r0 = my_eph.get_planet_pos(departure_planet, search_depart_time);
+			System.out.println("length of r0 " + r0.mag());
+			VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);
+			VectorN rf = my_eph.get_planet_pos(arrival_planet, search_arrival_time);
+			VectorN vf = my_eph.get_planet_vel(arrival_planet, search_arrival_time);
+			totaldv = lambert.compute(r0, v0, rf, vf, tof);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (LambertException e) {
+			totaldv = -1;
+			// System.out.println(e.message);
+			// e.printStackTrace();
+		}
+
+		return totaldv;
+	}
+
 }

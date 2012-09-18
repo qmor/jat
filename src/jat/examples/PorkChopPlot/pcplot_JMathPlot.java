@@ -47,9 +47,9 @@ public class pcplot_JMathPlot extends JApplet {
 		TimeAPL search_depart_time_start = new TimeAPL(2003, 5, 1, 1, 1, 1);
 		TimeAPL search_arrival_time_start = new TimeAPL(2003, 12, 1, 1, 1, 1);
 
-		porkChopPlot p = new porkChopPlot(DE405APL.EARTH, DE405APL.MARS);
+		porkChopPlot p = new porkChopPlot();
 		try {
-			p.make_porkchop_plot(search_depart_time_start, search_arrival_time_start, 2000, steps);
+			p.make_porkchop_plot(DE405APL.EARTH, DE405APL.MARS,search_depart_time_start, search_arrival_time_start, 2000, steps);
 			p.A.print();
 		} catch (IOException e) {
 			e.printStackTrace();

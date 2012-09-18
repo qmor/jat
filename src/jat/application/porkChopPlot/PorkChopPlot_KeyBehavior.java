@@ -83,6 +83,8 @@ public class PorkChopPlot_KeyBehavior extends jat_KeyBehavior_UserCall {
 		// TimeAPL(main.pcpPlot.pcplot_data.p.DepartureDate[x_index]).print();
 		// System.out.print("Arr ");
 		// new TimeAPL(main.pcpPlot.pcplot_data.p.ArrivalDate[y_index]).print();
+		main.pReturn.departure_planet = main.pcpGUI.comboDepartPlanet.getSelectedIndex();
+		main.pReturn.arrival_planet = main.pcpGUI.comboArrivalPlanet.getSelectedIndex();			
 		main.pReturn.DepartureDate = main.pcpPlot.pcplot_data.p.DepartureDate[x_index];
 		main.pReturn.ArrivalDate = main.pcpPlot.pcplot_data.p.ArrivalDate[y_index];
 	}
