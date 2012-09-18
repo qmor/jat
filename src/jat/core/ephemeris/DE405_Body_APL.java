@@ -17,13 +17,19 @@
 
 package jat.core.ephemeris;
 
-public class DE405_Enum_APL {
+public class DE405_Body_APL {
+
+	public final static int MERCURY = 1;
+	public final static int VENUS = 2;
+	public final static int EARTH = 3;
+	public final static int MARS = 4;
+	public final static int JUPITER = 5;
 
 	public enum body {
-		MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO;
+		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO;
 	};
 
-	public static String[] name = { "Mercury", "Venus", "Earth_Moon_Bary", "Mars", "Jupiter", "Saturn", "Uranus",
-			"Neptune", "Pluto" };
+	public static String[] name = { "===", "Mercury", "Venus", "Earth_Moon_Bary", "Mars", "Jupiter", "Saturn",
+			"Uranus", "Neptune", "Pluto" };
 
 }

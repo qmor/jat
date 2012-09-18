@@ -69,7 +69,7 @@ public class porkChopPlot {
 		mintotaldv = 1e9;
 		maxtotaldv = 0;
 
-		System.out.println("dep planet " + departure_planet + " arr planet " + arrival_planet);
+		System.out.println("[porkChopPlot.java] dep planet " + departure_planet + " arr planet " + arrival_planet);
 		//callLambert(departure_planet, arrival_planet,search_depart_time, search_arrival_time);
 
 		A.cornerlabel = "Dep / Arr";
