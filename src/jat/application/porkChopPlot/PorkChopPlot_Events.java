@@ -30,6 +30,7 @@ public class PorkChopPlot_Events implements ActionListener {
 
 	PorkChopPlot_GUI pcpGUI;
 	PorkChopPlot_main main;
+	PorkChopPlot_Parameters params;
 
 	public PorkChopPlot_Events(PorkChopPlot_GUI pcpGUI) {
 		this.pcpGUI = pcpGUI;
@@ -40,36 +41,45 @@ public class PorkChopPlot_Events implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ev) {
-
+		params = main.params;
 		if (ev.getSource() == pcpGUI.btn_make_plot) {
 			// System.out.println("make plot button");
-			int dep_year = pcpGUI.depart_date_picker.getModel().getYear();
-			int dep_month = pcpGUI.depart_date_picker.getModel().getMonth() + 1;
-			int dep_day = pcpGUI.depart_date_picker.getModel().getDay();
-			int arr_year = pcpGUI.arrival_date_picker.getModel().getYear();
-			int arr_month = pcpGUI.arrival_date_picker.getModel().getMonth() + 1;
-			int arr_day = pcpGUI.arrival_date_picker.getModel().getDay();
+
+			// retrieve parameters from GUI
+
+			params.departure_planet=main.pcpGUI.comboDepartPlanet.getSelectedIndex();
+			params.arrival_planet=main.pcpGUI.comboArrivalPlanet.getSelectedIndex();
+			params.dep_year = pcpGUI.depart_date_picker.getModel().getYear();
+			params.dep_month = pcpGUI.depart_date_picker.getModel().getMonth() + 1;
+			params.dep_day = pcpGUI.depart_date_picker.getModel().getDay();
+			params.arr_year = pcpGUI.arrival_date_picker.getModel().getYear();
+			params.arr_month = pcpGUI.arrival_date_picker.getModel().getMonth() + 1;
+			params.arr_day = pcpGUI.arrival_date_picker.getModel().getDay();
 
 			// System.out.println(year+"/"+day);
 			Object sp2 = main.pcpGUI.spinner_days.getValue();
-			main.params.searchDays = Integer.parseInt(sp2.toString());
+			params.searchDays = Integer.parseInt(sp2.toString());
 			Object sp1 = main.pcpGUI.spinner_steps.getValue();
-			main.params.steps = Integer.parseInt(sp1.toString());
+			params.steps = Integer.parseInt(sp1.toString());
 
-
-			main.params.search_depart_time_start = new TimeAPL(dep_year, dep_month, dep_day, 1, 1, 1);
-			main.params.search_arrival_time_start = new TimeAPL(arr_year, arr_month, arr_day, 1, 1, 1);
+			params.search_depart_time_start = new TimeAPL(params.dep_year, params.dep_month,
+					params.dep_day, 1, 1, 1);
+			params.search_arrival_time_start = new TimeAPL(params.arr_year, params.arr_month,
+					params.arr_day, 1, 1, 1);
 
 			try {
-				main.pcpPlot.pcplot_data.p.make_porkchop_plot(main.params.departure_planet, main.params.arrival_planet,main.params.search_depart_time_start,
-						main.params.search_arrival_time_start, main.params.searchDays, main.params.steps);
+				main.pcpPlot.pcplot_data.p.make_porkchop_plot(
+						params.departure_planet, params.arrival_planet,
+						params.search_depart_time_start,
+						params.search_arrival_time_start, params.searchDays,
+						params.steps);
 				main.pcpPlot.pcplot_data.update();
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(main, "DE405 Ephemeris data file not found.");
+				JOptionPane.showMessageDialog(main,
+						"DE405 Ephemeris data file not found.");
 				e.printStackTrace();
 				System.exit(0);
 			}
-
 
 			main.pcpPlot.setData(main.pcpPlot.pcplot_data);
 			main.pcpPlot.keyBehavior_u.reset();
@@ -95,21 +105,22 @@ public class PorkChopPlot_Events implements ActionListener {
 		}
 
 		if (pcpGUI.rdbtnFlightSelect.isSelected()) {
-			//System.out.println("flightselect");
+			// System.out.println("flightselect");
 			main.pcpPlot.requestFocusInWindow();
 			main.pcpPlot.keyBehaviorSwitch.setWhichChild(2);
 			main.pcpPlot.flightSelectorSwitch.setWhichChild(1);
 			main.pcpPlot.keyBehavior_u.updateMarker();
 			main.pcpGUI.btnGoMin.setEnabled(true);
 			main.pcpGUI.btnStep.setEnabled(true);
-			//System.out.println("flightselect out");
+			// System.out.println("flightselect out");
 		}
 	}
 
 	public void step() {
 		int x_index = main.pcpPlot.keyBehavior_u.x_index;
 		int y_index = main.pcpPlot.keyBehavior_u.y_index;
-		DataArraySearch d = new DataArraySearch(main.pcpPlot.pcplot_data.data, x_index, y_index);
+		DataArraySearch d = new DataArraySearch(main.pcpPlot.pcplot_data.data,
+				x_index, y_index);
 		d.step();
 		main.pcpPlot.keyBehavior_u.x_index = d.x_index;
 		main.pcpPlot.keyBehavior_u.y_index = d.y_index;
@@ -119,7 +130,8 @@ public class PorkChopPlot_Events implements ActionListener {
 	public void goToMinimum() {
 		int x_index = main.pcpPlot.keyBehavior_u.x_index;
 		int y_index = main.pcpPlot.keyBehavior_u.y_index;
-		DataArraySearch d = new DataArraySearch(main.pcpPlot.pcplot_data.data, x_index, y_index);
+		DataArraySearch d = new DataArraySearch(main.pcpPlot.pcplot_data.data,
+				x_index, y_index);
 		d.goToLocalMinimum();
 		main.pcpPlot.keyBehavior_u.x_index = d.x_index;
 		main.pcpPlot.keyBehavior_u.y_index = d.y_index;

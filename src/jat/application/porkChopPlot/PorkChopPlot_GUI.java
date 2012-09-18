@@ -220,8 +220,8 @@ public class PorkChopPlot_GUI extends JPanel {
 		arrival_date_picker.getModel().setMonth(main.params.arr_month);
 		arrival_date_picker.getModel().setDay(main.params.arr_day);
 		arrival_date_picker.getModel().setSelected(true);
-		comboDepartPlanet.setSelectedIndex(main.params.departure_planet-1);
-		comboArrivalPlanet.setSelectedIndex(main.params.arrival_planet-1);
+		comboDepartPlanet.setSelectedIndex(main.params.departure_planet);
+		comboArrivalPlanet.setSelectedIndex(main.params.arrival_planet);
 
 	}
 
