@@ -49,7 +49,7 @@ public class PorkChopPlot_Events implements ActionListener {
 
 			params.departure_planet=main.pcpGUI.comboDepartPlanet.getSelectedIndex();
 			params.arrival_planet=main.pcpGUI.comboArrivalPlanet.getSelectedIndex();
-			System.out.println("[PorkChopPlot_Events.java] sel. index dep " + params.departure_planet + " sel. index planet " + params.arrival_planet);
+			//System.out.println("[PorkChopPlot_Events.java] sel. index dep " + params.departure_planet + " sel. index planet " + params.arrival_planet);
 			params.dep_year = pcpGUI.depart_date_picker.getModel().getYear();
 			params.dep_month = pcpGUI.depart_date_picker.getModel().getMonth() + 1;
 			params.dep_day = pcpGUI.depart_date_picker.getModel().getDay();
