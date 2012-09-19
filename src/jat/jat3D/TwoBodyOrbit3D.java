@@ -45,7 +45,7 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 	double mu = Constants.GM_Sun / 1.e9;
 	VectorN r = new VectorN(100000000, 0, 0);
 	VectorN v = new VectorN(0, 30, 0);
-	TwoBodyAPL sat;
+	public TwoBodyAPL sat;
 
 	public TwoBodyOrbit3D(double[] coords) {
 		this.coords = coords;
@@ -109,12 +109,6 @@ public class TwoBodyOrbit3D extends Shape3D implements Printable {
 		sat.propagate(t0, tf, this, true, steps);
 		return sat.getR();
 	}
-
-	// public VectorN getPosition(double ta) {
-	//
-	// sat.setTa(ta);
-	// return sat.getR();
-	// }
 
 	private void draw_orbit() {
 
