@@ -18,6 +18,7 @@
 package jat.jat3D;
 
 import jat.core.cm.cm;
+import jat.core.ephemeris.DE405_Body_APL;
 
 import java.awt.Button;
 import java.awt.Image;
@@ -40,24 +41,25 @@ import com.sun.j3d.utils.image.TextureLoader;
  * @author Tobias Berthold
  */
 public class Planet3D extends Body3D implements ImageObserver {
-	public static final int MERCURY = 1, VENUS = 2, EARTH = 3, MARS = 4, JUPITER = 5, MOON = 11;
+	// public static final int MERCURY = 1, VENUS = 2, EARTH = 3, MARS = 4,
+	// JUPITER = 5, MOON = 11;
 	float radius;
 	String Texturefilename;
 	Appearance app;
 	Color3f Planetcolor; // planet color if texture not found
 	int divisions = 60; // number of divisions for sphere
-	Button b; // for ImageObserver if applet not used
+	Button b; // for ImageObserver if Applet not used
 	Appearance appear;
 
-	public Planet3D(int planet_number, float scale) {
+	public Planet3D(DE405_Body_APL.body planet, float scale) {
 		super.scale = scale;
 		b = new Button();
-		CreatePlanet(planet_number);
+		CreatePlanet(planet);
 	}
 
-	private void CreatePlanet(int planet_number) {
+	private void CreatePlanet(DE405_Body_APL.body planet) {
 
-		switch (planet_number) {
+		switch (planet) {
 		case MERCURY:
 			Texturefilename = images_path + "mercury.jpg";
 			radius = (float) cm.mercury_radius;
@@ -68,7 +70,7 @@ public class Planet3D extends Body3D implements ImageObserver {
 			radius = (float) cm.venus_radius;
 			Planetcolor = Colors.green;
 			break;
-		case EARTH:
+		case EARTH_MOON_BARY:
 			Texturefilename = images_path + "earth.jpg";
 			radius = (float) cm.earth_radius;
 			Planetcolor = Colors.blue;
@@ -100,9 +102,9 @@ public class Planet3D extends Body3D implements ImageObserver {
 		addChild(new Sphere(radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, divisions, appear));
 
 		Transform3D transform2 = new Transform3D();
-		transform2.rotX(Math.PI/2);
+		transform2.rotX(Math.PI / 2);
 		setTransform(transform2);
-				
+
 		set_scale(scale);
 
 	}
@@ -141,9 +143,7 @@ public class Planet3D extends Body3D implements ImageObserver {
 		return appear;
 	}
 
-	@Override
 	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

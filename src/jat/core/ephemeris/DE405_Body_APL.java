@@ -26,10 +26,10 @@ public class DE405_Body_APL {
 	public final static int JUPITER = 5;
 
 	public enum body {
-		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO;
+		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
 	};
 
-	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn",
-			"Uranus", "Neptune", "Pluto" };
+	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus",
+			"Neptune", "Pluto", "Moon" };
 
 }
