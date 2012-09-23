@@ -29,7 +29,7 @@ public class DE405_Body_APL {
 		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO;
 	};
 
-	public static String[] name = { "===", "Mercury", "Venus", "Earth_Moon_Bary", "Mars", "Jupiter", "Saturn",
+	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn",
 			"Uranus", "Neptune", "Pluto" };
 
 }
