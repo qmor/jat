@@ -32,7 +32,7 @@ public class pcplot_text {
 
 		porkChopPlot p = new porkChopPlot();
 		try {
-			p.make_porkchop_plot(DE405APL.EARTH, DE405APL.MARS,search_depart_time_start, search_arrival_time_start, 500, 10);
+			p.make_porkchop_plot(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS,search_depart_time_start, search_arrival_time_start, 500, 10);
 			p.A.print();
 		} catch (IOException e) {
 			e.printStackTrace();

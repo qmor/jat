@@ -49,7 +49,7 @@ public class pcplot_JMathPlot extends JApplet {
 
 		porkChopPlot p = new porkChopPlot();
 		try {
-			p.make_porkchop_plot(DE405APL.EARTH, DE405APL.MARS,search_depart_time_start, search_arrival_time_start, 2000, steps);
+			p.make_porkchop_plot(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS,search_depart_time_start, search_arrival_time_start, 2000, steps);
 			p.A.print();
 		} catch (IOException e) {
 			e.printStackTrace();
