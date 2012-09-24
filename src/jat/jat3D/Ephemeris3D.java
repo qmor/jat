@@ -60,11 +60,11 @@ public class Ephemeris3D extends Body3D {
 	// draw();
 	// }
 
-	public Ephemeris3D(DE405APL myEph, DE405APL.body body, Time startTime, int days) {
+	public Ephemeris3D(DE405APL myEph, DE405APL.body body, Time startTime, double days) {
 		this.myEph = myEph;
 		this.body = body;
 		this.startTime = startTime;
-		this.steps = days;
+		this.steps = (int) days;
 
 		// PathUtil f = new PathUtil();
 		// String fs = FileUtil.file_separator();
@@ -85,7 +85,7 @@ public class Ephemeris3D extends Body3D {
 			// double mjd_tt = TimeUtils.JDtoMJD(jd);
 			// rv = MRot.times(new VectorN(my_eph.get_planet_pos(body,
 			// mjd_tt+k)));
-			time.step_seconds(k *100);
+			time.step_seconds(k *1000);
 			try {
 				r = new VectorN(myEph.get_planet_pos(body, time));
 				double x, y, z, eps, c, s;

@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.cm;
+package jat.core.astronomy;
 
 /**
  * Simple class to store Hour Angle
@@ -28,9 +28,10 @@ package jat.core.cm;
 
 public class HourAngle
 {
-	boolean positive;
-	int hours, minutes;
-	double seconds;
+	public boolean positive;
+	public int hours;
+	public int minutes;
+	public double seconds;
 
 	public HourAngle()
 	{

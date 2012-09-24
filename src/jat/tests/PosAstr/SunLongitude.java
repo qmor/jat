@@ -21,6 +21,7 @@
 
 package jat.tests.PosAstr;
 
+import jat.core.astronomy.Angle;
 import jat.core.cm.*;
 
 public class SunLongitude

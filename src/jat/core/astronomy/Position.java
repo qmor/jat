@@ -18,29 +18,31 @@
  *
  */
 
-package jat.core.cm;
+package jat.core.astronomy;
+
 
 /**
- * Simple class to store Degrees of Arc
+ * Simple class to store two angles
  * @author Tobias Berthold
  * @version 1.0
  */
 
-public class ArcDegrees
+public class Position
 {
-	boolean positive;
-	int degrees, minutes;
-	double seconds;
-
-	public ArcDegrees()
+	public Angle RA;	// Right Ascension
+	public Angle dec;	// Declination
+	
+	public Position()
 	{
 	}
 
-	public ArcDegrees(boolean positive, int degrees, int minutes, double seconds)
+	/**
+	 * @param alpha
+	 * @param delta
+	 */
+	public Position(Angle alpha, Angle delta)
 	{
-		this.positive = positive;
-		this.degrees = degrees;
-		this.minutes = minutes;
-		this.seconds = seconds;
+		this.RA=alpha;
+		this.dec=delta;		
 	}
 }

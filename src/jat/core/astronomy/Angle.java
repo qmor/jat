@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.cm;
+package jat.core.astronomy;
 
 import jat.core.math.MathUtils;
 

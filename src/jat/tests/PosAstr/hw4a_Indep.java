@@ -22,6 +22,8 @@
 
 package jat.tests.PosAstr;
 
+import jat.core.astronomy.Angle;
+import jat.core.astronomy.Position;
 import jat.core.cm.*;
 
 public class hw4a_Indep

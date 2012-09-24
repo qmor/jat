@@ -75,12 +75,6 @@ import java.io.*;
 import java.util.EnumSet;
 
 public class DE405APL {
-
-	// public final static int MERCURY = 1;
-	// public final static int VENUS = 2;
-	// public final static int EARTH = 3;
-	// public final static int MARS = 4;
-	// public final static int JUPITER = 5;
 	public enum body {
 		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
         private static final int amount = EnumSet.allOf(body.class).size();

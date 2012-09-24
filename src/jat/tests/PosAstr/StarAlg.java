@@ -21,6 +21,8 @@
 
 package jat.tests.PosAstr;
 
+import jat.core.astronomy.Angle;
+import jat.core.astronomy.Position;
 import jat.core.cm.*;
 
 /**
