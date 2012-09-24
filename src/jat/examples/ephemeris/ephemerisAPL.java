@@ -31,7 +31,7 @@ public class ephemerisAPL
 		DE405APL ephem = new DE405APL();
         VectorN rv;
 		try {
-			rv = ephem.get_planet_posvel(DE405APL.MARS, mytime.jd_tt());
+			rv = ephem.get_planet_posvel(DE405APL.body.MARS, mytime.jd_tt());
 	        System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
 	        System.out.println("x= "+rv.get(0)+" km");
 	        System.out.println("y= "+rv.get(1)+" km");

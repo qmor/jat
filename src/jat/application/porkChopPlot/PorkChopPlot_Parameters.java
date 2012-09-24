@@ -17,12 +17,13 @@
 
 package jat.application.porkChopPlot;
 
+import jat.core.ephemeris.DE405APL.body;
 import jat.core.spacetime.TimeAPL;
 
 public class PorkChopPlot_Parameters {
 
-	int departure_planet;
-	int arrival_planet;
+	body departure_planet;
+	body arrival_planet;
 	int dep_year, dep_month, dep_day;
 	int arr_year, arr_month, arr_day;
 	TimeAPL search_depart_time_start;
@@ -30,7 +31,7 @@ public class PorkChopPlot_Parameters {
 	int searchDays;
 	int steps;
 
-	public PorkChopPlot_Parameters(int departure_planet, int arrival_planet, int dep_year, int dep_month, int dep_day,
+	public PorkChopPlot_Parameters(body departure_planet, body arrival_planet, int dep_year, int dep_month, int dep_day,
 			int arr_year, int arr_month, int arr_day, int searchDays, int steps) {
 		super();
 		this.departure_planet = departure_planet;

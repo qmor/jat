@@ -18,6 +18,7 @@
 package jat.application.porkChopPlot;
 
 import jat.core.algorithm.optimization.DataArraySearch;
+import jat.core.ephemeris.DE405APL.body;
 import jat.core.spacetime.TimeAPL;
 
 import java.awt.event.ActionEvent;
@@ -47,8 +48,8 @@ public class PorkChopPlot_Events implements ActionListener {
 
 			// retrieve parameters from GUI
 
-			params.departure_planet=main.pcpGUI.comboDepartPlanet.getSelectedIndex();
-			params.arrival_planet=main.pcpGUI.comboArrivalPlanet.getSelectedIndex();
+			params.departure_planet=body.fromInt(main.pcpGUI.comboDepartPlanet.getSelectedIndex());
+			params.arrival_planet=body.fromInt(main.pcpGUI.comboArrivalPlanet.getSelectedIndex());
 			//System.out.println("[PorkChopPlot_Events.java] sel. index dep " + params.departure_planet + " sel. index planet " + params.arrival_planet);
 			params.dep_year = pcpGUI.depart_date_picker.getModel().getYear();
 			params.dep_month = pcpGUI.depart_date_picker.getModel().getMonth() + 1;

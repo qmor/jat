@@ -16,7 +16,7 @@
  */
 package jat.application.porkChopPlot;
 
-import jat.core.ephemeris.DE405_Body_APL;
+import jat.core.ephemeris.DE405APL;
 
 import java.awt.GridLayout;
 
@@ -112,13 +112,13 @@ public class PorkChopPlot_GUI extends JPanel {
 		lblDeparturePlanet = new JLabel("Departure Planet");
 		PlanetSelectionPanel.add(lblDeparturePlanet);
 
-		comboDepartPlanet = new JComboBox(DE405_Body_APL.name);
+		comboDepartPlanet = new JComboBox(DE405APL.name);
 		PlanetSelectionPanel.add(comboDepartPlanet);
 
 		lblArrivalPlanet = new JLabel("Arrival Planet");
 		PlanetSelectionPanel.add(lblArrivalPlanet);
 
-		comboArrivalPlanet = new JComboBox(DE405_Body_APL.name);
+		comboArrivalPlanet = new JComboBox(DE405APL.name);
 		PlanetSelectionPanel.add(comboArrivalPlanet);
 
 		add(SearchIntervalPanel);
@@ -220,8 +220,8 @@ public class PorkChopPlot_GUI extends JPanel {
 		arrival_date_picker.getModel().setMonth(main.params.arr_month);
 		arrival_date_picker.getModel().setDay(main.params.arr_day);
 		arrival_date_picker.getModel().setSelected(true);
-		comboDepartPlanet.setSelectedIndex(main.params.departure_planet);
-		comboArrivalPlanet.setSelectedIndex(main.params.arrival_planet);
+		comboDepartPlanet.setSelectedIndex(main.params.departure_planet.ordinal());
+		comboArrivalPlanet.setSelectedIndex(main.params.arrival_planet.ordinal());
 
 	}
 

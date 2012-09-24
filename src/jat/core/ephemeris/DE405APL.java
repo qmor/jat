@@ -72,15 +72,33 @@ import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.PathUtil;
 import java.io.*;
+import java.util.EnumSet;
 
 public class DE405APL {
 
-	public final static int MERCURY = 1;
-	public final static int VENUS = 2;
-	public final static int EARTH = 3;
-	public final static int MARS = 4;
-	public final static int JUPITER = 5;
+	// public final static int MERCURY = 1;
+	// public final static int VENUS = 2;
+	// public final static int EARTH = 3;
+	// public final static int MARS = 4;
+	// public final static int JUPITER = 5;
+	public enum body {
+		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
+        private static final int amount = EnumSet.allOf(body.class).size();
+        private static body[] val = new body[amount];
+        static{ for(body q:EnumSet.allOf(body.class)){ val[q.ordinal()]=q; } }
+        public static body fromInt(int i) { return val[i]; }
+        public body next() { return fromInt((ordinal()+1)%amount); }
 
+	};
+
+	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus",
+			"Neptune", "Pluto", "Moon" };
+
+	
+	
+	
+	
+	
 	// static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon
 	static int interval_duration = 32; // duration of interval section in
@@ -499,53 +517,56 @@ public class DE405APL {
 		} catch (StringIndexOutOfBoundsException e) {
 			System.out.println("String index out of bounds at i = " + i);
 		}
-//			catch (FileNotFoundException e) {
-//			System.out.println("String index out of bounds at i = " + i);
-//		}
+		// catch (FileNotFoundException e) {
+		// System.out.println("String index out of bounds at i = " + i);
+		// }
 
 	}
 
-	public VectorN get_planet_posvel(int body_number, double jd) throws IOException {
+	public VectorN get_planet_posvel(body bodyEnum, double jd) throws IOException {
 		double daysec = 3600. * 24.;
-		double[] posvel = new double[6];
 
+		double[] posvel = new double[6];
 		planetary_ephemeris(jd);
-		posvel[0] = planet_r[body_number][1];
-		posvel[1] = planet_r[body_number][2];
-		posvel[2] = planet_r[body_number][3];
-		posvel[3] = planet_rprime[body_number][1] / daysec;
-		posvel[4] = planet_rprime[body_number][2] / daysec;
-		posvel[5] = planet_rprime[body_number][3] / daysec;
+		int bodyNumber = bodyEnum.ordinal();
+		posvel[0] = planet_r[bodyNumber][1];
+		posvel[1] = planet_r[bodyNumber][2];
+		posvel[2] = planet_r[bodyNumber][3];
+		posvel[3] = planet_rprime[bodyNumber][1] / daysec;
+		posvel[4] = planet_rprime[bodyNumber][2] / daysec;
+		posvel[5] = planet_rprime[bodyNumber][3] / daysec;
 
 		VectorN out = new VectorN(posvel);
 		return out;
 	}
 
-	public VectorN get_planet_pos(int body_number, Time t) throws IOException {
-		get_planet_posvel(body_number, t.jd_tt());
+	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
+		get_planet_posvel(bodyEnum, t.jd_tt());
 		double[] vel = new double[3];
 		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
 
+		int bodyNumber = bodyEnum.ordinal();
 		planetary_ephemeris(jultime);
-		vel[0] = planet_r[body_number][1];
-		vel[1] = planet_r[body_number][2];
-		vel[2] = planet_r[body_number][3];
+		vel[0] = planet_r[bodyNumber][1];
+		vel[1] = planet_r[bodyNumber][2];
+		vel[2] = planet_r[bodyNumber][3];
 
 		VectorN out = new VectorN(vel);
 
 		return out;
 	}
 
-	public VectorN get_planet_vel(int body_number, Time t) throws IOException {
+	public VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
 		double daysec = 3600. * 24.;
-		get_planet_posvel(body_number, t.jd_tt());
+		get_planet_posvel(bodyEnum, t.jd_tt());
 		double[] vel = new double[3];
 		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
 
 		planetary_ephemeris(jultime);
-		vel[0] = planet_rprime[body_number][1] / daysec;
-		vel[1] = planet_rprime[body_number][2] / daysec;
-		vel[2] = planet_rprime[body_number][3] / daysec;
+		int bodyNumber = bodyEnum.ordinal();
+		vel[0] = planet_rprime[bodyNumber][1] / daysec;
+		vel[1] = planet_rprime[bodyNumber][2] / daysec;
+		vel[2] = planet_rprime[bodyNumber][3] / daysec;
 
 		VectorN out = new VectorN(vel);
 

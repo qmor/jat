@@ -39,7 +39,7 @@ public class PorkChopPlot_main extends JApplet {
 	}
 
 	public void init() {
-		params = new PorkChopPlot_Parameters(DE405APL.EARTH, DE405APL.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
+		params = new PorkChopPlot_Parameters(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
 		//params = new PorkChopPlot_Parameters(DE405APL.MERCURY, DE405APL.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
 		//params = new PorkChopPlot_Parameters(DE405APL.VENUS, DE405APL.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
 		pcpGUI = new PorkChopPlot_GUI(this);

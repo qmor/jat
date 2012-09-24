@@ -18,7 +18,7 @@
 package jat.jat3D;
 
 import jat.core.cm.cm;
-import jat.core.ephemeris.DE405_Body_APL;
+import jat.core.ephemeris.DE405APL;
 
 import java.awt.Button;
 import java.awt.Image;
@@ -51,13 +51,13 @@ public class Planet3D extends Body3D implements ImageObserver {
 	Button b; // for ImageObserver if Applet not used
 	Appearance appear;
 
-	public Planet3D(DE405_Body_APL.body planet, float scale) {
+	public Planet3D(DE405APL.body planet, float scale) {
 		super.scale = scale;
 		b = new Button();
 		CreatePlanet(planet);
 	}
 
-	private void CreatePlanet(DE405_Body_APL.body planet) {
+	private void CreatePlanet(DE405APL.body planet) {
 
 		switch (planet) {
 		case MERCURY:

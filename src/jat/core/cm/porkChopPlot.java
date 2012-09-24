@@ -17,6 +17,7 @@
 package jat.core.cm;
 
 import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405APL.body;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.math.matvec.util.LabeledMatrix;
 import jat.core.spacetime.TimeAPL;
@@ -45,7 +46,7 @@ public class porkChopPlot {
 	// this.arrival_planet=arrival_planet;
 	// }
 
-	public void make_porkchop_plot(int departure_planet, int arrival_planet, TimeAPL search_depart_time_start,
+	public void make_porkchop_plot(body departure_planet, body arrival_planet, TimeAPL search_depart_time_start,
 			TimeAPL search_arrival_time_start, int searchDays, int steps) throws IOException {
 		double totaldv;
 		this.steps = steps;
@@ -124,7 +125,7 @@ public class porkChopPlot {
 
 	}
 
-	public double callLambert(int departure_planet, int arrival_planet, TimeAPL search_depart_time,
+	public double callLambert(body departure_planet, body arrival_planet, TimeAPL search_depart_time,
 			TimeAPL search_arrival_time) {
 		double tof = TimeAPL.minus(search_arrival_time, search_depart_time) * 86400.0;
 		double totaldv = -1.;
