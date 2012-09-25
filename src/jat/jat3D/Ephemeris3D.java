@@ -17,16 +17,14 @@
 
 package jat.jat3D;
 
-import java.io.IOException;
-
 import jat.core.cm.Constants;
 import jat.core.cm.cm;
 import jat.core.ephemeris.DE405APL;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
-import jat.core.util.FileUtil;
-import jat.core.util.PathUtil;
+import jat.core.spacetime.TimeAPL;
+
+import java.io.IOException;
 
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineStripArray;
@@ -43,10 +41,11 @@ public class Ephemeris3D extends Body3D {
 	DE405APL.body body;
 	double jd;
 	int steps = 100;
+	int days;
 	public double[] coords;
 	Color3f Color = Colors.gray;
 	Shape3D s;
-	Time startTime;
+	TimeAPL startTime;
 
 	// Matrix MRot;
 
@@ -60,11 +59,11 @@ public class Ephemeris3D extends Body3D {
 	// draw();
 	// }
 
-	public Ephemeris3D(DE405APL myEph, DE405APL.body body, Time startTime, double days) {
+	public Ephemeris3D(DE405APL myEph, DE405APL.body body, TimeAPL startTime, double days) {
 		this.myEph = myEph;
 		this.body = body;
 		this.startTime = startTime;
-		this.steps = (int) days;
+		this.days = (int) days;
 
 		// PathUtil f = new PathUtil();
 		// String fs = FileUtil.file_separator();
@@ -78,14 +77,17 @@ public class Ephemeris3D extends Body3D {
 	private void draw() {
 		// double rv[];
 		VectorN r;
-		Time time = startTime;
+		TimeAPL time = startTime;
+
+		double step=days*86400/steps;
 		// Create coords array
 		coords = new double[steps * 3];
 		for (int k = 0; k < steps; k++) {
 			// double mjd_tt = TimeUtils.JDtoMJD(jd);
 			// rv = MRot.times(new VectorN(my_eph.get_planet_pos(body,
 			// mjd_tt+k)));
-			time.step_seconds(k *1000);
+			time.step_seconds(step);
+			time.println();
 			try {
 				r = new VectorN(myEph.get_planet_pos(body, time));
 				double x, y, z, eps, c, s;
