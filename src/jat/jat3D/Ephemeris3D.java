@@ -21,10 +21,10 @@ import jat.core.cm.Constants;
 import jat.core.cm.cm;
 import jat.core.ephemeris.DE405APL;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeAPL;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineStripArray;
@@ -42,7 +42,6 @@ public class Ephemeris3D extends Body3D {
 	double jd;
 	int steps = 100;
 	int days;
-	public double[] coords;
 	Color3f Color = Colors.gray;
 	Shape3D s;
 	TimeAPL startTime;
@@ -75,19 +74,17 @@ public class Ephemeris3D extends Body3D {
 	}
 
 	private void draw() {
-		// double rv[];
+		ArrayList<Double> coordinates = new ArrayList<Double>();
 		VectorN r;
-		TimeAPL time = startTime;
-
-		double step=days*86400/steps;
-		// Create coords array
-		coords = new double[steps * 3];
+		TimeAPL time = new TimeAPL(startTime.mjd_utc());
+		boolean allDataLoaded = true;
+		double step = days * 86400 / steps;
 		for (int k = 0; k < steps; k++) {
 			// double mjd_tt = TimeUtils.JDtoMJD(jd);
 			// rv = MRot.times(new VectorN(my_eph.get_planet_pos(body,
 			// mjd_tt+k)));
 			time.step_seconds(step);
-			time.println();
+			// time.println();
 			try {
 				r = new VectorN(myEph.get_planet_pos(body, time));
 				double x, y, z, eps, c, s;
@@ -97,20 +94,42 @@ public class Ephemeris3D extends Body3D {
 				eps = cm.Rad(Constants.eps);
 				c = Math.cos(eps);
 				s = Math.sin(eps);
-				coords[k * 3 + 0] = x;
-				coords[k * 3 + 1] = c * y + s * z;
-				coords[k * 3 + 2] = -s * y + c * z;
+				coordinates.add(x);
+				coordinates.add(c * y + s * z);
+				coordinates.add(-s * y + c * z);
+
+				// coords[k * 3 + 0] = x;
+				// coords[k * 3 + 1] = c * y + s * z;
+				// coords[k * 3 + 2] = -s * y + c * z;
 			} catch (IOException e) {
-				e.printStackTrace();
+				allDataLoaded = false;
+				break;// e.printStackTrace();
 			}
 		}
-		int num_vert = coords.length / 3;
-		int[] stripLengths = { num_vert };
 
-		LineStripArray myLines = new LineStripArray(num_vert, GeometryArray.COORDINATES | GeometryArray.COLOR_3,
-				stripLengths);
-		Color3f colors[] = new Color3f[num_vert];
-		for (int i = 0; i < num_vert; i++)
+		// Create coords array
+		double[] coords;
+		if (allDataLoaded) 
+		coords = new double[coordinates.size()+3];
+		else
+			coords = new double[coordinates.size()];
+			
+		for (int i = 0; i < coordinates.size(); i++)
+			coords[i] = coordinates.get(i);
+
+		int numberOfVertices = coords.length / 3;
+		if (allDataLoaded) {
+			// Close the loop
+			coords[steps * 3 + 0] = coords[0];
+			coords[steps * 3 + 1] = coords[1];
+			coords[steps * 3 + 2] = coords[2];
+		}
+		int[] stripLengths = { numberOfVertices };
+
+		LineStripArray myLines = new LineStripArray(numberOfVertices,
+				GeometryArray.COORDINATES | GeometryArray.COLOR_3, stripLengths);
+		Color3f colors[] = new Color3f[numberOfVertices];
+		for (int i = 0; i < numberOfVertices; i++)
 			colors[i] = Color;
 		myLines.setColors(0, colors);
 		myLines.setCoordinates(0, coords);

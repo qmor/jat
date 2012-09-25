@@ -17,6 +17,7 @@
 
 package jat.jat3D;
 
+import jat.core.astronomy.SolarSystemBodies;
 import jat.core.cm.cm;
 import jat.core.ephemeris.DE405APL;
 
@@ -41,8 +42,6 @@ import com.sun.j3d.utils.image.TextureLoader;
  * @author Tobias Berthold
  */
 public class Planet3D extends Body3D implements ImageObserver {
-	// public static final int MERCURY = 1, VENUS = 2, EARTH = 3, MARS = 4,
-	// JUPITER = 5, MOON = 11;
 	float radius;
 	String Texturefilename;
 	Appearance app;
@@ -83,7 +82,12 @@ public class Planet3D extends Body3D implements ImageObserver {
 		case JUPITER:
 			Texturefilename = images_path + "jupiter.jpg";
 			radius = (float) cm.jupiter_radius;
-			Planetcolor = Colors.blue;
+			Planetcolor = Colors.orange;
+			break;
+		case SATURN:
+			Texturefilename = images_path + "saturn.jpg";
+			radius = (float)SolarSystemBodies.Bodies[DE405APL.body.SATURN.ordinal()].radius;
+			Planetcolor = Colors.orange;
 			break;
 		case MOON:
 			Texturefilename = images_path + "moon.jpg";

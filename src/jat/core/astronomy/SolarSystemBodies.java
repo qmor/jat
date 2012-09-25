@@ -4,7 +4,7 @@ import jat.core.ephemeris.DE405APL;
 
 public class SolarSystemBodies {
 
-	public Body[] Bodies;
+	public static Body[] Bodies;
 
 	public class Body {
 		DE405APL.body body;
@@ -26,11 +26,12 @@ public class SolarSystemBodies {
 
 		Bodies = new SolarSystemBodies.Body[10];
 
-		Bodies[1] = new Body(DE405APL.body.MERCURY, 2439.7, 330.2E21, 88);
+		Bodies[1] = new Body(DE405APL.body.MERCURY, 2439.7, 330.2e21, 88);
 		Bodies[2] = new Body(DE405APL.body.VENUS, 6051.8, 4868.5e21, 225);
-		Bodies[3] = new Body(DE405APL.body.EARTH_MOON_BARY, 4880., 328.5E21, 365);
-		Bodies[4] = new Body(DE405APL.body.MARS, 4880., 328.5E21, 600);
-		Bodies[5] = new Body(DE405APL.body.JUPITER, 4880., 328.5E21, 2000);
+		Bodies[3] = new Body(DE405APL.body.EARTH_MOON_BARY, 4880., 5972.2E21, 365);
+		Bodies[4] = new Body(DE405APL.body.MARS, 3396., 641.85e21, 687);
+		Bodies[5] = new Body(DE405APL.body.JUPITER, 69911, 1898600.0e21, 4332.59);
+		Bodies[6] = new Body(DE405APL.body.SATURN, 54364, 568460.0e21, 10759.22);
 
 	}
 
