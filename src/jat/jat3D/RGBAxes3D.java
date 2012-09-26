@@ -64,7 +64,11 @@ public class RGBAxes3D extends Body3D {
 		s = new Shape3D();
 		s.setGeometry(createGeometry());
 		addChild(s);
-		addChild(Arrowhead(Colors.red));	
+		addChild(Arrowhead(Colors.red, new Vector3f(axislength, .0f, .0f), -Math.PI / 2,0));
+		addChild(Arrowhead(Colors.green, new Vector3f(.0f, axislength, .0f), 0,0));
+		addChild(Arrowhead(Colors.blue, new Vector3f(.0f, .0f,axislength ), 0,Math.PI / 2));
+		//addChild(Arrowhead(Colors.blue, new Vector3f(.0f, .0f,axislength ), 0,0));
+		// addChild(Arrowhead(Colors.red,new Vector3f(0, .0f, .0f),0));
 		addChild(generateAxesLabels());
 	}
 
@@ -108,25 +112,26 @@ public class RGBAxes3D extends Body3D {
 
 	} // end of Axis createGeometry()
 
-	private TransformGroup Arrowhead(Color3f col) {
+	private TransformGroup Arrowhead(Color3f col, Vector3f trans, double zRot, double xRot) {
 		// X axis
 		Appearance appearance = new Appearance();
 		TransparencyAttributes ta = new TransparencyAttributes();
-		ta.setTransparencyMode(ta.BLENDED);
+		ta.setTransparencyMode(TransparencyAttributes.BLENDED);
 		ta.setTransparency(0.5f);
 		appearance.setTransparencyAttributes(ta);
-		// Color3f col = new Color3f(0.0f, 0.0f, 1.0f);
 		ColoringAttributes ca = new ColoringAttributes(col, ColoringAttributes.NICEST);
 		appearance.setColoringAttributes(ca);
 		Cone cone = new Cone(axislength / 40, axislength / 10, appearance);
 		TransformGroup tg = new TransformGroup();
-		Transform3D transform1 = new Transform3D();
-		Vector3f vector = new Vector3f(axislength, .0f, .0f);
-		transform1.setTranslation(vector);
-		Transform3D transform2 = new Transform3D();
-		transform2.rotZ(-Math.PI / 2);
-		transform1.mul(transform2);
-		tg.setTransform(transform1);
+		Transform3D arrowHeadTransform = new Transform3D();
+		arrowHeadTransform.setTranslation(trans);
+		Transform3D zRotTransform = new Transform3D();
+		zRotTransform.rotZ(zRot);
+		arrowHeadTransform.mul(zRotTransform);
+		Transform3D xRotTransform = new Transform3D();
+		xRotTransform.rotX(xRot);
+		arrowHeadTransform.mul(xRotTransform);
+		tg.setTransform(arrowHeadTransform);
 		tg.addChild(cone);
 		return tg;
 	}
@@ -148,11 +153,13 @@ public class RGBAxes3D extends Body3D {
 		Shape3D xshape = new Shape3D(xfont);
 
 		// Y-Axis Label
-		Text3D yfont = new Text3D(font3d, new String("Y"), new Point3f((i_xaxes - 0.25f), (i_yaxes + axeslength + 0.5f), 0.0f));
+		Text3D yfont = new Text3D(font3d, new String("Y"), new Point3f((i_xaxes - 0.25f),
+				(i_yaxes + axeslength + 0.5f), 0.0f));
 		Shape3D yshape = new Shape3D(yfont);
 
 		// Z-Axis Label
-		Text3D zfont = new Text3D(font3d, new String("Z"), new Point3f((i_xaxes - 0.5f), (i_yaxes - 0.5f), (axeslength + 0.5f)));
+		Text3D zfont = new Text3D(font3d, new String("Z"), new Point3f((i_xaxes - 0.5f), (i_yaxes - 0.5f),
+				(axeslength + 0.5f)));
 		Shape3D zshape = new Shape3D(zfont);
 
 		axislabelTrans.addChild(xshape);

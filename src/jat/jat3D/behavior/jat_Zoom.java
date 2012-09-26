@@ -148,7 +148,7 @@ public class jat_Zoom {
 		lookAt.invert();
 		jatplot3d.universe.getViewingPlatform().getViewPlatformTransform().setTransform(lookAt);
 
-		System.out.println("zoom , label");
+		// System.out.println("zoom , label");
 		jatplot3d.bbox.setLabels(jatplot3d.exponent);
 
 		// jatplot3d.bbox.xAxis.setLabel("X 10^" + jatplot3d.exponent + " km");
