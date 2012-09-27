@@ -65,9 +65,10 @@ public abstract class JatPlot3D extends Canvas3D {
 	public Switch keyBehaviorSwitch;
 	public Switch flightSelectorSwitch;
 	public jat_MouseRotate mouseRotate;
+	public jat_Rotate jat_rotate;
 	public Point3f viewingCenter = new Point3f(0, 0, 0);
-	public Point3d initialViewingPosition=new Point3d(2, 2, 1);
-	
+	public Point3d initialViewingPosition = new Point3d(2, 2, 1);
+
 	protected JatPlot3D() {
 		super(SimpleUniverse.getPreferredConfiguration());
 	}
@@ -138,9 +139,9 @@ public abstract class JatPlot3D extends Canvas3D {
 		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		objTransform.addChild(scene);
-		bg.addChild(objTransform);		
-		
-		jat_Rotate jat_rotate=new jat_Rotate(this);
+		bg.addChild(objTransform);
+
+		jat_rotate = new jat_Rotate(this);
 		mouseRotate = new jat_MouseRotate(jat_rotate);
 		float x, y, z;
 		x = y = z = (bbox.hi + bbox.lo) / 2;
@@ -153,7 +154,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		mouseTranslate.setSchedulingBounds(bounds);
 		bg.addChild(mouseTranslate);
 
-		jat_Zoom jat_zoom=new jat_Zoom(this);
+		jat_Zoom jat_zoom = new jat_Zoom(this);
 		mouseZoom = new jat_MouseZoom(jat_zoom);
 		mouseZoom.setSchedulingBounds(bounds);
 		bg.addChild(mouseZoom);
@@ -164,7 +165,7 @@ public abstract class JatPlot3D extends Canvas3D {
 		keyBehaviorSwitch.setCapability(Switch.ALLOW_SWITCH_WRITE);
 
 		// Default key behavior
-		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(jat_zoom,jat_rotate);
+		jat_KeyBehavior keyBehavior = new jat_KeyBehavior(jat_zoom, jat_rotate);
 		keyBehavior.setViewingPlatform(myvp);
 		x = y = z = (bbox.hi + bbox.lo) / 2;
 		keyBehavior.setViewingCenter(new Point3f(x, y, z));
@@ -262,7 +263,6 @@ public abstract class JatPlot3D extends Canvas3D {
 		jatScene.setTransform(tscale);
 	}
 
-	
 	public void jat_translate(float x, float y, float z) {
 		Transform3D Trans = new Transform3D();
 		myvpt.getTransform(Trans);
