@@ -61,7 +61,7 @@
 
 	
 	<target name="zip">
-			<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" excludes="**/.settings/,**/bin/,**/data/jat3D/,**/docs/,**/input/,**/javadoc/,**/scripts/,**/src/,**/zip/" />
+			<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/dist/**,**/lib/**,**/deploy/**,**/data/core/ephemeris/**,**/data/core/astronomy/**,**/data/jat3D/images_hires/**"  />
 		</target>
 			
 			
@@ -70,3 +70,8 @@
 	</target>
 
 </project>
+
+
+
+	<!--	<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/data/jat3D/images_hires/**" excludes="**/.settings/,**/bin/,**/data/jat3D/,**/docs/,**/input/,**/javadoc/,**/scripts/,**/src/,**/zip/" /> -->
+		
