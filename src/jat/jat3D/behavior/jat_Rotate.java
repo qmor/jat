@@ -47,7 +47,8 @@ public class jat_Rotate {
 	public ViewingPlatform myvp;
 	Point3f viewingCenter = new Point3f(0, 0, 0);
 	JatPlot3D jatplot3d;
-
+	public Vector3f v_current_sphere;
+	
 	public jat_Rotate(JatPlot3D jatplot3d) {
 		super();
 		this.jatplot3d = jatplot3d;
@@ -72,7 +73,6 @@ public class jat_Rotate {
 		v_current_cart2.z = v_current_cart1.z - viewingCenter.z;
 
 		// the current spherical view position relative to the sphere
-		Vector3f v_current_sphere;
 		v_current_sphere = CoordTransform3D.Cartesian_to_Spherical(v_current_cart2);
 		// util.print("view sphere", v_current_sphere);
 
