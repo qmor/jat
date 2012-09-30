@@ -49,7 +49,7 @@ public class MissionPlanGUI extends JPanel {
 	JFormattedTextField secondfield;
 	JFormattedTextField timestepfield;
 	JFormattedTextField viewdistancefield;
-	public MissionPlanMain mpmain;
+	public missionPlanApplet mpmain;
 	JPanel level2_Pane_Plot;
 	JPanel button_panel;
 	JPanel mission_panel;
@@ -64,7 +64,7 @@ public class MissionPlanGUI extends JPanel {
 	public MissionPlanEvents mpE;
 	public JCheckBox chckbxCameraRotate;
 
-	public MissionPlanGUI(MissionPlanMain mpmain) {
+	public MissionPlanGUI(missionPlanApplet mpmain) {
 		this.mpmain = mpmain;
 		mpE = new MissionPlanEvents(mpmain);
 

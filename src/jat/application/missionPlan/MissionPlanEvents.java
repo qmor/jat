@@ -44,7 +44,7 @@ import javax.swing.Timer;
 
 class MissionPlanEvents implements ActionListener, ItemListener {
 
-	MissionPlanMain mpmain;
+	missionPlanApplet mpmain;
 	MissionPlanGUI mpGUI;
 	jat_Rotate jat_rotate;
 	public Timer timer;
@@ -56,8 +56,8 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	ManageFlightsDialog myDialog;
 	boolean directionDown;
 
-	public MissionPlanEvents(MissionPlanMain mpmain) {
-		this.mpmain = mpmain;
+	public MissionPlanEvents(missionPlanApplet mpmain2) {
+		this.mpmain = mpmain2;
 		timer = new Timer(50, this);
 		// timer = new Timer(1000, this);
 		// timer.start();

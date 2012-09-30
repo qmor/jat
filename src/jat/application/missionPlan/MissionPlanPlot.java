@@ -35,14 +35,14 @@ import javax.media.j3d.Node;
 public class MissionPlanPlot extends JatPlot3D {
 	private static final long serialVersionUID = 599884902601254854L;
 	Star3D sun;
-	MissionPlanMain mpmain;
+	missionPlanApplet mpApplet;
 	DE405APL myEph; // Ephemeris class
 	Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
 
-	public MissionPlanPlot(MissionPlanMain mpmain) {
+	public MissionPlanPlot(missionPlanApplet mpApplet) {
 		super();
-		this.mpmain = mpmain;
+		this.mpApplet = mpApplet;
 	}
 
 	public Node createScene() {
@@ -64,7 +64,7 @@ public class MissionPlanPlot extends JatPlot3D {
 			jatScene.add(planet[i], DE405APL.name[i]);
 			//if (i == 3)
 			{
-				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
+				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpApplet.mpParam.simulationDate,
 						SolarSystemBodies.Bodies[i].orbitalPeriod);
 				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405APL.name[i]);
 			}

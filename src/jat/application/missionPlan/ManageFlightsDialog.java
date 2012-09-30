@@ -42,7 +42,7 @@ public class ManageFlightsDialog extends JDialog implements ActionListener, List
 	private static final long serialVersionUID = 6771932082871532590L;
 	JButton okButton;
 	JButton cancelButton;
-	MissionPlanMain ssmain;
+	missionPlanApplet ssmain;
 	public boolean OK_pressed;
 	private JList list;
 	private DefaultListModel model = new DefaultListModel();
@@ -65,10 +65,10 @@ public class ManageFlightsDialog extends JDialog implements ActionListener, List
 	private JLabel lblNewLabel_5;
 	private JFormattedTextField field_totaldv;
 
-	public ManageFlightsDialog(MissionPlanMain ssmain) {
-		super(ssmain.sFrame, true); // modal
+	public ManageFlightsDialog(missionPlanApplet mpmain) {
+		super(mpmain.sFrame, true); // modal
 		setTitle("Manage Flights");
-		this.ssmain = ssmain;
+		this.ssmain = mpmain;
 		setBounds(50, 50, 900, 700);
 		getContentPane().setLayout(new BorderLayout());
 		{
@@ -83,8 +83,8 @@ public class ManageFlightsDialog extends JDialog implements ActionListener, List
 				{
 					// list = new JList();
 					list = new JList(model);
-					for (int i = 0; i < ssmain.flightList.size(); i++)
-						model.addElement(ssmain.flightList.get(i));
+					for (int i = 0; i < mpmain.flightList.size(); i++)
+						model.addElement(mpmain.flightList.get(i));
 					// model.addElement("Java");
 					// model.addElement("Visual Basic");
 					// model.addElement("C++");
