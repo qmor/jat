@@ -52,29 +52,24 @@ public class deployWeb extends JApplet {
 		// Create a text pane.
 		JTextPane textPane = new JTextPane();
 		JScrollPane paneScrollPane = new JScrollPane(textPane);
-		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		paneScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		paneScrollPane.setPreferredSize(new Dimension(250, 155));
 		paneScrollPane.setMinimumSize(new Dimension(10, 10));
 
-		// JTextPane txtpnTest = new JTextPane();
-		// txtpnTest.setText("test");
 		getContentPane().add(paneScrollPane, BorderLayout.CENTER);
-
-		// MessageFrame mf = new MessageFrame();
-		// mf.setVisible(true);
-
-		// MessageConsole mc = new MessageConsole(mf.textArea);
-		MessageConsole mc = new MessageConsole(textPane);
-
 		JScrollPane scrollPane_1 = new JScrollPane();
 		getContentPane().add(scrollPane_1, BorderLayout.NORTH);
 
-		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.SOUTH);
-		mc.redirectOut();
-		mc.redirectErr(Color.RED, null);
-		mc.setMessageLines(100);
-
+		// JScrollPane scrollPane = new JScrollPane();
+		// getContentPane().add(scrollPane, BorderLayout.SOUTH);
+		boolean mcb = false;
+		if (mcb) {
+			MessageConsole mc = new MessageConsole(textPane);
+			mc.redirectOut();
+			mc.redirectErr(Color.RED, null);
+			mc.setMessageLines(100);
+		}
 		System.out.println("deployWeb started in main");
 		System.out.println("redirected output");
 		for (int i = 0; i < 40; i++)
