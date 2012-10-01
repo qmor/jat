@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Custom Progress bar Demo Application -->
+<!-- Java Astrodynamics Toolkit -->
 <jnlp spec="1.0+" codebase=".." >
   <information>
-    <title>Weather Applet With Custom Progress Bar</title>
+    <title>JAT Applet With Custom Progress Bar</title>
     <vendor>Me</vendor>
     <description>custom progress bar example</description>    
   </information>

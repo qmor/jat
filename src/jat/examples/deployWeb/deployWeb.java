@@ -63,7 +63,7 @@ public class deployWeb extends JApplet {
 
 		// JScrollPane scrollPane = new JScrollPane();
 		// getContentPane().add(scrollPane, BorderLayout.SOUTH);
-		boolean mcb = false;
+		boolean mcb = true;
 		if (mcb) {
 			MessageConsole mc = new MessageConsole(textPane);
 			mc.redirectOut();
