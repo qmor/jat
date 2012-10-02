@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Java Astrodynamics Toolkit -->
+<jnlp spec="1.0+" codebase=".." >
+  <information>
+    <title>JAT Applet With Custom Progress Bar</title>
+    <vendor>Me</vendor>
+    <description>custom progress bar example</description>    
+  </information>
+  <resources>
+    <j2se version="1.6+"/>
+    <jar href="dist/jatexamples.jar" main="true" />
+    <jar href="lib/applet_CustomProgressIndicator.jar" download="progress" />
+    <jar href="dist/jatcore.jar" />
+    <jar href="lib/j3dcore.jar" />
+    <jar href="lib/j3dutils.jar" />
+    <jar href="lib/vecmath.jar" />
+
+  </resources>
+  <applet-desc
+         name="bla"
+         main-class="jat.examples.jat3D.Hellojat3D.Hellojat3DApplet.Hellojat3Dmain"
+         progress-class="customprogressindicator.CustomProgress"
+         width="600"
+         height="400">
+         <param name="tagLine" value="Java Astrodynamics Toolkit"/>
+     </applet-desc>
+</jnlp>

@@ -3,10 +3,9 @@
   <head>
     <meta http-equiv="content-type" content="text/html;
       charset=ISO-8859-1">
+    <title></title>
   </head>
   <body>
-    All Applets<br>
-    <br>
     <table style="text-align: left; width: 100%;" border="1"
       cellpadding="2" cellspacing="2">
       <tbody>
@@ -21,8 +20,6 @@
                 src="images/DateConverter.png" style="border: 0px solid
                 ; width: 250px; height: 103px;"></a><br>
           </td>
-          <td style="vertical-align: top;"><br>
-          </td>
         </tr>
         <tr>
           <td style="vertical-align: top;">Orbit Viewer<br>
@@ -35,8 +32,6 @@
                 src="images/porkChopPlot.png" style="border: 0px solid;
                 width: 400px; height: 218px;"></a><br>
           </td>
-          <td style="vertical-align: top;"><br>
-          </td>
         </tr>
         <tr>
           <td style="vertical-align: top;">Solar System Mission Planner<br>
@@ -46,27 +41,85 @@
           </td>
           <td style="vertical-align: top;"><br>
           </td>
-          <td style="vertical-align: top;"><br>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <h3>Troubleshooting</h3>
+    <br>
+    <table style="text-align: left; width: 100%;" border="1"
+      cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td valign="top"><b>Problem</b><br>
+          </td>
+          <td valign="top"><b>Solution</b><br>
           </td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><br>
+          <td valign="top">I don't have Java3D on my computer.<br>
           </td>
-          <td style="vertical-align: top;"><br>
+          <td valign="top">Install Java3D. On Ubuntu, open the software
+            center and search for Java3D.</td>
+        </tr>
+        <tr>
+          <td valign="top">I try run a Jat3D application. It does not
+            run at all or I get a security warning.<br>
           </td>
-          <td style="vertical-align: top;"><br>
+          <td valign="top">Java's security policy does not allow a
+            browser to use native libraries (such has the 3D graphics
+            library) unless explicitly permitted.
+            <meta http-equiv="content-type" content="text/html;
+              charset=ISO-8859-1">
+            On Ubuntu Linux, this is accomplished by creating a security
+            policy file named ".java.policy" or "java.policy" in your
+            home directory. For simplicity, you could grant Java all
+            permissions to test the software, but you should not leave
+            this in place as it could compromise the security of your
+            system. Example:<br>
+            <br>
+            Contents of file /home/jatuser/java.policy<br>
+            <br>
+            grant {<br>
+            &nbsp; permission java.security.AllPermission;<br>
+            }<br>
+            <br>
+            You will have to close all open browser windows and restart
+            the web browser to enact the policy change.<br>
+            <br>
           </td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><br>
+          <td valign="top">I try run a Jat3D application. It does not
+            run at all or I get the error:
+            java.lang.UnsatisfiedLinkError: no j3dcore-ogl in
+            java.library.path<br>
           </td>
-          <td style="vertical-align: top;"><br>
+          <td valign="top">The library may not be in the library path of
+            the web browser. <br>
+            Copy the library into the /lib folder. Open a terminal and
+            run<br>
+            <br>
+            sudo cp /usr/lib/jni/libj3dcore-ogl.so /lib/<br>
+            <br>
+            Then, restart the browser.<br>
           </td>
-          <td style="vertical-align: top;"><br>
+        </tr>
+        <tr>
+          <td valign="top">I run a Jat3D application and when I try to
+            run another Jat3D application, <br>
+            I get the error: <br>
+            java.lang.UnsatisfiedLinkError: Native Library
+            /lib/libj3dcore-ogl.so already loaded in another classloader</td>
+          <td valign="top">Close the web browser and restart it. Reload
+            index.html and the application.<br>
           </td>
         </tr>
       </tbody>
     </table>
+    <br>
+    <br>
     <br>
     <br>
     <br>
