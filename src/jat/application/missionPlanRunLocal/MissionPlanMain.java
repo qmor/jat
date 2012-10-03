@@ -73,8 +73,8 @@ public class MissionPlanMain extends JApplet {
 		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
 		mApplet.mpPlot.requestFocusInWindow();
 
-		mApplet.mpGUI.mpE.timer.start();
-
+		//mApplet.mpGUI.mpE.timer.start();
+		mApplet.start();
 		if (Java3dTree_debug) {
 			m_Java3dTree = new com.tornadolabs.j3dtree.Java3dTree();
 			m_Java3dTree.recursiveApplyCapability(mApplet.mpPlot.jatScene);

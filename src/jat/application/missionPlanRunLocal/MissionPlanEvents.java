@@ -41,6 +41,7 @@ import java.util.Calendar;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.vecmath.Vector3f;
 
 class MissionPlanEvents implements ActionListener, ItemListener {
 
@@ -205,11 +206,12 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		update_scene(mpmain.mpParam.simulationDate);
 
 		if (mpGUI.chckbxCameraRotate.isSelected()) {
-System.out.println(jat_rotate.v_current_sphere.x+" "+jat_rotate.v_current_sphere.y+" "+jat_rotate.v_current_sphere.z);
-			
-			if (jat_rotate.v_current_sphere.z > 1)
+			Vector3f sphereCoord = jat_rotate.getV_current_sphere();
+			//System.out.println(sphereCoord.x + " " + sphereCoord.y + " " + sphereCoord.z);
+
+			if (sphereCoord.z > 1)
 				directionDown = true;
-			if (jat_rotate.v_current_sphere.z < -1)
+			if (sphereCoord.z < -1)
 				directionDown = false;
 			if (directionDown)
 				jat_rotate.jat_rotate(.01f, -.002f);
