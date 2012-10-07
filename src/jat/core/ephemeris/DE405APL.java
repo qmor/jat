@@ -67,6 +67,8 @@
 
 package jat.core.ephemeris;
 
+import jat.core.cm.Constants;
+import jat.core.cm.cm;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
@@ -567,6 +569,22 @@ public class DE405APL {
 		return out;
 	}
 
+	VectorN ecliptic_obliquity_rotate(VectorN r) {
+		VectorN returnval = new VectorN(3);
+		double x, y, z, eps, c, s;
+		x = r.get(0);
+		y = r.get(1);
+		z = r.get(2);
+		eps = cm.Rad(Constants.eps);
+		c = Math.cos(eps);
+		s = Math.sin(eps);
+		returnval.x[0] = x;
+		returnval.x[1] = c * y + s * z;
+		returnval.x[2] = -s * y + c * z;
+		return returnval;
+	}
+
+	
 	public static void main(String args[]) {
 
 		/* USER MUST SPECIFY jultime HERE. Example value is 2451545.0 */
