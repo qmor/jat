@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.sensors;
+package jat.coreNOSA.sensors;
 import jat.core.cm.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;

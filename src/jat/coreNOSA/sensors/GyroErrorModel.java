@@ -18,19 +18,19 @@
  *
  */
 
-package jat.core.sensors;
+package jat.coreNOSA.sensors;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 
 /**
  * <P>
- * The AccelerometerErrorModel Class models a generic accelerometer. It does
+ * The GyroErrorModel Class models a generic optical (RLG or FOG) gyro. It does
  * not include g-sensitive or non-linearity error effects.
  *
- * @author
+ * @author 
  * @version 1.0
  */
-public class AccelerometerErrorModel {
+public class GyroErrorModel {
     public VectorN scaleFactors;   // random constants, just treat as constant for now
     public VectorN misalignments;  // random constants, just treat as constant for now
     public VectorN noiseSigmas;
@@ -40,24 +40,14 @@ public class AccelerometerErrorModel {
     public GaussianVector randwalk;
     public Matrix sf;
 
-    /** Default constructor. Models a perfect accelerometer.
-     */
-    public AccelerometerErrorModel() {
-        this.scaleFactors = new VectorN(3);
-        this.misalignments = new VectorN(6);
-        this.noiseSigmas = new VectorN(3);
-        this.initialBiases = new VectorN(3);
-        this.biasRWsigmas = new VectorN(3);
-    }
-
-    /** Construct an accelerometer error model.
+    /** Construct a gyro error model.
      * @param sf Vector3 containing scale factor errors in ppm.
-     * @param ma Vector6 containing accelerometer misalignments in arcsec.
-     * @param ns Vector3 containing the accelerometer measurement noise sigmas in micro-g/rt-Hz.
-     * @param ib Vector3 containing the initial accel bias sigma in mg. This is the random constant part.
-     * @param bs Vector3 containing the sigmas for accel random walk in m/rt s.
+     * @param ma Vector6 containing gyro misalignments in arcsec.
+     * @param ns Vector3 containing the gyro measurement noise sigmas in deg/hr.
+     * @param ib Vector3 containing the initial gyro drift sigma in deg/hr. This is the random constant part.
+     * @param bs Vector3 containing the sigmas for gyro random walk in deg/rt hr.
      */
-    public AccelerometerErrorModel(VectorN sf, VectorN ma, VectorN ns, VectorN ib, VectorN bs){
+    public GyroErrorModel(VectorN sf, VectorN ma, VectorN ns, VectorN ib, VectorN bs){
         sf.checkVectorDimensions(3);
         ma.checkVectorDimensions(6);
         ns.checkVectorDimensions(3);
@@ -69,13 +59,11 @@ public class AccelerometerErrorModel {
         this.scaleFactors = sf.divide(1.0E+06);
         this.misalignments = ma.times(MathUtils.ARCSEC2RAD);
 
-        // convert mg to km/s^2
-
-        double mg = 9.81E-06;
-
-        this.noiseSigmas = ns.times(mg * 1.0E-03);
-        this.initialBiases = ib.times(mg);
-        this.biasRWsigmas = bs.times(mg);
+        double dprth2rps = MathUtils.DEG2RAD / 60.0;
+        double dph2rps = dprth2rps / 60.0;
+        this.noiseSigmas = ns.times(dph2rps);
+        this.initialBiases = ib.times(dph2rps);
+        this.biasRWsigmas = bs.times(dprth2rps);
         VectorN zeroMean = new VectorN(3);
         this.noise = new GaussianVector(zeroMean, this.noiseSigmas);
         this.randwalk = new GaussianVector(zeroMean, this.biasRWsigmas);
@@ -93,26 +81,34 @@ public class AccelerometerErrorModel {
         return out;
     }
 
-    /** Outputs the accelerometer's contribution to the INS velocity error (del-f in body frame).
-     * @return Velocity due to accelerometer errors.
-     * @param qref reference quaternion.
-     * @param f Specific force vector.
-     * @param ba Vector3 containing the current accel bias state.
+    /** Outputs the gyro's contribution to the INS error quaternion.
+     * @param qref Quaternion containing the current reference quaternion.
+     * @param wref Vector3 containing the reference angular velocity vector.
+     * @param bg Vector3 containing the current gyro bias state.
+     * @return Error quaternion due to gyro errors.
      */
-    public VectorN computeErrors(VectorN f, VectorN ba){
+    public Quaternion computeErrors(Quaternion qref, VectorN wref, VectorN bg){
+        Matrix Q = qref.qMatrix();
 
-
-
-        // create the accel measurement noise vector
+        // fill the gyro measurement noise vector
 
         this.noise.nextSet();
+//        this.noise.print("noise");
 
         // create the scalefactor-misalignment error vector
-        VectorN sfma = this.sf.times(f);
+//        wref.print("wref");
+        VectorN sfma = this.sf.times(wref);
+//        sfma.print("error due to sfma");
+//        bg.print("gyro bias");
 
         // add up the effects
-        VectorN sum = sfma.plus(ba.plus(this.noise));
+        VectorN sum = sfma.plus(bg.plus(this.noise));
+//        sum.print("sum of all gyro errors");
 
-        return sum;
+        // multiply by Q matrix to get gyro contribution to error quaternion
+        VectorN temp = Q.times(sum);
+//        temp.print("error quaternion due to gyro");
+        Quaternion out = new Quaternion(temp);
+        return out;
     }
 }

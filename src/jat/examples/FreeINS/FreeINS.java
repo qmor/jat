@@ -27,6 +27,9 @@ import jat.core.cm.*;
 import jat.core.math.matvec.data.*;
 import jat.core.plotutil.*;
 import jat.core.sensors.*;
+import jat.coreNOSA.sensors.AccelerometerErrorModel;
+import jat.coreNOSA.sensors.GyroErrorModel;
+import jat.coreNOSA.sensors.INSErrorState;
 
 /**
  * <P>
