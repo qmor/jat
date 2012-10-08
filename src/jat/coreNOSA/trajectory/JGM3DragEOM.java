@@ -25,7 +25,6 @@ package jat.coreNOSA.trajectory;
 import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.*;
 //import jat.cm.*;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.EarthRef;

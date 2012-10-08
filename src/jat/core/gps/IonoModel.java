@@ -23,7 +23,6 @@ package jat.core.gps;
  */
 
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.*;
 //import jat.math.*;
 import jat.coreNOSA.timeRef.CalDate;
 import jat.coreNOSA.timeRef.EarthRef;

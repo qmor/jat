@@ -28,7 +28,6 @@ import jat.core.cm.*;
 import jat.core.gps.*;
 import jat.core.gps.filters.*;
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.*;
 //import jat.math.*;
 //import jat.gps_ins.*;
 import jat.coreNOSA.timeRef.RSW_Frame;

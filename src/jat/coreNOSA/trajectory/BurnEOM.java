@@ -26,7 +26,6 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.*;
 //import jat.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.EarthRef;

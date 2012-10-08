@@ -32,7 +32,6 @@ import jat.core.gps_ins.*;
 import jat.core.ins.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.*;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.timeRef.RSW_Frame;
 

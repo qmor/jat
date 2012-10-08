@@ -22,7 +22,6 @@ package jat.core.cm.rendezvous;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.*;
 import jat.coreNOSA.timeRef.RSW_Frame;
 import jat.coreNOSA.trajectory.CentralBody;
 import jat.coreNOSA.trajectory.CoordinateSystem;

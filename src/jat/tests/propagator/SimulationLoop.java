@@ -27,7 +27,6 @@ import jat.core.forces.*;
 import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.timeRef.*;
 import jat.coreNOSA.matlabInterface.*;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.trajectory.Trajectory;

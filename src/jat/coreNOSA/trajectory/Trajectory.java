@@ -24,7 +24,6 @@ import java.util.*;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.timeRef.*;
 import jat.coreNOSA.timeRef.CalDate;
 /**
 * <P>

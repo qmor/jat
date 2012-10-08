@@ -22,11 +22,8 @@ package jat.core.forces;
 //import jat.cm.Constants;
 //import jat.math.MathUtils;
 import jat.core.cm.Constants;
-import jat.core.ephemeris.*;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.*;
-import jat.core.timeRef.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
@@ -34,7 +31,6 @@ import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.ReferenceFrame;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
-import jat.coreNOSA.util.FileUtil;
 
 /**
  * Simple class to model the gravitational attraction of the moon.
