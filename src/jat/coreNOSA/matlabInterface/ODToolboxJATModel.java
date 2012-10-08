@@ -32,7 +32,6 @@ import jat.core.forces.SolarRadiationPressure;
 import jat.core.forces.Sun;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacecraft.*;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.UniverseModel;
 

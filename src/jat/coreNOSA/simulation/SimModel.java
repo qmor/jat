@@ -34,7 +34,6 @@ import jat.core.forces.Sun;
 import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.matlabInterface.MatlabFunc;
-import jat.core.spacecraft.*;
 import jat.coreNOSA.spacecraft.ControlLaw;
 import jat.coreNOSA.spacecraft.Formation;
 import jat.coreNOSA.spacecraft.MatlabControlLaw;
