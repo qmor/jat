@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.core.spacecraft;
+package jat.coreNOSA.spacecraft;
 
 import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.integrators.Derivatives;
@@ -293,7 +293,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Get the absolute (inertial) velocity of the spacecraft.
-	 * @see jat.core.spacecraft.PrimarySpacecraft#get_abs_vel()
+	 * @see jat.coreNOSA.spacecraft.PrimarySpacecraft#get_abs_vel()
 	 */
 	public VectorN get_abs_vel() {
 		return sc.v();
@@ -301,7 +301,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Get the spacecraft attitude quaternion.
-	 * @see jat.core.spacecraft.PrimarySpacecraft#get_attitude()
+	 * @see jat.coreNOSA.spacecraft.PrimarySpacecraft#get_attitude()
 	 */
 	public Quaternion get_attitude() {
 		return sc.q();
@@ -309,7 +309,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Get the transformation matrix from inertial to Radial-Intrack-Crosstrack frame.
-	 * @see jat.core.spacecraft.PrimarySpacecraft#get_inertial2RIC()
+	 * @see jat.coreNOSA.spacecraft.PrimarySpacecraft#get_inertial2RIC()
 	 */
 	public Matrix get_inertial2RIC() {
 		return sc.get_inertial2RIC();
@@ -317,7 +317,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Get the rotation vector of the Radial-Intrack-Crosstrack frame.
-	 * @see jat.core.spacecraft.PrimarySpacecraft#get_omegaRIC()
+	 * @see jat.coreNOSA.spacecraft.PrimarySpacecraft#get_omegaRIC()
 	 */
 	//* this is true for circular orbits, for elliptical orbits
 	//* it is the instantaneous rate
@@ -334,7 +334,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	/**
 	 * Get the position of the spacecraft relative to the primary spacecraft in the 
 	 * formation.
-	 * @see jat.core.spacecraft.MemberSpacecraft#get_rel_pos(jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#get_rel_pos(jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	public VectorN get_rel_pos(PrimarySpacecraft ps) {
 		VectorN rel = sc.r().minus(ps.get_abs_pos());
@@ -344,7 +344,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	/**
 	 * Get the velocity of the spacecraft relative to the primary spacecraft in the
 	 * formation. 
-	 * @see jat.core.spacecraft.MemberSpacecraft#get_rel_vel(jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#get_rel_vel(jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	public VectorN get_rel_vel(PrimarySpacecraft ps) {
 		VectorN rel = sc.v().minus(ps.get_abs_vel());	//* assuming inertial frame
@@ -354,7 +354,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	/**
 	 * Get the relative position between this and another member spacecraft in the
 	 * formation.
-	 * @see jat.core.spacecraft.MemberSpacecraft#get_rel_pos(jat.core.spacecraft.MemberSpacecraft, jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#get_rel_pos(jat.coreNOSA.spacecraft.MemberSpacecraft, jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	//* assuming relative positions measured inertially
 	public VectorN get_rel_pos(MemberSpacecraft ms, PrimarySpacecraft ps) {
@@ -365,7 +365,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	/**
 	 * Get the relative velocity between this and another member spacecraft in the
 	 * formation.
-	 * @see jat.core.spacecraft.MemberSpacecraft#get_rel_vel(jat.core.spacecraft.MemberSpacecraft, jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#get_rel_vel(jat.coreNOSA.spacecraft.MemberSpacecraft, jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	//* assuming relative velocities measured inertially
 	public VectorN get_rel_vel(MemberSpacecraft ms, PrimarySpacecraft ps) {
@@ -390,7 +390,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Send a command to the indicated member spacecraft.
-	 * @see jat.core.spacecraft.MemberSpacecraft#send_control(double, jat.core.spacecraft.MemberSpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#send_control(double, jat.coreNOSA.spacecraft.MemberSpacecraft)
 	 */
 	public void send_control(double distance, MemberSpacecraft s) {
 		// TODO Auto-generated method stub
@@ -399,7 +399,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Send a command to the indicated member spacecraft.
-	 * @see jat.core.spacecraft.MemberSpacecraft#send_control(jat.core.math.matvec.data.VectorN, jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#send_control(jat.core.math.matvec.data.VectorN, jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	public void send_control(VectorN pos, PrimarySpacecraft s) {
 		// TODO Auto-generated method stub
@@ -410,7 +410,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	 * Return the state vector containing the relative state.
 	 * @param ps Primary Spacecraft
 	 * @return Relative State
-	 * @see jat.core.spacecraft.MemberSpacecraft#get_rel_state(jat.core.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#get_rel_state(jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	public double[] get_rel_state(PrimarySpacecraft ps) {
 		VectorN pos = this.get_rel_pos(ps);

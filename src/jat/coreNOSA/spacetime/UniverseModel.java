@@ -21,7 +21,7 @@ package jat.coreNOSA.spacetime;
 
 //import jat.spacetime.*;
 import jat.core.forces.*;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 
 /**
  * This class encapsulates the universe model for a simulation.  This includes the

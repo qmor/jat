@@ -21,11 +21,11 @@ package jat.examples.simulation;
 
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacecraft.Spacecraft;
-import jat.core.spacecraft.SpacecraftModel;
 import jat.coreNOSA.matlabInterface.MatlabControl;
 import jat.coreNOSA.matlabInterface.MatlabFunc;
 import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.SpacecraftModel;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.util.FileUtil;

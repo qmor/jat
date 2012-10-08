@@ -23,7 +23,7 @@
 package jat.core.forces;
 import jat.core.cm.Constants;
 import jat.core.math.matvec.data.*;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.timeRef.EarthRef;
 
 /**

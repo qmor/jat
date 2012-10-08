@@ -21,7 +21,7 @@ package jat.core.forces;
 
 import jat.core.cm.Constants;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.EarthRef;

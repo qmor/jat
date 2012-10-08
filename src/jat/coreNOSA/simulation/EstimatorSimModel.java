@@ -51,9 +51,9 @@ import jat.core.math.matvec.data.VectorN;
 import jat.core.measurements.ObservationMeasurement;
 import jat.core.measurements.ObservationMeasurementList;
 import jat.core.measurements.createMeasurements;
-import jat.core.spacecraft.Spacecraft;
-import jat.core.spacecraft.SpacecraftModel;
 
+import jat.coreNOSA.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.SpacecraftModel;
 import jat.coreNOSA.spacetime.*;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.trajectory.Trajectory;

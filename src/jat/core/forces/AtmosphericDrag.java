@@ -21,7 +21,7 @@
 package jat.core.forces;
 import jat.core.cm.Constants;
 import jat.core.math.matvec.data.*;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.EarthRef;
@@ -229,7 +229,7 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
      * @param t Time reference object
      * @param bRef Earth reference object
      * @param sc Spacecraft parameters and state
-     * @see jat.core.forces.ForceModel#acceleration(jat.coreNOSA.spacetime.Time, jat.coreNOSA.spacetime.BodyRef, jat.core.spacecraft.Spacecraft)
+     * @see jat.core.forces.ForceModel#acceleration(jat.coreNOSA.spacetime.Time, jat.coreNOSA.spacetime.BodyRef, jat.coreNOSA.spacecraft.Spacecraft)
      */
     public VectorN acceleration(Time t, BodyRef bRef, Spacecraft sc) {
         this.omega_e = bRef.get_spin_rate(t);
@@ -242,7 +242,7 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
      * @param eRef Earth reference object
      * @param sc Spacecraft parameters and state
      * @deprecated
-     * @see jat.core.forces.EarthForceModel#acceleration(jat.coreNOSA.timeRef.EarthRef, jat.core.spacecraft.Spacecraft)
+     * @see jat.core.forces.EarthForceModel#acceleration(jat.coreNOSA.timeRef.EarthRef, jat.coreNOSA.spacecraft.Spacecraft)
      */
     public VectorN acceleration(EarthRef eRef, Spacecraft sc) {
         this.omega_e = eRef.get_omega_e();

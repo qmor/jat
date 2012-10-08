@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import jat.core.forces.GravityModel;
 import jat.core.forces.GravityModelType;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 
 public class GravityModelTest extends ForceModelTest {
 

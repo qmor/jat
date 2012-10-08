@@ -24,7 +24,7 @@ import jat.core.forces.nrlmsise.NRLMSISE_data;
 import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.Geodetic;

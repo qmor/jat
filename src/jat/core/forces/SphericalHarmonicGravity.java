@@ -20,7 +20,7 @@
 
 package jat.core.forces;
 import jat.core.math.matvec.data.*;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.ReferenceFrame;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;

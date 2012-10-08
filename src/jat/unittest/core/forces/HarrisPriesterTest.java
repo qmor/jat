@@ -3,7 +3,7 @@ package jat.unittest.core.forces;
 import java.io.IOException;
 
 import jat.core.forces.HarrisPriester;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 
 public class HarrisPriesterTest extends ForceModelTest {
 

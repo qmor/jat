@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.core.spacecraft;
+package jat.coreNOSA.spacecraft;
 
 import jat.core.math.matvec.data.Quaternion;
 import jat.core.math.matvec.data.VectorN;

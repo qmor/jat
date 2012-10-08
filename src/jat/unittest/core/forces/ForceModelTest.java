@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 
 import jat.core.forces.ForceModel;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacecraft.Spacecraft;
+import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;

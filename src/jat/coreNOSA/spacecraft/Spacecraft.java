@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.core.spacecraft;
+package jat.coreNOSA.spacecraft;
 
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.timeRef.RSW_Frame;
@@ -27,7 +27,7 @@ import jat.coreNOSA.timeRef.RSW_Frame;
  * as an object representing the spacecraft hardware.  For a complete model of spacecraft
  * dynamics see SpacecraftModel.java
  * 
- * @see jat.core.spacecraft.SpacecraftModel
+ * @see jat.coreNOSA.spacecraft.SpacecraftModel
  * 
  * @author Richard C. Page III
  *

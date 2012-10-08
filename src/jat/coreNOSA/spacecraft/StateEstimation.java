@@ -17,32 +17,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.core.spacecraft;
-
-import jat.core.algorithm.integrators.*;
-import jat.core.forces.*;
-import jat.core.math.matvec.data.VectorN;
+package jat.coreNOSA.spacecraft;
 
 /**
- * A template class intended to be extended to implement various control
- * laws.  This class represents a unity feedback control law.
- * 
- * spacecraft[]-->(sum)-->[Dynamics]->[Control Law]-->acceleration[]
- *                  A -                             |
- *                  |_______________________________|
- * 
  * @author Richard C. Page III
+ *
  */
-public class ControlLaw {
-    
-    public ControlLaw(){    }
+public class StateEstimation {
 
-    public double[] compute_control(double t, double[] x){
-        return new double[x.length];
+    protected double[] current_state; 
+                     
+    public StateEstimation(){
+        current_state = new double[6];
     }
     
-    public double[] compute_control(double t, double[] x, double[] xrel){
-        return new double[3];
+    public double[] get_estimate(){
+        return current_state;
     }
     
+    public void update(double time, double[] x){
+        current_state = x;
+    }
+    
+    public static void main(String[] args) {
+    }
 }
