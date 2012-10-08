@@ -18,7 +18,7 @@
  * 
  */
 
-package jat.core.simulation;
+package jat.coreNOSA.simulation;
 
 
 import jat.core.algorithm.integrators.LinePrinter;

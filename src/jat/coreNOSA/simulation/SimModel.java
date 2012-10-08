@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.core.simulation;
+package jat.coreNOSA.simulation;
 
 //import jat.matlabInterface.MatlabControl;
 import jat.core.algorithm.integrators.*;
@@ -33,9 +33,9 @@ import jat.core.forces.SolarRadiationPressure;
 import jat.core.forces.Sun;
 import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.matlabInterface.MatlabFunc;
+import jat.coreNOSA.matlabInterface.MatlabFunc;
 import jat.core.spacecraft.*;
-import jat.core.spacetime.UniverseModel;
+import jat.coreNOSA.spacetime.UniverseModel;
 import jat.core.trajectory.*;
 import jat.core.util.*;
 //import jat.forces.ForceModelList;

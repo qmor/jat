@@ -20,7 +20,7 @@
  * National Aeronautics and Space Administration
  * Created by Richard C. Page III
  * */
-package jat.core.simulation;
+package jat.coreNOSA.simulation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,15 +53,12 @@ import jat.core.measurements.ObservationMeasurementList;
 import jat.core.measurements.createMeasurements;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
-import jat.core.spacetime.FitIERS;
-import jat.core.spacetime.RSW_Frame;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
-import jat.core.spacetime.UniverseModel;
+
 import jat.core.trajectory.RelativeTraj;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.Celestia;
 import jat.core.util.FileUtil;
+import jat.coreNOSA.spacetime.*;
 
 public class EstimatorSimModel extends SimModel {
 	

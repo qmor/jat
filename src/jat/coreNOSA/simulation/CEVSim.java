@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Richard C. Page III 
  **/
-package jat.core.simulation;
+package jat.coreNOSA.simulation;
 
 import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.integrators.LinePrinter;
@@ -36,13 +36,10 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.measurements.OpticalMeasurementModel;
 import jat.core.measurements.createMeasurements;
-import jat.core.simulation.*;
+import jat.coreNOSA.simulation.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
-import jat.core.spacetime.LunaFixedRef;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
-import jat.core.spacetime.UniverseModel;
+import jat.coreNOSA.spacetime.*;
 import jat.core.trajectory.RelativeTraj;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.Celestia;

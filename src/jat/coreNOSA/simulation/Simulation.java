@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.core.simulation;
+package jat.coreNOSA.simulation;
 
 import java.util.Random;
 
@@ -25,15 +25,10 @@ import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.RandomNumber;
 import jat.core.math.matvec.data.RotationMatrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.matlabInterface.MatlabControl;
-import jat.core.matlabInterface.MatlabFunc;
+import jat.coreNOSA.matlabInterface.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
-import jat.core.spacetime.CalDate;
-import jat.core.spacetime.EarthRef;
-import jat.core.spacetime.FitIERS;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
+import jat.coreNOSA.spacetime.*;
 import jat.core.trajectory.RelativeTraj;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
@@ -381,7 +376,7 @@ public class Simulation {
     }
 
     public void test(){
-        jat.core.matlabInterface.MatlabControl test = new MatlabControl();
+        jat.coreNOSA.matlabInterface.MatlabControl test = new MatlabControl();
         test.eval("disp('testing')");
     }
     
