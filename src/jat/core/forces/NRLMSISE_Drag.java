@@ -19,19 +19,15 @@
  */
 package jat.core.forces;
 
-import java.lang.Math;
 import jat.core.cm.Constants;
 import jat.core.forces.nrlmsise.NRLMSISE_data;
-import jat.core.math.*;
+import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.timeRef.Geodetic;
 import jat.coreNOSA.spacetime.BodyRef;
-import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
-import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
-import jat.coreNOSA.timeRef.EarthRef;
+import jat.coreNOSA.timeRef.Geodetic;
 
 /**
  * NRLMSISE drag model.  Translated from a code written in c, originally
