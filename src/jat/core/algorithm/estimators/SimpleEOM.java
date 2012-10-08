@@ -34,8 +34,8 @@ import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.UniverseModel;
 import jat.core.simulation.initializer;
-import jatNOSA.core.ephemeris.DE405;
-import jatNOSA.core.ephemeris.DE405_Body;
+import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405_Body;
 
 public class SimpleEOM implements Derivatives {
 	

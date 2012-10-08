@@ -44,7 +44,7 @@ import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
 import jat.core.simulation.CEVLunarSim;
 import jat.core.simulation.initializer;
-import jatNOSA.core.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405;
 
 public class SimpleProcessModel implements ProcessModel {
 

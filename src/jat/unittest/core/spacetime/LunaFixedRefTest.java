@@ -31,7 +31,7 @@ import jat.core.spacetime.ReferenceFrame;
 import jat.core.spacetime.ReferenceFrameTranslater;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
-import jatNOSA.core.ephemeris.DE405_Body;
+import jat.coreNOSA.ephemeris.DE405_Body;
 
 import java.io.BufferedReader;
 import java.io.IOException;

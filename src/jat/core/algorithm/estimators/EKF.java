@@ -31,7 +31,7 @@ import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
 import jat.core.simulation.*;
-import jatNOSA.core.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405;
 
 //import jat.audio.*;
 

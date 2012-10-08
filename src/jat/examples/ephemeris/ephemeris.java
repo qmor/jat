@@ -31,8 +31,8 @@ package jat.examples.ephemeris;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.Time;
 import jat.core.util.PathUtil;
-import jatNOSA.core.ephemeris.DE405;
-import jatNOSA.core.ephemeris.DE405_Body;
+import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405_Body;
 
 /**
  * @author Tobias Berthold

@@ -55,7 +55,7 @@ import jat.core.trajectory.RelativeTraj;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.Celestia;
 import jat.core.util.FileUtil;
-import jatNOSA.core.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405;
 
 import java.io.BufferedReader;
 import java.io.File;

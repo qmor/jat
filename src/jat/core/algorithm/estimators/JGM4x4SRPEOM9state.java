@@ -29,7 +29,7 @@ import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
 import jat.core.simulation.*;
-import jatNOSA.core.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405;
 
 import java.util.HashMap;
 

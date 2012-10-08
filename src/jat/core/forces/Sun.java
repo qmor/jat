@@ -34,8 +34,8 @@ import jat.core.spacetime.ReferenceFrameTranslater;
 import jat.core.spacetime.Time;
 import jat.core.timeRef.EarthRef;
 import jat.core.util.FileUtil;
-import jatNOSA.core.ephemeris.DE405;
-import jatNOSA.core.ephemeris.DE405_Body;
+import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405_Body;
 
 /**
  * Simple class to obtain the gravitational effect of the Sun.

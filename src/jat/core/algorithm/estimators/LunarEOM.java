@@ -34,7 +34,7 @@ import jat.core.spacetime.LunaRef;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.UniverseModel;
 import jat.core.simulation.initializer;
-import jatNOSA.core.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405;
 
 import java.util.HashMap;
 

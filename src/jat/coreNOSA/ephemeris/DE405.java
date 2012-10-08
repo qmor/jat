@@ -60,7 +60,7 @@ however, they could be adjusted to use the DE200 ephemeris, whose format is quit
 similar.
 */
 
-package jatNOSA.core.ephemeris;
+package jat.coreNOSA.ephemeris;
 
 import java.io.*;
 import java.util.HashMap;

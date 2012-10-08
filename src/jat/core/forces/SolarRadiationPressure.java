@@ -29,7 +29,7 @@ import jat.core.spacetime.ReferenceFrame;
 import jat.core.spacetime.ReferenceFrameTranslater;
 import jat.core.spacetime.Time;
 import jat.core.timeRef.EarthRef;
-import jatNOSA.core.ephemeris.DE405_Body;
+import jat.coreNOSA.ephemeris.DE405_Body;
 
 /**
  * <P>

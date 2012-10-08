@@ -28,8 +28,8 @@ import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.*;
 import jat.core.util.FileUtil;
-import jatNOSA.core.ephemeris.DE405;
-import jatNOSA.core.ephemeris.DE405_Body;
+import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405_Body;
 
 /**
  * Simple class to model the gravitational attraction of the moon.
