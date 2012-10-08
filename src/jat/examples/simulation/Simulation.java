@@ -21,14 +21,14 @@ package jat.examples.simulation;
 
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.matlabInterface.MatlabControl;
-import jat.core.matlabInterface.MatlabFunc;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
-import jat.core.spacetime.EarthRef;
 import jat.core.trajectory.RelativeTraj;
 import jat.core.util.FileUtil;
-import jat.core.simulation.*;
+import jat.coreNOSA.matlabInterface.MatlabControl;
+import jat.coreNOSA.matlabInterface.MatlabFunc;
+import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.spacetime.EarthRef;
 
 /**
  * This is a demo class for a generic simulation scenario.  It creates the necessary

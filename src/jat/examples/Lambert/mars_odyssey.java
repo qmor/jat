@@ -7,7 +7,7 @@ import jat.core.cm.Lambert;
 import jat.core.cm.LambertException;
 import jat.core.ephemeris.DE405APL;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
+import jat.coreNOSA.spacetime.Time;
 
 public class mars_odyssey {
 
