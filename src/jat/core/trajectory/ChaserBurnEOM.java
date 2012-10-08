@@ -26,8 +26,8 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
 import jat.core.math.matvec.data.*;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.*;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * <P>

@@ -24,8 +24,8 @@ import jat.core.algorithm.integrators.Derivatives;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.Quaternion;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.UniverseModel;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.UniverseModel;
 
 /**
  * This class models the entire system of a spacecraft including any software or 

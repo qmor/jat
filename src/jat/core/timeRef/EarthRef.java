@@ -27,6 +27,11 @@ import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
+import jat.coreNOSA.spacetime.ReferenceFrame;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
 
 /**
  * <P>
@@ -38,13 +43,13 @@ import jat.coreNOSA.ephemeris.DE405_Body;
  * For general use of Earth based coordinate systems, see jat.spacetime.EarthRef.java
  *
  * @deprecated
- * @see jat.core.spacetime.EarthRef
+ * @see jat.coreNOSA.spacetime.EarthRef
  * @author Richard C. Page III 
  * @author 
  * @version 1.0
- * @see jat.core.spacetime.EarthRef
+ * @see jat.coreNOSA.spacetime.EarthRef
  */
-public class EarthRef extends BodyCenteredInertialRef implements jat.core.spacetime.BodyRef {
+public class EarthRef extends BodyCenteredInertialRef implements jat.coreNOSA.spacetime.BodyRef {
     
     protected double sim_time = 0;
     public int n = 0;

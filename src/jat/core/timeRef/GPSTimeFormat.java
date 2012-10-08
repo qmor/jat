@@ -21,6 +21,7 @@
 package jat.core.timeRef;
 import jat.core.math.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.spacetime.TimeUtils;
 
 /**
  * <P>
@@ -29,7 +30,7 @@ import jat.core.spacetime.*;
  * Translated code from the NOAA GPS Toolbox (www.ngs.noaa.gov/gps-toolbox/index.html)
  *
  * @deprecated
- * @see jat.core.spacetime.GPSTimeFormat
+ * @see jat.coreNOSA.spacetime.GPSTimeFormat
  * @author 
  * @version 1.0
  */

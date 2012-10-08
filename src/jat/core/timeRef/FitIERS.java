@@ -40,7 +40,7 @@ import jat.core.util.FileUtil;
  * Bulletin A into a file called 'iers.dat' into the jat.timeRef directory. 
  * 
  * @deprecated
- * @see jat.core.spacetime.FitIERS
+ * @see jat.coreNOSA.spacetime.FitIERS
  * @author
  * @author Richard C. Page III
  */

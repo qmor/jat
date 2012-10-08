@@ -18,6 +18,8 @@
 package jat.core.spacetime;
 
 import jat.core.cm.cm;
+import jat.coreNOSA.spacetime.CalDate;
+import jat.coreNOSA.spacetime.Time;
 
 import java.util.Calendar;
 

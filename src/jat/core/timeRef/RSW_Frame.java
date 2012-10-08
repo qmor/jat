@@ -32,7 +32,7 @@ import jat.core.math.matvec.data.*;
  * Reference: Vallado.
  * 
  * @deprecated
- * @see jat.core.spacetime.RSW_Frame
+ * @see jat.coreNOSA.spacetime.RSW_Frame
  * @author 
  * @version 1.0
  */

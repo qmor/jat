@@ -29,6 +29,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.*;
 import jat.core.plotutil.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.spacetime.RSW_Frame;
 
 /**
 * The RelativeTraj.java Class takes two trajectories and computes the relative trajectory.

@@ -21,6 +21,7 @@
 package jat.core.timeRef;
 import jat.core.math.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.spacetime.TimeUtils;
 
 import java.io.*;
 
@@ -32,7 +33,7 @@ import java.io.*;
  * Note: CalDate is just a time format. The actual time depicted could be GPS time, UTC, TAI, etc.
  *
  * @deprecated
- * @see jat.core.spacetime.CalDate
+ * @see jat.coreNOSA.spacetime.CalDate
  * @author 
  * @version 1.0
  */
