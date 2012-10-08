@@ -1,4 +1,4 @@
-package jat.core.constants;
+package jat.coreNOSA.constants;
 
 public interface WGS84 {
     /** Mean Earth Radius in km from WGS-84.

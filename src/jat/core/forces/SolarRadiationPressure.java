@@ -23,13 +23,13 @@ import jat.core.cm.Constants;
 import jat.core.ephemeris.*;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.timeRef.EarthRef;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.ReferenceFrame;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.timeRef.EarthRef;
 
 /**
  * <P>

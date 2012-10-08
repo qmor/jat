@@ -26,6 +26,8 @@ import jat.core.algorithm.integrators.Derivatives;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.timeRef.*;
+import jat.coreNOSA.timeRef.EarthRef;
+import jat.coreNOSA.timeRef.FitIERS;
 
 /**
  * <p>

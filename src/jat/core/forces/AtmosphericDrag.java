@@ -25,6 +25,7 @@ import jat.core.spacecraft.Spacecraft;
 import jat.core.timeRef.*;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.timeRef.EarthRef;
 
 /**
  * <P>
@@ -242,7 +243,7 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
      * @param eRef Earth reference object
      * @param sc Spacecraft parameters and state
      * @deprecated
-     * @see jat.core.forces.EarthForceModel#acceleration(jat.core.timeRef.EarthRef, jat.core.spacecraft.Spacecraft)
+     * @see jat.core.forces.EarthForceModel#acceleration(jat.coreNOSA.timeRef.EarthRef, jat.core.spacecraft.Spacecraft)
      */
     public VectorN acceleration(EarthRef eRef, Spacecraft sc) {
         this.omega_e = eRef.get_omega_e();

@@ -20,14 +20,15 @@
 
 package jat.core.forces;
 import jat.core.*;
-import jat.core.audio.SoundPlayer;
 import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.timeRef.*;
+import jat.coreNOSA.audio.SoundPlayer;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.timeRef.EarthRef;
 
 
 /**

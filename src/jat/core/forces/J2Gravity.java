@@ -24,7 +24,7 @@ package jat.core.forces;
 import jat.core.cm.Constants;
 import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.timeRef.EarthRef;
+import jat.coreNOSA.timeRef.EarthRef;
 
 /**
 * The J2Gravity.java Class computes the gravitational acceleration and

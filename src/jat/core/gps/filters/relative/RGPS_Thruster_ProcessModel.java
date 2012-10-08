@@ -31,6 +31,7 @@ import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
 //import jat.math.*;
 //import jat.gps_ins.*;
+import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
 * The RGPS_ProcessModel.java Class provides the process model

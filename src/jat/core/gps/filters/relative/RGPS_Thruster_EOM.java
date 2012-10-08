@@ -30,6 +30,8 @@ import jat.core.gps.filters.*;
 import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
 //import jat.gps_ins.*;
+import jat.coreNOSA.timeRef.EarthRef;
+import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
  * The RGPS_Thruster_EOM provides the equations of motion for the 

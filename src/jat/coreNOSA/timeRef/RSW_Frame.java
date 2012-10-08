@@ -1,4 +1,4 @@
-package jat.core.timeRef;
+package jat.coreNOSA.timeRef;
 
 /* JAT: Java Astrodynamics Toolkit
  *

@@ -28,6 +28,7 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.RotationMatrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.*;
+import jat.coreNOSA.constants.IERS_1996;
 import jat.coreNOSA.spacetime.ITRF;
 import jat.coreNOSA.spacetime.Time;
 

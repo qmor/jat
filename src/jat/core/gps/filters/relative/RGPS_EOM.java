@@ -30,6 +30,7 @@ import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
 //import jat.cm.*;
 //import jat.gps_ins.*;
+import jat.coreNOSA.timeRef.EarthRef;
 
 /**
  * The RGPS_EOM provides the equations of motion for the 

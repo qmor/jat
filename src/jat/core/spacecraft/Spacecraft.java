@@ -20,7 +20,7 @@
 package jat.core.spacecraft;
 
 import jat.core.math.matvec.data.*;
-import jat.core.timeRef.RSW_Frame;
+import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
  * The Spacecraft class encapsulates physical parameters for a spacecraft and acts

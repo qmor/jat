@@ -27,6 +27,7 @@ import jat.core.cm.Constants;
 import jat.core.cm.TwoBody;
 import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
+import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
  * <P>

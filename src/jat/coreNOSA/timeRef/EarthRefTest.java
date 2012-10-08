@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package jat.core.timeRef;
+package jat.coreNOSA.timeRef;
 
 import jat.core.cm.*;
 import jat.core.math.*;

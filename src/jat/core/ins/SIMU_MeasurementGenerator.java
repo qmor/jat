@@ -27,6 +27,7 @@ import jat.core.cm.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
+import jat.coreNOSA.timeRef.RSW_Frame;
 import jat.coreNOSA.trajectory.CentralBody;
 import jat.coreNOSA.trajectory.ChaserBurnEOM;
 import jat.coreNOSA.trajectory.ChaserEOM;

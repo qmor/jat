@@ -1,4 +1,4 @@
-package jat.core.constants;
+package jat.coreNOSA.constants;
 
 public interface IERS_1996 {
     /** Speed of Light in m/s

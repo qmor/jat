@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.timeRef;
+package jat.coreNOSA.timeRef;
 import jat.core.cm.*;
 import jat.core.ephemeris.*;
 import jat.core.math.*;

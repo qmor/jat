@@ -38,7 +38,7 @@ import jat.core.math.*;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.measurements.*;
-import jat.core.timeRef.RSW_Frame;
+import jat.coreNOSA.timeRef.RSW_Frame;
 import jat.coreNOSA.util.FileUtil;
 
 /**

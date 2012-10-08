@@ -29,13 +29,13 @@ import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
-import jat.core.timeRef.RSW_Frame;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.simulation.*;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.spacetime.UniverseModel;
+import jat.coreNOSA.timeRef.RSW_Frame;
 import jat.coreNOSA.util.FileUtil;
 
 import java.util.HashMap;

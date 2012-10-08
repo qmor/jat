@@ -25,6 +25,7 @@ import java.util.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.timeRef.*;
+import jat.coreNOSA.timeRef.CalDate;
 /**
 * <P>
 * The Trajectory.java Class provides the means for storing and accessing trajectory data.

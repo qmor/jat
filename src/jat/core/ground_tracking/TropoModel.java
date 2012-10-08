@@ -23,6 +23,7 @@ import jat.core.constants.*;
 import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.constants.IERS_1996;
 
 /**
  * Tropospheric Refraction Model

@@ -21,7 +21,7 @@ package jat.core.spacecraft;
 
 import jat.core.math.matvec.data.Quaternion;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.timeRef.RSW_Frame;
+import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
  * Interface representing a member spacecraft of a formation.

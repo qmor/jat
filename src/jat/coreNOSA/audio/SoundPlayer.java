@@ -1,4 +1,4 @@
-package jat.core.audio;
+package jat.coreNOSA.audio;
 
 /* JAT: Java Astrodynamics Toolkit
  *

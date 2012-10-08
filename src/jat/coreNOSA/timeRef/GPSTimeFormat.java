@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.timeRef;
+package jat.coreNOSA.timeRef;
 import jat.core.math.*;
 import jat.core.spacetime.*;
 import jat.coreNOSA.spacetime.TimeUtils;
