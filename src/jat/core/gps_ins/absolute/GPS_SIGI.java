@@ -24,7 +24,6 @@ package jat.core.gps_ins.absolute;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
-import jat.core.ins.*;
 //import jat.gps_ins.*;
 import jat.coreNOSA.ins.INS_MeasurementList;
 

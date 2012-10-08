@@ -29,7 +29,6 @@ import jat.core.forces.*;
 import jat.core.gps.*;
 import jat.core.gps.filters.*;
 import jat.core.gps_ins.*;
-import jat.core.ins.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.ins.INS_Measurement;
