@@ -8,9 +8,9 @@ import java.util.Random;
 import jat.core.algorithm.estimators.*;
 import jat.core.gps.Visible;
 import jat.core.math.matvec.data.*;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;
+import jat.coreNOSA.util.FileUtil;
 
 public class GPSStateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	

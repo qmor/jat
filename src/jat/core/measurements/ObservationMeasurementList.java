@@ -26,14 +26,14 @@ import jat.core.gps.GPS_Measurement;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.RotationMatrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.trajectory.Trajectory;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.FitIERS;
 import jat.coreNOSA.spacetime.GPSTimeFormat;
 import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.trajectory.Trajectory;
+import jat.coreNOSA.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.EOFException;

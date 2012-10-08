@@ -24,6 +24,12 @@ import jat.core.cm.*;
 import jat.core.math.matvec.data.*;
 import jat.core.timeRef.*;
 import jat.core.trajectory.*;
+import jat.coreNOSA.trajectory.CentralBody;
+import jat.coreNOSA.trajectory.CoordinateSystem;
+import jat.coreNOSA.trajectory.DistanceUnits;
+import jat.coreNOSA.trajectory.JGM3DragEOM;
+import jat.coreNOSA.trajectory.TimeUnits;
+import jat.coreNOSA.trajectory.Trajectory;
 /**
  * <P>
  * The DeltaV_Generator Class provides an example of how to generate a rendezvous trajectory 

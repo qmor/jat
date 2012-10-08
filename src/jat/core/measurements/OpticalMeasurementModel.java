@@ -36,7 +36,6 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.Quaternion;
 import jat.core.math.matvec.data.RandomNumber;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.simulation.CEVLunarSim;
@@ -52,6 +51,7 @@ import jat.coreNOSA.spacetime.ReferenceFrame;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.util.FileUtil;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	

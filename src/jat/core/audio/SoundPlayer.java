@@ -22,7 +22,7 @@ package jat.core.audio;
  * File Created on Jul 2, 2003
  */
  
-import jat.core.util.FileUtil;
+import jat.coreNOSA.util.FileUtil;
 
 import java.applet.Applet;
 import java.applet.AudioClip;

@@ -31,13 +31,13 @@ import jat.core.algorithm.integrators.RungeKutta8;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.timeRef.RSW_Frame;
-import jat.core.trajectory.CentralBody;
-import jat.core.trajectory.CoordinateSystem;
-import jat.core.trajectory.DistanceUnits;
-import jat.core.trajectory.TimeUnits;
-import jat.core.trajectory.Trajectory;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.trajectory.CentralBody;
+import jat.coreNOSA.trajectory.CoordinateSystem;
+import jat.coreNOSA.trajectory.DistanceUnits;
+import jat.coreNOSA.trajectory.TimeUnits;
+import jat.coreNOSA.trajectory.Trajectory;
+import jat.coreNOSA.util.FileUtil;
 
 
 /**

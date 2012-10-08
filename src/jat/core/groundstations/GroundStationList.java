@@ -25,7 +25,7 @@ package jat.core.groundstations;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.math.*;
-import jat.core.util.FileUtil;
+import jat.coreNOSA.util.FileUtil;
 
 import java.io.*;
 import java.util.*;

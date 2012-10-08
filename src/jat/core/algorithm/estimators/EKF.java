@@ -27,11 +27,11 @@ import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.*;
 import jat.core.measurements.*;
 import jat.core.spacecraft.SpacecraftModel;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.simulation.*;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.util.FileUtil;
 
 //import jat.audio.*;
 

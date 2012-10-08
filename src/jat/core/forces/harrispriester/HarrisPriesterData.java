@@ -24,7 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import jat.core.util.FileUtil;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * @author Richard C. Page III

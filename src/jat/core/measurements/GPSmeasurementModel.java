@@ -30,7 +30,6 @@ import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.core.trajectory.*;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.EarthRef;
@@ -38,6 +37,7 @@ import jat.coreNOSA.spacetime.FitIERS;
 import jat.coreNOSA.spacetime.GPSTimeFormat;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.util.FileUtil;
 
 import java.util.HashMap;
 

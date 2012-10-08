@@ -19,7 +19,7 @@
  */
 
 package jat.core.algorithm.integrators;
-import jat.core.util.FileUtil;
+import jat.coreNOSA.util.FileUtil;
 
 import java.io.*;
 import java.net.URL;

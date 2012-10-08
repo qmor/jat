@@ -24,7 +24,6 @@ import jat.core.ephemeris.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
@@ -32,6 +31,7 @@ import jat.coreNOSA.spacetime.ReferenceFrame;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * <P>

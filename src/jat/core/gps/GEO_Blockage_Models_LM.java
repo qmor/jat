@@ -39,7 +39,7 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.measurements.*;
 import jat.core.timeRef.RSW_Frame;
-import jat.core.util.FileUtil;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * <P>
