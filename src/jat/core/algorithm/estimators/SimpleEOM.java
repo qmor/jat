@@ -31,11 +31,11 @@ import jat.core.forces.SolarRadiationPressure;
 import jat.core.gps.GPS_Utils;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.UniverseModel;
-import jat.core.simulation.initializer;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.simulation.initializer;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.UniverseModel;
 
 public class SimpleEOM implements Derivatives {
 	

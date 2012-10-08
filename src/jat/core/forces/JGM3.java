@@ -20,7 +20,7 @@
 
 package jat.core.forces;
 
-import jat.core.spacetime.EarthFixedRef;
+import jat.coreNOSA.spacetime.EarthFixedRef;
 
 /** <P>
  * The JGM3 class computes the acceleration due to gravity on a satellite

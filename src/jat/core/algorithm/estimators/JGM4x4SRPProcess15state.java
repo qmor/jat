@@ -37,7 +37,7 @@ import jat.core.trajectory.DistanceUnits;
 import jat.core.trajectory.TimeUnits;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
-import jat.core.simulation.*;
+import jat.coreNOSA.simulation.*;
 
 
 /**

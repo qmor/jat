@@ -29,12 +29,12 @@ import jat.core.forces.SolarRadiationPressure;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.LunaFixedRef;
-import jat.core.spacetime.LunaRef;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.UniverseModel;
-import jat.core.simulation.initializer;
 import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.simulation.initializer;
+import jat.coreNOSA.spacetime.LunaFixedRef;
+import jat.coreNOSA.spacetime.LunaRef;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.UniverseModel;
 
 import java.util.HashMap;
 

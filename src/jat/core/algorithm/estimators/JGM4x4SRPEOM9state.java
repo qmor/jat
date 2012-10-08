@@ -28,8 +28,11 @@ import jat.core.gps.GPS_Utils;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
-import jat.core.simulation.*;
 import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.spacetime.UniverseModel;
 
 import java.util.HashMap;
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.math.matvec.data.*;
-import jat.core.simulation.initializer;
+import jat.coreNOSA.simulation.initializer;
 
 
 public class createMeasurements{

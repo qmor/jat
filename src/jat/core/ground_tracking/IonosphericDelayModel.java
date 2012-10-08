@@ -27,7 +27,7 @@ import java.io.PrintStream;
 import jat.core.groundstations.GroundStation;
 import jat.core.groundstations.SimpleGroundStation;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
+import jat.coreNOSA.spacetime.Time;
 
 
 public class IonosphericDelayModel {

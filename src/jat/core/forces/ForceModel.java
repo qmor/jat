@@ -22,6 +22,8 @@ package jat.core.forces;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * Force Model is a simple interface which allows uniformity among the various force

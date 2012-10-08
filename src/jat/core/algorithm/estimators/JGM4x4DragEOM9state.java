@@ -31,9 +31,9 @@ import jat.core.forces.HarrisPriester;
 import jat.core.gps.GPS_Utils;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.UniverseModel;
-import jat.core.simulation.initializer;
+import jat.coreNOSA.simulation.initializer;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.UniverseModel;
 
 /**
 * This file has to be reconstructed for each state used.  It uses a 

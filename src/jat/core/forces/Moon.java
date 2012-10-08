@@ -30,6 +30,11 @@ import jat.core.timeRef.*;
 import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.ReferenceFrame;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
 
 /**
  * Simple class to model the gravitational attraction of the moon.
@@ -94,7 +99,7 @@ public class Moon extends GravitationalBody {
      * @param eRef Earth Reference
      * @param sc Spacecraft parameters and state
      */
-    public VectorN acceleration(jat.core.spacetime.EarthRef eRef, Spacecraft sc) {
+    public VectorN acceleration(jat.coreNOSA.spacetime.EarthRef eRef, Spacecraft sc) {
 
       //ReferenceFrameTranslater xlater = 
         //new ReferenceFrameTranslater(eRef, moonRef, new Time(eRef.mjd_utc()));

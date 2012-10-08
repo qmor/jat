@@ -22,9 +22,9 @@ package jat.core.forces;
 import jat.core.cm.Constants;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.BodyRef;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.EarthRef;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * The GravitationalBody class serves to model a point mass gravitational

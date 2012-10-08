@@ -21,11 +21,11 @@
 package jat.core.forces;
 import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.BodyRef;
-import jat.core.spacetime.ReferenceFrame;
-import jat.core.spacetime.ReferenceFrameTranslater;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.EarthRef;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.ReferenceFrame;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
 
 /** <P>
  * The SphericalHarmonicGravity class computes the acceleration due to gravity on a satellite

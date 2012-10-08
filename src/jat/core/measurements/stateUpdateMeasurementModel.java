@@ -8,8 +8,8 @@ import java.util.Random;
 import jat.core.algorithm.estimators.*;
 import jat.core.gps.Visible;
 import jat.core.math.matvec.data.*;
-import jat.core.simulation.EstimatorSimModel;
-import jat.core.simulation.initializer;
+import jat.coreNOSA.simulation.EstimatorSimModel;
+import jat.coreNOSA.simulation.initializer;
 
 public class stateUpdateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	

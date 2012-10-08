@@ -25,6 +25,9 @@ import jat.core.math.matvec.data.Matrix;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
+import jat.coreNOSA.spacetime.EarthFixedRef;
+import jat.coreNOSA.spacetime.ReferenceFrame;
 
 import java.io.BufferedReader;
 import java.io.File;

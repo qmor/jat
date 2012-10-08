@@ -25,6 +25,10 @@ import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.*;
 import jat.core.timeRef.EarthRef;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * <P>

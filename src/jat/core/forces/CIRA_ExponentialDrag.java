@@ -23,11 +23,11 @@ import jat.core.*;
 import jat.core.audio.SoundPlayer;
 import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.BodyRef;
-import jat.core.spacetime.EarthTrueOfDateRef;
-import jat.core.spacetime.ReferenceFrameTranslater;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.*;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
 
 
 /**

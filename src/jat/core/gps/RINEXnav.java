@@ -23,6 +23,8 @@ import java.io.*;
 import java.util.*;
 
 import jat.core.spacetime.*;
+import jat.coreNOSA.spacetime.CalDate;
+import jat.coreNOSA.spacetime.GPSTimeFormat;
 
 /**
  * <P>

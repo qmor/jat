@@ -31,8 +31,12 @@ import jat.core.spacecraft.Spacecraft;
 import jat.core.spacetime.*;
 import jat.core.timeRef.RSW_Frame;
 import jat.core.util.FileUtil;
-import jat.core.simulation.*;
 import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.spacetime.UniverseModel;
 
 import java.util.HashMap;
 

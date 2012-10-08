@@ -29,15 +29,16 @@ import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
-import jat.core.simulation.EstimatorSimModel;
-import jat.core.simulation.initializer;
-import jat.core.spacetime.EarthRef;
-import jat.core.spacetime.FitIERS;
-import jat.core.spacetime.GPSTimeFormat;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
 import jat.core.trajectory.*;
 import jat.core.util.FileUtil;
+import jat.coreNOSA.simulation.EstimatorSimModel;
+import jat.coreNOSA.simulation.initializer;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.FitIERS;
+import jat.coreNOSA.spacetime.GPSTimeFormat;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
+
 import java.util.HashMap;
 
 import java.io.*;

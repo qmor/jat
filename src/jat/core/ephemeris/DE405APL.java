@@ -70,9 +70,10 @@ package jat.core.ephemeris;
 import jat.core.cm.Constants;
 import jat.core.cm.cm;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
 import jat.core.util.PathUtil;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
+
 import java.io.*;
 import java.util.EnumSet;
 

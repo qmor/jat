@@ -21,9 +21,9 @@
 package jat.core.forces;
 import jat.core.math.matvec.data.*;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.BodyRef;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.*;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * <P>

@@ -27,15 +27,15 @@ import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.RotationMatrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.BodyCenteredInertialRef;
-import jat.core.spacetime.BodyRef;
-import jat.core.spacetime.ReferenceFrame;
-import jat.core.spacetime.ReferenceFrameTranslater;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.EarthRef;
 import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.ReferenceFrame;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * Simple class to obtain the gravitational effect of the Sun.

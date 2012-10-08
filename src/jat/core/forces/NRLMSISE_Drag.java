@@ -26,12 +26,12 @@ import jat.core.math.*;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.BodyRef;
-import jat.core.spacetime.EarthTrueOfDateRef;
-import jat.core.spacetime.ReferenceFrameTranslater;
-import jat.core.spacetime.Time;
 import jat.core.timeRef.EarthRef;
 import jat.core.timeRef.Geodetic;
+import jat.coreNOSA.spacetime.BodyRef;
+import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
 
 /**
  * NRLMSISE drag model.  Translated from a code written in c, originally
