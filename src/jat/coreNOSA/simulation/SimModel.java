@@ -36,6 +36,9 @@ import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.matlabInterface.MatlabFunc;
 import jat.core.spacecraft.*;
 import jat.coreNOSA.spacetime.UniverseModel;
+import jat.coreNOSA.trajectory.RelativeTraj;
+import jat.coreNOSA.trajectory.Trajectory;
+import jat.coreNOSA.util.FileUtil;
 import jat.core.trajectory.*;
 import jat.core.util.*;
 //import jat.forces.ForceModelList;
@@ -1109,7 +1112,7 @@ public class SimModel implements Derivatives {
         System.out.println("Elapsed time [min]: "+elapsed);
         //* Format and output the Celestia files for visualization
         if(plot_traj){
-        	jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+        	jat.coreNOSA.util.Celestia celestia = new jat.coreNOSA.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
         	try{
         		i--;
         		j--;

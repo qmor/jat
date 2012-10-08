@@ -69,9 +69,9 @@ import java.util.Map;
 
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.util.FileUtil;
 
 /** Compute planet positions and velocities from JPL DE405 Ephemerides.
  * Except for GEOCENTRIC_MOON and GEOCENTRIC_SUN, all planet positions 

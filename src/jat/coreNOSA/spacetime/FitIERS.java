@@ -32,8 +32,8 @@ import java.util.StringTokenizer;
 import jat.core.cm.Constants;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
-import jat.core.util.FileUtil;
 import jat.core.util.PathUtil;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * International Earth Rotation and Reference Service parameters. Parses and

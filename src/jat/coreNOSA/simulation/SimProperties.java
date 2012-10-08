@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import jat.core.util.FileUtil;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * TODO Javadoc

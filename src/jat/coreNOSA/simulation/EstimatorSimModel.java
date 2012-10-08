@@ -54,11 +54,11 @@ import jat.core.measurements.createMeasurements;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
 
-import jat.core.trajectory.RelativeTraj;
-import jat.core.trajectory.Trajectory;
-import jat.core.util.Celestia;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.spacetime.*;
+import jat.coreNOSA.trajectory.RelativeTraj;
+import jat.coreNOSA.trajectory.Trajectory;
+import jat.coreNOSA.util.Celestia;
+import jat.coreNOSA.util.FileUtil;
 
 public class EstimatorSimModel extends SimModel {
 	

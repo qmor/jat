@@ -40,10 +40,10 @@ import jat.coreNOSA.simulation.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.coreNOSA.spacetime.*;
-import jat.core.trajectory.RelativeTraj;
-import jat.core.trajectory.Trajectory;
-import jat.core.util.Celestia;
-import jat.core.util.FileUtil;
+import jat.coreNOSA.trajectory.RelativeTraj;
+import jat.coreNOSA.trajectory.Trajectory;
+import jat.coreNOSA.util.Celestia;
+import jat.coreNOSA.util.FileUtil;
 
 import java.io.IOException;
 import java.io.PrintStream;

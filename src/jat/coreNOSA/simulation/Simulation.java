@@ -29,10 +29,9 @@ import jat.coreNOSA.matlabInterface.*;
 import jat.core.spacecraft.Spacecraft;
 import jat.core.spacecraft.SpacecraftModel;
 import jat.coreNOSA.spacetime.*;
-import jat.core.trajectory.RelativeTraj;
-import jat.core.trajectory.Trajectory;
-import jat.core.util.FileUtil;
-//import jat.tests.propagator.PlotTrajectory;
+import jat.coreNOSA.trajectory.RelativeTraj;
+import jat.coreNOSA.trajectory.Trajectory;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * This is the primary class for a simulation scenario.  It obtains input from files
@@ -112,7 +111,7 @@ public class Simulation {
         System.out.println("Elapsed time [min]: "+elapsed);
         plot_traj=false;
         if(plot_traj){
-            	        jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/Code/Celestia/");
+            	        jat.coreNOSA.util.Celestia celestia = new jat.coreNOSA.util.Celestia("C:/Code/Celestia/");
             	        try{
             	            //i--;
             	            celestia.set_trajectory(sim.get_traj());
@@ -193,7 +192,7 @@ public class Simulation {
         System.out.println("Period [hr]: "+period+"  a: "+a+"  e: "+e);
         
         if(plot_traj){
-            jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_dev/celestia/");
+            jat.coreNOSA.util.Celestia celestia = new jat.coreNOSA.util.Celestia("C:/games/Celestia_dev/celestia/");
             try{
                 for(int k=0; k<sim.sc_formation.get_num_sc(); k++){
                     celestia.set_trajectory(sim.get_traj(k));
@@ -275,7 +274,7 @@ public class Simulation {
         double elapsed = (System.currentTimeMillis()-start)*0.001/60;
         System.out.println("Elapsed time [min]: "+elapsed);
         if(plot_traj){
-            jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_dev/celestia/");
+            jat.coreNOSA.util.Celestia celestia = new jat.coreNOSA.util.Celestia("C:/games/Celestia_dev/celestia/");
             try{
                 for(int k=0; k<3; k++){
                     celestia.set_trajectory(sim.get_traj(k));
@@ -481,7 +480,7 @@ public class Simulation {
         System.out.println("Elapsed time [min]: "+elapsed);
         boolean plot_traj = false;
         if(plot_traj){
-            	        jat.core.util.Celestia celestia = new jat.core.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
+            	        jat.coreNOSA.util.Celestia celestia = new jat.coreNOSA.util.Celestia("C:/games/Celestia_Dev/my_celestia/");
             	        try{
             	            i--;
             	            j--;

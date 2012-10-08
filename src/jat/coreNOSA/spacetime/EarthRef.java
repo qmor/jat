@@ -23,9 +23,9 @@ import jat.core.cm.*;
 import jat.core.ephemeris.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
-import jat.core.util.FileUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.util.FileUtil;
 
 /**
  * <P>
