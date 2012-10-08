@@ -23,13 +23,13 @@ package jat.unittest.core.spacetime;
 
 import jat.core.ephemeris.*;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.EarthRef;
-import jat.core.spacetime.LunaRef;
-import jat.core.spacetime.ReferenceFrameTranslater;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.LunaRef;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
 
 import junit.framework.TestCase;
 

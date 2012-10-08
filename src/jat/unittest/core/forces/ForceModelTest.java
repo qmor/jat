@@ -11,9 +11,9 @@ import java.io.InputStreamReader;
 import jat.core.forces.ForceModel;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.spacecraft.Spacecraft;
-import jat.core.spacetime.EarthRef;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
 import junit.framework.TestCase;
 
 public class ForceModelTest extends TestCase {

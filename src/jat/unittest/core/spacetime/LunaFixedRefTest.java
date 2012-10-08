@@ -23,15 +23,15 @@ package jat.unittest.core.spacetime;
 
 import jat.core.ephemeris.*;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.spacetime.BodyCenteredInertialRef;
-import jat.core.spacetime.EarthRef;
-import jat.core.spacetime.LunaFixedRef;
-import jat.core.spacetime.LunaRef;
-import jat.core.spacetime.ReferenceFrame;
-import jat.core.spacetime.ReferenceFrameTranslater;
-import jat.core.spacetime.Time;
-import jat.core.spacetime.TimeUtils;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.LunaFixedRef;
+import jat.coreNOSA.spacetime.LunaRef;
+import jat.coreNOSA.spacetime.ReferenceFrame;
+import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
