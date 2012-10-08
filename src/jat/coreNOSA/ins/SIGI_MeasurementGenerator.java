@@ -20,7 +20,7 @@
  * File Created on Aug 29, 2003
  */
  
-package jat.core.ins;
+package jat.coreNOSA.ins;
 //import jat.gps_ins.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
@@ -37,13 +37,13 @@ import jat.coreNOSA.trajectory.TimeUnits;
 import jat.coreNOSA.trajectory.Trajectory;
 
 /** 
- * SIMU_MeasurementGenerator generates SIMU measurements and truth trajectories for
+ * SIGI_MeasurementGenerator generates SIGI measurements and truth trajectories for
  * the chaser and ISS.
  * 
  * @author 
  * @version 1.0
- */
-public class SIMU_MeasurementGenerator {
+ */ 
+public class SIGI_MeasurementGenerator {
 	public Trajectory chaser = new Trajectory();
 	
 	public Trajectory iss = new Trajectory();
@@ -69,7 +69,7 @@ public class SIMU_MeasurementGenerator {
 	private int dv_index = 0;
 	
 	private INS_MeasurementList list = new INS_MeasurementList();
-	private double tau = 3.0 * 3600.0;
+	private double tau = 3600.0;
 	private VectorN gyro_sigma;
 	private VectorN accel_sigma;
 	private GaussianVector gyro_noise;
@@ -82,7 +82,7 @@ public class SIMU_MeasurementGenerator {
 	private long seed = -1;
 	
 	private Matrix phi;
-		
+	
 	/**
 	 * Constructor
 	 * @param t String containing the title
@@ -92,7 +92,7 @@ public class SIMU_MeasurementGenerator {
 	 * @param file4 String containing the INS measurement file to be created
 	 * @param file5 String containing the true bias file to be created
 	 */	
-	public SIMU_MeasurementGenerator(String t, String file1, String file2, String file3, String file4, String file5) {
+	public SIGI_MeasurementGenerator(String t, String file1, String file2, String file3, String file4, String file5) {
 		this.chaserFile = file1;
 		this.issFile = file2;
 		this.title = t;
@@ -129,11 +129,11 @@ public class SIMU_MeasurementGenerator {
 	
 	private VectorN qGyro(double dt){
 		
-		double biasSigma = 5.0E-05 * MathUtils.DEG2RAD / 3600.0;
+		double biasSigma = 0.0035 * MathUtils.DEG2RAD / 3600.0;
 		double exponent = -2.0*dt/tau;
 		double biasQ = biasSigma*biasSigma*(1.0 - Math.exp(exponent));
 		
-		double noiseSigma = 7.9E-05 * MathUtils.DEG2RAD;
+		double noiseSigma = 0.002 * MathUtils.DEG2RAD;
 		double noiseQ = noiseSigma * noiseSigma*dt / 3600.0;
 		VectorN out = new VectorN(6);
 		for (int i = 0; i < 3; i++) {
@@ -147,7 +147,7 @@ public class SIMU_MeasurementGenerator {
 		long sd = this.seed - 2;
 		RandomNumber rn = new RandomNumber(sd);
 		double sigma_ma = 1.0 * MathUtils.ARCSEC2RAD;  // 1 arcsec
-		double sigma_sf = 1.0E-06;                // 1 parts per million
+		double sigma_sf = 2.0E-06;                // 2 parts per million
 		Matrix temp = new Matrix(3, 3);
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -166,8 +166,8 @@ public class SIMU_MeasurementGenerator {
 	private Matrix sfmaAccel(){
 		long sd = this.seed - 3;
 		RandomNumber rn = new RandomNumber(sd);
-		double sigma_ma = 2.5E-05;  // 100 microrad
-		double sigma_sf = 5.0E-05;                // 310 parts per million
+		double sigma_ma = 1.0E-04;  // 100 microrad
+		double sigma_sf = 3.1E-04;                // 310 parts per million
 		Matrix temp = new Matrix(3, 3);
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -184,12 +184,12 @@ public class SIMU_MeasurementGenerator {
 
 	
 	private VectorN qAccel(double dt){
-		double biasSigma = 1.0E-09;
+		double biasSigma = 3.0E-05 * 9.81;
 		double exponent = -2.0*dt/tau;
 		double biasQ = biasSigma*biasSigma*(1.0 - Math.exp(exponent));
 
-		double noiseSigma = 1.0E-10;
-		double noiseQ = noiseSigma * noiseSigma * dt;
+		double noiseSigma = 0.00075;
+		double noiseQ = noiseSigma * noiseSigma*dt / 3600.0;
 		VectorN out = new VectorN(6);
 		for (int i = 0; i < 3; i++) {
 			out.set(i, biasQ);
@@ -202,8 +202,8 @@ public class SIMU_MeasurementGenerator {
 		long sd = this.seed - 2;
 		RandomNumber rn = new RandomNumber(sd);
 		VectorN out = new VectorN(12);
-		double gyro_sigma = 0.0003 * MathUtils.DEG2RAD / 3600.0;
-		double accel_sigma = 1.0E-06 * 9.81;
+		double gyro_sigma = 0.001 * MathUtils.DEG2RAD / 3600.0;
+		double accel_sigma = 1.6E-04 * 9.81;
 		for (int i = 0; i < 3; i++) {
 			double xa = rn.normal(0.0, accel_sigma);
 			double xg = rn.normal(0.0, gyro_sigma);
@@ -213,7 +213,6 @@ public class SIMU_MeasurementGenerator {
 		return out;
 	}
 		
-			
 	/**
 	 * Generate the data
 	 * @param t0 initial time (sim time in seconds)
@@ -380,8 +379,8 @@ public class SIMU_MeasurementGenerator {
         VectorN gyro_meas = gyro_temp.plus(gyro_noise_acc);
         
         // add the measurements to the list
-//        INS_Measurement meas = new INS_Measurement(t, accel_meas, gyro_meas);
-        INS_Measurement meas = new INS_Measurement(t, accel_true, omega_true);
+        INS_Measurement meas = new INS_Measurement(t, accel_meas, gyro_meas);
+//        INS_Measurement meas = new INS_Measurement(t, accel_true, omega_true);
         list.add(meas);
 //    	System.out.println(t+"\t"+accel_meas+"\t"+gyro_meas);
 
@@ -448,15 +447,15 @@ public class SIMU_MeasurementGenerator {
 		
 		// set up the generator
 		String title = "STS/ISS Rendezvous Trajectory";
-		String file1 = "C:\\Jat\\jat\\traj\\reference\\rvtraj_simu_vbar.jat";
-		String file2 = "C:\\Jat\\jat\\traj\\reference\\isstraj_simu_vbar.jat";
+		String file1 = "C:\\Jat\\jat\\traj\\reference\\rvtraj_vbar.jat";
+		String file2 = "C:\\Jat\\jat\\traj\\reference\\isstraj_vbar.jat";
 		String file3 = "C:\\Jat\\jat\\input\\burns\\vbar_burns.jat";
-		String file4 = "C:\\Jat\\jat\\input\\simu_vbar.jat";
-		String file5 = "C:\\Jat\\jat\\output\\simu_vbar_bias.txt";
+		String file4 = "C:\\Jat\\jat\\input\\sigi_vbar.jat";
+		String file5 = "C:\\Jat\\jat\\output\\sigi_vbar_bias.txt";
 //		String file4 = "C:\\Jat\\jat\\input\\sigi_ins.jat";
 //		String file5 = "C:\\Jat\\jat\\output\\sigi_bias.txt";
 		
-		SIMU_MeasurementGenerator x = new SIMU_MeasurementGenerator(title, file1, file2, file3, file4, file5);
+		SIGI_MeasurementGenerator x = new SIGI_MeasurementGenerator(title, file1, file2, file3, file4, file5);
 		VectorN x0 = x.initChaser();
 		VectorN xref0 = x.initISS();
 		
@@ -467,12 +466,12 @@ public class SIMU_MeasurementGenerator {
 		x.generate(t0, tf, x0, xref0);
 		System.out.println("Done Generating");
 		
-		LinePrinter lp1 = new LinePrinter("C:\\Jat\\jat\\traj\\rvtraj_simu_vbar.txt");
+		LinePrinter lp1 = new LinePrinter("C:\\Jat\\jat\\traj\\rvtraj_vbar.txt");
 		
 		x.chaser.sendToLinePrinter(lp1);
 
 
-		LinePrinter lp2 = new LinePrinter("C:\\Jat\\jat\\traj\\isstraj_simu_vbar.txt");
+		LinePrinter lp2 = new LinePrinter("C:\\Jat\\jat\\traj\\isstraj_vbar.txt");
 		
 		x.iss.sendToLinePrinter(lp2);
 				

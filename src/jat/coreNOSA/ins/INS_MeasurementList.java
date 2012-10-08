@@ -20,7 +20,7 @@
  * File Created on May 19, 2003
  */
 
-package jat.core.ins;
+package jat.coreNOSA.ins;
 //import jat.alg.estimators.*;
 //import jat.ins.*;
 import jat.core.algorithm.integrators.*;

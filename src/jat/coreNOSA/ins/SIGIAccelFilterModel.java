@@ -18,21 +18,21 @@
  *
  */
 
-package jat.core.ins;
+package jat.coreNOSA.ins;
 import jat.core.math.matvec.data.*;
 
 /**
  * <P>
- * The SIMUAccelerometer Class models the SIMU accelerometer triad.
+ * The SIGIAccelerometer Class models the SIGI accelerometer triad.
  * Only accelerometer bias and measurement noise are included.
  *
  * @author 
  * @version 1.0
  */
-public class SIMUAccelFilterModel {
+public class SIGIAccelFilterModel {
         
     /** accelerometer bias correlation time in seconds */
-    public static final double correlationTime = 3.0 * 3600.0;
+    public static final double correlationTime = 3600.0;
         
     /** accelerometer bias noise strength */
     private double qbias;
@@ -40,12 +40,12 @@ public class SIMUAccelFilterModel {
     private double q;
 
     /** Default constructor. Hardcoded with SIGI accelerometer numbers. */
-    public SIMUAccelFilterModel() {
+    public SIGIAccelFilterModel() {
     	
     	VectorN zeroMean = new VectorN(3);
     	
     	// accelerometer bias parameters for SIGI
-    	double biasSigma = 1.0E-10;        //  in m/s^2
+    	double biasSigma = 3.0E-05 * 9.81;        //  in m/s^2
     	double dt = 1.0; // time step
     	double exponent = -2.0*dt/correlationTime;
     	this.qbias = biasSigma*biasSigma*(1.0 - Math.exp(exponent));  // in (rad/sec)^2/Hz
@@ -65,7 +65,8 @@ public class SIMUAccelFilterModel {
     	
     	return out;
     }
-    
+
+
     /**
      * Return the accelerometer bias noise strength to be used in
      * the process noise matrix Q.
@@ -74,6 +75,5 @@ public class SIMUAccelFilterModel {
     public double Q() {
     	return this.q;
     }
-    
     	
 }

@@ -18,34 +18,35 @@
  *
  */
 
-package jat.core.ins;
+package jat.coreNOSA.ins;
+import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 
 /**
  * <P>
- * The SIGIAccelerometer Class models the SIGI accelerometer triad.
- * Only accelerometer bias and measurement noise are included.
+ * The SIGIGyro Class models the SIGI gyro triad.
+ * Only gyro bias and measurement noise are included.
  *
  * @author 
  * @version 1.0
  */
-public class SIGIAccelFilterModel {
+public class SIGIGyroFilterModel {
         
     /** accelerometer bias correlation time in seconds */
     public static final double correlationTime = 3600.0;
-        
-    /** accelerometer bias noise strength */
+            
+    /** gyro bias noise strength */
     private double qbias;
     
     private double q;
 
-    /** Default constructor. Hardcoded with SIGI accelerometer numbers. */
-    public SIGIAccelFilterModel() {
+    /** Default constructor. Hardcoded with SIGI gyro numbers. */
+    public SIGIGyroFilterModel() {
     	
     	VectorN zeroMean = new VectorN(3);
     	
-    	// accelerometer bias parameters for SIGI
-    	double biasSigma = 3.0E-05 * 9.81;        //  in m/s^2
+    	// gyro bias parameters for SIGI
+    	double biasSigma = 0.0035 * MathUtils.DEG2RAD / 3600.0;
     	double dt = 1.0; // time step
     	double exponent = -2.0*dt/correlationTime;
     	this.qbias = biasSigma*biasSigma*(1.0 - Math.exp(exponent));  // in (rad/sec)^2/Hz
@@ -54,26 +55,27 @@ public class SIGIAccelFilterModel {
 
     
     /** 
-     * Compute the derivatives for the accelerometer bias state.
-     * The accelerometer bias is modeled as a first order Gauss-Markov process.
-     * @param ba accelerometer bias vector
-     * @return the time derivative of the accelerometer bias
+     * Compute the derivatives for the gyro bias state.
+     * The gyro bias is modeled as a first order Gauss-Markov process.
+     * Used by GPS_INS Process Model.
+     * @param bg gyro bias vector
+     * @return the time derivative of the gyro bias
      */
-    public VectorN biasProcess(VectorN ba) {
+    public VectorN biasProcess(VectorN bg) {
     	double coef = -1.0/correlationTime;
-    	VectorN out = ba.times(coef);
+    	VectorN out = bg.times(coef);
     	
     	return out;
     }
-
-
+    
+   
     /**
-     * Return the accelerometer bias noise strength to be used in
+     * Return the gyro bias noise strength to be used in
      * the process noise matrix Q.
-     * @return accelerometer bias noise strength
+     * @return gyro bias noise strength
      */
     public double Q() {
     	return this.q;
-    }
-    	
+    }    
+        	
 }

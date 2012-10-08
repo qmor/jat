@@ -18,22 +18,22 @@
  *
  */
 
-package jat.core.ins;
+package jat.coreNOSA.ins;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 
 /**
  * <P>
- * The SIGIGyro Class models the SIGI gyro triad.
+ * The SIMUGyro Class models the SIMU gyro triad.
  * Only gyro bias and measurement noise are included.
  *
  * @author 
  * @version 1.0
  */
-public class SIGIGyroFilterModel {
+public class SIMUGyroFilterModel {
         
     /** accelerometer bias correlation time in seconds */
-    public static final double correlationTime = 3600.0;
+    public static final double correlationTime = 3.0 * 3600.0;
             
     /** gyro bias noise strength */
     private double qbias;
@@ -41,12 +41,12 @@ public class SIGIGyroFilterModel {
     private double q;
 
     /** Default constructor. Hardcoded with SIGI gyro numbers. */
-    public SIGIGyroFilterModel() {
+    public SIMUGyroFilterModel() {
     	
     	VectorN zeroMean = new VectorN(3);
     	
     	// gyro bias parameters for SIGI
-    	double biasSigma = 0.0035 * MathUtils.DEG2RAD / 3600.0;
+    	double biasSigma = 5.0E-05 * MathUtils.DEG2RAD / 3600.0;
     	double dt = 1.0; // time step
     	double exponent = -2.0*dt/correlationTime;
     	this.qbias = biasSigma*biasSigma*(1.0 - Math.exp(exponent));  // in (rad/sec)^2/Hz
@@ -68,7 +68,6 @@ public class SIGIGyroFilterModel {
     	return out;
     }
     
-   
     /**
      * Return the gyro bias noise strength to be used in
      * the process noise matrix Q.
@@ -77,5 +76,6 @@ public class SIGIGyroFilterModel {
     public double Q() {
     	return this.q;
     }    
+    
         	
 }

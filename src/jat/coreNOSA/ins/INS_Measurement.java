@@ -20,7 +20,7 @@
  * File Created on May 19, 2003
  */
  
-package jat.core.ins;
+package jat.coreNOSA.ins;
 import jat.core.math.matvec.data.*;
 
 import java.io.*;

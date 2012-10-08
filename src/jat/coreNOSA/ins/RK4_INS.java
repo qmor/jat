@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.ins;
+package jat.coreNOSA.ins;
 
 //import jat.matvec.data.*;
 //import java.io.*;

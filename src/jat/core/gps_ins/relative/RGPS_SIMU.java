@@ -26,6 +26,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 import jat.core.ins.*;
 //import jat.gps_ins.*;
+import jat.coreNOSA.ins.INS_MeasurementList;
 
 /**
 * The RGPS_SIMU.java Class runs the RGPS/IMU EKF.

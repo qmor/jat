@@ -23,6 +23,7 @@ package jat.core.gps_ins;
 //import jat.matvec.data.*;
 //import jat.gps_ins.*;
 import jat.core.ins.*;
+import jat.coreNOSA.ins.INS_Measurement;
 
 /**
  * <P>

@@ -26,6 +26,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
 import jat.core.ins.*;
 //import jat.gps_ins.*;
+import jat.coreNOSA.ins.INS_MeasurementList;
 
 /**
 * The ODdemo.java Class is a demonstration of Orbit Determination.
