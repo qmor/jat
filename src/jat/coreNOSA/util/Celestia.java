@@ -19,7 +19,6 @@
  */
 package jat.coreNOSA.util;
 
-import jat.core.trajectory.*;
 import jat.coreNOSA.trajectory.Trajectory;
 //import jat.matvec.data.Matrix;
 //import jat.matvec.data.VectorN;

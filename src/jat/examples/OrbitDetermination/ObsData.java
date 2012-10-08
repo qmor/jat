@@ -27,6 +27,7 @@ import java.util.*;
 import jat.core.algorithm.estimators.*;
 import jat.core.math.matvec.data.*;
 import jat.core.util.*;
+import jat.coreNOSA.util.FileUtil;
 
 /**
 * The ObsData.java Class provides the measurements and measurement model for a

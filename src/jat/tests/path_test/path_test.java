@@ -1,6 +1,7 @@
 package jat.tests.path_test;
 
 import jat.core.util.*;
+import jat.coreNOSA.util.FileUtil;
 
 public class path_test
 {

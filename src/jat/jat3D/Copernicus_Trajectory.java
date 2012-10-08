@@ -22,6 +22,7 @@
 package jat.jat3D;
 
 import jat.core.util.*;
+import jat.coreNOSA.util.EasyReader;
 
 import javax.media.j3d.*;
 

@@ -39,7 +39,6 @@ import jat.coreNOSA.spacetime.UniverseModel;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.trajectory.Trajectory;
 import jat.coreNOSA.util.FileUtil;
-import jat.core.trajectory.*;
 import jat.core.util.*;
 //import jat.forces.ForceModelList;
 
