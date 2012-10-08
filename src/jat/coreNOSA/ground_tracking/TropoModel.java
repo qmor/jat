@@ -18,7 +18,7 @@
 *
 * 
 */
-package jat.core.ground_tracking;
+package jat.coreNOSA.ground_tracking;
 import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;

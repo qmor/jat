@@ -1,4 +1,4 @@
-package jat.core.ground_tracking;
+package jat.coreNOSA.ground_tracking;
 /* JAT: Java Astrodynamics Toolkit
 *
 * Copyright (c) 2007 National Aeronautics and Space Administration. All rights reserved.
@@ -24,9 +24,9 @@ package jat.core.ground_tracking;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import jat.core.groundstations.GroundStation;
-import jat.core.groundstations.SimpleGroundStation;
 import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.groundstations.GroundStation;
+import jat.coreNOSA.groundstations.SimpleGroundStation;
 import jat.coreNOSA.spacetime.Time;
 
 

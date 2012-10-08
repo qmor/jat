@@ -21,7 +21,7 @@
  * File Created on May 20, 2007
  */
  
-package jat.core.groundstations;
+package jat.coreNOSA.groundstations;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.math.*;
