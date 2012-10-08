@@ -1,4 +1,4 @@
-package jat.core.ephemeris;
+package jatNOSA.core.ephemeris;
 
 
 public enum DE405_Body {	

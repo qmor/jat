@@ -23,7 +23,6 @@ package jat.core.algorithm.estimators;
 
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.cm.Constants;
-import jat.core.ephemeris.DE405;
 import jat.core.forces.*;
 import jat.core.gps.GPS_Utils;
 import jat.core.math.MathUtils;
@@ -33,6 +32,7 @@ import jat.core.spacetime.*;
 import jat.core.timeRef.RSW_Frame;
 import jat.core.util.FileUtil;
 import jat.core.simulation.*;
+import jatNOSA.core.ephemeris.DE405;
 
 import java.util.HashMap;
 

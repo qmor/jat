@@ -24,6 +24,7 @@ import jat.core.math.MathUtils;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
+import jatNOSA.core.ephemeris.DE405_Body;
 
 import java.io.BufferedReader;
 import java.io.File;

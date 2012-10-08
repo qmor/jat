@@ -24,7 +24,6 @@ package jat.core.algorithm.estimators;
 import java.util.HashMap;
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.ephemeris.DE405;
 import jat.core.math.matvec.data.*;
 import jat.core.measurements.*;
 import jat.core.spacecraft.SpacecraftModel;
@@ -32,6 +31,7 @@ import jat.core.spacetime.Time;
 import jat.core.spacetime.TimeUtils;
 import jat.core.util.FileUtil;
 import jat.core.simulation.*;
+import jatNOSA.core.ephemeris.DE405;
 
 //import jat.audio.*;
 

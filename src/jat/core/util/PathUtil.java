@@ -29,16 +29,18 @@ public class PathUtil {
 
 	public String root_path;
 	public String current_path;
+	public String data_path;
 	public String fs = File.separator;
 
 	public PathUtil() {
 		root_path = find_root();
+		data_path = find_data_folder();
 	}
 
 	public PathUtil(Applet myapplet) {
 
-		current_path =find_current_path(myapplet);
-
+		current_path = find_current_path(myapplet);
+		data_path = find_data_folder();
 		// current_path =
 		// myapplet.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
@@ -50,7 +52,7 @@ public class PathUtil {
 
 	public String find_data_folder() {
 
-		return find_root() + "data/";
+		return find_root() + "data";
 	}
 
 	/**

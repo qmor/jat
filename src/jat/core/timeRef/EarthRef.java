@@ -25,6 +25,8 @@ import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.FileUtil;
+import jatNOSA.core.ephemeris.DE405;
+import jatNOSA.core.ephemeris.DE405_Body;
 
 /**
  * <P>

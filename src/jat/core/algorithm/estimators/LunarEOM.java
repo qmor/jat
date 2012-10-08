@@ -23,7 +23,6 @@ package jat.core.algorithm.estimators;
 
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.cm.Constants;
-import jat.core.ephemeris.DE405;
 import jat.core.forces.GravityModel;
 import jat.core.forces.GravityModelType;
 import jat.core.forces.SolarRadiationPressure;
@@ -35,6 +34,7 @@ import jat.core.spacetime.LunaRef;
 import jat.core.spacetime.Time;
 import jat.core.spacetime.UniverseModel;
 import jat.core.simulation.initializer;
+import jatNOSA.core.ephemeris.DE405;
 
 import java.util.HashMap;
 

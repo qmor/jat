@@ -27,7 +27,6 @@ import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.algorithm.integrators.RungeKutta8;
 import jat.core.cm.Constants;
 import jat.core.cm.TwoBody;
-import jat.core.ephemeris.DE405;
 import jat.core.forces.GravitationalBody;
 import jat.core.forces.GravityModel;
 import jat.core.forces.GravityModelType;
@@ -56,6 +55,7 @@ import jat.core.trajectory.RelativeTraj;
 import jat.core.trajectory.Trajectory;
 import jat.core.util.Celestia;
 import jat.core.util.FileUtil;
+import jatNOSA.core.ephemeris.DE405;
 
 import java.io.BufferedReader;
 import java.io.File;

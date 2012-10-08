@@ -33,6 +33,8 @@ import jat.core.ephemeris.*;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.CalDate;
 import jat.core.spacetime.Time;
+import jatNOSA.core.ephemeris.DE405;
+import jatNOSA.core.ephemeris.DE405_Body;
 import junit.framework.TestCase;
 
 public class DE405Test extends TestCase {

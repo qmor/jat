@@ -27,7 +27,6 @@ import java.util.Random;
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.ephemeris.DE405;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
 import jat.core.measurements.OpticalMeasurementModel;
@@ -45,6 +44,7 @@ import jat.core.trajectory.Trajectory;
 import jat.core.util.FileUtil;
 import jat.core.simulation.CEVLunarSim;
 import jat.core.simulation.initializer;
+import jatNOSA.core.ephemeris.DE405;
 
 public class SimpleProcessModel implements ProcessModel {
 

@@ -50,6 +50,8 @@ import jat.core.simulation.CEVLunarSim;
 import jat.core.simulation.CEVSim;
 import jat.core.simulation.EstimatorSimModel;
 import jat.core.simulation.initializer;
+import jatNOSA.core.ephemeris.DE405;
+import jatNOSA.core.ephemeris.DE405_Body;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	
