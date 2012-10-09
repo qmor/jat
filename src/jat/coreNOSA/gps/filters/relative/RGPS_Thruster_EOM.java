@@ -26,6 +26,8 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
 //import jat.gps_ins.*;
+import jat.coreNOSA.forces.CIRA_ExponentialDrag;
+import jat.coreNOSA.forces.J2Gravity;
 import jat.coreNOSA.gps.IonoModel;
 import jat.coreNOSA.gps.ReceiverFilterModel;
 import jat.coreNOSA.gps.URE_Model;

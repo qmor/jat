@@ -23,10 +23,10 @@ package jat.core.algorithm.estimators;
 
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.cm.Constants;
-import jat.core.forces.GravityModel;
-import jat.core.forces.GravityModelType;
-import jat.core.forces.SolarRadiationPressure;
 import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.forces.GravityModel;
+import jat.coreNOSA.forces.GravityModelType;
+import jat.coreNOSA.forces.SolarRadiationPressure;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.initializer;

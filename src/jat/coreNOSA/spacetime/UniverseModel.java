@@ -21,6 +21,9 @@ package jat.coreNOSA.spacetime;
 
 //import jat.spacetime.*;
 import jat.core.forces.*;
+import jat.coreNOSA.forces.AtmosphericDrag;
+import jat.coreNOSA.forces.ForceModel;
+import jat.coreNOSA.forces.ForceModelList;
 import jat.coreNOSA.spacecraft.Spacecraft;
 
 /**
@@ -133,7 +136,7 @@ public class UniverseModel {
     
     /**
      * Add a force model to the universe.
-     * @see jat.core.forces.ForceModel
+     * @see jat.coreNOSA.forces.ForceModel
      * @param f The force model.
      */
     public void addForce(ForceModel f){

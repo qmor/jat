@@ -34,6 +34,7 @@ import java.io.StreamTokenizer;
    <LI>LU Decomposition of rectangular matrices.
    <LI>QR Decomposition of rectangular matrices.
    <LI>Singular Value Decomposition of rectangular matrices.
+
    <LI>Eigenvalue Decomposition of both symmetric and nonsymmetric square matrices.
 </UL>
 <DL>
