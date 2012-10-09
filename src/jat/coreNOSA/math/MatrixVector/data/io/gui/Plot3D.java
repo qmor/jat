@@ -2,7 +2,6 @@ package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
 //import jat.matvec.data.Matrix;
 
-import jat.core.math.matvec.io.gui.plotTools.*;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Axe3D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Coordinates3D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.DataPlot3D;

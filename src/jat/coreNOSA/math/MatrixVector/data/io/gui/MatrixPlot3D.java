@@ -1,13 +1,16 @@
 package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
-import jat.core.math.matvec.io.gui.plotTools.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
 
 
 public class MatrixPlot3D extends Plot3D {
 
-  private Matrix[] XYZ;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8176264814304167999L;
+private Matrix[] XYZ;
 
   public MatrixPlot3D(Matrix xyz) {
     setAppearence();

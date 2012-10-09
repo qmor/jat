@@ -2,7 +2,6 @@ package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
 //import jat.matvec.data.Matrix;
 
-import jat.core.math.matvec.io.gui.plotTools.*;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Axe2D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Coordinates2D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.DataPlot2D;
@@ -16,7 +15,12 @@ import java.awt.event.*;
 
 public abstract class Plot2D extends JPanel implements MouseListener, MouseMotionListener {
 
-  private Dimension defaultSize = new Dimension(400,400);
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6027686204743112203L;
+
+private Dimension defaultSize = new Dimension(400,400);
 
   public static int PIXEL = DataPlot2D.PIXEL;
   public static int DOT = DataPlot2D.DOT;

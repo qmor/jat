@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.core.math.matvec.util;
+package jat.core.math.MatrixVector.util;
 
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

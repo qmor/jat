@@ -1,13 +1,16 @@
 package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
-import jat.core.math.matvec.io.gui.plotTools.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
 
 
 public class MatrixPlot2D extends Plot2D {
 
-  private Matrix[] XY;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5440840698081659885L;
+private Matrix[] XY;
 
   public MatrixPlot2D(Matrix xy) {
     setAppearence();

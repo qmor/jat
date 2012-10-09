@@ -1,6 +1,5 @@
 package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
-import jat.core.math.matvec.io.gui.plotTools.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RandomMatrix;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
@@ -8,7 +7,11 @@ import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
 
 public class MatrixHist2D extends Plot2D {
 
-  private Matrix[] XY;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6356121500445522355L;
+private Matrix[] XY;
   private Matrix[] width;
 
   private int nbSlices;

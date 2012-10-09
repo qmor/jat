@@ -1,13 +1,17 @@
 package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
-import jat.core.math.matvec.io.gui.plotTools.*;
 import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
 
 
 public class FunctionPlot3D extends Plot3D {
 
-  private DoubleFunction[] F;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4708819612154821212L;
+
+private DoubleFunction[] F;
 
   private double Xmin;
   private double Xmax;
