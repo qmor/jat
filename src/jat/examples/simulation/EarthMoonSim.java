@@ -21,7 +21,6 @@
 package jat.examples.simulation;
 
 import jat.core.cm.*;
-import jat.core.forces.*;
 import jat.coreNOSA.forces.GravitationalBody;
 import jat.coreNOSA.forces.Moon;
 import jat.coreNOSA.forces.Sun;

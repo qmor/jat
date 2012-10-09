@@ -19,15 +19,12 @@
  */
 package jat.tests.propagator;
 
-import com.mathworks.jmi.Matlab;
-
-//import jat.util.FileUtil;
-import jat.core.algorithm.integrators.*;
-import jat.core.forces.*;
+import jat.core.algorithm.integrators.LinePrinter;
+import jat.core.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.forces.ForceModelListOld;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.matlabInterface.*;
+import jat.coreNOSA.matlabInterface.MatlabControl;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.trajectory.Trajectory;

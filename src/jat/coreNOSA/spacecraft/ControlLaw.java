@@ -19,9 +19,6 @@
  */
 package jat.coreNOSA.spacecraft;
 
-import jat.core.algorithm.integrators.*;
-import jat.core.forces.*;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * A template class intended to be extended to implement various control

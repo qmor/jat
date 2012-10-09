@@ -23,8 +23,6 @@
 package jat.coreNOSA.trajectory;
 	
 import jat.core.algorithm.integrators.*;
-import jat.core.forces.*;
-//import jat.cm.*;
 import jat.coreNOSA.forces.HarrisPriester;
 import jat.coreNOSA.forces.JGM3;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

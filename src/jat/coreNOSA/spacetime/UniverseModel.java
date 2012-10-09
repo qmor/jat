@@ -20,7 +20,6 @@
 package jat.coreNOSA.spacetime;
 
 //import jat.spacetime.*;
-import jat.core.forces.*;
 import jat.coreNOSA.forces.AtmosphericDrag;
 import jat.coreNOSA.forces.ForceModel;
 import jat.coreNOSA.forces.ForceModelList;
