@@ -20,7 +20,6 @@
 
 package jat.examples.IntegratorExample;
 import jat.core.algorithm.integrators.*;
-import jat.core.plotutil.*;
 import jat.coreNOSA.plotutil.TwoPlots;
 
 /**

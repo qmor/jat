@@ -22,7 +22,6 @@
 package jat.examples.ZeroVelCurve;
 
 import jat.core.math.matvec.data.*;
-import jat.core.plotutil.*;
 import jat.coreNOSA.plotutil.SinglePlot;
 
 /**

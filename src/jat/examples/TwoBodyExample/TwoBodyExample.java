@@ -21,7 +21,6 @@
 package jat.examples.TwoBodyExample;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.plotutil.*;
 import jat.coreNOSA.plotutil.SinglePlot;
 
 /**

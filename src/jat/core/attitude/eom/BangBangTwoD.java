@@ -22,7 +22,6 @@ package jat.core.attitude.eom;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.Matrix;
-import jat.core.plotutil.*;
 import jat.coreNOSA.plotutil.FourPlots;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.TwoPlots;

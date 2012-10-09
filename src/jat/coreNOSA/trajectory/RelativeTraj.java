@@ -22,17 +22,14 @@ package jat.coreNOSA.trajectory;
  * File Created on Jun 8, 2003
  */
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.*;
-import jat.core.plotutil.*;
-import jat.core.spacetime.*;
+import jat.core.algorithm.integrators.LinePrinter;
+import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;
 import jat.coreNOSA.plotutil.TwoPlots;
 import jat.coreNOSA.spacetime.RSW_Frame;
+
+import java.awt.Color;
 
 /**
 * The RelativeTraj.java Class takes two trajectories and computes the relative trajectory.

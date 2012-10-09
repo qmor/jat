@@ -21,7 +21,6 @@
 package jat.core.attitude;
  
 import jat.core.algorithm.integrators.*;
-import jat.core.plotutil.*;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;
 import jat.coreNOSA.plotutil.TwoPlots;

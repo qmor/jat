@@ -20,7 +20,6 @@
 
 package jat.core.cm;
 import jat.core.math.matvec.data.*;
-import jat.core.plotutil.*;
 import jat.core.util.*;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.trajectory.CentralBody;
