@@ -1,4 +1,4 @@
-package jat.core.math.matvec.io.gui;
+package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 

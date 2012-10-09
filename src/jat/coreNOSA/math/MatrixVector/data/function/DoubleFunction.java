@@ -1,8 +1,8 @@
 package jat.coreNOSA.math.MatrixVector.data.function;
 
-import jat.core.math.matvec.io.gui.FrameView;
-import jat.core.math.matvec.io.gui.FunctionPlot2D;
-import jat.core.math.matvec.io.gui.FunctionPlot3D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.FrameView;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.FunctionPlot2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.FunctionPlot3D;
 /**
  * <p>Titre : JAva MAtrix TOols</p>
  * <p>Description : </p>

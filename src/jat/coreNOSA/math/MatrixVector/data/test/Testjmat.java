@@ -14,6 +14,13 @@ import jat.coreNOSA.math.MatrixVector.data.function.InvokeMatrixFunction;
 import jat.coreNOSA.math.MatrixVector.data.function.MatrixFunctionExpression;
 import jat.coreNOSA.math.MatrixVector.data.function.TestDoubleFunctionExpression;
 import jat.coreNOSA.math.MatrixVector.data.io.data.TextFile;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.FrameView;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.FunctionPlot2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.FunctionPlot3D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixHist2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixHist3D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixPlot2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixPlot3D;
 
 import java.io.*;
 

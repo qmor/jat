@@ -1,8 +1,14 @@
-package jat.core.math.matvec.io.gui;
+package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
 //import jat.matvec.data.Matrix;
 
 import jat.core.math.matvec.io.gui.plotTools.*;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Axe2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Coordinates2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.DataPlot2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Grid2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.NotedPoint2D;
+import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
 
 import javax.swing.*;
 import java.awt.*;

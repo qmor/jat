@@ -1,4 +1,4 @@
-package jat.core.math.matvec.io.gui.plotTools;
+package jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools;
 
 public class Coordinates2D {
 
