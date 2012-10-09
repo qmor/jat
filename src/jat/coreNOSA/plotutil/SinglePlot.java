@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.plotutil;
+package jat.coreNOSA.plotutil;
 
 import ptolemy.plot.*;
 import java.awt.GridBagLayout;

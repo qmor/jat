@@ -23,6 +23,9 @@ package jat.examples.AttitudeExample;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.plotutil.*;
+import jat.coreNOSA.plotutil.SinglePlot;
+import jat.coreNOSA.plotutil.ThreePlots;
+import jat.coreNOSA.plotutil.TwoPlots;
 
 /**
  * <p>This class demonstrates a way to do a simple s/c attitude simulation.

@@ -10,7 +10,7 @@ import jat.core.algorithm.VectorTimeFunction;
 import jat.core.algorithm.integrators.Printable;
 import jat.core.math.Interpolator;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.plotutil.SinglePlot;
+import jat.coreNOSA.plotutil.SinglePlot;
 
 import java.text.*;
 

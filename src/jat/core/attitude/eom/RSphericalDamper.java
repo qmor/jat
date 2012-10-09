@@ -23,6 +23,9 @@ import jat.core.algorithm.integrators.*;
 import jat.core.attitude.QuatToDeg;
 import jat.core.math.matvec.data.*;
 import jat.core.plotutil.*;
+import jat.coreNOSA.plotutil.FourPlots;
+import jat.coreNOSA.plotutil.SinglePlot;
+import jat.coreNOSA.plotutil.ThreePlots;
 
 /**
  * This class contains the equations of motion for the simulation

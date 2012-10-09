@@ -23,6 +23,7 @@ import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.math.matvec.data.*;
 import jat.core.plotutil.*;
+import jat.coreNOSA.plotutil.SinglePlot;
 
 /**
  * @author Tobias Berthold

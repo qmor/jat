@@ -24,6 +24,7 @@ package jat.examples.OST;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.plotutil.*;
+import jat.coreNOSA.plotutil.SinglePlot;
 
 /**
  * @author Tobias Berthold

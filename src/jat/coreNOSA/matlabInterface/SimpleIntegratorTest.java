@@ -21,6 +21,7 @@
 package jat.coreNOSA.matlabInterface;
 import jat.core.algorithm.integrators.*;
 import jat.core.plotutil.*;
+import jat.coreNOSA.plotutil.TwoPlots;
 
 /**
  * <P>

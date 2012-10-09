@@ -29,6 +29,9 @@ import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.*;
 import jat.core.plotutil.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.plotutil.SinglePlot;
+import jat.coreNOSA.plotutil.ThreePlots;
+import jat.coreNOSA.plotutil.TwoPlots;
 import jat.coreNOSA.spacetime.RSW_Frame;
 
 /**
