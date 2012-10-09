@@ -1,4 +1,4 @@
-package jat.core.math.matvec.function.expressionParser;
+package jat.coreNOSA.math.MatrixVector.data.function.expressionParser;
 
 import java.util.HashMap;
 

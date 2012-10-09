@@ -1,4 +1,4 @@
-package jat.core.math.matvec.function;
+package jat.coreNOSA.math.MatrixVector.data.function;
 
 import jat.core.math.matvec.io.gui.FrameView;
 import jat.core.math.matvec.io.gui.FunctionPlot2D;

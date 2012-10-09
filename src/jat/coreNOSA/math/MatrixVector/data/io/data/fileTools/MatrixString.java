@@ -1,4 +1,4 @@
-package jat.core.math.matvec.io.data.fileTools;
+package jat.coreNOSA.math.MatrixVector.data.io.data.fileTools;
 
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 

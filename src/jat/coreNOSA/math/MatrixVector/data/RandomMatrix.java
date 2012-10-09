@@ -1,12 +1,12 @@
 package jat.coreNOSA.math.MatrixVector.data;
 
-import jat.core.math.matvec.function.DoubleFunction;
 import jat.core.math.matvec.io.gui.FrameView;
 import jat.core.math.matvec.io.gui.MatrixHist2D;
 import jat.core.math.matvec.io.gui.MatrixHist3D;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RandomVariable;
 import jat.coreNOSA.math.MatrixVector.data.arrayTools.Shuffle;
+import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
 
 
 

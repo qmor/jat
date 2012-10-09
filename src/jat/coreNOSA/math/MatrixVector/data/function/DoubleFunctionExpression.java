@@ -1,22 +1,20 @@
-package jat.core.math.matvec.function;
+package jat.coreNOSA.math.MatrixVector.data.function;
 
-import jat.core.math.matvec.function.expressionParser.Evaluator;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.function.expressionParser.Evaluator;
 
-public class TestDoubleFunctionExpression extends TestDoubleFunction {
-
-  //private int argNumber;
+public class DoubleFunctionExpression extends DoubleFunction {
 
   private String expression;
   private String[] variables;
   private Evaluator E = new Evaluator();
 
-  public TestDoubleFunctionExpression(String exp,String[] vars) {
+  public DoubleFunctionExpression(String exp,String[] vars) {
     argNumber = vars.length;
     setFunction(exp,vars);
   }
 
-  public TestDoubleFunctionExpression(String exp,String vars) {
+  public DoubleFunctionExpression(String exp,String vars) {
     argNumber = 1;
     String[] variable = new String[1];
     variable[0] = vars;
@@ -27,7 +25,6 @@ public class TestDoubleFunctionExpression extends TestDoubleFunction {
     expression = exp;
     variables = vars;
   }
-
 
   private void setVariableValues(double[] values) {
     for (int i = 0;i<variables.length;i++) {
@@ -48,24 +45,21 @@ public class TestDoubleFunctionExpression extends TestDoubleFunction {
     E.setExpression(expression);
   }
 
-  public boolean eval(double[] values) {
+  public double eval(double[] values) {
     checkArgNumber(values.length);
     setVariableValues(values);
-    boolean bool = (((Double)(E.getValue())).doubleValue()>0.5) ? (true) : (false);
-    return bool;
+    return ((Double)(E.getValue())).doubleValue();
   }
 
-  public boolean eval(double value) {
+  public double eval(double value) {
     checkArgNumber(1);
     setVariableValues(value);
-    boolean bool = (((Double)(E.getValue())).doubleValue()>0.5) ? (true) : (false);
-    return bool;
+    return ((Double)(E.getValue())).doubleValue();
   }
 
-  public boolean eval(Matrix values) {
+  public double eval(Matrix values) {
     checkArgNumber(values.getRowDimension());
     setVariableValues(values);
-    boolean bool = (((Double)(E.getValue())).doubleValue()>0.5) ? (true) : (false);
-    return bool;
+    return ((Double)(E.getValue())).doubleValue();
   }
 }

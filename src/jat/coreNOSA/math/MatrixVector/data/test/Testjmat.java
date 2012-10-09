@@ -6,6 +6,14 @@ import jat.core.math.matvec.io.gui.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RandomMatrix;
 import jat.coreNOSA.math.MatrixVector.data.Text;
+import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
+import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunctionExpression;
+import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunctionInterpolation;
+import jat.coreNOSA.math.MatrixVector.data.function.InvokeDoubleFunction;
+import jat.coreNOSA.math.MatrixVector.data.function.InvokeMatrixFunction;
+import jat.coreNOSA.math.MatrixVector.data.function.MatrixFunctionExpression;
+import jat.coreNOSA.math.MatrixVector.data.function.TestDoubleFunctionExpression;
+import jat.coreNOSA.math.MatrixVector.data.io.data.TextFile;
 
 import java.io.*;
 

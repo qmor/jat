@@ -1,4 +1,6 @@
-package jat.core.math.matvec.function;
+package jat.coreNOSA.math.MatrixVector.data.function;
+
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 /**
  * <p>Titre : JAva MAtrix TOols</p>
@@ -7,11 +9,11 @@ package jat.core.math.matvec.function;
  * @version 1.0
  */
 
-public abstract class TestDoubleFunction {
+public abstract class MatrixFunction {
 
   protected int argNumber;
 
-  public abstract boolean eval(double[] values);
+  public abstract Matrix eval(Matrix[] values);
 
   public void checkArgNumber(int n) {
     if (argNumber != n) {

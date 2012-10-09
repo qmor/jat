@@ -1,4 +1,4 @@
-package jat.core.math.matvec.function;
+package jat.coreNOSA.math.MatrixVector.data.function;
 
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 

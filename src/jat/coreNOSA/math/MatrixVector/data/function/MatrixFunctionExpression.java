@@ -1,7 +1,7 @@
-package jat.core.math.matvec.function;
+package jat.coreNOSA.math.MatrixVector.data.function;
 
-import jat.core.math.matvec.function.expressionParser.Evaluator;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.function.expressionParser.Evaluator;
 
 public class MatrixFunctionExpression extends MatrixFunction {
 

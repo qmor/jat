@@ -1,7 +1,7 @@
 package jat.core.math.matvec.io.gui;
 
-import jat.core.math.matvec.function.DoubleFunction;
 import jat.core.math.matvec.io.gui.plotTools.*;
+import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
 
 
 public class FunctionPlot2D extends Plot2D {

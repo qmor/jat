@@ -1,9 +1,9 @@
 package jat.coreNOSA.math.MatrixVector.data;
 
-import jat.core.math.matvec.io.data.TextFile;
-import jat.core.math.matvec.io.data.fileTools.MatrixString;
 import jat.core.math.matvec.io.gui.FrameView;
 import jat.core.math.matvec.io.gui.TextWindow;
+import jat.coreNOSA.math.MatrixVector.data.io.data.TextFile;
+import jat.coreNOSA.math.MatrixVector.data.io.data.fileTools.MatrixString;
 //import jat.matvec.io.data.fileTools.TextString;
 
 

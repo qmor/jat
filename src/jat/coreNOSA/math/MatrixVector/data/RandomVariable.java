@@ -1,6 +1,6 @@
 package jat.coreNOSA.math.MatrixVector.data;
 
-import jat.core.math.matvec.function.DoubleFunction;
+import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
 
 /**
 <P>
