@@ -5,11 +5,9 @@ package jat.coreNOSA.measurements;
 import java.io.IOException;
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.Interpolator;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.spacetime.Time;
 
 import java.util.Random;
 
@@ -37,18 +35,18 @@ public class generatePolarization{
 			recXaxis = new VectorN(Interpolator.readXAxis(ReceiverModel));
 			recYaxis = new VectorN(Interpolator.readYAxis(ReceiverModel));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
 		GPSDataMat = Interpolator.readData(GPSmodel, GPSXaxis.length, GPSYaxis.length);
 		recDataMat = Interpolator.readData(ReceiverModel, recXaxis.length, recYaxis.length);
 		
-        GPSlengthy=GPSDataMat.getColumnDimension()-1;
-        GPSlengthx=GPSDataMat.getRowDimension()-1;
+        setGPSlengthy(GPSDataMat.getColumnDimension()-1);
+        setGPSlengthx(GPSDataMat.getRowDimension()-1);
         
-        recLengthy=recDataMat.getColumnDimension()-1;
-        recLengthx=recDataMat.getRowDimension()-1;
+        setRecLengthy(recDataMat.getColumnDimension()-1);
+        setRecLengthx(recDataMat.getRowDimension()-1);
 
 		gpsAng = new double[33];
 		for(int i = 0;i<33; i++)
@@ -173,6 +171,38 @@ public class generatePolarization{
 		
 		return out;
     }
+
+	public static double getGPSlengthx() {
+		return GPSlengthx;
+	}
+
+	public static void setGPSlengthx(double gPSlengthx) {
+		GPSlengthx = gPSlengthx;
+	}
+
+	public static double getGPSlengthy() {
+		return GPSlengthy;
+	}
+
+	public static void setGPSlengthy(double gPSlengthy) {
+		GPSlengthy = gPSlengthy;
+	}
+
+	public static double getRecLengthy() {
+		return recLengthy;
+	}
+
+	public static void setRecLengthy(double recLengthy) {
+		generatePolarization.recLengthy = recLengthy;
+	}
+
+	public static double getRecLengthx() {
+		return recLengthx;
+	}
+
+	public static void setRecLengthx(double recLengthx) {
+		generatePolarization.recLengthx = recLengthx;
+	}
 
 }
 

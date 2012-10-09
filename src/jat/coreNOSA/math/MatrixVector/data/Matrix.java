@@ -22,8 +22,7 @@ package jat.coreNOSA.math.MatrixVector.data;
 
 import java.io.*;
 
-import jat.core.math.matvec.data.arrayTools.*;
-import jat.core.math.matvec.data.matrixDecompositions.*;
+
 import jat.core.math.matvec.function.DoubleFunction;
 import jat.core.math.matvec.io.data.MatrixFile;
 import jat.core.math.matvec.io.data.fileTools.MatrixString;

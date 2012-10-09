@@ -21,7 +21,6 @@
 package jat.core.cm;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

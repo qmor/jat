@@ -19,7 +19,6 @@
  */
  
 package jat.coreNOSA.math.MatrixVector.data.matrixDecompositions;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 /**

@@ -29,7 +29,6 @@ package jat.coreNOSA.gps.filters.absolute;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.IonoModel;
 import jat.coreNOSA.gps.ReceiverFilterModel;

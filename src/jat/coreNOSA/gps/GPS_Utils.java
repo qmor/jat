@@ -22,7 +22,6 @@ package jat.coreNOSA.gps;
  * File Created on Jun 20, 2003
  */
  
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

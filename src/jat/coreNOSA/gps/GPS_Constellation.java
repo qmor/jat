@@ -21,14 +21,13 @@
 package jat.coreNOSA.gps;
 
 //import java.io.*;
-import java.util.*;
-
-import jat.core.math.matvec.data.*;
-import jat.core.spacetime.*;
-import jat.core.util.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.GPSTimeFormat;
 import jat.coreNOSA.util.FileUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * <P>
  * The GPS_Constellation Class provides a model of the GPS constellation

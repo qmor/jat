@@ -22,7 +22,6 @@
 package jat.tests.core.algorithm.solver;
 
 import jat.core.algorithm.solver.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

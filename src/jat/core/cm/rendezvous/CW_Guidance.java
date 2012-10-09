@@ -25,7 +25,6 @@ package jat.core.cm.rendezvous;
 import jat.core.cm.ClohessyWiltshire;
 import jat.core.cm.Constants;
 import jat.core.cm.TwoBody;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.RSW_Frame;

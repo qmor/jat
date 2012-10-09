@@ -24,7 +24,6 @@ package jat.core.cm.rendezvous;
  
 import java.io.*;
 
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
@@ -36,6 +35,11 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
  */
 
 public class CW_Target implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8824206007429439739L;
+
 	/** Epoch time of measurement in sim time (seconds) */
 	public double t;
 		

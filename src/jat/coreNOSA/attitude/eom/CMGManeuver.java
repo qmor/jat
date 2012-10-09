@@ -22,7 +22,6 @@
 package jat.coreNOSA.attitude.eom;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.attitude.QuatToDeg;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.plotutil.FourPlots;

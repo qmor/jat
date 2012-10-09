@@ -24,7 +24,6 @@ package jat.examples.Rendezvous;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
  
 public class CW_Rendezvous {

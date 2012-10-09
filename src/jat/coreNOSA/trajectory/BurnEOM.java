@@ -25,7 +25,6 @@ package jat.coreNOSA.trajectory;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
-import jat.core.math.matvec.data.*;
 //import jat.spacetime.BodyRef;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.Quaternion;

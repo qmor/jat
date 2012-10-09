@@ -24,7 +24,6 @@ package jat.coreNOSA.ins;
 //import jat.alg.estimators.*;
 //import jat.ins.*;
 import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;

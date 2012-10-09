@@ -1,6 +1,5 @@
 package jat.coreNOSA.math.MatrixVector.data.test;
 
-import jat.core.math.matvec.data.*;
 import jat.core.math.matvec.function.*;
 import jat.core.math.matvec.io.data.*;
 import jat.core.math.matvec.io.gui.*;

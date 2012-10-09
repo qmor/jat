@@ -23,7 +23,6 @@ package jat.core.cm.eom;
 import jat.core.algorithm.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

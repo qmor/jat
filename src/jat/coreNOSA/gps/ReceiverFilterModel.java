@@ -19,8 +19,6 @@
  */
 
 package jat.coreNOSA.gps;
-import jat.core.math.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

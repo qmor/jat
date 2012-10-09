@@ -24,7 +24,6 @@ package jat.core.algorithm.estimators;
 import java.util.HashMap;
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

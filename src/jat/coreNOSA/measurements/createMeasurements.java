@@ -3,7 +3,6 @@ package jat.coreNOSA.measurements;
 import java.util.HashMap;
 
 import jat.core.algorithm.estimators.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.initializer;
 

@@ -19,8 +19,6 @@
 * 
 */
 package jat.coreNOSA.ground_tracking;
-import jat.core.math.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.constants.IERS_1996;
 import jat.coreNOSA.gps.GPS_Utils;
 import jat.coreNOSA.math.MathUtils;

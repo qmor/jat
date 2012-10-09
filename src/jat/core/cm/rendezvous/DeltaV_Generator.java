@@ -21,7 +21,6 @@
 package jat.core.cm.rendezvous;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.Quaternion;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

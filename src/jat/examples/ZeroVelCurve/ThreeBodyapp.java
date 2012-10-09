@@ -21,7 +21,6 @@
 
 package jat.examples.ZeroVelCurve;
 
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 

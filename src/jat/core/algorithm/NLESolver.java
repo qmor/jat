@@ -29,8 +29,6 @@
 
 package jat.core.algorithm;
 
-import jat.core.math.matvec.data.*;
-import jat.core.math.matvec.data.matrixDecompositions.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.Householder;

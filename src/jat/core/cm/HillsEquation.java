@@ -22,7 +22,6 @@
 package jat.core.cm;
 import java.io.*;
 
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /** Implements Hills Equations
@@ -41,7 +40,6 @@ public class HillsEquation {
         PrintWriter pw = new PrintWriter(outf);
 
         VectorN x = new VectorN(6);
-        Constants c = new Constants();
 
         double x0 = 0.0;
         double y0 = 0.0;

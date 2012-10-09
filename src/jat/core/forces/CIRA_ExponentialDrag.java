@@ -19,8 +19,6 @@
  */
 
 package jat.core.forces;
-import jat.core.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.timeRef.*;
 import jat.coreNOSA.audio.SoundPlayer;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

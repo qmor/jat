@@ -21,7 +21,6 @@
 package jat.core.algorithm.optimization;
 
 import jat.core.algorithm.ScalarfromArrayFunction;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

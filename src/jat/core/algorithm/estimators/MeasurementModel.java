@@ -21,7 +21,6 @@ package jat.core.algorithm.estimators;
  * 
  * File Created on May 7, 2003
  */
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

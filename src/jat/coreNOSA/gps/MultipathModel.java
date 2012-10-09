@@ -22,8 +22,6 @@ package jat.coreNOSA.gps;
 
 import jat.core.algorithm.*;
 import jat.core.cm.*;
-import jat.core.math.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

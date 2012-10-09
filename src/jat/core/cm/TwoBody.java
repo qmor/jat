@@ -20,7 +20,6 @@
 
 package jat.core.cm;
 import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
@@ -68,7 +67,7 @@ public class TwoBody implements Derivatives
 	 */
 	public TwoBody(KeplerElements k)
 	{
-		Constants c = new Constants();
+		//Constants c = new Constants();
 		this.a = k.a;
 		this.e = k.e;
 		this.i = k.i;
@@ -85,7 +84,7 @@ public class TwoBody implements Derivatives
 	 */
 	public TwoBody(double mu)
 	{
-		Constants c = new Constants();
+		//Constants c = new Constants();
 		this.mu = mu;
 		rv = new VectorN(randv());
 	}
@@ -97,7 +96,7 @@ public class TwoBody implements Derivatives
 	 */
 	public TwoBody(double mu, KeplerElements k)
 	{
-		Constants c = new Constants();
+		//Constants c = new Constants();
 		this.a = k.a;
 		this.e = k.e;
 		this.i = k.i;
@@ -140,7 +139,7 @@ public class TwoBody implements Derivatives
 	 */
 	public TwoBody(double mu, double x1, double x2, double x3, double x4, double x5, double x6)
 	{
-		Constants c = new Constants();
+		//Constants c = new Constants();
 		double[] temp = new double[6];
 		this.mu = mu;
 		this.a = x1;
@@ -243,7 +242,7 @@ public class TwoBody implements Derivatives
 	{
 		r.checkVectorDimensions(3);
 		v.checkVectorDimensions(3);
-		Constants c = new Constants();
+		//Constants c = new Constants();
 		VectorN evec = new VectorN(3); // e vector
 		VectorN k = new VectorN(3); // unit vector in z direction
 
@@ -488,7 +487,7 @@ public class TwoBody implements Derivatives
 	public Matrix RSW2ECI()
 	{
 		VectorN r = this.getR();
-		VectorN v = this.getV();
+		//VectorN v = this.getV();
 		VectorN h = this.getH();
 		VectorN rhat = r.unitVector();
 		VectorN what = h.unitVector();
@@ -701,7 +700,7 @@ public class TwoBody implements Derivatives
 
 		// determine sqrt(1+e/1-e)
 
-		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
+		//double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
 
 		// initialize t
 
@@ -776,7 +775,7 @@ public class TwoBody implements Derivatives
 
 		// determine sqrt(1+e/1-e)
 
-		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
+		//double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
 
 		// initialize t
 
@@ -853,7 +852,7 @@ public class TwoBody implements Derivatives
 
 		// determine sqrt(1+e/1-e)
 
-		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
+		//double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
 
 		// initialize t
 

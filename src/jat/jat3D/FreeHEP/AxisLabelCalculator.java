@@ -1,6 +1,5 @@
 package jat.jat3D.FreeHEP;
 
-import java.io.*;
 /**
  * @author Joy Kyriakopulos (joyk@fnal.gov)
  * @version $Id: AxisLabelCalculator.java 8584 2006-08-10 23:06:37Z duns $

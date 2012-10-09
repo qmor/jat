@@ -15,7 +15,6 @@ import java.util.Random;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.cm.Constants;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -23,7 +22,6 @@ import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.Time;
-import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.trajectory.Trajectory;
 import jat.coreNOSA.util.FileUtil;
 

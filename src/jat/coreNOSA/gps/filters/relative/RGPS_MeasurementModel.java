@@ -23,7 +23,6 @@
 package jat.coreNOSA.gps.filters.relative;
 
 import jat.core.algorithm.estimators.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.GPS_SV;
 import jat.coreNOSA.gps.GPS_Utils;

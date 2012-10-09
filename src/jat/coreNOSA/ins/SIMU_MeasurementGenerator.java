@@ -24,8 +24,6 @@ package jat.coreNOSA.ins;
 //import jat.gps_ins.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
-import jat.core.math.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.GaussianVector;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
@@ -382,8 +380,8 @@ public class SIMU_MeasurementGenerator {
         
         
         // form the measurements        
-        VectorN accel_meas = accel_temp.plus(accel_noise_acc);
-        VectorN gyro_meas = gyro_temp.plus(gyro_noise_acc);
+        //VectorN accel_meas = accel_temp.plus(accel_noise_acc);
+        //VectorN gyro_meas = gyro_temp.plus(gyro_noise_acc);
         
         // add the measurements to the list
 //        INS_Measurement meas = new INS_Measurement(t, accel_meas, gyro_meas);

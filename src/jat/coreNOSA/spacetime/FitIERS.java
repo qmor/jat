@@ -19,7 +19,10 @@
  */
 package jat.coreNOSA.spacetime;
 
-import java.util.*;
+import jat.core.util.PathUtil;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,15 +30,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
-import jat.core.cm.Constants;
-import jat.core.math.*;
-import jat.core.math.matvec.data.*;
-import jat.core.util.PathUtil;
-import jat.coreNOSA.math.MatrixVector.data.Matrix;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.util.FileUtil;
 
 /**
  * International Earth Rotation and Reference Service parameters. Parses and

@@ -1,17 +1,15 @@
 package jat.coreNOSA.measurements;
 
 
-import java.util.HashMap;
-
-import java.util.Random;
-
-import jat.core.algorithm.estimators.*;
-import jat.core.math.matvec.data.*;
-import jat.coreNOSA.gps.Visible;
+import jat.core.algorithm.estimators.EKF;
+import jat.core.algorithm.estimators.MeasurementFileModel;
+import jat.core.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;
-import jat.coreNOSA.util.FileUtil;
+
+import java.util.HashMap;
+import java.util.Random;
 
 public class GPSStateMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	

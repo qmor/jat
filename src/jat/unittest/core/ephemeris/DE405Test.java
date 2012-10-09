@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jat.core.ephemeris.*;
-import jat.core.math.matvec.data.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
