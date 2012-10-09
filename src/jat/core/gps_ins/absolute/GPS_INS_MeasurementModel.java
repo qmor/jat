@@ -23,7 +23,6 @@
 package jat.core.gps_ins.absolute;
 
 import jat.core.algorithm.estimators.*;
-import jat.core.gps.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.GPS_SV;

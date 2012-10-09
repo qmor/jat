@@ -25,8 +25,6 @@ import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.forces.*;
-import jat.core.gps.*;
-import jat.core.gps.filters.*;
 import jat.core.math.matvec.data.*;
 //import jat.gps_ins.*;
 import jat.coreNOSA.gps.IonoModel;

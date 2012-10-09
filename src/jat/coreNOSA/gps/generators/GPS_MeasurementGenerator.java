@@ -23,7 +23,6 @@
 package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.gps.GPS_Constellation;

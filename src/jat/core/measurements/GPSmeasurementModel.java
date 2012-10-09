@@ -26,7 +26,6 @@ import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.estimators.MeasurementFileModel;
 import jat.core.algorithm.estimators.MeasurementModel;
 import jat.core.algorithm.integrators.*;
-import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.gps.GEO_Blockage_Models;

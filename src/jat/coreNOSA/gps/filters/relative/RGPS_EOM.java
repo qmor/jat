@@ -24,8 +24,6 @@ package jat.coreNOSA.gps.filters.relative;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.forces.*;
-import jat.core.gps.*;
-import jat.core.gps.filters.*;
 import jat.core.math.matvec.data.*;
 //import jat.cm.*;
 //import jat.gps_ins.*;

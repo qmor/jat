@@ -23,7 +23,6 @@
 package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.gps.ElevationMask;
@@ -77,7 +76,7 @@ public class RGPS_MP_MeasurementGenerator_MC {
 
 	private URE_Model ure;
 
-	private RungeKutta8 rk8 = new RungeKutta8(1.0);
+	//private RungeKutta8 rk8 = new RungeKutta8(1.0);
 
 	private String outfile;
 
