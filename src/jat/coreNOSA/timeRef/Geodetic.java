@@ -28,7 +28,6 @@ import jat.core.math.matvec.data.*;
 * The Geodetic Class provides methods of converting between geocentric and geodetic reference systems.
 * Reference: Satellite Orbits by Montenbruck and Gill, Section 5.5. This is basically their C++ code converted to Java.
 * 
-* @deprecated
 * @see jat.spacetime.Geodetic
 * @author 
 * @version 1.0

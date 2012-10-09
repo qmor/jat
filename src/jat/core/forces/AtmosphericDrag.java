@@ -96,7 +96,6 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
     abstract public double computeDensity(Time t, BodyRef ref, VectorN r);
 
 //    /** Abstract class requires the subclass to compute the atmospheric density.
-//     * @deprecated
 //     * @param ref EarthRef object.
 //     * @param r Position vector.
 //     * @return Atmospheric density in kg/m^3
@@ -181,7 +180,6 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
     }
 
 //    /** Computes the acceleration due to drag in m/s^2.
-//     * @deprecated
 //     * @param ref EarthRef object.
 //     * @param r ECI position vector in meters.
 //     * @param v ECI velocity vector in meters.
@@ -241,7 +239,6 @@ abstract public class AtmosphericDrag implements ForceModel, EarthForceModel {
      * Returns the acceleration developed on the spacecraft at the current time and position
      * @param eRef Earth reference object
      * @param sc Spacecraft parameters and state
-     * @deprecated
      * @see jat.core.forces.EarthForceModel#acceleration(jat.coreNOSA.timeRef.EarthRef, jat.coreNOSA.spacecraft.Spacecraft)
      */
     public VectorN acceleration(EarthRef eRef, Spacecraft sc) {

@@ -42,7 +42,6 @@ import jat.coreNOSA.util.FileUtil;
  * 
  * For general use of Earth based coordinate systems, see jat.spacetime.EarthRef.java
  *
- * @deprecated
  * @see jat.coreNOSA.spacetime.EarthRef
  * @author Richard C. Page III 
  * @author 

@@ -69,7 +69,6 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	 */
 	protected ControlLaw controller;
 	/**
-	 * @deprecated
 	 * Model for the state estimation algorithms and filters.
 	 */
 	protected StateEstimation estimator;

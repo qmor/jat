@@ -39,7 +39,6 @@ import jat.coreNOSA.util.FileUtil;
  * use the GEONS method, change the parameter 'use_GEONS' to true and place the IERS
  * Bulletin A into a file called 'iers.dat' into the jat.timeRef directory. 
  * 
- * @deprecated
  * @see jat.coreNOSA.spacetime.FitIERS
  * @author
  * @author Richard C. Page III

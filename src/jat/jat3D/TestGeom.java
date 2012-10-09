@@ -86,22 +86,4 @@ public class TestGeom extends  Body3D
 		addChild(s);
 	}
 
-	/**
-	 * @deprecated ColorCube now extends shape so it is no longer necessary
-	 * to call this method.
-	 */
-//	public Shape3D getShape()
-//	{
-//		return this;
-//	}
-//
-//	/**
-//	 * Returns the scale of the Cube
-//	 *
-//	 * @since Java 3D 1.2.1
-//	 */
-//	public double getScale()
-//	{
-//		return scale;
-//	}
 }

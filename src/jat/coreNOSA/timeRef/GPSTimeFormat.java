@@ -29,7 +29,6 @@ import jat.coreNOSA.spacetime.TimeUtils;
  * Reference: Satellite Orbits by Montenbruck and Gill.
  * Translated code from the NOAA GPS Toolbox (www.ngs.noaa.gov/gps-toolbox/index.html)
  *
- * @deprecated
  * @see jat.coreNOSA.spacetime.GPSTimeFormat
  * @author 
  * @version 1.0

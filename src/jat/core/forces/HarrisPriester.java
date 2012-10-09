@@ -19,16 +19,16 @@
  */
 
 package jat.core.forces;
-import jat.core.forces.harrispriester.*;
-import jat.core.math.matvec.data.*;
-import jat.core.spacetime.*;
-import jat.coreNOSA.timeRef.*;
+import jat.core.forces.harrispriester.HarrisPriesterData;
+import jat.core.math.matvec.data.Matrix;
+import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.EarthRef;
+import jat.coreNOSA.timeRef.Geodetic;
 
 /**
  * <P>
@@ -279,7 +279,6 @@ public class HarrisPriester extends AtmosphericDrag{
 	/**
 	 * 
 	 * Compute the atmospheric density using the Harris-Priester atmosphere model.
-	 * @deprecated
      * @param ref Earth reference object.
      * @param r ECI position vector in meters.
      * @return Atmospheric density in kg/m^3.
