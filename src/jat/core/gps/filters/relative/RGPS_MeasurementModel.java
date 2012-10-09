@@ -25,6 +25,12 @@ package jat.core.gps.filters.relative;
 import jat.core.algorithm.estimators.*;
 import jat.core.gps.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.gps.GPS_Constellation;
+import jat.coreNOSA.gps.GPS_SV;
+import jat.coreNOSA.gps.GPS_Utils;
+import jat.coreNOSA.gps.IonoModel;
+import jat.coreNOSA.gps.RGPS_Measurement;
+import jat.coreNOSA.gps.RGPS_MeasurementList;
 
 /**
 * The RGPS_MeasurementModel.java Class provides ...

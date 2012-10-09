@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *

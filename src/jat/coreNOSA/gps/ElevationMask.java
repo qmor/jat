@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -22,49 +22,49 @@ package jat.core.gps;
  * File Created on Jul 13, 2003
  */
  
+import jat.core.math.*;
 import jat.core.math.matvec.data.*;
-//import jat.math.*;
+
 /**
  * <P>
- * The ISS_Blockage Class provides a model of GPS signal blockage due to 
- * a spherical ISS and a spherical earth.
+ * The ElevationMask Class provides a model of GPS signal blockage due to 
+ * a minimum elevation constraint or elevation mask.
  *
  * @author 
  * @version 1.0
  */
-
-public class ISS_Earth_Blockage implements Visible {
+public class ElevationMask implements Visible {
 	
 	private double elevationMask;
-	private static final double issRadius = 50.0;
-	private Earth_Blockage earth = new Earth_Blockage();
 	
+	public ElevationMask() {
+		this.elevationMask = 10.0 * MathUtils.DEG2RAD;
+	}
+		
+	/** Constructor
+	 * @param em elevation mask angle in degrees
+	 */
+	public ElevationMask(double em) {
+		this.elevationMask = em * MathUtils.DEG2RAD;
+	}
 	
-    /**
-     * Determine if the GPS satellite is visible, including ISS blockage
+	 /**
+     * Determine if the GPS satellite is visible
      * Used by GPS Measurement Generator.
      * @param losu Line of sight unit vector
      * @param r    current position vector
-     * @param rISS current position vector of the ISS
      * @return boolean true if the GPS satellite is visible
      */
 	public boolean visible(VectorN losu, VectorN r, VectorN rISS) {
-		
-		// check elevation mask
-		boolean visible = earth.visible(losu, r, rISS);
-		
-		// check ISS visibility
-		VectorN rrel = rISS.minus(r);
-		double dist = rrel.mag();
-		double cone = Math.atan2(issRadius,dist);
-		VectorN rel = rrel.unitVector();
-		double cos_delta = rel.dotProduct(losu);
-		double delta = Math.acos(cos_delta);
-		if (delta < cone) {
+		boolean visible = true;
+		double pi2 = MathUtils.PI / 2.0;
+		VectorN bore = r.unitVector();
+		double cos_theta = bore.dotProduct(losu);
+		double theta = Math.acos(cos_theta);
+		if (theta > (pi2 - this.elevationMask)) {
 			visible = false;
 		}
-		
 		return visible;
-	}	
+	}
 
 }

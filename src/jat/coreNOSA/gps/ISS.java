@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;

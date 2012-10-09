@@ -18,7 +18,7 @@
  *
  */
  
-package jat.core.gps;
+package jat.coreNOSA.gps;
 import java.io.*;
 import java.util.*;
 

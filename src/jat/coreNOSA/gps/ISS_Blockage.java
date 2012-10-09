@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -24,47 +24,59 @@ package jat.core.gps;
  
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
-
 /**
  * <P>
- * The ElevationMask Class provides a model of GPS signal blockage due to 
- * a minimum elevation constraint or elevation mask.
+ * The ISS_Blockage Class provides a model of GPS signal blockage due to 
+ * a spherical ISS.
  *
  * @author 
  * @version 1.0
  */
-public class ElevationMask implements Visible {
+public class ISS_Blockage implements Visible {
 	
 	private double elevationMask;
+	private static final double issRadius = 50.0;
+	private ElevationMask elev;
 	
-	public ElevationMask() {
+	public ISS_Blockage() {
 		this.elevationMask = 10.0 * MathUtils.DEG2RAD;
+		this.elev = new ElevationMask();
 	}
-		
+	
 	/** Constructor
 	 * @param em elevation mask angle in degrees
 	 */
-	public ElevationMask(double em) {
+	public ISS_Blockage(double em) {
 		this.elevationMask = em * MathUtils.DEG2RAD;
+		this.elev = new ElevationMask(this.elevationMask);
+		
 	}
 	
-	 /**
-     * Determine if the GPS satellite is visible
+    /**
+     * Determine if the GPS satellite is visible, including ISS blockage
      * Used by GPS Measurement Generator.
      * @param losu Line of sight unit vector
      * @param r    current position vector
+     * @param rISS current position vector of the ISS
      * @return boolean true if the GPS satellite is visible
      */
 	public boolean visible(VectorN losu, VectorN r, VectorN rISS) {
-		boolean visible = true;
-		double pi2 = MathUtils.PI / 2.0;
-		VectorN bore = r.unitVector();
-		double cos_theta = bore.dotProduct(losu);
-		double theta = Math.acos(cos_theta);
-		if (theta > (pi2 - this.elevationMask)) {
+		
+		// check elevation mask
+		boolean visible = elev.visible(losu, r, rISS);
+		
+		// check ISS visibility
+		VectorN rrel = rISS.minus(r);
+		double dist = rrel.mag();
+		double cone = Math.atan2(issRadius,dist);
+		VectorN rel = rrel.unitVector();
+		double cos_delta = rel.dotProduct(losu);
+		double delta = Math.acos(cos_delta);
+		if (delta < cone) {
 			visible = false;
 		}
+		
 		return visible;
-	}
+	}	
 
 }

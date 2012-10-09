@@ -24,6 +24,8 @@ package jat.core.gps.filters.relative;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
+import jat.coreNOSA.gps.GPS_Constellation;
+import jat.coreNOSA.gps.RGPS_MeasurementList;
 
 /**
 * The RGPS_Thruster.java Class runs the RGPS-only EKF with thruster model.

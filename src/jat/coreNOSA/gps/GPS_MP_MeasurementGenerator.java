@@ -20,7 +20,7 @@
  * File Created on May 22, 2003
  */
 
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.math.*;

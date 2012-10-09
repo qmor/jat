@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -37,7 +37,6 @@ import jat.core.gps.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.measurements.*;
 import jat.coreNOSA.timeRef.RSW_Frame;
 import jat.coreNOSA.util.FileUtil;
 
@@ -51,7 +50,7 @@ import jat.coreNOSA.util.FileUtil;
  * @version 1.0
  */
 
-public class GEO_Blockage_Models_LM implements ExpandedVisible {
+public class GEO_Blockage_Models implements ExpandedVisible {
 	
 	private double elevationMask;
 	private static final double earthRadius = 6478140.0;
@@ -61,7 +60,7 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
 	
 	double Ae = 0;  //Attenuation due to the atmosthpere
 	double As = 0 ;  //To account for signal loss in front of LNA
-	double PowerSV = 13.0;  //Average transmit power of block IIA sats
+	double PowerSV = 14.9;  //Average transmit power of block IIA sats
 	double L  = -1.1;  //Receiver implimentation loss
 	double Nf = -3.4;  //Noise figure for Receiver/LNA
 	double Ts =  290.0;  //System Noise Temperature (K) earth pointing antenna
@@ -69,22 +68,18 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
 	
 	double pointingBias = 0;
 	//The receiver performance figures
-	double AcquisitionThreshold = 30.0;// (dB-Hz)
-	double TrackingThreshold    = 28.0;// (dB-Hz)
+	double AcquisitionThreshold = 25;// (dB-Hz)
+	double TrackingThreshold    = 22;// (dB-Hz)
 	static boolean [] AcquisitionFlag = new boolean[33];
 	
-	static double [] receiverAntennaDeg = new double[14];
-	static double [] receiverAntennaGain = new double[14];
+	static double [] receiverAntennaDeg = new double[15];
+	static double [] receiverAntennaGain = new double[15];
 	static double [] GPSAntennaDeg = new double[66];
 	static double [] GPSAntennaGain = new double[66];
 	public static double Cn0;
+	public static double elevation;
 	public static double trackedCn0;
 	boolean firsttime = true;
-	public static double[] elevation = new double[33];
-	public static double[] azimuth   = new double[33];
-	Interpolator interpR, interpG;
-	double LMNoise;
-	double thetaR, thetaGPS;
 
 	
     /**
@@ -95,7 +90,7 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
      * @param rGPS current position vector of GPS Satellite
      * @return boolean true if the GPS satellite is visible
      */
-	public boolean visible(VectorN losu, VectorN r, VectorN rGPS, VectorN v, VectorN vGPS, int prn, double mjd) {
+	public boolean visible(VectorN losu, VectorN r, VectorN rGPS) {
 
 		//Load the antenna gain maps.  Note:  0 = receiver, 1 = GPS Sv
 		//NOTE: I believe that both GPS satellite and the receiver antenna
@@ -112,26 +107,14 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
             }	
 //          
 			//readFromFile("C:\\GOESR\\omni_antenna.txt",receiverAntennaDeg,receiverAntennaGain);
-			//eadFromFile("C:\\GOESR\\ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
+			readFromFile(dir_in+"ballhybrid_10db_60deg.txt",receiverAntennaDeg,receiverAntennaGain);
 			//readFromFile(dir_in+"patch.txt",receiverAntennaDeg,receiverAntennaGain);
-			//readFromFile(dir_in+"GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
+			readFromFile(dir_in+"GPSIIA_L1MEAN.txt",GPSAntennaDeg,GPSAntennaGain);
 			//readFromFile("C:\\GOESR\\LMantenna.txt",receiverAntennaDeg,receiverAntennaGain);
 			firsttime = false;
-			//interpR = new Interpolator(receiverAntennaDeg,receiverAntennaGain);
-			//interpG = new Interpolator(GPSAntennaDeg,GPSAntennaGain);
-			interpG = new Interpolator(dir_in + "BlockIIRTrans.txt");
-			//interpR = new Interpolator(dir_in + "LM22deg.txt");
-			//LMNoise = 204.6;
-			//interpR = new Interpolator(dir_in + "LM17deg.txt");
-			//LMNoise = 204.6;
-			interpR = new Interpolator(dir_in + "IIRM.txt");
-			generatePolarization polar = new generatePolarization(dir_in+"BlockIIRTransAxial.txt",dir_in+"IIRMAxial.txt");
-			LMNoise = 204.2;
-			L = -1.2;
-			Nf = -1.4;
 		}
-		
-		
+		Interpolator interpR = new Interpolator(receiverAntennaDeg,receiverAntennaGain);
+		Interpolator interpG = new Interpolator(GPSAntennaDeg,GPSAntennaGain);
 		// check elevation mask
 		boolean visible = true;
 		
@@ -161,83 +144,44 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
 			VectorN unitrGPS = rGPS.unitVector();
 			VectorN minusUnitRGPS = unitrGPS.times(-1.0);
 			VectorN minusLosu = losu.times(-1.0);
-			thetaGPS = (180/(Math.PI))*Math.acos(minusUnitRGPS.dotProduct(minusLosu));
-			if(thetaGPS > 80 || thetaGPS < -80)
+			double thetaGPS = (180/(Math.PI))*Math.acos(minusUnitRGPS.dotProduct(minusLosu));
+			if(thetaGPS > 40 || thetaGPS < -40)
 			{
 				visible = false;
 			}
 			
 			//Lookup the appropriate gain from the transmitting antenna
-			//double Gt = interpG.get_value(thetaGPS);
-			
-			//Determine the current yaw angle for the GPS receiver
-			double yaw = generateYaw.getYawAngle(mjd,rGPS,vGPS,prn);
-			
-			
-			//Rotate the LOS vector (negative since it needs to be from
-			//the receiver to the GPS satellite) into the GPS SV's RSW frame
-			VectorN losRSW = generateYaw.T.times(minusLosu);
-			VectorN GPSRSW = generateYaw.T.times(rGPS);
-			VectorN unitGPSRSW = GPSRSW.unitVector();
-			unitGPSRSW = unitGPSRSW.times(-1.0); //Needs to point to the center of the Earth
-			
-			//the antenna angles provided are 180 degrees off from the yaw angle
-			yaw = yaw + 180;
-			double transmitAzimuth = yaw + (180/Math.PI)*Math.atan2(losRSW.get(1),losRSW.get(2));
-			if(transmitAzimuth < 0)
-				transmitAzimuth = transmitAzimuth + 360.0;
-			if(transmitAzimuth > 360)
-				transmitAzimuth = transmitAzimuth - 360.0;
-			
-			double transmitElevation = (180/(Math.PI))*Math.acos(unitGPSRSW.dotProduct(losRSW));
-			if(transmitElevation > 69)
-				transmitElevation = 65;
-			double Gt = interpG.get_value(transmitElevation,transmitAzimuth);
-			
-
-	
-			//compute the polarization losses
-			//double Gt = interpG.get_value(thetaGPS);
-			
-			
+			double Gt = interpG.get_value(thetaGPS);
 			
 			//Determine the angle between the receiver boresight 
-			//and the GPS SV	
-			//Generate a RTN rotation matrix and rotate the LOS vector into it
-			Matrix T = RSW_Frame.ECI2RIC(r,v);
-			VectorN losRTN = T.times(losu);
-			azimuth[prn] = ((180)/Math.PI)*Math.atan2(losRTN.get(0),losRTN.get(1)*-1);
+			//and the GPS SV
+//			Generate a RTN rotation matrix and rotate the LOS vector into it
+			//Matrix T = RSW_Frame.ECI2RIC(r,v);
+			//VectorN losRTN = T.times(losu);
+			
+			//azimuth[prn] = ((180)/Math.PI)*Math.acos(dots/mags);
+			//azimuth[prn] = ((180)/Math.PI)*Math.atan2(losRTN.get(0),losRTN.get(1)*-1);
 
-			//Compute the Elevaton to the GPS Satellite
-			elevation[prn]=Math.abs((180/Math.PI)*Math.asin(losRTN.get(2)/losRTN.mag()));
+//			Compute the Elevaton to the GPS Satellite
+			//elevation[prn]=(180/Math.PI)*Math.asin(losRTN.get(2)/losRTN.mag());
+			
+			
+			
+			
 			
 			VectorN unitR = r.unitVector();
 			VectorN minusUnitR = unitR.times(-1.0);
-			thetaR = (180/(Math.PI))*Math.acos(minusUnitR.dotProduct(losu)) + pointingBias;
-			
-			
-			if(thetaR > 80 || thetaR < -80)
+			double thetaR = (180/(Math.PI))*Math.acos(minusUnitR.dotProduct(losu)) + pointingBias;
+			elevation = thetaR;
+			if(thetaR > 40 || thetaR < -40)
 			{
 				visible = false;
 			}
 			
 			
 			//Lookup the approprate gain from the receiving antenna			
-			//double Gr = interpR.get_value(thetaR);
-			double receiveAzimuth = (180/Math.PI)*Math.atan2(losRTN.get(1),losRTN.get(2));
-			if(receiveAzimuth < 0)
-				receiveAzimuth= receiveAzimuth+ 360;
-			if(thetaR > 69)
-				thetaR = 65;
-			double Gr = interpR.get_value(thetaR,receiveAzimuth);
+			double Gr = interpR.get_value(thetaR);
 			
-			
-			//Determine Polarizaiton Losses
-			double pol = 0.0;
-			if(visible)
-			{
-				pol = generatePolarization.returnPolarization(prn, receiveAzimuth, thetaR,transmitAzimuth, transmitElevation, 10.0*(Math.PI/180),yaw);
-			}
 			//Determine the free space propagation loss
 			VectorN los = GPS_Utils.lineOfSight(r, rGPS);
 			double Ad = 20*Math.log10((C/L1freq) / (4*Math.PI*los.mag()));
@@ -250,68 +194,62 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
 			//Determine the received power
 			// Received Power = Attenuated Power + Receiver Gain + 
 			//  				Losses prior to LNA
-			double Rp = Ap + Gr + As - pol;
+			double Rp = Ap + Gr + As;
 			
 			
 			//Determine the Carrier to Noise Ratio
 			//Carrier to Noise ratio = Received power - scaling of system noise
 			//						 +  288.6 (not sure what that is) + receiver noise figure
 			//						 +  Losses in receiver/LNA (front end?)
-			//Cn0 = Rp - 10*Math.log10(Ts) + 228.6 + Nf + L;
-			Cn0 = Rp + LMNoise;// + Nf + L ;
-
-			if(Cn0 < TrackingThreshold)
-				visible = false;
-			//System.out.println("thetaR: " + thetaR + " ThetaGPS: " + thetaGPS + " C/N0: " + Cn0);
+			Cn0 = Rp - 10*Math.log10(Ts) + 228.6 + Nf + L;
+			
+			
+			
 			//If the satellite isn't visible, reset the AcquisitionFlag
 			//to force it to reacquire
-			if(visible == false)
-				AcquisitionFlag[prn] = false;
+			//if(visible == false)
+			//	AcquisitionFlag[prn] = false;
 			
 			
 			//System.out.println("Cn0 for PRN : " + prn + " is: "+Cn0);
 			//If it is visible and strong enough, "Acquire" satellite
-			if(visible && AcquisitionFlag[prn] == false && Cn0 > AcquisitionThreshold)
-				AcquisitionFlag[prn] = true;
+			//if(visible && AcquisitionFlag[prn] == false && Cn0 > AcquisitionThreshold)
+			//	AcquisitionFlag[prn] = true;
 
 			//If we have "acquired" a satellite and if the Cn0 is greater than
 			//the tracking threshold, then it is visible
-			if(AcquisitionFlag[prn])
-			{
-				if(Cn0 > TrackingThreshold)
-				{
-	
-					visible = true;
-					trackedCn0 = Cn0;
-				}
-			}
-			else
-			{
-				visible = false;
-				trackedCn0 = 0;
-			}
+			//if(AcquisitionFlag[prn])
+		//	{
+			//	if(Cn0 > TrackingThreshold)
+			//	{
+			//		visible = true;
+			//		trackedCn0 = Cn0;
+			//	}
+			//}
+			//else
+			//{
+			//	visible = false;
+			//	trackedCn0 = 0;
+			//}
 		
 		
 		}
 		if(visible != true)
-			elevation[prn] = 0.0;
-		if(visible == true)
-		{
-			FileWriter out;
-			try {
-				
-				out = new FileWriter("C:\\GOESR\\tmp.txt",true);
-				BufferedWriter writer = new BufferedWriter(out);
-				String pp = mjd + " " + Cn0 + " " + thetaR + " " + thetaGPS + "\n"; 
-		
-						
-				writer.write(pp);
-				writer.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+			elevation = 0.0;
+//		if(visible == true)
+//		{
+//			FileWriter out;
+//			try {
+//				out = new FileWriter("C:\\GOESR\\tmp.txt",true);
+//				BufferedWriter writer = new BufferedWriter(out);
+//				String pp = " " + Cn0 + "\n";
+//				writer.write(pp);
+//				writer.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		return visible;
 		
 	}
@@ -349,15 +287,16 @@ public class GEO_Blockage_Models_LM implements ExpandedVisible {
 			return;
 		}
 	}
-	public boolean visible(VectorN losu, VectorN r, VectorN rISS) {
+
+
+	public boolean visible(VectorN losu, VectorN r, VectorN rGPS, VectorN v, int prn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public boolean visible(VectorN losu, VectorN r, VectorN v, VectorN rGPS, VectorN vGPS, int prn, double mjd) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-
-	//public boolean visible(VectorN losu, VectorN r, VectorN rGPS, VectorN v, int prn) {
-	//	// TODO Auto-generated method stub
-	//	return false;
-	//}
-
 }
+

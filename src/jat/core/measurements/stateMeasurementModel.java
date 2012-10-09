@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 import jat.core.algorithm.estimators.*;
-import jat.core.gps.Visible;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.gps.Visible;
 import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;
 

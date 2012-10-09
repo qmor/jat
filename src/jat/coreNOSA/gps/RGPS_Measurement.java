@@ -20,7 +20,7 @@
  * File Created on May 19, 2003
  */
  
-package jat.core.gps;
+package jat.coreNOSA.gps;
 import java.io.*;
 
 
@@ -30,7 +30,7 @@ import java.io.*;
 * @author 
 * @version 1.0
 */
-public class GPS_Measurement implements Serializable {
+public class RGPS_Measurement implements Serializable {
 	
 	/** Epoch time of measurement in sim time (seconds) */
 	private double t;
@@ -38,11 +38,11 @@ public class GPS_Measurement implements Serializable {
 	/** Epoch time of measurement in MJD */
 	private double t_mjd;
 	
-	/** C/A Code Range to SV in meters */
-	private double coderange;
+	/** Range to SV in meters */
+	private double range;
 	
-	/** Carrier Phase Range to SV in meters */
-	private double phaserange;	
+	/** Measurement type */
+	private int type;	
 	
 	/** SVID */
 	public int svid;
@@ -54,11 +54,11 @@ public class GPS_Measurement implements Serializable {
 	 * @param cpr carrier phase range to GPS SV in meters.
 	 * @param sv SVID
 	 */
-	public GPS_Measurement(double tsim, double tmjd, double r, double cpr, int sv) {
+	public RGPS_Measurement(double tsim, double tmjd, double r, int typ, int sv) {
 		this.t = tsim;
 		this.t_mjd = tmjd;
-		this.coderange = r;
-		this.phaserange = cpr;
+		this.range = r;
+		this.type = typ;
 		this.svid = sv;
 	}
 	
@@ -66,7 +66,7 @@ public class GPS_Measurement implements Serializable {
 	 * @return GPS measurement data on a single line
 	 */
 	public String toString() {
-		String out = t+"\t"+t_mjd+"\t"+coderange+"\t"+phaserange+"\t"+svid;
+		String out = t+"\t"+t_mjd+"\t"+range+"\t"+type+"\t"+svid;
 		return out;
 	}
 	
@@ -87,19 +87,19 @@ public class GPS_Measurement implements Serializable {
 	}
 	
 	/**
-	 * Return the pseudorange measurement
-	 * @return double containing the pseudorange measurement
+	 * Return the range measurement
+	 * @return double containing the range measurement
 	 */
 	public double range() {
-		return this.coderange;
+		return this.range;
 	}
 	
 	/**
-	 * Return the carrier phase range measurement
-	 * @return double containing the carrier phase range measurement
+	 * Return the measurement type
+	 * @return int containing the measurement type
 	 */
-	public double phaseRange(){
-		return this.phaserange;
+	public int type(){
+		return this.type;
 	}
 	
 	/**

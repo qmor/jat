@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -28,7 +28,7 @@ package jat.core.gps;
  * @author 
  * @version 1.0
  */
-public interface ExpandedVisible extends Visible{
+public interface Visible {
 	/**
 	 * check to see if the GPS SV is visible
 	 * @param losu GPS SV line of sight unit vector
@@ -36,5 +36,5 @@ public interface ExpandedVisible extends Visible{
 	 * @param rISS ISS position vector
 	 * @return boolean true = visible, false = blocked
 	 */
-	public boolean visible(VectorN losu, VectorN r, VectorN v, VectorN rGPS, VectorN vGPS, int prn, double mjd);
+	public boolean visible(VectorN losu, VectorN r, VectorN rISS);
 }

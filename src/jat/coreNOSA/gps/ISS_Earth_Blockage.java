@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -23,25 +23,25 @@ package jat.core.gps;
  */
  
 import jat.core.math.matvec.data.*;
-
+//import jat.math.*;
 /**
  * <P>
- * The Earth_Blockage Class provides a model of GPS signal blockage due to 
- * a spherical earth.
+ * The ISS_Blockage Class provides a model of GPS signal blockage due to 
+ * a spherical ISS and a spherical earth.
  *
  * @author 
  * @version 1.0
  */
 
-public class Earth_Blockage implements Visible {
+public class ISS_Earth_Blockage implements Visible {
 	
 	private double elevationMask;
-	private static final double earthRadius = 6478140.0;
-	
+	private static final double issRadius = 50.0;
+	private Earth_Blockage earth = new Earth_Blockage();
 	
 	
     /**
-     * Determine if the GPS satellite is visible, including earth blockage
+     * Determine if the GPS satellite is visible, including ISS blockage
      * Used by GPS Measurement Generator.
      * @param losu Line of sight unit vector
      * @param r    current position vector
@@ -51,13 +51,14 @@ public class Earth_Blockage implements Visible {
 	public boolean visible(VectorN losu, VectorN r, VectorN rISS) {
 		
 		// check elevation mask
-		boolean visible = true;
+		boolean visible = earth.visible(losu, r, rISS);
 		
 		// check ISS visibility
-		double dist = r.mag();
-		double cone = Math.atan2(earthRadius, dist);
-		VectorN r_unit = r.unitVector().times(-1.0);
-		double cos_delta = r_unit.dotProduct(losu);
+		VectorN rrel = rISS.minus(r);
+		double dist = rrel.mag();
+		double cone = Math.atan2(issRadius,dist);
+		VectorN rel = rrel.unitVector();
+		double cos_delta = rel.dotProduct(losu);
 		double delta = Math.acos(cos_delta);
 		if (delta < cone) {
 			visible = false;

@@ -32,6 +32,10 @@ import jat.core.cm.*;
 import jat.core.gps.*;
 import jat.core.gps.filters.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.gps.GPS_Constellation;
+import jat.coreNOSA.gps.IonoModel;
+import jat.coreNOSA.gps.ReceiverFilterModel;
+import jat.coreNOSA.gps.URE_Model;
 
 /**
 * The GPS_ProcessModel.java Class provides the process model

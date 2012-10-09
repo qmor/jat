@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.gps;
+package jat.coreNOSA.gps;
 import jat.core.cm.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;

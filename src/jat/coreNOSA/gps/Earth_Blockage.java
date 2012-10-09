@@ -1,4 +1,4 @@
-package jat.core.gps;
+package jat.coreNOSA.gps;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -22,38 +22,26 @@ package jat.core.gps;
  * File Created on Jul 13, 2003
  */
  
-import jat.core.math.*;
 import jat.core.math.matvec.data.*;
+
 /**
  * <P>
- * The ISS_Blockage Class provides a model of GPS signal blockage due to 
- * a spherical ISS.
+ * The Earth_Blockage Class provides a model of GPS signal blockage due to 
+ * a spherical earth.
  *
  * @author 
  * @version 1.0
  */
-public class ISS_Blockage implements Visible {
+
+public class Earth_Blockage implements Visible {
 	
 	private double elevationMask;
-	private static final double issRadius = 50.0;
-	private ElevationMask elev;
+	private static final double earthRadius = 6478140.0;
 	
-	public ISS_Blockage() {
-		this.elevationMask = 10.0 * MathUtils.DEG2RAD;
-		this.elev = new ElevationMask();
-	}
 	
-	/** Constructor
-	 * @param em elevation mask angle in degrees
-	 */
-	public ISS_Blockage(double em) {
-		this.elevationMask = em * MathUtils.DEG2RAD;
-		this.elev = new ElevationMask(this.elevationMask);
-		
-	}
 	
     /**
-     * Determine if the GPS satellite is visible, including ISS blockage
+     * Determine if the GPS satellite is visible, including earth blockage
      * Used by GPS Measurement Generator.
      * @param losu Line of sight unit vector
      * @param r    current position vector
@@ -63,14 +51,13 @@ public class ISS_Blockage implements Visible {
 	public boolean visible(VectorN losu, VectorN r, VectorN rISS) {
 		
 		// check elevation mask
-		boolean visible = elev.visible(losu, r, rISS);
+		boolean visible = true;
 		
 		// check ISS visibility
-		VectorN rrel = rISS.minus(r);
-		double dist = rrel.mag();
-		double cone = Math.atan2(issRadius,dist);
-		VectorN rel = rrel.unitVector();
-		double cos_delta = rel.dotProduct(losu);
+		double dist = r.mag();
+		double cone = Math.atan2(earthRadius, dist);
+		VectorN r_unit = r.unitVector().times(-1.0);
+		double cos_delta = r_unit.dotProduct(losu);
 		double delta = Math.acos(cos_delta);
 		if (delta < cone) {
 			visible = false;
