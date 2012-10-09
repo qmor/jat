@@ -17,48 +17,42 @@
  *
  */
 
-package jat.core.attitude.eom;
+package jat.coreNOSA.attitude.eom;
  
 import jat.core.algorithm.integrators.*;
-import jat.core.attitude.QuatToDeg;
+import jat.core.attitude.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.attitude.QuatToDeg;
 import jat.coreNOSA.plotutil.FourPlots;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;
 
 /**
- *<P>
+ * <P>
  * This class contains the equations of motion for the simulation
  * of a rigid spacecraft subjected to gravity gradient torque
- * while it goes around an eccentric orbit .
+ * while it orbits around the earth.
  * The class implements jat.alg.integrators.Derivatives and
- * jat.alg.integrateors.Printble, so an outside application code can perform 
- * a numerical simulation of equations of motion defined in this class and get 
- * the output from the simulation.
- * 
+ * jat.alg.integrateors.Printble, so an outside application code
+ * can perform a numerical simulation of equations of motion defined
+ * in this class and get the output from the simulation.
+ *  
  * @author Noriko Takada
  * Modification since the last version
- * 		Switched to the interface EquationsOfMotion
- *  
+ * 		Switched to the interface EquationsOfMotion * 
+ * 
+ * @param	time_step:			Time step of numerical integration
+ * @param	quat_values[][]		Two dimensional array that contains quarternions from simulation
+ * @param	I1,I2,I3			Principal moments of inertia about 1,2, and 3 axes
+ * 
  */
 
-public class RGGEccentricOrbit implements EquationsOfMotion
+public class RGGCircularOrbit implements EquationsOfMotion
 {
-	//Note: The EOM still has some errors! because the simulation doesn't really agree 
- //    with the Matlab simulation!!
- //
- //		time_step:			Time step of numerical integration
- //		quat_values[][]		Two dimensional array that contains quarternions from simulation
- //		I1,I2,I3			Principal moments of inertia about 1,2, and 3 axes
- //  	e					Eccentricity
- //		rotation_plot		Plots of angular velocities
- //		angle_plot			Plots of euler angles
- //		quarternion_check	Plot of e1^2 + e2^2 + e3^2 +e4^2
 	double  time_step;
-	public int currentPts=0;
+	public int currentPts;
 	private float quat_values[][];
 	
-	// Create variables for the necessary plots
 	// Create variables for the necessary plots
 	private ThreePlots angular_velocity_plot = new ThreePlots();								
 	private ThreePlots euler_angle_plot = new ThreePlots();
@@ -67,10 +61,12 @@ public class RGGEccentricOrbit implements EquationsOfMotion
 	private SinglePlot energy_plot = new SinglePlot();
 	private FourPlots angular_momentum_plot = new FourPlots();
 	
-	private double I1 = 10.42;
+	
+	
+	private double I1 = 10.42;       
     private double I2 = 35.42;
     private double I3 = 41.67;
-    private double e  = 0.3;	
+	
 	
 	/**
 	 * Constructor 1
@@ -79,10 +75,9 @@ public class RGGEccentricOrbit implements EquationsOfMotion
 	 * @param 	I1					Principle moment of inertia about 1 axis
 	 * @param 	I2					Principle moment of inertia about 2 axis
 	 * @param 	I3					Principle moment of inertia about 3 axis
-	 * @param	e					Eccentricity
 	 */ 
-	public RGGEccentricOrbit(double time_step, double I1, double I2, double I3
-							, double e, float quat_values[][])
+	public RGGCircularOrbit(double time_step, double I1, double I2, double I3,
+							 float quat_values[][])
 	{
 		setupPlots();
 		this.time_step = time_step;
@@ -90,15 +85,14 @@ public class RGGEccentricOrbit implements EquationsOfMotion
 		this.I1 = I1;
 		this.I2 = I2;
 		this.I3 = I3;
-		this.e = e;
 	}
-		
+	
 	/**
 	 * Constructor 2
 	 * @param	time_step:			Time step of numerical integration
  	 * @param	quat_values[][]		Two dimensional array that contains quarternions from simulation
  	 */
-	public RGGEccentricOrbit(double time_step, float quat_values[][])
+	public RGGCircularOrbit(double time_step, float quat_values[][])
 	{
 		setupPlots();
 		this.time_step = time_step;
@@ -162,66 +156,36 @@ public class RGGEccentricOrbit implements EquationsOfMotion
         angular_momentum_plot.fourthPlot.setXLabel("t (Orbits)");
         angular_momentum_plot.fourthPlot.setYLabel("Hi total");
         
-        
+              
 	}
 	
-	 
+	
 	/** Compute the derivatives.
      * Equations of Motion
      * @params t    double containing time or the independent variable.
      * @params x    VectorN containing the required data.
      * @return      double [] containing the derivatives.
      */
-		
 	public double[] derivs(double t, double[] x)
     {
-       	     
-        
-        double c11 = 1- 2*( x[4]*x[4] + x[5]*x[5]);
+       	double c11 = 1- 2*( x[4]*x[4] + x[5]*x[5]);
         double c21 = 2* (x[3]*x[4]-x[5]*x[6]);
         double c31 = 2* (x[3]*x[5]+x[4]*x[6]); 
         
-        /* The non-dimensionalized equations of motion for this series are:
-
-         // *** Angular Velocity Equations ***
-         w1dot = (2*pi*A)*((iyy-izz)/ixx)*(w2*w3-3*c21*c31*B);
-         w2dot = (2*pi*A)*((izz-ixx)/iyy)*(w1*w3-3*c31*c11*B);
-         w3dot = (2*pi*A)*((ixx-iyy)/izz)*(w1*w2-3*c11*c21*B);
-
-         // *** Quaternions ***
-         e1dot = (-pi*A*(-(w3+1/A)*e2 + w2*e3 - w1*e4));
-         e2dot = (-pi*A*((w3+1/A)*e1 - w1*e3 - w2*e4));
-         e3dot = (-pi*A*(-w2*e1 + w1*e2 - (w3-1/A)*e4));
-         e4dot = (-pi*A*(w1*e1 + w2*e2 + (w3-1/A)*e3));
-
-         c11 = 1 - 2*(e2^2 + e3^2)
-         c21 = 2*(e1*e2 - e3*e4)
-         c31 = 2*(e1*e3 + e2*e4)
-			
-		 A = ((1-e^2)^(3/2)/(1+e*cos(2*pi*t))^2
-		 B = (1+e*cos(2*pi*t))^3/(1-e^2)^3	
-         */
-
-         double A=Math.pow((1-e*e),1.5)/Math.pow((1+ e*Math.cos(2*Math.PI*t)),2);
-         double B=Math.pow((1+e*Math.cos(2*Math.PI*t)),3)/Math.pow((1-e*e), 3);
-         
-         double [] out = new double[7];
-         // *** Angular Velocity Equations (dw/dnu (orbits)) *** //
-         out[0] = A*2*Math.PI*((I2-I3)/I1)*(x[1]*x[2]-3*c21*c31*B);
-         out[1] = A*2*Math.PI*((I3-I1)/I2)*(x[0]*x[2]-3*c31*c11*B);
-         out[2] = A*2*Math.PI*((I1-I2)/I3)*(x[0]*x[1]-3*c11*c21*B);
-         
-         // *** Quaternions (de/dnu (orbits)) ***
-         out[3] = -Math.PI*A*(-(x[2]+1/A)*x[4] + x[1]*x[5] - x[0]*x[6]);
-         out[4] = -Math.PI*A*((x[2]+1/A)*x[3] - x[0]*x[5] - x[1]*x[6]);
-         out[5] = -Math.PI*A*(-x[1]*x[3] + x[0]*x[4] - (x[2]-1/A)*x[6]);
-         out[6] = -Math.PI*A*(x[0]*x[3] + x[1]*x[4] + (x[2]-1/A)*x[5]);
-         //System.out.println("e is "+ e+ " "+ x[0]+" "+A+" " +B);
-              
+        double [] out = new double[7];
+        out[0] = 2*Math.PI*((I2-I3)/I1)* (x[1]*x[2] - 3*c21*c31);
+        out[1] = 2*Math.PI*((I3-I1)/I2)* (x[0]*x[2] - 3*c31*c11) ;
+        out[2] = 2*Math.PI*((I1-I2)/I3)* (x[0]*x[1] - 3*c11*c21) ;
+        out[3] = -Math.PI* (-(x[2]+1)*x[4] + x[1]*x[5] - x[0]*x[6]);
+        out[4] = -Math.PI* ((x[2]+1)*x[3]  - x[0]*x[5] - x[1]*x[6]);
+        out[5] = -Math.PI* (-(x[2]-1)*x[6] + x[0]*x[4] - x[1]*x[3]);
+        out[6] = -Math.PI* ((x[2]-1)*x[5]  + x[1]*x[4] + x[0]*x[3]);
+        
+        
         return out;
     }// End of derivs
     	
-    /** Implements the Printable interface to get the data out of the propagator and pass it to the plot.
+     /** Implements the Printable interface to get the data out of the propagator and pass it to the plot.
      *  This method is executed by the propagator at each integration step.
      * @param t Time.
      * @param y Data array.
@@ -254,9 +218,8 @@ public class RGGEccentricOrbit implements EquationsOfMotion
     	double Phi = angle[2];
     	
     	double quat_check = q1*q1+q2*q2+q3*q3+q4*q4;
-        
-        
-        // Calculate Transformation matrix elements
+    	
+    	// Calculate Transformation matrix elements
         // Transform from A to B see Bong Wie (p.318)
         double c11 = 1- 2*(q2*q2 + q3*q3);
         double c12 = 2* (q1*q2 + q3*q4);
@@ -318,7 +281,7 @@ public class RGGEccentricOrbit implements EquationsOfMotion
         currentPts++;
     }
     
-      /**
+     /**
     * Return the quarternion values after simulation
     * @author	Noriko Takada
     */
@@ -333,6 +296,12 @@ public class RGGEccentricOrbit implements EquationsOfMotion
     */
    public void makePlotsVisible()
    {
+   		//ThreePlots angular_velocity_plot = new ThreePlots();								
+		//ThreePlots euler_angle_plot = new ThreePlots();
+		//SinglePlot quarternion_check = new SinglePlot();
+		//FourPlots quaternion_plot = new FourPlots();
+		//SinglePlot energy_plot = new SinglePlot();
+		//FourPlots angular_momentum_plot = new FourPlots();
    		angular_velocity_plot.setVisible(true);
    		euler_angle_plot.setVisible(true);
    		quarternion_check.setVisible(true);
@@ -347,7 +316,7 @@ public class RGGEccentricOrbit implements EquationsOfMotion
 
         double time_step=0.1;
         double timeDuration=10;
-        double tf = 15;
+        double tf = 20;
         double t0 = 0.0;
                
         RungeKutta8 rk8 = new RungeKutta8(time_step);
@@ -358,7 +327,7 @@ public class RGGEccentricOrbit implements EquationsOfMotion
     	float quat_values[][]= new  float[5][numberOfPts+1];// +1 is for AnimationWindow
         
         // create an instance
-        RGGEccentricOrbit si = new RGGEccentricOrbit(time_step, quat_values);
+        RGGCircularOrbit si = new RGGCircularOrbit(time_step, quat_values);
 		
         // initialize the variables
         double [] x0 = new double[7];
@@ -376,6 +345,8 @@ public class RGGEccentricOrbit implements EquationsOfMotion
         // make the plot visible
         si.makePlotsVisible();
     }
+    							
+	   
     	
 }// End of File
     		

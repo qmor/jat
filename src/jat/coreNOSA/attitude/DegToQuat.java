@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package jat.core.attitude;
+package jat.coreNOSA.attitude;
 
 /**
  * <P>The QuatToDeg converts the quarternions to the corresponding

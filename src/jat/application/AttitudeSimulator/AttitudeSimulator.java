@@ -20,7 +20,7 @@
 
 package jat.application.AttitudeSimulator;
 
-import jat.core.attitude.DegToQuat;
+import jat.coreNOSA.attitude.DegToQuat;
 import jat.jat3D.util;
 
 import java.awt.BorderLayout;

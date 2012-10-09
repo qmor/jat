@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.attitude.eom;
+package jat.coreNOSA.attitude.eom;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.math.matvec.data.Matrix;

@@ -17,11 +17,11 @@
  *
  */
 
-package jat.core.attitude.eom;
+package jat.coreNOSA.attitude.eom;
  
 import jat.core.algorithm.integrators.*;
-import jat.core.attitude.QuatToDeg;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.attitude.QuatToDeg;
 import jat.coreNOSA.plotutil.FourPlots;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;

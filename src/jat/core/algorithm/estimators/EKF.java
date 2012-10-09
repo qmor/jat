@@ -25,7 +25,6 @@ import java.util.HashMap;
 
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.*;
-import jat.core.measurements.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.measurements.ObservationMeasurement;
 import jat.coreNOSA.measurements.ObservationMeasurementList;

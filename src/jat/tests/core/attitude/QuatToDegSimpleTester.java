@@ -21,7 +21,7 @@
 
 package jat.tests.core.attitude;
 
-import jat.core.attitude.QuatToDeg;
+import jat.coreNOSA.attitude.QuatToDeg;
 
 
 

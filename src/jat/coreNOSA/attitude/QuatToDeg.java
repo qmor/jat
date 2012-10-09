@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.attitude;
+package jat.coreNOSA.attitude;
 
 
 /**

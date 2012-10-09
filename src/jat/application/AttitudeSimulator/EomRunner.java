@@ -23,15 +23,15 @@ package jat.application.AttitudeSimulator;
 import jat.application.AttitudeSimulator.animation.AnimationWindow;
 import jat.application.AttitudeSimulator.animation.AnimationWindow2;
 import jat.core.algorithm.integrators.*;
-import jat.core.attitude.eom.BangBangTwoD;
-import jat.core.attitude.eom.CMGManeuver;
-import jat.core.attitude.eom.FlexibleThreeD;
-import jat.core.attitude.eom.FlexibleTwoD;
-import jat.core.attitude.eom.FourRWManeuver;
-import jat.core.attitude.eom.RConstantTorque;
-import jat.core.attitude.eom.RGGCircularOrbit;
-import jat.core.attitude.eom.RGGEccentricOrbit;
-import jat.core.attitude.eom.RSphericalDamper;
+import jat.coreNOSA.attitude.eom.BangBangTwoD;
+import jat.coreNOSA.attitude.eom.CMGManeuver;
+import jat.coreNOSA.attitude.eom.FlexibleThreeD;
+import jat.coreNOSA.attitude.eom.FlexibleTwoD;
+import jat.coreNOSA.attitude.eom.FourRWManeuver;
+import jat.coreNOSA.attitude.eom.RConstantTorque;
+import jat.coreNOSA.attitude.eom.RGGCircularOrbit;
+import jat.coreNOSA.attitude.eom.RGGEccentricOrbit;
+import jat.coreNOSA.attitude.eom.RSphericalDamper;
 
 /**
  * EomRunner class - call simulation scenarios

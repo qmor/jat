@@ -18,7 +18,7 @@
  *
  */
  
-package jat.core.attitude;
+package jat.coreNOSA.attitude;
  
 import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.plotutil.SinglePlot;
@@ -33,7 +33,8 @@ import jat.coreNOSA.plotutil.TwoPlots;
  * 
  */
 
-public class AttitudeOutput implements Printable
+
+public class FourRWManeuverOutput implements Printable
 {
 		// Create variables for the necessary plots
 		ThreePlots rotation_plot;								
@@ -41,29 +42,34 @@ public class AttitudeOutput implements Printable
 		SinglePlot quarternion_check;
 		TwoPlots quarternion_plot1;
 		TwoPlots quarternion_plot2;
+		TwoPlots RWplot1;
+		TwoPlots RWplot2;
 		float quat_values[][];
 		//double timeDuration;
 		double time_step;
 		int plotYes = 0;
 		
-		//constructor 1 -- No Plot generation
-		public AttitudeOutput(double time_step, float quat_values[][])
+		
+		//constructor: No plot generation
+		public FourRWManeuverOutput(double time_step, float quat_values[][])
 		{
 			this.quat_values = quat_values;
-			this.time_step = time_step;   
+			this.time_step = time_step;
 		}
-		//constructor 2
-		public AttitudeOutput(ThreePlots rotation, ThreePlots angle
+		//constructor
+		public FourRWManeuverOutput (ThreePlots rotation, ThreePlots angle
       	                       ,SinglePlot quatCheck, TwoPlots quat1
-      	                       ,TwoPlots quat2,double time_step
-      	                       ,float quat_values[][])
+      	                       ,TwoPlots quat2, TwoPlots RW1, TwoPlots RW2
+      	                       ,double time_step, float quat_values[][])
       	{
-			plotYes = 1;
+      		plotYes = 1;
       		rotation_plot = rotation;
       		angle_plot = angle;
       		quarternion_check = quatCheck;
       		quarternion_plot1 = quat1;
       		quarternion_plot2 = quat2;
+      		RWplot1 = RW1;
+      		RWplot2 = RW2;
       		
       		// Quaternion Values Index
       		// Index	[0  1  2  3  4]
@@ -71,8 +77,7 @@ public class AttitudeOutput implements Printable
       		// quat_values = new  float[5][numberOfPoints];
       		this.quat_values = quat_values;
       		//this.timeDuration = timeDuration;
-      		this.time_step = time_step;      		
-      		
+      		this.time_step = time_step;      	
       		
 			rotation_plot.setTitle("Angular Velocity");
         	rotation_plot.topPlot.setXLabel("t(sec)");
@@ -105,6 +110,18 @@ public class AttitudeOutput implements Printable
         	quarternion_check.setTitle("Quarternion Check");
         	quarternion_check.plot.setXLabel("t(sec)");
         	quarternion_check.plot.setYLabel("e1^2 + e2^2 + e3^2 + e4^2");
+        	
+        	RWplot1.setTitle("RW speeds 1&2");
+        	RWplot1.topPlot.setXLabel("t");
+        	RWplot1.topPlot.setYLabel("Omega1");
+        	RWplot1.bottomPlot.setXLabel("t");
+        	RWplot1.bottomPlot.setYLabel("Omega2");
+        
+        	RWplot2.setTitle("RW speeds 3&4");
+        	RWplot2.topPlot.setXLabel("t");
+        	RWplot2.topPlot.setYLabel("Omega3");
+        	RWplot2.bottomPlot.setXLabel("t");
+        	RWplot2.bottomPlot.setYLabel("Omega4");
       	}// End of constructor	
 		
 		/** Implements the Printable interface to get the data out of the propagator and pass it to the plot.
@@ -117,8 +134,8 @@ public class AttitudeOutput implements Printable
         	boolean first = true;
         	if (t == 0.0) first = false;
         	
-        	int currentPts = (int)(t/time_step); // This is the array index
-        	
+        	int currentPts = (int)(t/time_step); // This is the quarternion array index.
+        
        	 	double w1 = y[0];
         	double w2 = y[1];
         	double w3 = y[2];
@@ -126,6 +143,11 @@ public class AttitudeOutput implements Printable
         	double e2 = y[4];
         	double e3 = y[5];
         	double e4 = y[6];
+        	double Omega1 = y[7];
+        	double Omega2 = y[8];
+        	double Omega3 = y[9];
+        	double Omega4 = y[10];
+        	
         	double quat_check = e1*e1+e2*e2+e3*e3+e4*e4;
         
         	// Calculate Transformation matrix elements
@@ -142,9 +164,10 @@ public class AttitudeOutput implements Printable
         	double angle22 = Math.toDegrees(Math.acos(c22));
         	double angle33 = Math.toDegrees(Math.acos(c33));
         
-			if (plotYes == 1)
-			{
-			    // add data point to the plot
+        	if (plotYes == 1)
+        	{
+        	
+        		// add data point to the plot
         		rotation_plot.topPlot.addPoint(0, t, w1, first);
 				rotation_plot.middlePlot.addPoint(0, t, w2, first);
         		rotation_plot.bottomPlot.addPoint(0, t, w3, first);
@@ -156,13 +179,19 @@ public class AttitudeOutput implements Printable
         		quarternion_plot1.bottomPlot.addPoint(0,t,e2, first);
         		quarternion_plot2.topPlot.addPoint(0,t,e3, first);
         		quarternion_plot2.bottomPlot.addPoint(0,t,e4,first);
+        		RWplot1.topPlot.addPoint(0, t, Omega1, first);
+        		RWplot1.bottomPlot.addPoint(0,t,Omega2, first);
+        		RWplot2.topPlot.addPoint(0,t,Omega3, first);
+        		RWplot2.bottomPlot.addPoint(0,t,Omega4,first);
+        	
+        		
         	}
         	
-        	quat_values[0][currentPts] = (float)t; // time value
-        	quat_values[1][currentPts] = (float)e1; // quaternion 1
-        	quat_values[2][currentPts] = (float)e2; // quarternion 2
-        	quat_values[3][currentPts] = (float)e3; // quarternion 3
-        	quat_values[4][currentPts] = (float)e4; // quarternion 4
+			quat_values[0][currentPts] = (float)t; // time value
+			quat_values[1][currentPts] = (float)e1; // quaternion 1
+			quat_values[2][currentPts] = (float)e2; // quarternion 2
+			quat_values[3][currentPts] = (float)e3; // quarternion 3
+			quat_values[4][currentPts] = (float)e4; // quarternion 4
         	// also print to the screen 
         	System.out.println(t+" "+y[0]+" "+y[1]+" "+y[2]);
     	}// End of print
