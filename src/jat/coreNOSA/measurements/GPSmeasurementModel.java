@@ -20,7 +20,7 @@
  * File Created on May 22, 2003
  */
 
-package jat.core.measurements;
+package jat.coreNOSA.measurements;
 
 import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.estimators.MeasurementFileModel;

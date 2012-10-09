@@ -20,7 +20,7 @@
  * File Created on 3 October 2005
  * Created by Kathryn Bradley, National Aeronautics and Space Administration
  * */
-package jat.core.measurements;
+package jat.coreNOSA.measurements;
 
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.RotationMatrix;

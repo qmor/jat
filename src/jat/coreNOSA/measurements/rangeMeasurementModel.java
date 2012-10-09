@@ -1,4 +1,4 @@
-package jat.core.measurements;
+package jat.coreNOSA.measurements;
 
 
 import java.io.BufferedReader;

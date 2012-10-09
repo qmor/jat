@@ -25,8 +25,8 @@ package jat.coreNOSA.gps;
 import jat.core.math.Interpolator;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.measurements.generatePolarization;
-import jat.core.measurements.generateYaw;
+import jat.coreNOSA.measurements.generatePolarization;
+import jat.coreNOSA.measurements.generateYaw;
 import jat.coreNOSA.timeRef.RSW_Frame;
 import jat.coreNOSA.util.FileUtil;
 

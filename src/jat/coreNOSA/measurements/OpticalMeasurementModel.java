@@ -20,7 +20,7 @@
  * File created by Richard C. Page III 
  * Some implementation translated from Matlab written by Sun Hur-Diaz.
  **/
-package jat.core.measurements;
+package jat.coreNOSA.measurements;
 
 import java.util.ArrayList;
 import java.util.HashMap;

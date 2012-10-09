@@ -48,10 +48,10 @@ import jat.core.forces.SolarRadiationPressure;
 import jat.core.forces.Sun;
 import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.data.VectorN;
-import jat.core.measurements.ObservationMeasurement;
-import jat.core.measurements.ObservationMeasurementList;
-import jat.core.measurements.createMeasurements;
 
+import jat.coreNOSA.measurements.ObservationMeasurement;
+import jat.coreNOSA.measurements.ObservationMeasurementList;
+import jat.coreNOSA.measurements.createMeasurements;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacecraft.SpacecraftModel;
 import jat.coreNOSA.spacetime.*;
