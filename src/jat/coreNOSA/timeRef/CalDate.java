@@ -19,7 +19,7 @@
  */
 
 package jat.coreNOSA.timeRef;
-import jat.core.math.MathUtils;
+import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.spacetime.TimeUtils;
 
 import java.io.Serializable;

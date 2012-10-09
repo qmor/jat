@@ -20,6 +20,7 @@
 
 package jat.coreNOSA.ins;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * <P>

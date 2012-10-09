@@ -21,6 +21,7 @@
 package jat.coreNOSA.timeRef;
 import jat.core.math.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.spacetime.TimeUtils;
 
 /**

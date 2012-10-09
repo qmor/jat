@@ -1,7 +1,7 @@
 package jat.core.math.matvec.io.gui;
 
-import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.io.gui.plotTools.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 
 public class MatrixPlot3D extends Plot3D {

@@ -19,9 +19,9 @@ package jat.jat3D;
 
 import jat.core.astronomy.StarCatalog;
 import jat.core.astronomy.Stardata;
-import jat.core.math.CoordTransform;
-import jat.core.math.MathUtils;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.CoordTransform;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;

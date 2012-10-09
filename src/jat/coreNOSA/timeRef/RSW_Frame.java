@@ -23,6 +23,8 @@ package jat.coreNOSA.timeRef;
  */
  
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 /**
  * <P>
  * The RSW_Frame Class provides methods of converting between the ECI and RSW frame,

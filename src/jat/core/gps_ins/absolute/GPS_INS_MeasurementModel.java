@@ -30,6 +30,7 @@ import jat.coreNOSA.gps.GPS_Utils;
 import jat.coreNOSA.gps.IonoModel;
 import jat.coreNOSA.gps.RGPS_Measurement;
 import jat.coreNOSA.gps.RGPS_MeasurementList;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
 * The GPS_INS_MeasurementModel.java Class provides the measurement model for GPS/INS

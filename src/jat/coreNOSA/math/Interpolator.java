@@ -19,10 +19,10 @@
  *
  */
 
-package jat.core.math;
+package jat.coreNOSA.math;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;
 

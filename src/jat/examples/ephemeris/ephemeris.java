@@ -28,10 +28,10 @@
 
 package jat.examples.ephemeris;
 
-import jat.core.math.matvec.data.VectorN;
 import jat.core.util.PathUtil;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 /**

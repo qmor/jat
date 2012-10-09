@@ -28,6 +28,8 @@ import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.gps.GPS_Utils;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.*;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.Time;

@@ -23,6 +23,7 @@ package jat.coreNOSA.gps;
  */
  
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
 * The GPSutils.java Class provides general utility functions needed for GPS

@@ -19,8 +19,9 @@ package jat.tests.core.algorithm.optimization;
 import java.util.List;
 
 import jat.core.algorithm.optimization.DataArraySearch;
-import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.util.LabeledMatrix;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+
 import java.util.ArrayList;
 
 public class DataArraySearchTest {

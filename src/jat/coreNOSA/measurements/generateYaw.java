@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.timeRef.RSW_Frame;

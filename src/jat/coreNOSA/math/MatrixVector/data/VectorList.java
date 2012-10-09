@@ -19,7 +19,7 @@
  * 
  * File Created on Aug 25, 2003
  */
-package jat.core.math.matvec.data;
+package jat.coreNOSA.math.MatrixVector.data;
 
 import java.util.ArrayList;
  

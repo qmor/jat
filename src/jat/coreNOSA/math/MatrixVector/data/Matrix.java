@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.math.matvec.data;
+package jat.coreNOSA.math.MatrixVector.data;
 
 import java.io.*;
 
@@ -31,6 +31,14 @@ import jat.core.math.matvec.io.gui.FrameView;
 import jat.core.math.matvec.io.gui.MatrixPlot2D;
 import jat.core.math.matvec.io.gui.MatrixPlot3D;
 import jat.core.math.matvec.io.gui.MatrixTable;
+import jat.coreNOSA.math.MatrixVector.data.arrayTools.Find;
+import jat.coreNOSA.math.MatrixVector.data.arrayTools.Sort;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.CholeskyDecomposition;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.EigenvalueDecomposition;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.LUDecomposition;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.Mathfun;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.QRDecomposition;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.SingularValueDecomposition;
 
 /**
  * <P>

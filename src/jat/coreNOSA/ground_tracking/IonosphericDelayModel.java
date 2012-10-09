@@ -24,9 +24,9 @@ package jat.coreNOSA.ground_tracking;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.groundstations.GroundStation;
 import jat.coreNOSA.groundstations.SimpleGroundStation;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 

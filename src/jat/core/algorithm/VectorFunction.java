@@ -21,6 +21,7 @@
 
 package jat.core.algorithm;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * <P>

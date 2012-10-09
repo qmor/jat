@@ -25,7 +25,7 @@ import jat.core.algorithm.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.cm.eom.*;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 
 import java.io.*;

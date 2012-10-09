@@ -5,8 +5,10 @@ package jat.coreNOSA.measurements;
 import java.io.IOException;
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.math.Interpolator;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.Interpolator;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 import java.util.Random;

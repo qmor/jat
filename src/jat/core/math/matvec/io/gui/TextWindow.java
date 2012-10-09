@@ -1,6 +1,6 @@
 package jat.core.math.matvec.io.gui;
 
-import jat.core.math.matvec.data.Text;
+import jat.coreNOSA.math.MatrixVector.data.Text;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;

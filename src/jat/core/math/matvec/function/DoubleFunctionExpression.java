@@ -1,7 +1,7 @@
 package jat.core.math.matvec.function;
 
-import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.function.expressionParser.Evaluator;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 public class DoubleFunctionExpression extends DoubleFunction {
 

@@ -24,6 +24,7 @@ package jat.coreNOSA.gps;
 
 import jat.core.math.matvec.data.*;
 //import jat.math.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.CalDate;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.timeRef.GPSTimeFormat;

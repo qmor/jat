@@ -1,4 +1,4 @@
-package jat.core.math.matvec.data.arrayTools;
+package jat.coreNOSA.math.MatrixVector.data.arrayTools;
 
    /** Find a value or a verified condition in a 2D-Array of double.
    */

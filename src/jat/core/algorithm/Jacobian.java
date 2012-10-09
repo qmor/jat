@@ -20,6 +20,8 @@
 
 package jat.core.algorithm;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * Utility class for Numerical Derivatives

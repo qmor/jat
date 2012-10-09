@@ -1,9 +1,12 @@
-package jat.core.math.matvec.test;
+package jat.coreNOSA.math.MatrixVector.data.test;
 
 import jat.core.math.matvec.data.*;
 import jat.core.math.matvec.function.*;
 import jat.core.math.matvec.io.data.*;
 import jat.core.math.matvec.io.gui.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.RandomMatrix;
+import jat.coreNOSA.math.MatrixVector.data.Text;
 
 import java.io.*;
 

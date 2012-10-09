@@ -19,7 +19,7 @@
  *
  */
 
-package jat.core.math;
+package jat.coreNOSA.math;
 
 import java.io.*;
 

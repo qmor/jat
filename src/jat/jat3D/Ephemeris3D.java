@@ -20,8 +20,8 @@ package jat.jat3D;
 import jat.core.cm.Constants;
 import jat.core.cm.cm;
 import jat.core.ephemeris.DE405APL;
-import jat.core.math.matvec.data.VectorN;
 import jat.core.spacetime.TimeAPL;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.IOException;
 import java.util.ArrayList;

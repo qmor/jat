@@ -8,8 +8,8 @@ package jat.examples.OST;
 
 import jat.core.algorithm.VectorTimeFunction;
 import jat.core.algorithm.integrators.Printable;
-import jat.core.math.Interpolator;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.Interpolator;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 
 import java.text.*;

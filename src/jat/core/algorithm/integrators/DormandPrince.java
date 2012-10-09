@@ -19,7 +19,7 @@
  */
 package jat.core.algorithm.integrators;
 
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * Implements a Dormand-Prince 8(7) integrator

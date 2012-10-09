@@ -24,6 +24,8 @@ package jat.coreNOSA.gps;
  
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 /**
  * <P>
  * The ISS_Blockage Class provides a model of GPS signal blockage due to 

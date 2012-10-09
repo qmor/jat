@@ -22,6 +22,8 @@ package jat.core.algorithm.estimators;
  * File Created on May 7, 2003
  */
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
 * The ProcessModel.java Class provides an interface to the Extended Kalman Filter

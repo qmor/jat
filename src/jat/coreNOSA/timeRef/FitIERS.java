@@ -28,6 +28,9 @@ import java.util.StringTokenizer;
 import jat.core.cm.Constants;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.util.FileUtil;
 
 /**

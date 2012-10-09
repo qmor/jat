@@ -20,6 +20,9 @@
 package jat.coreNOSA.spacecraft;
 
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.Quaternion;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**

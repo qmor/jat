@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.math.matvec.data;
+package jat.coreNOSA.math.MatrixVector.data;
 
 import java.io.*;
 import java.io.Serializable;

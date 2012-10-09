@@ -20,6 +20,7 @@
 
 package jat.core.forces;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;

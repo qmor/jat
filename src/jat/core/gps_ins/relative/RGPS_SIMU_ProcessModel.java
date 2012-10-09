@@ -41,6 +41,11 @@ import jat.coreNOSA.ins.SIGIAccelFilterModel;
 import jat.coreNOSA.ins.SIGIGyroFilterModel;
 import jat.coreNOSA.ins.SIMUAccelFilterModel;
 import jat.coreNOSA.ins.SIMUGyroFilterModel;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.GaussianVector;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.Quaternion;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.timeRef.RSW_Frame;
 

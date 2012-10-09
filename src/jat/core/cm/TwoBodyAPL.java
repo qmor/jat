@@ -18,8 +18,8 @@
 package jat.core.cm;
 
 import jat.core.algorithm.integrators.Printable;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 public class TwoBodyAPL extends TwoBody {
 	double initial_ta;

@@ -20,10 +20,10 @@
 package jat.core.forces;
 
 import jat.core.ephemeris.*;
-import jat.core.math.MathUtils;
-import jat.core.math.matvec.data.Matrix;
 import jat.core.spacetime.*;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
 import jat.coreNOSA.spacetime.EarthFixedRef;
 import jat.coreNOSA.spacetime.ReferenceFrame;

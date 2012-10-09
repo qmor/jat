@@ -1,8 +1,8 @@
 package jat.core.math.matvec.io.data;
 
-import jat.core.math.matvec.data.Matrix;
 import jat.core.math.matvec.io.data.fileTools.CharFile;
 import jat.core.math.matvec.io.data.fileTools.MatrixString;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 import java.io.File;
 //import java.io.IOException;

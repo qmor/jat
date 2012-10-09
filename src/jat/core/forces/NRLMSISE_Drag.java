@@ -21,9 +21,9 @@ package jat.core.forces;
 
 import jat.core.cm.Constants;
 import jat.core.forces.nrlmsise.NRLMSISE_data;
-import jat.core.math.MathUtils;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.Time;

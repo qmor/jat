@@ -1,6 +1,6 @@
 package jat.core.math.matvec.io.gui;
 
-import jat.core.math.matvec.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 import java.lang.Double;
 

@@ -26,6 +26,8 @@ import java.util.HashMap;
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.measurements.ObservationMeasurement;
 import jat.coreNOSA.measurements.ObservationMeasurementList;
 import jat.coreNOSA.measurements.createMeasurements;
@@ -658,12 +660,12 @@ public class EKF {
 				if(measurements.measurementTypes[measNum].equalsIgnoreCase("y_angle_los")){
 					//String residualsOut = "Time:  " + simTime +
 					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist +
-					"  Residual:  " + (jat.core.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
+					"  Residual:  " + (jat.coreNOSA.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
 				}else if(measurements.measurementTypes[measNum].equalsIgnoreCase("range")){
 					String residualsOut = "Time:  " + simTime +"  Dist:  " + dist + 
-					"  Residual:  " + (jat.core.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
+					"  Residual:  " + (jat.coreNOSA.math.MathUtils.RAD2DEG*y) + "  deg    Measurement Type:  " + 
 					measurements.measurementTypes[measNum] + " State " + whichMeas;
 					residuals.println(residualsOut);
 				}else{

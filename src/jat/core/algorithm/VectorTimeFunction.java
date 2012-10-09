@@ -20,6 +20,7 @@
 
 package jat.core.algorithm;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * The VectorTimeFunction interface provides the mechanism for passing a method

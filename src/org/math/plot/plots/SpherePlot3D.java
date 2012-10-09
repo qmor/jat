@@ -1,7 +1,7 @@
 package org.math.plot.plots;
 
-import jat.core.math.CoordTransform;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.CoordTransform;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.awt.*;
 

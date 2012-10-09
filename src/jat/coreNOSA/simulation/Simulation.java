@@ -22,9 +22,9 @@ package jat.coreNOSA.simulation;
 import java.util.Random;
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.math.matvec.data.RandomNumber;
-import jat.core.math.matvec.data.RotationMatrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
+import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.matlabInterface.*;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacecraft.SpacecraftModel;

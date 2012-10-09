@@ -17,8 +17,8 @@
 
 package jat.core.math.matvec.util;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 public class LabeledMatrix extends Matrix {
 	private static final long serialVersionUID = -2882712126083407423L;

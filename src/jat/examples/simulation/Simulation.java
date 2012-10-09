@@ -20,7 +20,7 @@
 package jat.examples.simulation;
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.matlabInterface.MatlabControl;
 import jat.coreNOSA.matlabInterface.MatlabFunc;
 import jat.coreNOSA.simulation.*;

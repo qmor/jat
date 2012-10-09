@@ -30,8 +30,8 @@ import jat.core.forces.Moon;
 import jat.core.forces.NRLMSISE_Drag;
 import jat.core.forces.SolarRadiationPressure;
 import jat.core.forces.Sun;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.UniverseModel;
 

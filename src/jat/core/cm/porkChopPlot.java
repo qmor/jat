@@ -18,9 +18,9 @@ package jat.core.cm;
 
 import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405APL.body;
-import jat.core.math.matvec.data.VectorN;
 import jat.core.math.matvec.util.LabeledMatrix;
 import jat.core.spacetime.TimeAPL;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.IOException;
 

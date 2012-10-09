@@ -20,7 +20,8 @@ package jat.jat3D;
 import jat.core.algorithm.integrators.Printable;
 import jat.core.cm.Constants;
 import jat.core.cm.TwoBodyAPL;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineStripArray;
 import javax.media.j3d.Shape3D;

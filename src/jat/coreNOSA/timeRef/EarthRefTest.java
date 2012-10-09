@@ -9,6 +9,9 @@ package jat.coreNOSA.timeRef;
 import jat.core.cm.*;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MathUtils;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * @author

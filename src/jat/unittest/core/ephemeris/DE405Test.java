@@ -33,6 +33,7 @@ import jat.core.ephemeris.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.coreNOSA.spacetime.Time;
 import junit.framework.TestCase;

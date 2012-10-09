@@ -1,4 +1,4 @@
-package jat.core.math.matvec.data.arrayTools;
+package jat.coreNOSA.math.MatrixVector.data.arrayTools;
 
    /** Quick Sort algoritm.
    <P>

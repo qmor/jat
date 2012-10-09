@@ -22,8 +22,8 @@
 package jat.unittest.core.spacetime;
 
 import jat.core.ephemeris.*;
-import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.LunaFixedRef;

@@ -19,9 +19,9 @@
  *
  */
 
-package jat.core.math;
+package jat.coreNOSA.math;
 
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * Transformations between different coordinate systems

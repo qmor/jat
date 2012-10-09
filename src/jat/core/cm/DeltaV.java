@@ -22,6 +22,7 @@
  
 package jat.core.cm;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;
 

@@ -20,7 +20,7 @@
 package jat.coreNOSA.matlabInterface;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import com.mathworks.jmi.Matlab;
 

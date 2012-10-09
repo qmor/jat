@@ -23,7 +23,7 @@ package jat.coreNOSA.trajectory;
  */
 
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;
 import jat.coreNOSA.plotutil.TwoPlots;

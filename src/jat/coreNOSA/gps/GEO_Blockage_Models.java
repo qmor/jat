@@ -22,8 +22,8 @@ package jat.coreNOSA.gps;
  * File Created on Jul 13, 2003
  */
  
-import jat.core.math.Interpolator;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.Interpolator;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.util.FileUtil;
 
 import java.io.BufferedReader;

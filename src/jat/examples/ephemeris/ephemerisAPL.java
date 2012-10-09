@@ -20,7 +20,7 @@ package jat.examples.ephemeris;
 import java.io.IOException;
 
 import jat.core.ephemeris.DE405APL;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 public class ephemerisAPL

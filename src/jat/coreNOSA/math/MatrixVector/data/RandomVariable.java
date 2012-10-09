@@ -1,4 +1,4 @@
-package jat.core.math.matvec.data;
+package jat.coreNOSA.math.MatrixVector.data;
 
 import jat.core.math.matvec.function.DoubleFunction;
 

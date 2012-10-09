@@ -23,7 +23,7 @@ package jat.core.forces;
 import java.util.*;
 
 import jat.core.algorithm.integrators.Derivatives;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.timeRef.FitIERS;

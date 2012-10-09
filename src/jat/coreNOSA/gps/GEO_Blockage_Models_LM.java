@@ -22,9 +22,9 @@ package jat.coreNOSA.gps;
  * File Created on Jul 13, 2003
  */
  
-import jat.core.math.Interpolator;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.Interpolator;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.measurements.generatePolarization;
 import jat.coreNOSA.measurements.generateYaw;
 import jat.coreNOSA.timeRef.RSW_Frame;

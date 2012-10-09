@@ -2,8 +2,8 @@ package jat.core.math.matvec.function.expressionParser;
 
 import java.util.HashMap;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.RandomMatrix;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.RandomMatrix;
 
 import java.lang.Double;
 

@@ -32,7 +32,7 @@ public class interpolator_test
         double[] data={1.,2.,3.,5.};
         double[] vari={1.,2.,3.,4.};
         double test_x;
-        jat.core.math.Interpolator in1=new jat.core.math.Interpolator(vari,data);
+        jat.coreNOSA.math.Interpolator in1=new jat.coreNOSA.math.Interpolator(vari,data);
 
         // too low: expect error
         test_x=in1.get_value(0.8);

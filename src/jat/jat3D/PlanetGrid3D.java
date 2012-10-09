@@ -22,7 +22,8 @@ package jat.jat3D;
 
 import jat.core.cm.*;
 import jat.core.math.*;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.CoordTransform;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;

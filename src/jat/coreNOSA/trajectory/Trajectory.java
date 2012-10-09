@@ -23,7 +23,7 @@ import java.io.*;
 import java.util.*;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.CalDate;
 /**
 * <P>

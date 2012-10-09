@@ -27,7 +27,7 @@ import jat.core.algorithm.integrators.Derivatives;
 import jat.core.algorithm.integrators.RungeKutta4;
 import jat.core.algorithm.integrators.RungeKutta8;
 import jat.core.algorithm.integrators.RungeKuttaFehlberg78;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;
 

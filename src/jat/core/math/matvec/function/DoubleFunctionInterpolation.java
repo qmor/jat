@@ -1,6 +1,6 @@
 package jat.core.math.matvec.function;
 
-import jat.core.math.matvec.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 public class DoubleFunctionInterpolation extends DoubleFunction {
 

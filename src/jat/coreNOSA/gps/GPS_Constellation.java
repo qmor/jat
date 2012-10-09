@@ -26,6 +26,7 @@ import java.util.*;
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
 import jat.core.util.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.GPSTimeFormat;
 import jat.coreNOSA.util.FileUtil;
 /**

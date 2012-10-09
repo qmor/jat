@@ -25,6 +25,7 @@ package jat.core.cm.rendezvous;
 import java.io.*;
 
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * <P>

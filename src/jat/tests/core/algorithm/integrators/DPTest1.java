@@ -2,7 +2,7 @@ package jat.tests.core.algorithm.integrators;
 
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.algorithm.integrators.DormandPrince;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 public class DPTest1 implements Derivatives
 {

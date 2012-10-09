@@ -21,8 +21,8 @@ package jat.core.forces;
 
 import jat.core.cm.Constants;
 import jat.core.ephemeris.*;
-import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;
 import jat.coreNOSA.spacetime.BodyRef;

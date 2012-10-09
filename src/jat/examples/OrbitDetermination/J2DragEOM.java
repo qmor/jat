@@ -23,6 +23,8 @@ package jat.examples.OrbitDetermination;
 
 import jat.core.algorithm.integrators.Derivatives;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
 * The J2DragEOM.java Class provides the equations of motion (derivatives)

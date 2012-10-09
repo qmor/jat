@@ -24,8 +24,8 @@ package jat.coreNOSA.measurements;
 
 import jat.core.algorithm.estimators.MeasurementFileModel;
 import jat.core.algorithm.estimators.MeasurementModel;
-import jat.core.math.matvec.data.RotationMatrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.SpacecraftModel;
 
 import java.io.Serializable;

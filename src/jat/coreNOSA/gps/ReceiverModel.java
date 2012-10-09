@@ -22,6 +22,11 @@ package jat.coreNOSA.gps;
 import jat.core.math.*;
 import jat.core.math.matvec.data.*;
 import jat.core.math.matvec.data.matrixDecompositions.*;
+import jat.coreNOSA.math.MatrixVector.data.GaussianVector;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.CholeskyDecomposition;
 //import jat.cm.*;
 //import jat.gps.*;
 /**

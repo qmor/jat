@@ -19,7 +19,7 @@
 */
 package jat.core.forces;
 
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.timeRef.EarthRef;
 

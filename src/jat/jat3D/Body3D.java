@@ -21,8 +21,8 @@
 
 package jat.jat3D;
 
-import jat.core.math.matvec.data.VectorN;
 import jat.core.util.PathUtil;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;

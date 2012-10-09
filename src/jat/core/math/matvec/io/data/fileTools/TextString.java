@@ -1,6 +1,6 @@
 package jat.core.math.matvec.io.data.fileTools;
 
-import jat.core.math.matvec.data.Text;
+import jat.coreNOSA.math.MatrixVector.data.Text;
 
 public class TextString {
 

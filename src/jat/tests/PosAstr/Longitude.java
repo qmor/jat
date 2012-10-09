@@ -24,6 +24,8 @@ package jat.tests.PosAstr;
 import jat.core.astronomy.Angle;
 import jat.core.cm.*;
 import jat.core.math.matvec.data.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 public class Longitude
 {

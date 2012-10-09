@@ -31,6 +31,8 @@ import jat.coreNOSA.gps.IonoModel;
 import jat.coreNOSA.gps.ReceiverFilterModel;
 import jat.coreNOSA.gps.URE_Model;
 import jat.coreNOSA.gps.filters.DragProcessModel;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.timeRef.RSW_Frame;
 

@@ -19,8 +19,8 @@
  */
 package jat.coreNOSA.spacetime;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * Class used to perform translation or transformation between two

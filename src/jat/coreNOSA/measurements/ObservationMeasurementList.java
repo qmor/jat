@@ -22,10 +22,10 @@
  * */
 package jat.coreNOSA.measurements;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.RotationMatrix;
-import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.gps.GPS_Measurement;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.coreNOSA.spacetime.EarthRef;

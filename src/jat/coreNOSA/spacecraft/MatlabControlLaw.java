@@ -19,7 +19,7 @@
  */
 package jat.coreNOSA.spacecraft;
 
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.matlabInterface.*;
 /**
  * This class represents a call to a Matlab function which runs a control algorithm.  The

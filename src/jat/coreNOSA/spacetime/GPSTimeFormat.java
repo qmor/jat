@@ -20,6 +20,7 @@
 
 package jat.coreNOSA.spacetime;
 import jat.core.math.*;
+import jat.coreNOSA.math.MathUtils;
 
 /**
  * <P>

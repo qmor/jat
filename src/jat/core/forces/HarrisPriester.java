@@ -20,8 +20,8 @@
 
 package jat.core.forces;
 import jat.core.forces.harrispriester.HarrisPriesterData;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.EarthTrueOfDateRef;

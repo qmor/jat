@@ -1,6 +1,6 @@
 package jat.coreNOSA.spacetime;
 
-import jat.core.math.MathUtils;
+import jat.coreNOSA.math.MathUtils;
 
 public class TimeUtils {
     /**

@@ -1,4 +1,4 @@
-package jat.core.math.matvec.data.matrixDecompositions;
+package jat.coreNOSA.math.MatrixVector.data.matrixDecompositions;
 
 //import jat.matvec.data.Matrix;
 

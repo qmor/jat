@@ -20,6 +20,7 @@
 
 package jat.core.algorithm;
 import jat.core.math.*;
+import jat.coreNOSA.math.MathUtils;
 
 /**
  * <P>

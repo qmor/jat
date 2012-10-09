@@ -20,7 +20,7 @@
 
 package jat.core.astronomy;
 
-import jat.core.math.MathUtils;
+import jat.coreNOSA.math.MathUtils;
 
 /**
  * @author Tobias Berthold

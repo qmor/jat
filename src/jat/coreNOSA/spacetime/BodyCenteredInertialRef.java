@@ -20,9 +20,9 @@
 package jat.coreNOSA.spacetime;
 
 import jat.core.ephemeris.*;
-import jat.core.math.matvec.data.VectorN;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * Used to represent the inertial reference frame centered at any one

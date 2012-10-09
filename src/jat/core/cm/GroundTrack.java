@@ -21,6 +21,8 @@
 package jat.core.cm;
 import jat.core.math.matvec.data.*;
 import jat.core.util.*;
+import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.trajectory.CentralBody;
 import jat.coreNOSA.trajectory.CoordinateSystem;

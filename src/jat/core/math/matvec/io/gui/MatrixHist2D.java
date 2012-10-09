@@ -1,8 +1,8 @@
 package jat.core.math.matvec.io.gui;
 
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.RandomMatrix;
 import jat.core.math.matvec.io.gui.plotTools.*;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.RandomMatrix;
 
 
 public class MatrixHist2D extends Plot2D {

@@ -23,6 +23,8 @@ import jat.core.*;
 import jat.core.math.matvec.data.*;
 import jat.coreNOSA.timeRef.*;
 import jat.coreNOSA.audio.SoundPlayer;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;
 import jat.coreNOSA.spacetime.EarthTrueOfDateRef;

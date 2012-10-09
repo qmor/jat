@@ -21,9 +21,9 @@ package jat.coreNOSA.spacecraft;
 
 import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.integrators.Derivatives;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.Quaternion;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.Quaternion;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.UniverseModel;
 
@@ -398,7 +398,7 @@ public class SpacecraftModel implements Derivatives,PrimarySpacecraft, MemberSpa
 	
 	/**
 	 * Send a command to the indicated member spacecraft.
-	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#send_control(jat.core.math.matvec.data.VectorN, jat.coreNOSA.spacecraft.PrimarySpacecraft)
+	 * @see jat.coreNOSA.spacecraft.MemberSpacecraft#send_control(jat.coreNOSA.math.MatrixVector.data.VectorN, jat.coreNOSA.spacecraft.PrimarySpacecraft)
 	 */
 	public void send_control(VectorN pos, PrimarySpacecraft s) {
 		// TODO Auto-generated method stub

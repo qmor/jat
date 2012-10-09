@@ -69,6 +69,7 @@ import java.util.Map;
 
 import jat.core.math.matvec.data.*;
 import jat.core.spacetime.*;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.util.FileUtil;

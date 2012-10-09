@@ -21,7 +21,7 @@
  **/
 package jat.core.algorithm.estimators;
 
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.measurements.ObservationMeasurement;
 
 public interface MeasurementFileModel {

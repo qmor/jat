@@ -22,8 +22,8 @@
 package jat.core.algorithm.estimators;
 
 import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.math.matvec.data.Matrix;
-import jat.core.math.matvec.data.VectorN;
+import jat.coreNOSA.math.MatrixVector.data.Matrix;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.RSW_Frame;
 
