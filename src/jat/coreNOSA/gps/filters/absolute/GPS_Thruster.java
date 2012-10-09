@@ -1,4 +1,4 @@
-package jat.core.gps.filters.absolute;
+package jat.coreNOSA.gps.filters.absolute;
 
 /* JAT: Java Astrodynamics Toolkit
  *

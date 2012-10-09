@@ -20,7 +20,7 @@
  * File Created on May 19, 2003
  */
 
-package jat.core.gps.filters.absolute;
+package jat.coreNOSA.gps.filters.absolute;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.gps.*;

@@ -20,36 +20,37 @@
  * File Created on May 19, 2003
  */
 
-package jat.core.gps.filters.absolute;
+package jat.coreNOSA.gps.filters.relative;
 
-//import jat.math.*;
-//import jat.gps_ins.*;
-//import jat.timeRef.*;
-//import jat.forces.*;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
 import jat.core.gps.*;
 import jat.core.gps.filters.*;
 import jat.core.math.matvec.data.*;
+//import jat.math.*;
+//import jat.gps_ins.*;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.IonoModel;
 import jat.coreNOSA.gps.ReceiverFilterModel;
 import jat.coreNOSA.gps.URE_Model;
+import jat.coreNOSA.gps.filters.DragProcessModel;
+import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
-* The GPS_ProcessModel.java Class provides the process model
-* for the GPS-only EKF.
+* The RGPS_ProcessModel.java Class provides the process model
+* for the RGPS-only EKF.
 *
 * @author 
 * @version 1.0
 */
-public class GPS_Thruster_ProcessModel implements ProcessModel {
+public class RGPS_Thruster_ProcessModel implements ProcessModel {
 	
 	private IonoModel iono = new IonoModel();
 	
 	private ReceiverFilterModel rcvr = new ReceiverFilterModel();
 	
+//	private JGM3 jgm3 = new JGM3(12,12);
 			
 	private RungeKutta8 rk8;
 	private double dt = 1.0;
@@ -57,38 +58,48 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	private GPS_Constellation gpscon;
 	
 	private URE_Model ure;
-		
+	
+	private int issIndex;
+	private int iaIndex;
+	
 	private int nsv;
 	
 	private LinePrinter lp1;
 	private LinePrinter lp2;
+	private LinePrinter lp3;
 
-	private GPS_EOM coastEOM;
-	private GPS_Thruster_EOM burnEOM;
+	private RGPS_EOM coastEOM;
+	private RGPS_Thruster_EOM burnEOM;
 	
 	public FiniteBurnList burnlist;
 	private int dv_index = 0;
     private boolean burnstarted = false;
 	
+	
 	/**
 	 * Constructor
 	 * @param gps GPS_Constellation
 	 * @param l1 LinePrinter for state, covariance output
-	 * @param l2 LinePrinter for residual output
+	 * @param l2 LinePrinter for relative state, covariance output
+	 * @param l3 LinePrinter for residual output
 	 * @param burnfile String containing the finite burns filename
 	 */
-	public GPS_Thruster_ProcessModel(GPS_Constellation gps, LinePrinter l1, LinePrinter l2, String burnfile) {
+	public RGPS_Thruster_ProcessModel(GPS_Constellation gps, LinePrinter l1, LinePrinter l2, LinePrinter l3, String burnfile) {
 		this.gpscon = gps;
 		this.nsv = gps.size();
+		this.issIndex = 10 + this.nsv;
+		this.iaIndex = 19 + this.nsv;
 		
 		this.burnlist = FiniteBurnList.recover(burnfile);
 		
+
 		this.ure = new URE_Model(this.nsv);
 		this.lp1 = l1;
 		this.lp2 = l2;
+		this.lp3 = l3;
 		this.rk8 = new RungeKutta8(this.dt);
-		this.coastEOM = new GPS_EOM(this.nsv, this.numberOfStates(), this.iono, this.rcvr, this.ure);
-		this.burnEOM = new GPS_Thruster_EOM(this.nsv, this.numberOfStates(), this.iono, this.rcvr, this.ure);
+		this.coastEOM = new RGPS_EOM(this.nsv, this.issIndex, this.numberOfStates(), this.iono, this.rcvr, this.ure);
+		this.burnEOM = new RGPS_Thruster_EOM(this.nsv, this.issIndex, this.numberOfStates(), this.iono, this.rcvr, this.ure);
 		
 	}
 	
@@ -103,6 +114,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 		
 		// set initial position, velocity, attitude
 		TwoBody orbit1 = new TwoBody(Constants.GM_Earth, 6765500.0, 0.0, 51.8, 0.0, 0.0, theta);
+		TwoBody orbit2 = new TwoBody(Constants.GM_Earth, 6765500.0, 0.0, 51.8, 0.0, 0.0, 0.0);
 		VectorN r = orbit1.getR();
 		VectorN v = orbit1.getV();
 		
@@ -118,18 +130,6 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 //		rv = rv.plus(pt);
 //		RSW_Frame rsw = new RSW_Frame(r, v);
 //		Matrix Cb2i = rsw.ECI2RSW().transpose();
-
-		//perturb ICs
-		VectorN mean = new VectorN(3);
-		VectorN sigp = new VectorN(3);
-		VectorN sigv = new VectorN(3);
-		sigp.set(10.0);
-		sigv.set(0.1);
-		GaussianVector ppert = new GaussianVector(mean, sigp);
-		r = r.plus(ppert);
-		GaussianVector vpert = new GaussianVector(mean, sigv);
-		v = v.plus(vpert);
-
 		
 		VectorN out = new VectorN(n);
 		out.set(0, r);
@@ -149,6 +149,14 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 		
 		// set initial ure states to zero
 		
+		// set ISS initial states
+		VectorN rv = orbit2.rv;
+		
+		// perturb ICs
+//		rv = rv.plus(pt);
+		out.set(this.issIndex, rv);
+		
+		// set initial ISS clock states, integer amb states to zero
 		
 		return out;
 	}
@@ -187,7 +195,20 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 
 		for (int i = 0; i < this.nsv; i++){
 			out.set((i+10),(i+10), sigma2_ure);
-		}		
+			out.set((this.iaIndex+i),(this.iaIndex+i), 8.0);
+		}
+		
+		int k = this.issIndex;
+		out.set(k, k, sigma2_r);
+		out.set(k+1, k+1, sigma2_r);
+		out.set(k+2, k+2, sigma2_r);
+		out.set(k+3, k+3, sigma2_v);
+		out.set(k+4, k+4, sigma2_v);
+		out.set(k+5, k+5, sigma2_v);
+		out.set(k+6, k+6, sigma2_bc);
+		out.set(k+7, k+7, sigma2_dc);
+		out.set(k+8, k+8, sigma2_drag);
+		
 		
 		return out;
 	}
@@ -196,7 +217,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	 * @see jat.core.algorithm.estimators.ProcessModel#numberOfStates()
 	 */
 	public int numberOfStates() {
-		int n = 10 + this.nsv;
+		int n = 19 + 2*this.nsv;
 		return n;
 	}
 	
@@ -220,30 +241,169 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	/**
 	 * @see jat.core.algorithm.estimators.ProcessModel#Q(double, double)
 	 */
+//	public Matrix Q(double t, double dt, VectorN x) {
+//		int n = this.numberOfStates();
+//		Matrix q = new Matrix(n, n);
+//		
+//		
+//		// adaptive tuning
+//		double tsw = 7800.0;
+//		double sp = 0.0;		
+//		if (t < tsw) {
+//			sp = 1.0E-06;
+//		}
+//		else {
+//			sp = 1.0E-12;
+//		}
+//
+//		// nominal tuning
+////		double sp = 1.0E-06;
+//
+//		// blockage tuning
+////		double sp = 1.0E-12;
+//
+//		// common SV tuning
+////		double sp = 1.0E-11;
+//
+//		double sp3 = sp/3.0;
+//		double sp2 = sp/2.0;
+//		q.set(0, 0, sp3);
+//		q.set(1, 1, sp3);
+//		q.set(2, 2, sp3);
+//		q.set(3, 3, sp);
+//		q.set(4, 4, sp);
+//		q.set(5, 5, sp);
+//		q.set(0, 3, sp2);
+//		q.set(1, 4, sp2);
+//		q.set(2, 5, sp2);
+//		q.set(3, 0, sp2);
+//		q.set(4, 1, sp2);
+//		q.set(5, 2, sp2);
+//
+////		q.setMatrix(6, 6, rcvr.biasQ(dt).times(10.0));
+////		q.setMatrix(6, 6, rcvr.biasQ(dt));
+//		
+//
+//		q.set(8, 8, DragProcessModel.dragQ(dt));
+//
+////		q.set(9, 9, 10.0*iono.ionoQ(dt));
+////		q.set(9, 9, iono.ionoQ(dt));
+//		
+//		// adaptive
+//		if (t < tsw) {
+//			q.setMatrix(6, 6, rcvr.biasQ(dt));
+//			q.set(9, 9, iono.ionoQ(dt));
+//		} else {
+//			q.setMatrix(6, 6, rcvr.biasQ(dt).times(10.0));
+//			q.set(9, 9, 10.0*iono.ionoQ(dt));
+//		}
+//		
+//		for (int i = 0; i < this.nsv; i++) {
+//			
+//			// adaptive
+//			if (t < tsw) {
+//				q.set((i+10),(i+10), ure.biasQ());
+//			} else {
+//				q.set((i+10),(i+10), 10.0*ure.biasQ());
+//			}
+//
+//			q.set((i+this.iaIndex),(i+this.iaIndex), 1.0E-6*dt);
+//		}
+//		
+//		int kk = this.issIndex;
+//
+//		// adaptive tuning		
+//		if (t < 7200.0) {		
+//			sp = 1.0E-05;
+//			sp3 = sp/3.0;
+//			sp2 = sp/2.0;
+//		}
+//		
+//		q.set(kk, kk, sp3);
+//		q.set(kk+1, kk+1, sp3);
+//		q.set(kk+2, kk+2, sp3);
+//		q.set(kk+3, kk+3, sp);
+//		q.set(kk+4, kk+4, sp);
+//		q.set(kk+5, kk+5, sp);
+//		q.set(kk, kk+3, sp2);
+//		q.set(kk+1, kk+4, sp2);
+//		q.set(kk+2, kk+5, sp2);
+//		q.set(kk+3, kk, sp2);
+//		q.set(kk+4, kk+1, sp2);
+//		q.set(kk+5, kk+2, sp2);
+//		q.setMatrix(kk+6, kk+6, rcvr.biasQ(dt));
+//		q.set(kk+8, kk+8, DragProcessModel.dragQ(dt));
+//				
+//		return q;
+//	}
+
 	public Matrix Q(double t, double dt, EstSTM stm) {
 		int n = this.numberOfStates();
+		Matrix q = new Matrix(n, n);
 
 		VectorN x = stm.state();
 		Matrix phi = stm.phi();
 		Matrix phiT = phi.transpose();
-
-
-		Matrix q = new Matrix(n, n);
 		
-		double sp = 1.0E-06;
+		
+		// adaptive tuning
+//		double tsw = 7200.0;
+//		double sp = 0.0;		
+//		if (t < tsw) {
+//			sp = 1.0E-06;
+//		}
+//		else {
+//			sp = 1.0E-09;
+//		}
+
+		double sp = 1.0E-09;
+
+
 		q.set(3, 3, sp);
 		q.set(4, 4, sp);
 		q.set(5, 5, sp);
-
-		q.setMatrix(6, 6, rcvr.Q());
-
+		
 		q.set(8, 8, DragProcessModel.Q());
-
-		q.set(9, 9, iono.Q());
+		
+		// adaptive
+//		if (t < tsw) {
+//			q.setMatrix(6, 6, rcvr.Q());
+//			q.set(9, 9, iono.Q());
+//		} else {
+			q.setMatrix(6, 6, rcvr.Q().times(10.0));
+			q.set(9, 9, 10.0*iono.Q());
+//		}
 		
 		for (int i = 0; i < this.nsv; i++) {
-			q.set((i+10),(i+10), ure.Q());
+			
+			// adaptive
+//			if (t < tsw) {
+//				q.set((i+10),(i+10), ure.Q());
+//			} else {
+				q.set((i+10),(i+10), 10.0*ure.Q());
+//			}
+
+			q.set((i+this.iaIndex),(i+this.iaIndex), 1.0E-6);
 		}
+		
+		int kk = this.issIndex;
+
+		q.set(kk+3, kk+3, sp);
+		q.set(kk+4, kk+4, sp);
+		q.set(kk+5, kk+5, sp);
+		q.setMatrix(kk+6, kk+6, rcvr.Q());
+		q.set(kk+8, kk+8, DragProcessModel.Q());
+		
+		// Relative Nav correlation
+		double rho = 0.99;
+		Matrix qab = new Matrix(6, 6);
+		for (int i = 0; i < 6; i++) {
+			double qa = q.get(i, i);
+			double qb = q.get(kk+i, kk+i);
+			double val = rho * Math.sqrt(qa * qb);
+			q.set(i, (kk+i), val);
+			q.set((kk+i), i, val);
+		}		
 
 		Matrix out = phi.times(q.times(phiT));
 		out = out.times(dt);			
@@ -251,6 +411,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 				
 		return out;
 	}
+
 
 	/**
 	 * @see jat.core.algorithm.estimators.ProcessModel#propagate(double, double[], double)
@@ -287,13 +448,8 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 		
 		return xnew;
 	}
-		
-	/**
-	 * Print output
-	 * @param t sim time in seconds
-	 * @param state VectorN containing the state vector
-	 * @param cov Matrix containing the covariance matrix
-	 */
+	
+	
 	public void print(double t, VectorN state, Matrix cov) {
 		
 		// absolute state processing
@@ -302,28 +458,53 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 		VectorN printvector = new VectorN(state, sigmas);
 		lp1.print(t, printvector.x);
 		
+		// relative state processing
+		VectorN r_chaser = state.get(0,3);
+		VectorN v_chaser = state.get(3,3);
+		VectorN r_iss = state.get(this.issIndex,3);
+		VectorN v_iss = state.get(this.issIndex+3,3);
+		RSW_Frame rsw = new RSW_Frame(r_iss, v_iss);
+		VectorN r_rel = r_chaser.minus(r_iss);
+		VectorN v_rel = v_chaser.minus(v_iss);
+		VectorN rv_rel = rsw.transform(r_rel, v_rel);
+		
+		Matrix p_chaser = cov.getMatrix(0, 5, 0, 5);
+		Matrix p_iss = cov.getMatrix(this.issIndex, this.issIndex+5,this.issIndex, this.issIndex+5);
+		Matrix p_a = cov.getMatrix(0, 5, this.issIndex, this.issIndex+5); 
+		Matrix p_b = cov.getMatrix(this.issIndex, this.issIndex+5, 0, 5);
+		Matrix temp1 = p_chaser.plus(p_iss);
+		Matrix temp2 = p_a.plus(p_b);
+		Matrix p_rel = temp1.minus(temp2);
+		
+		Matrix eci2rsw = rsw.ECI2RSW();
+		
+		Matrix T = new Matrix(6,6);
+		T.setMatrix(0, 0, eci2rsw);
+		T.setMatrix(3, 3, eci2rsw);
+		Matrix Ttrans = T.transpose();
+		
+		Matrix temp3 = p_rel.times(Ttrans);
+		Matrix p_rsw = T.times(temp3);
+		sigmas = p_rsw.diagonal();
+		sigmas = sigmas.ebeSqrt();
+		printvector = new VectorN(rv_rel, sigmas);
+		lp2.print(t, printvector.x);
+
 	}
 	
-	/**
-	 * Print residuals
-	 * @param t sim time in seconds
-	 * @param r1 residual before measurement update
-	 * @param r2 residual after measurement update
-	 */	
 	public void printResiduals(double t, double r1, double r2) {
 		double[] y = new double[3];
 		y[0] = t;
 		y[1] = r1;
 		y[2] = r2;
-		lp2.print(y);
+		lp3.print(y);
 	} 
 	
 
-	/**
-	 * close the LinePrinters
-	 */
 	public void closeLinePrinter(){
 		lp1.close();
+		lp2.close();
+		lp3.close();
 	}
 				
 

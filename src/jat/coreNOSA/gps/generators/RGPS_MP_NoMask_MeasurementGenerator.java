@@ -20,7 +20,7 @@
  * File Created on May 22, 2003
  */
 
-package jat.core.gps.generators;
+package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
@@ -32,6 +32,7 @@ import jat.coreNOSA.gps.GPS_SV;
 import jat.coreNOSA.gps.GPS_Utils;
 import jat.coreNOSA.gps.ISS_Blockage;
 import jat.coreNOSA.gps.IonoModel;
+import jat.coreNOSA.gps.MultipathModel;
 import jat.coreNOSA.gps.RGPS_Measurement;
 import jat.coreNOSA.gps.RGPS_MeasurementList;
 import jat.coreNOSA.gps.ReceiverModel;
@@ -43,19 +44,19 @@ import java.io.*;
 //import jat.gps_ins.*;
 
 /**
-* The RGPS_MeasurementGenerator.java Class is used to generate
-* relative GPS measurements.
+* The RGPS_MP_NoMask_MeasurementGenerator.java Class generates relative GPS measurements
+* including the effects of multipath where the elevation mask = 0 degrees.
 *
 * @author 
 * @version 1.0
 */
-public class RGPS_MeasurementGenerator {
+public class RGPS_MP_NoMask_MeasurementGenerator {
 
 	private Trajectory truth;
 
 	private Trajectory iss;
 
-	private static final double t_mjd0 = 51969.375;
+	private static final double t_mjd0 = 51969.0;
 
 	private ReceiverModel rcvr1;
 	private ReceiverModel rcvr2;
@@ -66,6 +67,11 @@ public class RGPS_MeasurementGenerator {
 	private VectorN vISS;
 
 	private GPS_Constellation constell;
+	
+	private double arcs = 500.0;
+	private int nrays = 5;
+	
+	private MultipathModel mp = new MultipathModel(arcs, nrays);
 
 	private IonoModel iono = new IonoModel();
 
@@ -86,7 +92,7 @@ public class RGPS_MeasurementGenerator {
 	private Visible vis1;
 
 	private Visible vis2;
-	
+
 	/**
 	 * Constructor
 	 * @param t Spacecraft Trajectory
@@ -98,7 +104,7 @@ public class RGPS_MeasurementGenerator {
 	 * @param mlp LinePrinter for measurement data output
 	 * @param seed random number generator seed to be used
 	 */
-	public RGPS_MeasurementGenerator(
+	public RGPS_MP_NoMask_MeasurementGenerator(
 		Trajectory t,
 		Trajectory i,
 		GPS_Constellation c,
@@ -163,11 +169,42 @@ public class RGPS_MeasurementGenerator {
 		double code_noise = rcv.codeNoise();
 		double ionoDelay = iono.error(t_mjd, r, rGPS, iv);
 		double uree = ure.ure(isv, los, rGPS, vGPS);
+		
 		double rho = truerho + clock_err + uree + ionoDelay + code_noise;
 
 		double cp_noise = rcv.cpNoise();
 		double carrier_rho = truerho + clock_err + uree + ia - ionoDelay + cp_noise;
 		measLP.println(t+"\t"+t_mjd+"\t"+rho+"\t"+carrier_rho+"\t"+type+"\t"+prn +"\t"+ isv + "\t"+ iv + "\t" + uree+ "\t"+ ia);
+
+		out[0] = rho;
+		out[1] = carrier_rho;
+		return out;
+	}
+
+
+	private double[] compute_mp(double t, double t_mjd, ReceiverModel rcv, VectorN los, 
+	VectorN r, VectorN v, VectorN rGPS, VectorN vGPS, VectorN rISS, double clock0, double iv, double ia, int isv, int prn, int type) {
+			
+		double[] out = new double[2];
+		double truerho = los.mag();
+		double clock_err = rcv.clockError(los, v, vGPS, clock0);
+		double code_noise = rcv.codeNoise();
+		double ionoDelay = iono.error(t_mjd, r, rGPS, iv);
+		double uree = ure.ure(isv, los, rGPS, vGPS);
+		
+		// multipath
+		double theta = GPS_Utils.declination(r, rGPS);
+		VectorN dr_vec = rISS.minus(r);
+		double dr = dr_vec.mag();		
+		mp.environment(prn, dr, theta, rGPS, rISS, r);
+		double mperr = mp.pseudorangeError();
+		double cperr = mp.carrierPhaseError();
+		
+		double rho = truerho + clock_err + uree + ionoDelay + code_noise + mperr;
+
+		double cp_noise = rcv.cpNoise();
+		double carrier_rho = truerho + clock_err + uree + ia - ionoDelay + cp_noise + cperr;
+		measLP.println(t+"\t"+t_mjd+"\t"+rho+"\t"+carrier_rho+"\t"+type+"\t"+prn +"\t"+ isv + "\t"+ iv + "\t" + uree+ "\t"+ ia + "\t"+ mperr+ "\t"+ cperr);
 
 		out[0] = rho;
 		out[1] = carrier_rho;
@@ -260,7 +297,7 @@ public class RGPS_MeasurementGenerator {
 
 					nvis1 = nvis1 + 1;
 					
-					meas1 = this.compute(t, t_mjd, this.rcvr1, los1, this.r, this.v, rGPS1, vGPS1, oldclock1[0], iv1, this.iaChaser[isv], isv, prn, 0);
+					meas1 = this.compute_mp(t, t_mjd, this.rcvr1, los1, this.r, this.v, rGPS1, vGPS1, rISS, oldclock1[0], iv1, this.iaChaser[isv], isv, prn, 0);
 
 					// output data
 					RGPS_Measurement meas =
@@ -340,14 +377,12 @@ public class RGPS_MeasurementGenerator {
 		// get the true trajectory data
 		System.out.println("recovering truth data");
 		String in_directory = "C:\\Jat\\jat\\traj\\reference\\";
-//		String trajfile = "rvtraj_burn.jat";
 		String trajfile = "rvtraj_rbar.jat";
 		String file = in_directory + trajfile;
 		Trajectory truetraj = Trajectory.recover(file);
 
 		// get the ISS data
 		String issfile = "isstraj_rbar.jat";
-//		String issfile = "isstraj_burn.jat";
 		file = in_directory + issfile;
 		Trajectory isstraj = Trajectory.recover(file);
 
@@ -357,27 +392,25 @@ public class RGPS_MeasurementGenerator {
 
 		// set the output file
 		String out_directory = "C:\\Jat\\jat\\output\\";
-//		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_vbar.jat";
-		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_abs_rbar_geom4.jat";
+		String measfile = "C:\\Jat\\jat\\input\\gps\\rgpsmeas_rbar_geom1_mp_nomask.jat";
 		String outfile = measfile;
 
 		// set the clock output
-//		String clockfile = "rgpsclock_vbar.txt";
-		String clockfile = "rgpsclock_abs_rbar_geom4.txt";
+		String clockfile = "gpsref\\rgpsclock_rbar_geom1_mp_nomask.txt";
 		LinePrinter clp = new LinePrinter(out_directory + clockfile);
 
 		// set the text output file
 //		String msfile = "rgpsmeas_vbar.txt";
-		String msfile = "rgpsmeas_abs_rbar_geom4.txt";
+		String msfile = "gpsref\\rgpsmeas_rbar_geom1_mp_nomask.txt";
 		LinePrinter mlp = new LinePrinter(out_directory + msfile);
 
 		// visibility checker
-		ISS_Blockage block = new ISS_Blockage();
-		ElevationMask mask = new ElevationMask();
+		ISS_Blockage block = new ISS_Blockage(0.0);
+		ElevationMask mask = new ElevationMask(0.0);
 		
 		long seed = -1;
 
-		RGPS_MeasurementGenerator x = new RGPS_MeasurementGenerator(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
+		RGPS_MP_NoMask_MeasurementGenerator x = new RGPS_MP_NoMask_MeasurementGenerator(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
 		x.generate();
 
 	}

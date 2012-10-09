@@ -20,7 +20,7 @@
  * File Created on May 22, 2003
  */
 
-package jat.core.gps.generators;
+package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
@@ -32,7 +32,6 @@ import jat.coreNOSA.gps.GPS_SV;
 import jat.coreNOSA.gps.GPS_Utils;
 import jat.coreNOSA.gps.ISS_Blockage;
 import jat.coreNOSA.gps.IonoModel;
-import jat.coreNOSA.gps.MultipathModel;
 import jat.coreNOSA.gps.RGPS_Measurement;
 import jat.coreNOSA.gps.RGPS_MeasurementList;
 import jat.coreNOSA.gps.ReceiverModel;
@@ -44,19 +43,19 @@ import java.io.*;
 //import jat.gps_ins.*;
 
 /**
-* The RGPS_MP_MeasurementGenerator_MC.java Class generates relative GPS measurements
-* including the effects of multipath for a Monte Carlo study.
-
+* The RGPS_MeasurementGenerator.java Class is used to generate
+* relative GPS measurements.
+*
 * @author 
 * @version 1.0
 */
-public class RGPS_MP_MeasurementGenerator_MC {
+public class RGPS_MeasurementGenerator {
 
 	private Trajectory truth;
 
 	private Trajectory iss;
 
-	private static final double t_mjd0 = 51969.25;
+	private static final double t_mjd0 = 51969.375;
 
 	private ReceiverModel rcvr1;
 	private ReceiverModel rcvr2;
@@ -67,11 +66,6 @@ public class RGPS_MP_MeasurementGenerator_MC {
 	private VectorN vISS;
 
 	private GPS_Constellation constell;
-	
-	private double arcs = 500.0;
-	private int nrays = 5;
-	
-	private MultipathModel mp = new MultipathModel(arcs, nrays);
 
 	private IonoModel iono = new IonoModel();
 
@@ -92,7 +86,7 @@ public class RGPS_MP_MeasurementGenerator_MC {
 	private Visible vis1;
 
 	private Visible vis2;
-
+	
 	/**
 	 * Constructor
 	 * @param t Spacecraft Trajectory
@@ -104,7 +98,7 @@ public class RGPS_MP_MeasurementGenerator_MC {
 	 * @param mlp LinePrinter for measurement data output
 	 * @param seed random number generator seed to be used
 	 */
-	public RGPS_MP_MeasurementGenerator_MC(
+	public RGPS_MeasurementGenerator(
 		Trajectory t,
 		Trajectory i,
 		GPS_Constellation c,
@@ -125,16 +119,16 @@ public class RGPS_MP_MeasurementGenerator_MC {
 		this.vis1 = v1;
 		this.vis2 = v2;
 		this.rcvr1 = new ReceiverModel(seed);
-		this.rcvr2 = new ReceiverModel(seed - 1);
+		this.rcvr2 = new ReceiverModel(2 * seed);
 
 		int nsv = this.constell.size();
-		this.ure = new URE_Model(nsv, (seed - 2));
+		this.ure = new URE_Model(nsv);
 
 		// initialize integer ambiguity
 		this.iaChaser = new double[nsv];
 		this.iaISS = new double[nsv];
-		RandomNumber rn1 = new RandomNumber(seed - 3);
-		RandomNumber rn2 = new RandomNumber(seed - 4);
+		RandomNumber rn1 = new RandomNumber(seed);
+		RandomNumber rn2 = new RandomNumber(2 * seed);
 		for (int j = 0; j < nsv; j++) {
 			double number1 = rn1.normal(0.0, 1.0E+06);
 			double num1 = MathUtils.round(number1);
@@ -143,8 +137,6 @@ public class RGPS_MP_MeasurementGenerator_MC {
 			double num2 = MathUtils.round(number2);
 			this.iaISS[j] = GPS_Utils.lambda * num2;
 		}
-		
-		this.mp.setSeed(seed - 5);
 
 	}
 
@@ -171,42 +163,11 @@ public class RGPS_MP_MeasurementGenerator_MC {
 		double code_noise = rcv.codeNoise();
 		double ionoDelay = iono.error(t_mjd, r, rGPS, iv);
 		double uree = ure.ure(isv, los, rGPS, vGPS);
-		
 		double rho = truerho + clock_err + uree + ionoDelay + code_noise;
 
 		double cp_noise = rcv.cpNoise();
 		double carrier_rho = truerho + clock_err + uree + ia - ionoDelay + cp_noise;
 		measLP.println(t+"\t"+t_mjd+"\t"+rho+"\t"+carrier_rho+"\t"+type+"\t"+prn +"\t"+ isv + "\t"+ iv + "\t" + uree+ "\t"+ ia);
-
-		out[0] = rho;
-		out[1] = carrier_rho;
-		return out;
-	}
-
-
-	private double[] compute_mp(double t, double t_mjd, ReceiverModel rcv, VectorN los, 
-	VectorN r, VectorN v, VectorN rGPS, VectorN vGPS, VectorN rISS, double clock0, double iv, double ia, int isv, int prn, int type) {
-			
-		double[] out = new double[2];
-		double truerho = los.mag();
-		double clock_err = rcv.clockError(los, v, vGPS, clock0);
-		double code_noise = rcv.codeNoise();
-		double ionoDelay = iono.error(t_mjd, r, rGPS, iv);
-		double uree = ure.ure(isv, los, rGPS, vGPS);
-		
-		// multipath
-		double theta = GPS_Utils.declination(r, rGPS);
-		VectorN dr_vec = rISS.minus(r);
-		double dr = dr_vec.mag();		
-		mp.environment(prn, dr, theta, rGPS, rISS, r);
-		double mperr = mp.pseudorangeError();
-		double cperr = mp.carrierPhaseError();
-		
-		double rho = truerho + clock_err + uree + ionoDelay + code_noise + mperr;
-
-		double cp_noise = rcv.cpNoise();
-		double carrier_rho = truerho + clock_err + uree + ia - ionoDelay + cp_noise + cperr;
-		measLP.println(t+"\t"+t_mjd+"\t"+rho+"\t"+carrier_rho+"\t"+type+"\t"+prn +"\t"+ isv + "\t"+ iv + "\t" + uree+ "\t"+ ia + "\t"+ mperr+ "\t"+ cperr);
 
 		out[0] = rho;
 		out[1] = carrier_rho;
@@ -219,7 +180,7 @@ public class RGPS_MP_MeasurementGenerator_MC {
 	 */
 	public void generate() throws IOException {
 
-//		System.out.println("Generating RGPS Measurements");
+		System.out.println("Generating RGPS Measurements");
 		RGPS_MeasurementList list = new RGPS_MeasurementList();
 
 		// initialize
@@ -232,7 +193,7 @@ public class RGPS_MP_MeasurementGenerator_MC {
 
 		double t_mjd = t_mjd0; // MJD at beginning of the sim
 
-//		System.out.println("initialized, number of points " + truth.npts());
+		System.out.println("initialized, number of points " + truth.npts());
 
 		// grab the first data
 		double[] data = truth.next();
@@ -299,7 +260,7 @@ public class RGPS_MP_MeasurementGenerator_MC {
 
 					nvis1 = nvis1 + 1;
 					
-					meas1 = this.compute_mp(t, t_mjd, this.rcvr1, los1, this.r, this.v, rGPS1, vGPS1, rISS, oldclock1[0], iv1, this.iaChaser[isv], isv, prn, 0);
+					meas1 = this.compute(t, t_mjd, this.rcvr1, los1, this.r, this.v, rGPS1, vGPS1, oldclock1[0], iv1, this.iaChaser[isv], isv, prn, 0);
 
 					// output data
 					RGPS_Measurement meas =
@@ -375,63 +336,49 @@ public class RGPS_MP_MeasurementGenerator_MC {
 	}
 
 	public static void main(String[] args) throws IOException {
-		
-		long counter = 1;
-		int j = 1;
-		for (int i = 0; i < 30; i++) {
-			
-			String num = Integer.toString(j);
 
-			// get the true trajectory data
-			System.out.println("recovering truth data");
-			String in_directory = "C:\\Jat\\jat\\traj\\reference\\";
-	//		String trajfile = "rvtraj_burn.jat";
-			String trajfile = "rvtraj_rbar.jat";
-			String file = in_directory + trajfile;
-			Trajectory truetraj = Trajectory.recover(file);
-	
-			// get the ISS data
-			String issfile = "isstraj_rbar.jat";
-	//		String issfile = "isstraj_burn.jat";
-			file = in_directory + issfile;
-			Trajectory isstraj = Trajectory.recover(file);
-	
-			// get the GPS Constellation
-			String rinexfile = "C:\\Jat\\jat\\input\\gps\\rinex.n";
-			GPS_Constellation constellation = new GPS_Constellation(rinexfile);
-	
-			// set the output file
-			String dotJat = ".jat";
-			String out_directory = "C:\\Jat\\jat\\output\\";
-	//		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_vbar.jat";
-			String measfile = "C:\\Jat\\jat\\input\\monte\\rgpsmeas_rbar_geom3_mp_";
-			String outfile = measfile + num + dotJat;
-			System.out.println("Generating: "+outfile);
-	
-			// set the clock output
-			String dotTxt = ".txt";
-	//		String clockfile = "rgpsclock_vbar.txt";
-			String clockfile = "monte\\rgpsclock_rbar_geom3_mp_";
-			LinePrinter clp = new LinePrinter(out_directory + clockfile + num + dotTxt);
-	
-			// set the text output file
-	//		String msfile = "rgpsmeas_vbar.txt";
-			String msfile = "monte\\rgpsmeas_rbar_geom3_mp_";
-			LinePrinter mlp = new LinePrinter(out_directory + msfile + num + dotTxt);
-	
-			// visibility checker
-			ISS_Blockage block = new ISS_Blockage();
-			ElevationMask mask = new ElevationMask();
-			
-			long seed = -1 * counter;
-	
-			RGPS_MP_MeasurementGenerator_MC x = new RGPS_MP_MeasurementGenerator_MC(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
-			x.generate();
-			
-			counter = counter + 1;
-			j = j + 1;
-			
-		}
+		// get the true trajectory data
+		System.out.println("recovering truth data");
+		String in_directory = "C:\\Jat\\jat\\traj\\reference\\";
+//		String trajfile = "rvtraj_burn.jat";
+		String trajfile = "rvtraj_rbar.jat";
+		String file = in_directory + trajfile;
+		Trajectory truetraj = Trajectory.recover(file);
+
+		// get the ISS data
+		String issfile = "isstraj_rbar.jat";
+//		String issfile = "isstraj_burn.jat";
+		file = in_directory + issfile;
+		Trajectory isstraj = Trajectory.recover(file);
+
+		// get the GPS Constellation
+		String rinexfile = "C:\\Jat\\jat\\input\\gps\\rinex.n";
+		GPS_Constellation constellation = new GPS_Constellation(rinexfile);
+
+		// set the output file
+		String out_directory = "C:\\Jat\\jat\\output\\";
+//		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_vbar.jat";
+		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_abs_rbar_geom4.jat";
+		String outfile = measfile;
+
+		// set the clock output
+//		String clockfile = "rgpsclock_vbar.txt";
+		String clockfile = "rgpsclock_abs_rbar_geom4.txt";
+		LinePrinter clp = new LinePrinter(out_directory + clockfile);
+
+		// set the text output file
+//		String msfile = "rgpsmeas_vbar.txt";
+		String msfile = "rgpsmeas_abs_rbar_geom4.txt";
+		LinePrinter mlp = new LinePrinter(out_directory + msfile);
+
+		// visibility checker
+		ISS_Blockage block = new ISS_Blockage();
+		ElevationMask mask = new ElevationMask();
+		
+		long seed = -1;
+
+		RGPS_MeasurementGenerator x = new RGPS_MeasurementGenerator(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
+		x.generate();
 
 	}
 }

@@ -20,7 +20,7 @@
  * File Created on May 22, 2003
  */
 
-package jat.core.gps.generators;
+package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
@@ -44,19 +44,20 @@ import java.io.*;
 //import jat.gps_ins.*;
 
 /**
-* The RGPS_MP_NoMask_MeasurementGenerator.java Class generates relative GPS measurements
-* including the effects of multipath where the elevation mask = 0 degrees.
+* The RGPS_MeasurementGenerator.java Class generates relative GPS measurements
+* including the effects of multipath but only for GPS SVs that are
+* visible to both receivers.
 *
 * @author 
 * @version 1.0
 */
-public class RGPS_MP_NoMask_MeasurementGenerator {
+public class RGPS_MP_Common_MeasurementGenerator {
 
 	private Trajectory truth;
 
 	private Trajectory iss;
 
-	private static final double t_mjd0 = 51969.0;
+	private static final double t_mjd0 = 51969.375;
 
 	private ReceiverModel rcvr1;
 	private ReceiverModel rcvr2;
@@ -104,7 +105,7 @@ public class RGPS_MP_NoMask_MeasurementGenerator {
 	 * @param mlp LinePrinter for measurement data output
 	 * @param seed random number generator seed to be used
 	 */
-	public RGPS_MP_NoMask_MeasurementGenerator(
+	public RGPS_MP_Common_MeasurementGenerator(
 		Trajectory t,
 		Trajectory i,
 		GPS_Constellation c,
@@ -292,41 +293,35 @@ public class RGPS_MP_NoMask_MeasurementGenerator {
 				double [] meas1 = new double[2];
 				double [] meas2 = new double[2];
 				
-				// if visible by chaser
-				if (visible1) {
+				// if visible by both, then create a single diff cp measurement
+				if (visible1 && visible2) {
 
 					nvis1 = nvis1 + 1;
 					
 					meas1 = this.compute_mp(t, t_mjd, this.rcvr1, los1, this.r, this.v, rGPS1, vGPS1, rISS, oldclock1[0], iv1, this.iaChaser[isv], isv, prn, 0);
 
 					// output data
-					RGPS_Measurement meas =
+					RGPS_Measurement meas_a =
 						new RGPS_Measurement(t, t_mjd, meas1[0], 0, prn);
-					list.add(meas);
+					list.add(meas_a);
 
-				}
 				
-				// if visible by ISS
-				if (visible2) {
 
 					nvis2 = nvis2 + 1;
 					
 					meas2 = this.compute(t, t_mjd, this.rcvr2, los2, this.rISS, this.vISS, rGPS2, vGPS2, oldclock2[0], iv2, this.iaISS[isv], isv, prn, 1);
 
 					// output data
-					RGPS_Measurement meas =
+					RGPS_Measurement meas_b =
 						new RGPS_Measurement(t, t_mjd, meas2[0], 1, prn);
-					list.add(meas);
+					list.add(meas_b);
 
-				}
 				
-				// if visible by both, then create a single diff cp measurement
-				if (visible1 && visible2) {
 					ncommon = ncommon + 1;
 					double diff = meas1[1] - meas2[1];
-					RGPS_Measurement meas =
+					RGPS_Measurement meas_c =
 						new RGPS_Measurement(t, t_mjd, diff, 2, prn);
-					list.add(meas);					
+					list.add(meas_c);					
 				}
 								
 			}
@@ -377,12 +372,14 @@ public class RGPS_MP_NoMask_MeasurementGenerator {
 		// get the true trajectory data
 		System.out.println("recovering truth data");
 		String in_directory = "C:\\Jat\\jat\\traj\\reference\\";
-		String trajfile = "rvtraj_rbar.jat";
+//		String trajfile = "rvtraj_burn.jat";
+		String trajfile = "rvtraj_vbar.jat";
 		String file = in_directory + trajfile;
 		Trajectory truetraj = Trajectory.recover(file);
 
 		// get the ISS data
-		String issfile = "isstraj_rbar.jat";
+		String issfile = "isstraj_vbar.jat";
+//		String issfile = "isstraj_burn.jat";
 		file = in_directory + issfile;
 		Trajectory isstraj = Trajectory.recover(file);
 
@@ -392,25 +389,27 @@ public class RGPS_MP_NoMask_MeasurementGenerator {
 
 		// set the output file
 		String out_directory = "C:\\Jat\\jat\\output\\";
-		String measfile = "C:\\Jat\\jat\\input\\gps\\rgpsmeas_rbar_geom1_mp_nomask.jat";
+//		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_vbar.jat";
+		String measfile = "C:\\Jat\\jat\\input\\gps\\rgpsmeas_vbar_geom4_mp_cm.jat";
 		String outfile = measfile;
 
 		// set the clock output
-		String clockfile = "gpsref\\rgpsclock_rbar_geom1_mp_nomask.txt";
+//		String clockfile = "rgpsclock_vbar.txt";
+		String clockfile = "gpsref\\rgpsclock_vbar_geom4_mp_cm.txt";
 		LinePrinter clp = new LinePrinter(out_directory + clockfile);
 
 		// set the text output file
 //		String msfile = "rgpsmeas_vbar.txt";
-		String msfile = "gpsref\\rgpsmeas_rbar_geom1_mp_nomask.txt";
+		String msfile = "gpsref\\rgpsmeas_vbar_geom4_mp_cm.txt";
 		LinePrinter mlp = new LinePrinter(out_directory + msfile);
 
 		// visibility checker
-		ISS_Blockage block = new ISS_Blockage(0.0);
-		ElevationMask mask = new ElevationMask(0.0);
+		ISS_Blockage block = new ISS_Blockage();
+		ElevationMask mask = new ElevationMask();
 		
 		long seed = -1;
 
-		RGPS_MP_NoMask_MeasurementGenerator x = new RGPS_MP_NoMask_MeasurementGenerator(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
+		RGPS_MP_Common_MeasurementGenerator x = new RGPS_MP_Common_MeasurementGenerator(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
 		x.generate();
 
 	}

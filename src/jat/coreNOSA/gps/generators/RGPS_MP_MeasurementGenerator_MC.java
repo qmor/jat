@@ -20,7 +20,7 @@
  * File Created on May 22, 2003
  */
 
-package jat.core.gps.generators;
+package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.gps.*;
@@ -44,20 +44,19 @@ import java.io.*;
 //import jat.gps_ins.*;
 
 /**
-* The RGPS_MeasurementGenerator.java Class generates relative GPS measurements
-* including the effects of multipath but only for GPS SVs that are
-* visible to both receivers.
-*
+* The RGPS_MP_MeasurementGenerator_MC.java Class generates relative GPS measurements
+* including the effects of multipath for a Monte Carlo study.
+
 * @author 
 * @version 1.0
 */
-public class RGPS_MP_Common_MeasurementGenerator {
+public class RGPS_MP_MeasurementGenerator_MC {
 
 	private Trajectory truth;
 
 	private Trajectory iss;
 
-	private static final double t_mjd0 = 51969.375;
+	private static final double t_mjd0 = 51969.25;
 
 	private ReceiverModel rcvr1;
 	private ReceiverModel rcvr2;
@@ -105,7 +104,7 @@ public class RGPS_MP_Common_MeasurementGenerator {
 	 * @param mlp LinePrinter for measurement data output
 	 * @param seed random number generator seed to be used
 	 */
-	public RGPS_MP_Common_MeasurementGenerator(
+	public RGPS_MP_MeasurementGenerator_MC(
 		Trajectory t,
 		Trajectory i,
 		GPS_Constellation c,
@@ -126,16 +125,16 @@ public class RGPS_MP_Common_MeasurementGenerator {
 		this.vis1 = v1;
 		this.vis2 = v2;
 		this.rcvr1 = new ReceiverModel(seed);
-		this.rcvr2 = new ReceiverModel(2 * seed);
+		this.rcvr2 = new ReceiverModel(seed - 1);
 
 		int nsv = this.constell.size();
-		this.ure = new URE_Model(nsv);
+		this.ure = new URE_Model(nsv, (seed - 2));
 
 		// initialize integer ambiguity
 		this.iaChaser = new double[nsv];
 		this.iaISS = new double[nsv];
-		RandomNumber rn1 = new RandomNumber(seed);
-		RandomNumber rn2 = new RandomNumber(2 * seed);
+		RandomNumber rn1 = new RandomNumber(seed - 3);
+		RandomNumber rn2 = new RandomNumber(seed - 4);
 		for (int j = 0; j < nsv; j++) {
 			double number1 = rn1.normal(0.0, 1.0E+06);
 			double num1 = MathUtils.round(number1);
@@ -144,6 +143,8 @@ public class RGPS_MP_Common_MeasurementGenerator {
 			double num2 = MathUtils.round(number2);
 			this.iaISS[j] = GPS_Utils.lambda * num2;
 		}
+		
+		this.mp.setSeed(seed - 5);
 
 	}
 
@@ -218,7 +219,7 @@ public class RGPS_MP_Common_MeasurementGenerator {
 	 */
 	public void generate() throws IOException {
 
-		System.out.println("Generating RGPS Measurements");
+//		System.out.println("Generating RGPS Measurements");
 		RGPS_MeasurementList list = new RGPS_MeasurementList();
 
 		// initialize
@@ -231,7 +232,7 @@ public class RGPS_MP_Common_MeasurementGenerator {
 
 		double t_mjd = t_mjd0; // MJD at beginning of the sim
 
-		System.out.println("initialized, number of points " + truth.npts());
+//		System.out.println("initialized, number of points " + truth.npts());
 
 		// grab the first data
 		double[] data = truth.next();
@@ -293,35 +294,41 @@ public class RGPS_MP_Common_MeasurementGenerator {
 				double [] meas1 = new double[2];
 				double [] meas2 = new double[2];
 				
-				// if visible by both, then create a single diff cp measurement
-				if (visible1 && visible2) {
+				// if visible by chaser
+				if (visible1) {
 
 					nvis1 = nvis1 + 1;
 					
 					meas1 = this.compute_mp(t, t_mjd, this.rcvr1, los1, this.r, this.v, rGPS1, vGPS1, rISS, oldclock1[0], iv1, this.iaChaser[isv], isv, prn, 0);
 
 					// output data
-					RGPS_Measurement meas_a =
+					RGPS_Measurement meas =
 						new RGPS_Measurement(t, t_mjd, meas1[0], 0, prn);
-					list.add(meas_a);
+					list.add(meas);
 
+				}
 				
+				// if visible by ISS
+				if (visible2) {
 
 					nvis2 = nvis2 + 1;
 					
 					meas2 = this.compute(t, t_mjd, this.rcvr2, los2, this.rISS, this.vISS, rGPS2, vGPS2, oldclock2[0], iv2, this.iaISS[isv], isv, prn, 1);
 
 					// output data
-					RGPS_Measurement meas_b =
+					RGPS_Measurement meas =
 						new RGPS_Measurement(t, t_mjd, meas2[0], 1, prn);
-					list.add(meas_b);
+					list.add(meas);
 
+				}
 				
+				// if visible by both, then create a single diff cp measurement
+				if (visible1 && visible2) {
 					ncommon = ncommon + 1;
 					double diff = meas1[1] - meas2[1];
-					RGPS_Measurement meas_c =
+					RGPS_Measurement meas =
 						new RGPS_Measurement(t, t_mjd, diff, 2, prn);
-					list.add(meas_c);					
+					list.add(meas);					
 				}
 								
 			}
@@ -368,49 +375,63 @@ public class RGPS_MP_Common_MeasurementGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-
-		// get the true trajectory data
-		System.out.println("recovering truth data");
-		String in_directory = "C:\\Jat\\jat\\traj\\reference\\";
-//		String trajfile = "rvtraj_burn.jat";
-		String trajfile = "rvtraj_vbar.jat";
-		String file = in_directory + trajfile;
-		Trajectory truetraj = Trajectory.recover(file);
-
-		// get the ISS data
-		String issfile = "isstraj_vbar.jat";
-//		String issfile = "isstraj_burn.jat";
-		file = in_directory + issfile;
-		Trajectory isstraj = Trajectory.recover(file);
-
-		// get the GPS Constellation
-		String rinexfile = "C:\\Jat\\jat\\input\\gps\\rinex.n";
-		GPS_Constellation constellation = new GPS_Constellation(rinexfile);
-
-		// set the output file
-		String out_directory = "C:\\Jat\\jat\\output\\";
-//		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_vbar.jat";
-		String measfile = "C:\\Jat\\jat\\input\\gps\\rgpsmeas_vbar_geom4_mp_cm.jat";
-		String outfile = measfile;
-
-		// set the clock output
-//		String clockfile = "rgpsclock_vbar.txt";
-		String clockfile = "gpsref\\rgpsclock_vbar_geom4_mp_cm.txt";
-		LinePrinter clp = new LinePrinter(out_directory + clockfile);
-
-		// set the text output file
-//		String msfile = "rgpsmeas_vbar.txt";
-		String msfile = "gpsref\\rgpsmeas_vbar_geom4_mp_cm.txt";
-		LinePrinter mlp = new LinePrinter(out_directory + msfile);
-
-		// visibility checker
-		ISS_Blockage block = new ISS_Blockage();
-		ElevationMask mask = new ElevationMask();
 		
-		long seed = -1;
+		long counter = 1;
+		int j = 1;
+		for (int i = 0; i < 30; i++) {
+			
+			String num = Integer.toString(j);
 
-		RGPS_MP_Common_MeasurementGenerator x = new RGPS_MP_Common_MeasurementGenerator(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
-		x.generate();
+			// get the true trajectory data
+			System.out.println("recovering truth data");
+			String in_directory = "C:\\Jat\\jat\\traj\\reference\\";
+	//		String trajfile = "rvtraj_burn.jat";
+			String trajfile = "rvtraj_rbar.jat";
+			String file = in_directory + trajfile;
+			Trajectory truetraj = Trajectory.recover(file);
+	
+			// get the ISS data
+			String issfile = "isstraj_rbar.jat";
+	//		String issfile = "isstraj_burn.jat";
+			file = in_directory + issfile;
+			Trajectory isstraj = Trajectory.recover(file);
+	
+			// get the GPS Constellation
+			String rinexfile = "C:\\Jat\\jat\\input\\gps\\rinex.n";
+			GPS_Constellation constellation = new GPS_Constellation(rinexfile);
+	
+			// set the output file
+			String dotJat = ".jat";
+			String out_directory = "C:\\Jat\\jat\\output\\";
+	//		String measfile = "C:\\Jat\\jat\\input\\rgpsmeas_vbar.jat";
+			String measfile = "C:\\Jat\\jat\\input\\monte\\rgpsmeas_rbar_geom3_mp_";
+			String outfile = measfile + num + dotJat;
+			System.out.println("Generating: "+outfile);
+	
+			// set the clock output
+			String dotTxt = ".txt";
+	//		String clockfile = "rgpsclock_vbar.txt";
+			String clockfile = "monte\\rgpsclock_rbar_geom3_mp_";
+			LinePrinter clp = new LinePrinter(out_directory + clockfile + num + dotTxt);
+	
+			// set the text output file
+	//		String msfile = "rgpsmeas_vbar.txt";
+			String msfile = "monte\\rgpsmeas_rbar_geom3_mp_";
+			LinePrinter mlp = new LinePrinter(out_directory + msfile + num + dotTxt);
+	
+			// visibility checker
+			ISS_Blockage block = new ISS_Blockage();
+			ElevationMask mask = new ElevationMask();
+			
+			long seed = -1 * counter;
+	
+			RGPS_MP_MeasurementGenerator_MC x = new RGPS_MP_MeasurementGenerator_MC(truetraj,isstraj, constellation, block, mask, outfile, clp, mlp, seed);
+			x.generate();
+			
+			counter = counter + 1;
+			j = j + 1;
+			
+		}
 
 	}
 }
