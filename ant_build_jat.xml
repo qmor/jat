@@ -8,7 +8,7 @@
 	<property name="docs.dir" location="javadoc" />
 	<property name="project-name" value="jat" />
 	<property name="folder-to-zip" value="." />
-	
+
 	<!-- Deletes the existing build, docs and dist directory-->
 	<target name="clean">
 		<delete dir="${docs.dir}" />
@@ -25,7 +25,16 @@
 
 	<!--JAT Core Creates the deployable jar file  -->
 	<target name="jatcore.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatcore.jar" basedir="${build.dir}" excludes="**/application/,**/examples/,**/simulation/,**/tests/,**/unittest/,**/org/"  >
+		<jar destfile="${dist.dir}\jatcore.jar" basedir="${build.dir}" includes="**/core/,**/org/" excludes="**/tests/,**/unittest/">
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!--JAT Core NOSA Creates the deployable jar file  -->
+	<target name="jatcoreNOSA.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jatcoreNOSA.jar" basedir="${build.dir}" includes="**/coreNOSA/">
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
@@ -34,7 +43,7 @@
 
 	<!--JAT Application Creates the deployable jar file  -->
 	<target name="jatapplication.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" excludes="**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/,**/org/"  >
+		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" includes="**/application/">
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
@@ -43,7 +52,16 @@
 
 	<!--JAT Examples Creates the deployable jar file  -->
 	<target name="jatexamples.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatexamples.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/simulation/,**/tests/,**/unittest/,**/org/"  >
+		<jar destfile="${dist.dir}\jatexamples.jar" basedir="${build.dir}" includes="**/examples/" excludes="**/core/">
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!--JAT Examples Creates the deployable jar file  -->
+	<target name="jattests.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jattests.jar" basedir="${build.dir}" includes="**/tests/" >
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
@@ -52,20 +70,20 @@
 
 	<!--JAT JMathTools Creates the deployable jar file  -->
 	<target name="jatjmathtools.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatjmathtools.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/"  >
+		<jar destfile="${dist.dir}\jatjmathtools.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/">
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
 		</jar>
 	</target>
 
-	
+
 	<target name="zip">
-			<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/dist/**,**/lib/**,**/deploy/**,**/data/core/ephemeris/**,**/data/core/astronomy/**,**/data/jat3D/images_hires/**"  />
-		</target>
-			
-			
-	<target name="main" depends="jatcore.jar, jatapplication.jar, jatexamples.jar, jatjmathtools.jar, zip">
+		<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/dist/**,**/lib/**,**/deploy/**,**/data/core/ephemeris/**,**/data/core/astronomy/**,**/data/jat3D/images_hires/**" />
+	</target>
+
+
+	<target name="main" depends="jatcore.jar, jatcoreNOSA.jar,jatapplication.jar, jatexamples.jar, jattests.jar, jatjmathtools.jar, zip">
 		<description>Main target</description>
 	</target>
 
@@ -73,5 +91,4 @@
 
 
 
-	<!--	<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/data/jat3D/images_hires/**" excludes="**/.settings/,**/bin/,**/data/jat3D/,**/docs/,**/input/,**/javadoc/,**/scripts/,**/src/,**/zip/" /> -->
-		
+<!--	<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/data/jat3D/images_hires/**" excludes="**/.settings/,**/bin/,**/data/jat3D/,**/docs/,**/input/,**/javadoc/,**/scripts/,**/src/,**/zip/" /> -->
