@@ -23,7 +23,6 @@
 package jat.coreNOSA.gps.filters.relative;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.cm.FiniteBurn;
 import jat.coreNOSA.forces.CIRA_ExponentialDrag;
 import jat.coreNOSA.forces.J2Gravity;

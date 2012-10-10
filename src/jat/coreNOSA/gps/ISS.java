@@ -20,7 +20,6 @@
 package jat.coreNOSA.gps;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

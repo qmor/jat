@@ -21,7 +21,6 @@
 package jat.coreNOSA.timeRef;
 
 import jat.core.util.PathUtil;
-import jat.core.cm.*;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;

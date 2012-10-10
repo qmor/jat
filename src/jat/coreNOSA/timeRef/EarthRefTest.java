@@ -6,7 +6,6 @@
  */
 package jat.coreNOSA.timeRef;
 
-import jat.core.cm.*;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

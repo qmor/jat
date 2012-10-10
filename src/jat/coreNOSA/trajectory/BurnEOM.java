@@ -23,7 +23,6 @@
 package jat.coreNOSA.trajectory;
 
 import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.cm.FiniteBurn;
 import jat.coreNOSA.forces.HarrisPriester;
 import jat.coreNOSA.forces.JGM3;
