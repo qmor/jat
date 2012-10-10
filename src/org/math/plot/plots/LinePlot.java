@@ -14,6 +14,7 @@ public class LinePlot extends ScatterPlot {
 
 	public boolean draw_dot = false;
 	public boolean closed_curve = true;
+	//public boolean closed_curve = false;
 
 	public LinePlot(String n, Color c, boolean[][] _pattern, double[][] _XY) {
 		super(n, c, _pattern, _XY);

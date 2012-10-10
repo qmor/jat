@@ -84,6 +84,13 @@ public class Plot2DCanvas extends PlotCanvas {
 		return addPlot(new ScatterPlot(name, c, convertXY(X,Y)));
 	}
 
+	
+	
+	
+	public int addLinePlot(LinePlot l) {
+		return addPlot(l);
+	}
+	
 	public int addLinePlot(String name, Color c, double[] Y) {
 		return addPlot(new LinePlot(name, c, convertY(Y)));
 	}

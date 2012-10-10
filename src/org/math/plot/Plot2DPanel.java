@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import org.math.plot.canvas.Plot2DCanvas;
 import org.math.plot.canvas.PlotCanvas;
+import org.math.plot.plots.LinePlot;
 
 /**
  * BSD License
@@ -141,6 +142,8 @@ public class Plot2DPanel extends PlotPanel {
     public int addLinePlot(String name, double[] X, double[] Y) {
         return addLinePlot(name, getNewColor(), X,Y);
     }
+
+    
     
     /**
      * Adds a bar plot (each data point is shown as a dot marker connected to
@@ -399,5 +402,7 @@ public class Plot2DPanel extends PlotPanel {
             throw new IllegalArgumentException("Plot type is unknown : " + type);
         }
     }
+
+
     
 }
