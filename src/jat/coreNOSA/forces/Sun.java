@@ -21,8 +21,8 @@ package jat.coreNOSA.forces;
 
 //import jat.matvec.data.Matrix;
 //import jat.timeRef.Time;
-import jat.core.cm.Constants;
 import jat.core.ephemeris.*;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MathUtils;

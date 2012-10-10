@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.astronomy;
+package jat.coreNOSA.astronomy;
 
 import jat.coreNOSA.math.MathUtils;
 

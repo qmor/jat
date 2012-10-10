@@ -10,7 +10,7 @@ import java.text.*;
 
 import jat.core.algorithm.ScalarfromArrayFunction;
 import jat.core.algorithm.integrators.*;
-import jat.core.cm.eom.TwoBodyCSI;
+import jat.coreNOSA.cm.eom.TwoBodyCSI;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

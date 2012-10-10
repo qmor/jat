@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;

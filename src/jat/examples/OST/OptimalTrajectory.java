@@ -24,6 +24,10 @@ package jat.examples.OST;
 import jat.core.algorithm.optimization.*;
 import jat.core.cm.*;
 import jat.core.cm.eom.*;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.KeplerElements;
+import jat.coreNOSA.cm.cm;
+import jat.coreNOSA.cm.eom.TwoBodyCSI;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 

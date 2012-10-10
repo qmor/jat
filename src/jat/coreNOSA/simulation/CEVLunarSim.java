@@ -25,7 +25,7 @@ import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.estimators.LunarEOM;
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.cm.TwoBody;
+import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.measurements.OpticalMeasurementModel;

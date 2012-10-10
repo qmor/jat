@@ -1,4 +1,4 @@
-package jat.core.cm.rendezvous;
+package jat.coreNOSA.cm.rendezvous;
 
 /* JAT: Java Astrodynamics Toolkit
  *

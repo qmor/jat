@@ -2,9 +2,9 @@ package jat.application.missionPlan;
 
 import javax.vecmath.Color3f;
 
-import jat.core.cm.Lambert;
 import jat.core.ephemeris.DE405APL.body;
 import jat.core.spacetime.TimeAPL;
+import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.jat3D.Sphere3D;
 import jat.jat3D.TwoBodyOrbit3D;

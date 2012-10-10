@@ -20,7 +20,9 @@
 
 package jat.coreNOSA.timeRef;
 
+import jat.core.util.PathUtil;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MathUtils;
@@ -113,6 +115,7 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.coreNOSA.sp
      */
     public EarthRef( double mjd_UTC ){
         super(DE405_Body.EARTH);
+		        
         //accept the input
 //        CalDate utc = new CalDate(mjd_UTC);
         this.MJD_UTC = mjd_UTC;
@@ -141,6 +144,9 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.coreNOSA.sp
      */
     public EarthRef(CalDate date){
         super(DE405_Body.EARTH);
+        
+
+        
         this.MJD_UTC = date.mjd();
         this.MJD_UTC_START = date.mjd();
         this.MJD_TT = CalDate.UTC2TT(this.MJD_UTC);
@@ -148,9 +154,11 @@ public class EarthRef extends BodyCenteredInertialRef implements jat.coreNOSA.sp
         this.T = trueOfDate();
         this.E = eci2ecef();
         if(this.use_moon || this.use_sun){
-            String fs = FileUtil.file_separator();
-            String dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs;
-            jpl_ephem = new DE405(dir_in);
+    		PathUtil p = new PathUtil();
+            jpl_ephem = new DE405(p.DE405Path);
+            //String fs = FileUtil.file_separator();
+            //String dir_in = FileUtil.getClassFilePath("jat.eph","DE405")+fs+"DE405data"+fs;
+            //jpl_ephem = new DE405(dir_in);
         }
         if(this.use_sun) compute_JPL_Sun_Vector();
         if(this.use_moon) compute_JPL_Moon_Vector();

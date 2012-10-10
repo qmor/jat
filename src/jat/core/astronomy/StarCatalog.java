@@ -27,13 +27,13 @@ import java.util.List;
 import au.com.bytecode.opencsv.CSVReader;
 
 public class StarCatalog {
-	public List manystardata;
+	public List<Stardata> manystardata;
 	
 	public int a;
 	
 	
 	public void load() {
-		manystardata = new ArrayList();
+		manystardata = new ArrayList<Stardata>();
 
 		PathUtil f = new PathUtil();
 		String fs = f.fs;

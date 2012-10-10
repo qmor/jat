@@ -21,6 +21,11 @@ package jat.examples.Lambert;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.Lambert;
+import jat.coreNOSA.cm.LambertException;
+import jat.coreNOSA.cm.TwoBody;
+import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 

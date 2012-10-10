@@ -19,7 +19,7 @@
  */
 
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 import java.io.*;
 
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

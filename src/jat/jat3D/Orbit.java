@@ -22,6 +22,9 @@ package jat.jat3D;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.KeplerElements;
+import jat.coreNOSA.cm.TwoBody;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;

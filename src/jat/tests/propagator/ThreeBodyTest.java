@@ -21,7 +21,7 @@ package jat.tests.propagator;
 
 import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.cm.ThreeBody;
+import jat.coreNOSA.cm.ThreeBody;
 
 /**
  * @author rcpage

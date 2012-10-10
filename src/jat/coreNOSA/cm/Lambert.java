@@ -20,7 +20,7 @@
 
 // 2012: add exception management
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 
 import jat.core.algorithm.*;
 import jat.core.algorithm.integrators.*;

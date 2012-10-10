@@ -23,6 +23,9 @@ package jat.examples.OST;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.KeplerElements;
+import jat.coreNOSA.cm.TwoBody;
+import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.plotutil.SinglePlot;
 
 /**

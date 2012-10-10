@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.astronomy;
+package jat.coreNOSA.astronomy;
 
 /**
  * Simple class to store Hour Angle

@@ -21,7 +21,7 @@ package jat.coreNOSA.simulation;
 
 //import jat.matlabInterface.MatlabControl;
 import jat.core.algorithm.integrators.*;
-import jat.core.cm.Constants;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.ForceModel;
 import jat.coreNOSA.forces.GravitationalBody;
 import jat.coreNOSA.forces.GravityModel;

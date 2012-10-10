@@ -23,7 +23,7 @@ package jat.coreNOSA.simulation;
 
 import jat.core.algorithm.estimators.EKF;
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.cm.Constants;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.GravitationalBody;
 import jat.coreNOSA.forces.GravityModel;
 import jat.coreNOSA.forces.GravityModelType;

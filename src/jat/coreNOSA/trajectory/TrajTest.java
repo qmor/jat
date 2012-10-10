@@ -24,6 +24,7 @@ package jat.coreNOSA.trajectory;
 import jat.core.algorithm.integrators.*;
 //import jat.plot.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.TwoBody;
 
 /**
  * <P>

@@ -24,7 +24,7 @@ package jat.core.algorithm.estimators;
 import java.util.HashMap;
 
 import jat.core.algorithm.integrators.Derivatives;
-import jat.core.cm.Constants;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.GravityModel;
 import jat.coreNOSA.forces.GravityModelType;
 import jat.coreNOSA.forces.HarrisPriester;

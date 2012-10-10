@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

@@ -7,16 +7,12 @@
 package jat.coreNOSA.timeRef;
 
 import jat.core.cm.*;
+import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-/**
- * @author
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+
 public class EarthRefTest {
 
 	public static void main(String[] args) {

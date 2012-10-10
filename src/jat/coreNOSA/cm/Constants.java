@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 
 /** Astrodynamical Constants
  * @author 

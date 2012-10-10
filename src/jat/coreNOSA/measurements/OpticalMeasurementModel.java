@@ -28,8 +28,8 @@ import java.util.Random;
 
 import jat.core.algorithm.estimators.MeasurementModel;
 import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.cm.Constants;
 import jat.core.ephemeris.*;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.Interpolator;

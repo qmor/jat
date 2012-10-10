@@ -22,7 +22,7 @@
 package jat.core.algorithm.estimators;
 
 import jat.core.algorithm.integrators.Derivatives;
-import jat.core.cm.Constants;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.forces.GravityModel;
 import jat.coreNOSA.forces.GravityModelType;

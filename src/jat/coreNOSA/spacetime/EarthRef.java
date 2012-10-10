@@ -20,6 +20,7 @@
 
 package jat.coreNOSA.spacetime;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MathUtils;

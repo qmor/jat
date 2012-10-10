@@ -23,6 +23,7 @@ package jat.examples.RK78F_Test;
 
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.TwoBody;
 
 import java.io.*;
 

@@ -18,8 +18,8 @@
 package jat.application.orbitviewer;
 
 import jat.core.algorithm.integrators.Printable;
-import jat.core.cm.TwoBody;
-import jat.core.cm.cm;
+import jat.coreNOSA.cm.TwoBody;
+import jat.coreNOSA.cm.cm;
 
 import org.math.plot.Plot3DPanel;
 

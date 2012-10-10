@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import jat.core.cm.*;
+import jat.coreNOSA.cm.cm;
 
 /**
  * @author Tobias Berthold

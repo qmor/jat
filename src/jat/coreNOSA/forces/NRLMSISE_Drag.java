@@ -19,7 +19,7 @@
  */
 package jat.coreNOSA.forces;
 
-import jat.core.cm.Constants;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.nrlmsise.NRLMSISE_data;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

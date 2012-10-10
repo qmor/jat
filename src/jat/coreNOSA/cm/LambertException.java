@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 
 public class LambertException extends Exception {
 

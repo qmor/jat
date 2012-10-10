@@ -18,7 +18,7 @@
  *
  */
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 
 /**
  * Simple class to store Kepler elements 

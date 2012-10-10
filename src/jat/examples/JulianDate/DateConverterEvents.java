@@ -1,6 +1,6 @@
 package jat.examples.JulianDate;
 
-import jat.core.cm.cm;
+import jat.coreNOSA.cm.cm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

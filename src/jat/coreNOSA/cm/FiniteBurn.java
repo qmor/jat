@@ -20,7 +20,7 @@
  * File Created on Aug 28, 2003
  */
 
-package jat.core.cm;
+package jat.coreNOSA.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;

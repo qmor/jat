@@ -17,13 +17,13 @@
 
 package jat.application.missionPlan;
 
-import jat.core.cm.Constants;
-import jat.core.cm.Lambert;
-import jat.core.cm.LambertException;
 import jat.core.cm.TwoBodyAPL;
-import jat.core.cm.cm;
 import jat.core.ephemeris.DE405APL;
 import jat.core.spacetime.TimeAPL;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.Lambert;
+import jat.coreNOSA.cm.LambertException;
+import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.jat3D.Colors;

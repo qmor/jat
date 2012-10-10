@@ -18,8 +18,8 @@
 package jat.jat3D;
 
 import jat.core.astronomy.SolarSystemBodies;
-import jat.core.cm.cm;
 import jat.core.ephemeris.DE405APL;
+import jat.coreNOSA.cm.cm;
 
 import java.awt.Button;
 import java.awt.Image;

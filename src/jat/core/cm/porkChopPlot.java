@@ -20,6 +20,9 @@ import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405APL.body;
 import jat.core.math.MatrixVector.util.LabeledMatrix;
 import jat.core.spacetime.TimeAPL;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.Lambert;
+import jat.coreNOSA.cm.LambertException;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.IOException;

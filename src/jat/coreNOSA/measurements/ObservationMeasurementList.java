@@ -139,7 +139,7 @@ public class ObservationMeasurementList
 					x = Double.parseDouble(tok.nextToken());
 					y = Double.parseDouble(tok.nextToken());
 					z = Double.parseDouble(tok.nextToken());
-					clock = Double.parseDouble(tok.nextToken())/jat.core.cm.Constants.c;
+					clock = Double.parseDouble(tok.nextToken())/jat.coreNOSA.cm.Constants.c;
 					mjd = mjd - (clock)/86400;
 					r = new VectorN(x,y,z);
 					time = new Time(mjd);

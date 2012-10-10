@@ -17,7 +17,7 @@
 
 package jat.core.spacetime;
 
-import jat.core.cm.cm;
+import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.coreNOSA.spacetime.Time;
 

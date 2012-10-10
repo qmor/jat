@@ -67,9 +67,9 @@
 
 package jat.core.ephemeris;
 
-import jat.core.cm.Constants;
-import jat.core.cm.cm;
 import jat.core.util.PathUtil;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;

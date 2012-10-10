@@ -1,4 +1,4 @@
-package jat.core.cm.rendezvous;
+package jat.coreNOSA.cm.rendezvous;
 
 /* JAT: Java Astrodynamics Toolkit
  *
@@ -22,9 +22,9 @@ package jat.core.cm.rendezvous;
  * File Created on Aug 26, 2003
  */
  
-import jat.core.cm.ClohessyWiltshire;
-import jat.core.cm.Constants;
-import jat.core.cm.TwoBody;
+import jat.coreNOSA.cm.ClohessyWiltshire;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.RSW_Frame;

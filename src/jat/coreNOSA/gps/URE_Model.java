@@ -24,6 +24,8 @@ package jat.coreNOSA.gps;
  
 //import jat.gps.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

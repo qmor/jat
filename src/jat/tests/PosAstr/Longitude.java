@@ -21,7 +21,7 @@
 
 package jat.tests.PosAstr;
 
-import jat.core.astronomy.Angle;
+import jat.coreNOSA.astronomy.Angle;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

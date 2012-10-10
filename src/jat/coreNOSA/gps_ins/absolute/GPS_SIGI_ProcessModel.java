@@ -25,6 +25,8 @@ package jat.coreNOSA.gps_ins.absolute;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.forces.J2Gravity;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.IonoModel;

@@ -18,6 +18,8 @@
 package jat.core.cm;
 
 import jat.core.algorithm.integrators.Printable;
+import jat.coreNOSA.cm.Constants;
+import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

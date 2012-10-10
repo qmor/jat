@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 import java.util.Random;
 
 import jat.core.algorithm.estimators.*;
-import jat.core.cm.Constants;
+import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

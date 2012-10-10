@@ -29,25 +29,26 @@ public class PathUtil {
 
 	public String root_path;
 	public String current_path;
+	public String DE405Path;
 	public String data_path;
 	public String fs = File.separator;
 
 	public PathUtil() {
 		root_path = find_root();
 		data_path = find_data_folder();
+		DE405Path = root_path + "data/core/ephemeris/DE405data/";
+		
 	}
 
 	public PathUtil(Applet myapplet) {
 
 		current_path = find_current_path(myapplet);
 		data_path = find_data_folder();
-		// current_path =
-		// myapplet.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-
+		root_path = find_root();
+		DE405Path = root_path + "data/core/ephemeris/DE405data/";
+		
 		System.out.print("<PathUtil 1> ");
 		System.out.println(current_path);
-
-		root_path = find_root();
 	}
 
 	public String find_data_folder() {

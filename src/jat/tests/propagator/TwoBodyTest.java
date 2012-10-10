@@ -7,6 +7,7 @@
 package jat.tests.propagator;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.cm.TwoBody;
 
 /**
  * @author
