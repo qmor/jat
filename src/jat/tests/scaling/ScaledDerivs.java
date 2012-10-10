@@ -22,6 +22,9 @@ package jat.tests.scaling;
 
 import jat.core.algorithm.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.VectorTimeFunction;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.Printable;
 
 /**
  * Equations of motion

@@ -22,6 +22,8 @@
 package jat.examples.AttitudeExample;
 
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.EquationsOfMotion;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;
 import jat.coreNOSA.plotutil.TwoPlots;

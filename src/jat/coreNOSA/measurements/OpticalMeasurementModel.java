@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import jat.core.algorithm.estimators.MeasurementModel;
-import jat.core.algorithm.integrators.LinePrinter;
 import jat.core.ephemeris.*;
+import jat.coreNOSA.algorithm.estimators.MeasurementModel;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;

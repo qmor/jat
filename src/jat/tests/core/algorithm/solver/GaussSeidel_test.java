@@ -22,6 +22,7 @@
 package jat.tests.core.algorithm.solver;
 
 import jat.core.algorithm.solver.*;
+import jat.coreNOSA.algorithm.solver.GaussSeidel;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

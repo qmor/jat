@@ -22,6 +22,8 @@ package jat.tests.core.algorithm.optimization;
 
 import jat.core.algorithm.*;
 import jat.core.algorithm.optimization.*;
+import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
+import jat.coreNOSA.algorithm.optimization.LineSearch;
 
 public class InnerClassExample
 {

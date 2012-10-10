@@ -20,7 +20,7 @@
 
 package jat.tests.core.algorithm.solver;
 
-import jat.core.algorithm.solver.GaussElim;
+import jat.coreNOSA.algorithm.solver.GaussElim;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

@@ -21,10 +21,10 @@
  **/
 package jat.coreNOSA.simulation;
 
-import jat.core.algorithm.estimators.EKF;
-import jat.core.algorithm.estimators.LunarEOM;
-import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.algorithm.integrators.RungeKutta8;
+import jat.coreNOSA.algorithm.estimators.EKF;
+import jat.coreNOSA.algorithm.estimators.LunarEOM;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

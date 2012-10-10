@@ -6,8 +6,8 @@
  */
 package jat.examples.OST;
 
-import jat.core.algorithm.VectorTimeFunction;
-import jat.core.algorithm.integrators.Printable;
+import jat.coreNOSA.algorithm.VectorTimeFunction;
+import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.math.Interpolator;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;

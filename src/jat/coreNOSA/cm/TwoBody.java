@@ -20,6 +20,8 @@
 
 package jat.coreNOSA.cm;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

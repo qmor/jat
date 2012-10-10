@@ -23,6 +23,7 @@ package jat.tests.core.algorithm.optimization;
 import java.util.Date;
 
 import jat.core.algorithm.optimization.*;
+import jat.coreNOSA.algorithm.optimization.LineSearch;
 import jat.tests.core.algorithm.optimization.functions.*;
 
 /**

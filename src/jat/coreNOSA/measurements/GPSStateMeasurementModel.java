@@ -1,9 +1,9 @@
 package jat.coreNOSA.measurements;
 
 
-import jat.core.algorithm.estimators.EKF;
-import jat.core.algorithm.estimators.MeasurementFileModel;
-import jat.core.algorithm.estimators.MeasurementModel;
+import jat.coreNOSA.algorithm.estimators.EKF;
+import jat.coreNOSA.algorithm.estimators.MeasurementFileModel;
+import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;

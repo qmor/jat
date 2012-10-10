@@ -34,10 +34,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import jat.core.algorithm.estimators.EKF;
-import jat.core.algorithm.integrators.Derivatives;
-import jat.core.algorithm.integrators.LinePrinter;
 
+import jat.coreNOSA.algorithm.estimators.EKF;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.GravitationalBody;
 import jat.coreNOSA.forces.GravityModel;

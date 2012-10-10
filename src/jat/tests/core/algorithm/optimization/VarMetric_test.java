@@ -23,6 +23,7 @@ package jat.tests.core.algorithm.optimization;
 import java.text.*;
 
 import jat.core.algorithm.optimization.*;
+import jat.coreNOSA.algorithm.optimization.VarMetric;
 import jat.tests.core.algorithm.optimization.functions.*;
 
 public class VarMetric_test

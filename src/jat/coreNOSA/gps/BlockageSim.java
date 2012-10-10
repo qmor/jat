@@ -21,6 +21,8 @@
 package jat.coreNOSA.gps;
 //import jat.matvec.data.arrayTools.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

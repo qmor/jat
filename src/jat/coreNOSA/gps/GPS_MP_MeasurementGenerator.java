@@ -23,6 +23,8 @@
 package jat.coreNOSA.gps;
 
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

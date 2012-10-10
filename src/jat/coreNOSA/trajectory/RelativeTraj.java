@@ -22,7 +22,7 @@ package jat.coreNOSA.trajectory;
  * File Created on Jun 8, 2003
  */
 
-import jat.core.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 import jat.coreNOSA.plotutil.ThreePlots;

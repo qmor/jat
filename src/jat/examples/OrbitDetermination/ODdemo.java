@@ -23,6 +23,9 @@ package jat.examples.OrbitDetermination;
  */
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.estimators.ExtendedKalmanFilter;
+import jat.coreNOSA.algorithm.estimators.ProcessModel;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 
 /**
 * The ODdemo.java Class is a demonstration of Orbit Determination.

@@ -24,6 +24,9 @@ package jat.coreNOSA.gps_ins.absolute;
 
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.estimators.EstSTM;
+import jat.coreNOSA.algorithm.estimators.ProcessModel;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.forces.J2Gravity;
@@ -171,7 +174,7 @@ public class GPS_SIGI_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#P0()
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#P0()
 	 */
 	public Matrix P0() {
 		Matrix out = new Matrix(this.numberOfStates());
@@ -223,7 +226,7 @@ public class GPS_SIGI_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#numberOfStates()
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#numberOfStates()
 	 */
 	public int numberOfStates() {
 		int n = 19 + this.nsv;
@@ -231,7 +234,7 @@ public class GPS_SIGI_ProcessModel implements Derivs, ProcessModel {
 	}
 	
 	/**
-	 * @see jat.core.algorithm.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.coreNOSA.algorithm.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x, INS_Measurement measl_1, INS_Measurement measl, int sw) {
 		
@@ -430,7 +433,7 @@ public class GPS_SIGI_ProcessModel implements Derivs, ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#Q(double, double)
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#Q(double, double)
 	 */
 //	public Matrix Q(double t, double dt, VectorN x) {
 //		int n = this.numberOfStates();
@@ -578,7 +581,7 @@ public class GPS_SIGI_ProcessModel implements Derivs, ProcessModel {
 
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#propagate(double, double[], double)
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#propagate(double, double[], double)
 	 */
 	public double[] propagate(double t0, double[] xin, double tf) {
 		

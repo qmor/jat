@@ -17,7 +17,7 @@
 
 package jat.application.orbitviewer;
 
-import jat.core.algorithm.integrators.Printable;
+import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.cm.cm;
 

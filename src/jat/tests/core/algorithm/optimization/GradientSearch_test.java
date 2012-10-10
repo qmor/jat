@@ -21,6 +21,7 @@
 package jat.tests.core.algorithm.optimization;
 
 import jat.core.algorithm.optimization.*;
+import jat.coreNOSA.algorithm.optimization.GradientSearch;
 import jat.tests.core.algorithm.optimization.functions.*;
 
 public class GradientSearch_test

@@ -22,6 +22,8 @@ package jat.examples.OptimalLambert;
 
 import jat.core.algorithm.optimization.*;
 import jat.core.cm.*;
+import jat.coreNOSA.algorithm.optimization.DFP;
+import jat.coreNOSA.algorithm.optimization.GradientSearch;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.cm.cm;

@@ -7,6 +7,8 @@
 package jat.tests.propagator;
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.TwoBody;
 
 /**

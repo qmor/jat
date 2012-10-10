@@ -19,8 +19,8 @@
  */
 package jat.coreNOSA.spacecraft;
 
-import jat.core.algorithm.estimators.EKF;
-import jat.core.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.estimators.EKF;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.Quaternion;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

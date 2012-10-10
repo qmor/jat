@@ -23,6 +23,8 @@
 package jat.coreNOSA.gps.filters.absolute;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.estimators.EstSTM;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.forces.CIRA_ExponentialDrag;
 import jat.coreNOSA.forces.J2Gravity;
 import jat.coreNOSA.gps.IonoModel;
@@ -73,7 +75,7 @@ public class GPS_EOM implements Derivatives {
 
 	
 	/**
-	 * @see jat.core.algorithm.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.coreNOSA.algorithm.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x) {
 		

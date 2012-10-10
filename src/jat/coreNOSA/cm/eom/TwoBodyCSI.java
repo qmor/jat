@@ -20,8 +20,8 @@
 
 package jat.coreNOSA.cm.eom;
 
-import jat.core.algorithm.VectorTimeFunction;
-import jat.core.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.VectorTimeFunction;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.cm.KeplerElements;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

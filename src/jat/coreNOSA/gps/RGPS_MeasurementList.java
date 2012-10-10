@@ -22,6 +22,7 @@
 
 package jat.coreNOSA.gps;
 import jat.core.algorithm.estimators.*;
+import jat.coreNOSA.algorithm.estimators.MeasurementData;
 //import jat.gps.*;
 
 import java.io.*;

@@ -21,7 +21,7 @@
 package jat.coreNOSA.simulation;
 
 
-import jat.core.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.trajectory.Trajectory;
 /**

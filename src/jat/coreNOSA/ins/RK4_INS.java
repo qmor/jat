@@ -23,6 +23,7 @@ package jat.coreNOSA.ins;
 //import jat.matvec.data.*;
 //import java.io.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.gps_ins.Derivs;
 import jat.coreNOSA.gps_ins.EOM;
 

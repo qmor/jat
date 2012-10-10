@@ -21,6 +21,8 @@ package jat.coreNOSA.gps;
  */
 
 import jat.core.algorithm.*;
+import jat.coreNOSA.algorithm.ScalarFunction;
+import jat.coreNOSA.algorithm.ZeroFinder;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;

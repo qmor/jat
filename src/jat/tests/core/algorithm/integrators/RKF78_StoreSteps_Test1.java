@@ -1,8 +1,8 @@
 package jat.tests.core.algorithm.integrators;
 
-import jat.core.algorithm.integrators.Derivatives;
-import jat.core.algorithm.integrators.RKF78_StoreSteps;
 import jat.core.util.PrintMatrix;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.RKF78_StoreSteps;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.math.MatrixVector.data.io.data.fileTools.MatrixString;

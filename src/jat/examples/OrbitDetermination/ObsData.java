@@ -25,6 +25,8 @@ import java.io.*;
 import java.util.*;
 
 import jat.core.algorithm.estimators.*;
+import jat.coreNOSA.algorithm.estimators.MeasurementData;
+import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.util.FileUtil;

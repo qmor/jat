@@ -18,8 +18,8 @@ package jat.tests.core.algorithm.optimization;
 
 import java.util.List;
 
-import jat.core.algorithm.optimization.DataArraySearch;
 import jat.core.math.MatrixVector.util.LabeledMatrix;
+import jat.coreNOSA.algorithm.optimization.DataArraySearch;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
 import java.util.ArrayList;

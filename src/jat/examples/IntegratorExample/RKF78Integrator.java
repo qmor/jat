@@ -20,6 +20,9 @@
 
 package jat.examples.IntegratorExample;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.Printable;
+import jat.coreNOSA.algorithm.integrators.RungeKuttaFehlberg78;
 import jat.coreNOSA.plotutil.TwoPlots;
 
 /**

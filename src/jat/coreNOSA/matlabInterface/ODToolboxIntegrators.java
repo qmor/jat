@@ -23,10 +23,10 @@ package jat.coreNOSA.matlabInterface;
 import java.util.Arrays;
 import java.util.Vector;
 
-import jat.core.algorithm.integrators.Derivatives;
-import jat.core.algorithm.integrators.RungeKutta4;
-import jat.core.algorithm.integrators.RungeKutta8;
-import jat.core.algorithm.integrators.RungeKuttaFehlberg78;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.RungeKutta4;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
+import jat.coreNOSA.algorithm.integrators.RungeKuttaFehlberg78;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;

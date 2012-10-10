@@ -28,6 +28,10 @@ package jat.coreNOSA.gps.filters.absolute;
 //import jat.forces.*;
 import jat.core.algorithm.estimators.*;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.estimators.EstSTM;
+import jat.coreNOSA.algorithm.estimators.ProcessModel;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.FiniteBurn;
 import jat.coreNOSA.cm.FiniteBurnList;
@@ -158,7 +162,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#P0()
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#P0()
 	 */
 	public Matrix P0() {
 		Matrix out = new Matrix(this.numberOfStates());
@@ -197,7 +201,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#numberOfStates()
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#numberOfStates()
 	 */
 	public int numberOfStates() {
 		int n = 10 + this.nsv;
@@ -222,7 +226,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#Q(double, double)
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#Q(double, double)
 	 */
 	public Matrix Q(double t, double dt, EstSTM stm) {
 		int n = this.numberOfStates();
@@ -257,7 +261,7 @@ public class GPS_Thruster_ProcessModel implements ProcessModel {
 	}
 
 	/**
-	 * @see jat.core.algorithm.estimators.ProcessModel#propagate(double, double[], double)
+	 * @see jat.coreNOSA.algorithm.estimators.ProcessModel#propagate(double, double[], double)
 	 */
 	public double[] propagate(double t0, double[] xin, double tf) {
 		

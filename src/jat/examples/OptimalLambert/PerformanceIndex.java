@@ -22,8 +22,8 @@ package jat.examples.OptimalLambert;
 
 import java.text.*;
 
-import jat.core.algorithm.ScalarfromArrayFunction;
 import jat.core.cm.*;
+import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.cm.LambertException;

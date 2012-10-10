@@ -23,8 +23,8 @@ package jat.coreNOSA.matlabInterface;
 import java.util.Arrays;
 import java.util.Vector;
 
-import jat.core.algorithm.integrators.Derivatives;
-import jat.core.algorithm.integrators.RungeKutta8;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.SimModel;
 import jat.coreNOSA.spacecraft.SpacecraftModel;

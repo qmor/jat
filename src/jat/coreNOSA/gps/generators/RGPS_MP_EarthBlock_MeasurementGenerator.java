@@ -23,6 +23,8 @@
 package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.gps.Earth_Blockage;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.GPS_SV;

@@ -1,7 +1,7 @@
 package jat.coreNOSA.measurements;
 
 
-import jat.core.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.TimeUtils;

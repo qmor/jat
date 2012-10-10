@@ -21,6 +21,7 @@
 package jat.tests.core.algorithm.optimization.functions;
 
 import jat.core.algorithm.*;
+import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 
 public class Function3 implements ScalarfromArrayFunction
 {

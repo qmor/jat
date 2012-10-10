@@ -20,6 +20,7 @@
 
 package jat.coreNOSA.cm.rendezvous;
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.DeltaV;
 import jat.coreNOSA.cm.DeltaV_List;

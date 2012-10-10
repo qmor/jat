@@ -24,6 +24,7 @@
 package jat.coreNOSA.cm;
  
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.*;

@@ -21,7 +21,7 @@
  */
 package jat.examples.OrbitDetermination;
 
-import jat.core.algorithm.integrators.Derivatives;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

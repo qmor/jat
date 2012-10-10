@@ -19,8 +19,8 @@
  */
 package jat.tests.propagator;
 
-import jat.core.algorithm.integrators.LinePrinter;
-import jat.core.algorithm.integrators.RungeKutta8;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.forces.ForceModelListOld;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

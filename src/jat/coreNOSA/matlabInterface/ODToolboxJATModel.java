@@ -20,6 +20,7 @@
 package jat.coreNOSA.matlabInterface;
 
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.AtmosphericDrag;
 import jat.coreNOSA.forces.GravitationalBody;

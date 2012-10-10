@@ -23,6 +23,7 @@
 package jat.coreNOSA.gps.generators;
 
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.gps.ElevationMask;
 import jat.coreNOSA.gps.GPS_Constellation;
 import jat.coreNOSA.gps.GPS_SV;

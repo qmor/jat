@@ -22,6 +22,7 @@
 package jat.examples.ZeroVelCurve;
 
 import jat.core.algorithm.*;
+import jat.coreNOSA.algorithm.NLESolver;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**

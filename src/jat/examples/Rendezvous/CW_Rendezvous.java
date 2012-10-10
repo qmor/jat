@@ -24,6 +24,7 @@ package jat.examples.Rendezvous;
  
 import jat.core.algorithm.integrators.*;
 import jat.core.cm.*;
+import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.ClohessyWiltshire;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.TwoBody;

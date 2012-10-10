@@ -21,7 +21,7 @@ package jat.coreNOSA.simulation;
 
 import java.util.Random;
 
-import jat.core.algorithm.integrators.LinePrinter;
+import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

@@ -20,6 +20,7 @@
 package jat.coreNOSA.matlabInterface;
 
 import jat.core.algorithm.integrators.*;
+import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import com.mathworks.jmi.Matlab;
@@ -59,7 +60,7 @@ public class MatlabDerivs implements Derivatives {
 	 * @param t independent variable
 	 * @param x dependent variables
 	 * 
-	 * @see jat.core.algorithm.integrators.Derivatives#derivs(double, double[])
+	 * @see jat.coreNOSA.algorithm.integrators.Derivatives#derivs(double, double[])
 	 */
 	public double[] derivs(double t, double[] x) {
 		// Set up the inputs
