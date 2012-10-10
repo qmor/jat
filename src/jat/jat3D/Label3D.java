@@ -21,10 +21,14 @@
 
 package jat.jat3D;
 
-import java.awt.*;
-import java.awt.image.*;
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import javax.media.j3d.ImageComponent;
+import javax.media.j3d.ImageComponent2D;
+import javax.media.j3d.Shape3D;
+import javax.vecmath.Point3f;
 
 
 /** Label3D class

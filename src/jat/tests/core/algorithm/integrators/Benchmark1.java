@@ -21,8 +21,6 @@
 package jat.tests.core.algorithm.integrators;
 
 
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.DormandPrince;
 import jat.coreNOSA.algorithm.integrators.Printable;

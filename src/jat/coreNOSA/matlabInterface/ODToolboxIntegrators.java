@@ -20,16 +20,13 @@
 
 package jat.coreNOSA.matlabInterface;
 
-import java.util.Arrays;
-import java.util.Vector;
-
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.RungeKutta4;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.algorithm.integrators.RungeKuttaFehlberg78;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-import java.io.*;
+import java.util.Arrays;
+import java.util.Vector;
 
 /**
  * The ODToolboxIntegrators.java Class is an adaptor for Matlab to call the JAT Integrators in the same 

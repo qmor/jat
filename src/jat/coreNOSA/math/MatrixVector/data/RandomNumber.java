@@ -19,7 +19,9 @@
  */
 
 package jat.coreNOSA.math.MatrixVector.data;
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * <P>

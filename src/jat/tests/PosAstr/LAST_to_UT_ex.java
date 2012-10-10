@@ -21,7 +21,6 @@
 
 package jat.tests.PosAstr;
 
-import jat.core.cm.*;
 import jat.coreNOSA.astronomy.Angle;
 
 public class LAST_to_UT_ex

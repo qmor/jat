@@ -1,7 +1,9 @@
 package jat.jat3D.plot3D;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.IndexedLineArray;
+import javax.media.j3d.Node;
+import javax.media.j3d.Shape3D;
+import javax.vecmath.Point3d;
 
 /**
  * This is a base class for all PlotBuilders.

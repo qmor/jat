@@ -19,7 +19,6 @@
  */
 package jat.coreNOSA.algorithm.integrators;
 
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 /**
  * Implements a Dormand-Prince 8(7) integrator

@@ -21,11 +21,19 @@
  */
 
 package jat.coreNOSA.gps;
-import jat.core.algorithm.estimators.*;
 import jat.coreNOSA.algorithm.estimators.MeasurementData;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
 * The GPS_MeasurementList.java Class provides a way to deal with

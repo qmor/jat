@@ -22,9 +22,9 @@ package jat.coreNOSA.cm.rendezvous;
  * File Created on Aug 26, 2003
  */
  
-import java.io.*;
-
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
+import java.io.Serializable;
 
 /**
  * <P>

@@ -20,7 +20,7 @@ import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixHist3D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixPlot2D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.MatrixPlot3D;
 
-import java.io.*;
+import java.io.File;
 
 //import javax.swing.*;
 //import java.awt.*;

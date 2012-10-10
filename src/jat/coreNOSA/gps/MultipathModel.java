@@ -20,7 +20,6 @@ package jat.coreNOSA.gps;
  *
  */
 
-import jat.core.algorithm.*;
 import jat.coreNOSA.algorithm.ScalarFunction;
 import jat.coreNOSA.algorithm.ZeroFinder;
 import jat.coreNOSA.cm.Constants;

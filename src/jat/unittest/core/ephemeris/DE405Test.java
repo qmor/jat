@@ -21,6 +21,12 @@
  **/
 package jat.unittest.core.ephemeris;
 
+import jat.coreNOSA.ephemeris.DE405;
+import jat.coreNOSA.ephemeris.DE405_Body;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
+import jat.coreNOSA.spacetime.CalDate;
+import jat.coreNOSA.spacetime.Time;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,11 +35,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jat.coreNOSA.ephemeris.DE405;
-import jat.coreNOSA.ephemeris.DE405_Body;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.spacetime.CalDate;
-import jat.coreNOSA.spacetime.Time;
 import junit.framework.TestCase;
 
 public class DE405Test extends TestCase {

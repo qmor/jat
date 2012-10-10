@@ -22,21 +22,7 @@
  * */
 package jat.coreNOSA.simulation;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.StringTokenizer;
-
-
 import jat.coreNOSA.algorithm.estimators.EKF;
-import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.GravitationalBody;
@@ -49,16 +35,31 @@ import jat.coreNOSA.forces.SolarRadiationPressure;
 import jat.coreNOSA.forces.Sun;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.measurements.ObservationMeasurement;
 import jat.coreNOSA.measurements.ObservationMeasurementList;
 import jat.coreNOSA.measurements.createMeasurements;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacecraft.SpacecraftModel;
-import jat.coreNOSA.spacetime.*;
+import jat.coreNOSA.spacetime.FitIERS;
+import jat.coreNOSA.spacetime.RSW_Frame;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
+import jat.coreNOSA.spacetime.UniverseModel;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.trajectory.Trajectory;
 import jat.coreNOSA.util.Celestia;
 import jat.coreNOSA.util.FileUtil;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class EstimatorSimModel extends SimModel {
 	

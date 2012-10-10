@@ -6,9 +6,9 @@ package org.math.plot.plotObjects;
  * @author Yann RICHET
  */
 
-import java.awt.*;
+import java.awt.Color;
 
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 
 public class BasePlot implements /*Plotable,*/BaseDependant {
 

@@ -19,10 +19,9 @@
  */
 package jat.coreNOSA.spacecraft;
 
-import java.util.*;
-
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
+import java.util.ArrayList;
 
 /**
  * This class represents a spacecraft formation.  It contains any number of spacecraft

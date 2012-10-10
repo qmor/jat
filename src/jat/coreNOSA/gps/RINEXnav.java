@@ -19,12 +19,14 @@
  */
  
 package jat.coreNOSA.gps;
-import java.io.*;
-import java.util.*;
-
-import jat.core.spacetime.*;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.coreNOSA.spacetime.GPSTimeFormat;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * <P>

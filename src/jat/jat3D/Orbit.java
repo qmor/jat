@@ -20,15 +20,15 @@
  */
 package jat.jat3D;
 
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.KeplerElements;
 import jat.coreNOSA.cm.TwoBody;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.LineStripArray;
+import javax.media.j3d.Shape3D;
+import javax.vecmath.Color3f;
 
 /**
  * The Orbit class creates a Shape3D object in Java3D for a twobody orbit. 

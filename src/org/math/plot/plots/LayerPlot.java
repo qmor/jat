@@ -3,7 +3,7 @@
  */
 package org.math.plot.plots;
 
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 
 public abstract class LayerPlot extends Plot {
 

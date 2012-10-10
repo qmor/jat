@@ -20,10 +20,6 @@
 
 package jat.examples.FreeINS;
 
-import java.io.*;
-
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.Constants;
@@ -35,6 +31,10 @@ import jat.coreNOSA.plotutil.ThreePlots;
 import jat.coreNOSA.sensors.AccelerometerErrorModel;
 import jat.coreNOSA.sensors.GyroErrorModel;
 import jat.coreNOSA.sensors.INSErrorState;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * <P>

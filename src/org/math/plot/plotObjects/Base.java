@@ -1,6 +1,9 @@
 package org.math.plot.plotObjects;
 
-import static java.lang.Math.*;
+import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
+import static java.lang.Math.log;
+import static java.lang.Math.pow;
 
 /**
  * BSD License

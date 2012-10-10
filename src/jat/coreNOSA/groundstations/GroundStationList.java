@@ -23,14 +23,15 @@
  
 package jat.coreNOSA.groundstations;
  
-import jat.core.algorithm.integrators.*;
-import jat.core.math.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.util.FileUtil;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
 * The GroundStationList.java Class provides a way to deal with

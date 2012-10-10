@@ -20,12 +20,16 @@
 package jat.coreNOSA.util;
 
 import jat.coreNOSA.trajectory.Trajectory;
-//import jat.matvec.data.Matrix;
-//import jat.matvec.data.VectorN;
 
-//import java.lang.Math;
-import java.io.*;
-import java.text.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 

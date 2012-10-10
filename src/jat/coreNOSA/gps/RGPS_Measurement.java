@@ -21,7 +21,7 @@
  */
  
 package jat.coreNOSA.gps;
-import java.io.*;
+import java.io.Serializable;
 
 
 /**

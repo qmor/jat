@@ -1,6 +1,9 @@
 package org.math.io.littleendian;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This class was designed on the base of Roedy Green LEDataInputStream

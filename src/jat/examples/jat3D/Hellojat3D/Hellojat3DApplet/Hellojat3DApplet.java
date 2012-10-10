@@ -2,9 +2,6 @@ package jat.examples.jat3D.Hellojat3D.Hellojat3DApplet;
 
 
 import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import java.awt.GridLayout;
 
 public class Hellojat3DApplet extends JApplet {
 

@@ -1,14 +1,5 @@
 package jat.tests.core.timeRef;
 
-import java.applet.Applet;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.JApplet;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
 import jat.core.util.messageConsole.MessageConsole;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MathUtils;
@@ -16,6 +7,14 @@ import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.timeRef.CalDate;
 import jat.coreNOSA.timeRef.EarthRef;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.JApplet;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 public class EarthRefTest extends JApplet {
 

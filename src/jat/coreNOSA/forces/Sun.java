@@ -21,12 +21,9 @@ package jat.coreNOSA.forces;
 
 //import jat.matvec.data.Matrix;
 //import jat.timeRef.Time;
-import jat.core.ephemeris.*;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
-import jat.coreNOSA.math.MathUtils;
-import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyCenteredInertialRef;

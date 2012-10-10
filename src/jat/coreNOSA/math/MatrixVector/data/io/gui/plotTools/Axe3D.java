@@ -1,7 +1,11 @@
 package jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
 
 public class Axe3D {
 

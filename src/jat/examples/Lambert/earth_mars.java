@@ -19,8 +19,7 @@
  */
 package jat.examples.Lambert;
 
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
+
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;

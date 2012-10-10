@@ -23,7 +23,7 @@
 package jat.coreNOSA.ins;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-import java.io.*;
+import java.io.Serializable;
 
 
 /**

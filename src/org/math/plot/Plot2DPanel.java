@@ -1,8 +1,9 @@
 package org.math.plot;
 
-import java.awt.*;
+import java.awt.Color;
 
-import org.math.plot.canvas.*;
+import org.math.plot.canvas.Plot2DCanvas;
+import org.math.plot.canvas.PlotCanvas;
 
 /**
  * BSD License

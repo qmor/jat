@@ -19,7 +19,6 @@
  */
 package jat.coreNOSA.spacetime;
 
-import jat.core.ephemeris.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

@@ -3,8 +3,8 @@ package jat.coreNOSA.math.MatrixVector.data.io.gui;
 import jat.coreNOSA.math.MatrixVector.data.Text;
 
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class TextWindow extends JPanel {
 

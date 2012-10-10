@@ -22,8 +22,19 @@
 package jat.jat3D.plot3D;
 
 import java.awt.Font;
-import javax.media.j3d.*;
-import javax.vecmath.*;
+
+import javax.media.j3d.Billboard;
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Font3D;
+import javax.media.j3d.LineArray;
+import javax.media.j3d.Node;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Text3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
 
 public class AxisBuilder
 {

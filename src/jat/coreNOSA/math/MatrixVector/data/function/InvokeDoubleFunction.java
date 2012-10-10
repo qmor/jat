@@ -4,7 +4,6 @@ import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.io.data.MatrixFile;
 
 import java.io.File;
-//import java.io.IOException;
 
 public class InvokeDoubleFunction {
 

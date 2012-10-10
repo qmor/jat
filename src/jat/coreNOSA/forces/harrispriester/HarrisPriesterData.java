@@ -19,12 +19,12 @@
  */
 package jat.coreNOSA.forces.harrispriester;
 
+import jat.coreNOSA.util.FileUtil;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import jat.coreNOSA.util.FileUtil;
 
 /**
  * @author Richard C. Page III

@@ -9,9 +9,15 @@ import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.Grid2D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.NotedPoint2D;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools.PlotAttributes;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JPanel;
 
 public abstract class Plot2D extends JPanel implements MouseListener, MouseMotionListener {
 

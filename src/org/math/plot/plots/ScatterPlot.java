@@ -1,12 +1,15 @@
 package org.math.plot.plots;
 
-import java.awt.*;
+import java.awt.Color;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import org.math.plot.*;
+import org.math.plot.FrameView;
+import org.math.plot.Plot2DPanel;
+import org.math.plot.Plot3DPanel;
+import org.math.plot.PlotPanel;
 import org.math.plot.canvas.PlotCanvas;
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 import org.math.plot.utils.Array;
 
 public class ScatterPlot extends Plot {

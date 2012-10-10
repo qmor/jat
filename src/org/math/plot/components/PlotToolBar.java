@@ -1,14 +1,23 @@
 package org.math.plot.components;
 
-import java.awt.event.*;
-import java.io.*;
-import java.security.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.security.AccessControlException;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
-import org.math.plot.*;
-import org.math.plot.canvas.*;
+import org.math.plot.PlotPanel;
+import org.math.plot.canvas.Plot3DCanvas;
+import org.math.plot.canvas.PlotCanvas;
 
 /**
  * BSD License

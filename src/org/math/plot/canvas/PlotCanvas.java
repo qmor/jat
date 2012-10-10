@@ -1,5 +1,11 @@
 package org.math.plot.canvas;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.min;
+import static org.math.plot.plotObjects.Base.LINEAR;
+import static org.math.plot.plotObjects.Base.LOGARITHM;
+import static org.math.plot.plotObjects.Base.STRINGS;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -37,10 +43,6 @@ import org.math.plot.plotObjects.Plotable;
 import org.math.plot.plots.Plot;
 import org.math.plot.render.AbstractDrawer;
 import org.math.plot.utils.Array;
-
-import static java.lang.Math.*;
-
-import static org.math.plot.plotObjects.Base.*;
 
 /**
  * BSD License

@@ -21,15 +21,16 @@
  */
 
 package jat.examples.OrbitDetermination;
-import java.io.*;
-import java.util.*;
-
-import jat.core.algorithm.estimators.*;
 import jat.coreNOSA.algorithm.estimators.MeasurementData;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.util.FileUtil;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
 
 /**
 * The ObsData.java Class provides the measurements and measurement model for a

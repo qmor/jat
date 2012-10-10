@@ -21,7 +21,6 @@
 
 package jat.examples.JulianDate;
 
-import jat.core.cm.*;
 import jat.coreNOSA.cm.cm;
 
 /**

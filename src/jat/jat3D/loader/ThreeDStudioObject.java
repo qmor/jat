@@ -26,8 +26,11 @@ import jat.jat3D.Colors;
 import jat.jat3D.Cylinder3D;
 import jat.jat3D.Sphere3D;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import com.mnstarfire.loaders3d.Inspector3DS;
 
 /** 3DStudio Object class

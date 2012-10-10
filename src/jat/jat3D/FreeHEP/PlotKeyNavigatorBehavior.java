@@ -1,11 +1,11 @@
 package jat.jat3D.FreeHEP;
 
+import java.awt.event.KeyEvent;
+
 import javax.media.j3d.Behavior;
-import javax.media.j3d.TransformGroup;
 import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupOnAWTEvent;
-import java.awt.AWTEvent;
-import java.awt.event.*;
 import javax.vecmath.Vector3f;
 
 /**

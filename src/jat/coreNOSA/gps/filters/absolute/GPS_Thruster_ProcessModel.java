@@ -26,8 +26,6 @@ package jat.coreNOSA.gps.filters.absolute;
 //import jat.gps_ins.*;
 //import jat.timeRef.*;
 //import jat.forces.*;
-import jat.core.algorithm.estimators.*;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.estimators.EstSTM;
 import jat.coreNOSA.algorithm.estimators.ProcessModel;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;

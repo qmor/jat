@@ -20,14 +20,15 @@
 
 package jat.coreNOSA.gps;
 //import jat.matvec.data.arrayTools.*;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-//import jat.alg.*;
-import java.io.*;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * <P>

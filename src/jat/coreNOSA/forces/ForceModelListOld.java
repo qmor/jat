@@ -20,13 +20,13 @@
 package jat.coreNOSA.forces;
 
 
-import java.util.*;
-
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.timeRef.EarthRef;
 import jat.coreNOSA.timeRef.FitIERS;
+
+import java.util.ArrayList;
 
 /**
  * <p>

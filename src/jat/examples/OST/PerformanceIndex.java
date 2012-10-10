@@ -6,13 +6,13 @@
  */
 package jat.examples.OST;
 
-import java.text.*;
-
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.eom.TwoBodyCSI;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * @author Tobias Berthold

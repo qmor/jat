@@ -21,8 +21,9 @@
 package jat.coreNOSA.algorithm.integrators;
 import jat.coreNOSA.util.FileUtil;
 
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 
 /** <P>
  * The LinePrinter Class provides a way to print out integrator output data

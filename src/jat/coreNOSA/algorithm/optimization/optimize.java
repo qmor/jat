@@ -20,10 +20,10 @@
 
 package jat.coreNOSA.algorithm.optimization;
 
-import jat.core.algorithm.*;
 import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * Base class for unconstrained parameter optimization with 

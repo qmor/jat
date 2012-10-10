@@ -19,8 +19,7 @@
  */
 
 package jat.examples.TwoBodyExample;
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
+
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.plotutil.SinglePlot;

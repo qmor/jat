@@ -22,8 +22,6 @@
 
 package jat.coreNOSA.cm;
 
-import jat.core.algorithm.*;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.ScalarFunction;
 import jat.coreNOSA.algorithm.ZeroFinder;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;

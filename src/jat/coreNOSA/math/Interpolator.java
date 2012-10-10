@@ -24,7 +24,9 @@ package jat.coreNOSA.math;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StreamTokenizer;
 
 /**
  * Linearly interpolates values in double arrays

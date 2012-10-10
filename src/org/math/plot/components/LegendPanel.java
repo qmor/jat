@@ -1,14 +1,24 @@
 package org.math.plot.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.LinkedList;
 
-import javax.swing.*;
+import javax.swing.JColorChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import org.math.plot.*;
-import org.math.plot.canvas.*;
-import org.math.plot.plots.*;
+import org.math.plot.PlotPanel;
+import org.math.plot.canvas.PlotCanvas;
+import org.math.plot.plots.Plot;
 
 /**
  * BSD License

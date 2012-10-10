@@ -27,9 +27,8 @@ import jat.coreNOSA.util.FileUtil;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.File;
-import java.net.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * <P>

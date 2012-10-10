@@ -21,7 +21,6 @@
  **/
 package jat.unittest.core.spacetime;
 
-import jat.core.ephemeris.*;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -30,7 +29,6 @@ import jat.coreNOSA.spacetime.LunaRef;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
-
 import junit.framework.TestCase;
 
 public class BodyCenteredInertialRefTest extends TestCase {

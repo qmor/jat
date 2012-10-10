@@ -1,13 +1,13 @@
 package jat.examples.Lambert;
 
-import java.io.IOException;
-
 import jat.core.ephemeris.DE405APL;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.cm.LambertException;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
+
+import java.io.IOException;
 
 public class mars_odyssey {
 

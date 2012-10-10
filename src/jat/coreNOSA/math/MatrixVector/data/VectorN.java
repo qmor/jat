@@ -20,8 +20,9 @@
 
 package jat.coreNOSA.math.MatrixVector.data;
 
-import java.io.*;
+import java.io.PrintWriter;
 import java.io.Serializable;
+
 import javax.vecmath.Vector3d;
 
 /**

@@ -3,13 +3,19 @@
  */
 package org.math.plot.plotObjects;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.File;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import org.math.plot.*;
-import org.math.plot.render.*;
+import org.math.plot.FrameView;
+import org.math.plot.Plot2DPanel;
+import org.math.plot.Plot3DPanel;
+import org.math.plot.PlotPanel;
+import org.math.plot.render.AbstractDrawer;
 
 public class RasterImage implements Plotable{
 

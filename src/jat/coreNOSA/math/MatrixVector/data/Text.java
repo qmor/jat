@@ -4,8 +4,6 @@ import jat.coreNOSA.math.MatrixVector.data.io.data.TextFile;
 import jat.coreNOSA.math.MatrixVector.data.io.data.fileTools.MatrixString;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.FrameView;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.TextWindow;
-//import jat.matvec.io.data.fileTools.TextString;
-
 
 import javax.swing.JPanel;
 

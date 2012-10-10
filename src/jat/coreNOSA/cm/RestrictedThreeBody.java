@@ -19,7 +19,6 @@
  */
 
 package jat.coreNOSA.cm;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 
 /**

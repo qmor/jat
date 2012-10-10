@@ -20,7 +20,6 @@
 
 package jat.tests.scaling;
 
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 
 public class SimpleIntegrator

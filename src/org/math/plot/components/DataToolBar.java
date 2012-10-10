@@ -1,11 +1,15 @@
 package org.math.plot.components;
 
-import java.awt.event.*;
-import java.security.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.security.AccessControlException;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JToolBar;
 
-import org.math.plot.*;
+import org.math.plot.DataPanel;
 
 /**
  * BSD License

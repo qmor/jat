@@ -3,9 +3,12 @@ package org.math.plot;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-import org.math.plot.canvas.*;
+import org.math.plot.canvas.Plot2DCanvas;
+import org.math.plot.canvas.Plot3DCanvas;
 
 /**
  * BSD License

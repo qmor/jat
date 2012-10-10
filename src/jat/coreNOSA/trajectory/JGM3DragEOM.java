@@ -22,7 +22,6 @@ package jat.coreNOSA.trajectory;
  * File Created on Aug 26, 2003
  */
  
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.EquationsOfMotion;
 import jat.coreNOSA.forces.HarrisPriester;
 import jat.coreNOSA.forces.JGM3;

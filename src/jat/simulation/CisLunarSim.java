@@ -34,7 +34,6 @@ import jat.coreNOSA.forces.SolarRadiationPressure;
 import jat.coreNOSA.forces.Sun;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.measurements.GPSmeasurementModel;
 import jat.coreNOSA.measurements.OpticalMeasurementModel;
 import jat.coreNOSA.measurements.createMeasurements;
 import jat.coreNOSA.simulation.EstimatorSimModel;

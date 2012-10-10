@@ -21,7 +21,7 @@
 
 package jat.coreNOSA.math;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * <P>

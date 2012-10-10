@@ -19,7 +19,6 @@
 */
 package jat.coreNOSA.forces;
 
-import jat.core.ephemeris.*;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

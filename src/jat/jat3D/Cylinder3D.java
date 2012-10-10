@@ -21,9 +21,13 @@
 
 package jat.jat3D;
 
-import javax.media.j3d.*;
+import javax.media.j3d.Appearance;
+import javax.media.j3d.Material;
+import javax.media.j3d.TransparencyAttributes;
 import javax.vecmath.Color3f;
-import com.sun.j3d.utils.geometry.*;
+
+import com.sun.j3d.utils.geometry.Cylinder;
+import com.sun.j3d.utils.geometry.Sphere;
 
 /** 
  * @author Tobias Berthold

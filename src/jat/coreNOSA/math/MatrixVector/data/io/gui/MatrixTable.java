@@ -2,19 +2,13 @@ package jat.coreNOSA.math.MatrixVector.data.io.gui;
 
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
-import java.lang.Double;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JScrollPane;
-
-//import javax.swing.*;
-import java.awt.*;
-//import java.awt.event.*;
-
-import javax.swing.table.*;
-//import javax.swing.event.TableModelListener;
-//import javax.swing.event.TableModelEvent;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 public class MatrixTable extends JPanel {
 

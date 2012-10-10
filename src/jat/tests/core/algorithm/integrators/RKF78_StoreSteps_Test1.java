@@ -5,7 +5,6 @@ import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.RKF78_StoreSteps;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.math.MatrixVector.data.io.data.fileTools.MatrixString;
 
 /**
  * Test the Runge Kutta integrator by comparing it's output of a harmonic oscillator with the sine and cosine functions

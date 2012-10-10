@@ -22,7 +22,6 @@
  * */
 package jat.coreNOSA.measurements;
 
-import jat.coreNOSA.gps.GPS_Measurement;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -42,7 +41,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 

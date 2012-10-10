@@ -21,7 +21,7 @@
 
 package jat.jat3D;
 
-import javax.vecmath.*;
+import javax.vecmath.Color3f;
 
 /**
  * @author Tobias Berthold

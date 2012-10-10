@@ -21,7 +21,6 @@
 
 package jat.coreNOSA.trajectory;
 
-import jat.core.algorithm.integrators.*;
 //import jat.plot.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.Printable;

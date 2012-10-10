@@ -21,7 +21,6 @@
  */
 package jat.coreNOSA.groundstations;
 
-import jat.core.spacetime.*;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.constants.IERS_1996;
 import jat.coreNOSA.math.MathUtils;

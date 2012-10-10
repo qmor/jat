@@ -1,17 +1,30 @@
 package org.math.plot.canvas;
 
-import java.awt.*;
-import java.awt.event.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.min;
+import static org.math.plot.plotObjects.Base.LINEAR;
+import static org.math.plot.utils.Array.getColumnsRangeCopy;
+import static org.math.plot.utils.Array.getSubMatrixRangeCopy;
+import static org.math.plot.utils.Array.mergeColumns;
+import static org.math.plot.utils.Histogram.histogram_classes_2D;
+import static org.math.plot.utils.Histogram.histogram_classes_3D;
 
-import org.math.plot.plotObjects.*;
-import org.math.plot.plots.*;
-import org.math.plot.render.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
-import static java.lang.Math.*;
-
-import static org.math.plot.plotObjects.Base.*;
-import static org.math.plot.utils.Array.*;
-import static org.math.plot.utils.Histogram.*;
+import org.math.plot.plotObjects.Base;
+import org.math.plot.plotObjects.BasePlot;
+import org.math.plot.plots.BarPlot;
+import org.math.plot.plots.BoxPlot3D;
+import org.math.plot.plots.CloudPlot3D;
+import org.math.plot.plots.GridPlot3D;
+import org.math.plot.plots.HistogramPlot3D;
+import org.math.plot.plots.LinePlot;
+import org.math.plot.plots.ScatterPlot;
+import org.math.plot.plots.SpherePlot3D;
+import org.math.plot.render.AWTDrawer3D;
 
 /**
  * BSD License

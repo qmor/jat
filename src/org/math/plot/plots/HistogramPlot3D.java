@@ -1,9 +1,10 @@
 package org.math.plot.plots;
 
-import java.awt.*;
+import java.awt.Color;
 
-import org.math.plot.*;
-import org.math.plot.render.*;
+import org.math.plot.FrameView;
+import org.math.plot.Plot3DPanel;
+import org.math.plot.render.AbstractDrawer;
 
 public class HistogramPlot3D extends Plot {
 

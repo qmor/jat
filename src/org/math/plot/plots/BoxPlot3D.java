@@ -1,8 +1,8 @@
 package org.math.plot.plots;
 
-import java.awt.*;
+import java.awt.Color;
 
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 
 public class BoxPlot3D extends Plot {
 

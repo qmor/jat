@@ -1,9 +1,23 @@
 package jat.jat3D.FreeHEP;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.AmbientLight;
+import javax.media.j3d.Behavior;
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.Bounds;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.DirectionalLight;
+import javax.media.j3d.Node;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.media.j3d.View;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3f;
+
+import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
+import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
 import com.sun.j3d.utils.universe.SimpleUniverse;
-import com.sun.j3d.utils.behaviors.mouse.*;
 
 /**
  * Abstract class extended by other 3D Plot widgets.

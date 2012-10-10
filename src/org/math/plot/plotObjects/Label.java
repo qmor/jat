@@ -1,8 +1,9 @@
 package org.math.plot.plotObjects;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 
 /**
  * BSD License

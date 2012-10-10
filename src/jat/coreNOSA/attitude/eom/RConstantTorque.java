@@ -20,7 +20,6 @@
 
 package jat.coreNOSA.attitude.eom;
  
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.EquationsOfMotion;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

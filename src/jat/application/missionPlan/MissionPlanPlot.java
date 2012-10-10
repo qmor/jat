@@ -17,6 +17,7 @@
 
 package jat.application.missionPlan;
 
+import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405APL;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.Ephemeris3D;
@@ -27,7 +28,6 @@ import jat.jat3D.StarsBackground3D;
 import jat.jat3D.jatScene3D;
 import jat.jat3D.plot3D.BoundingBox3D;
 import jat.jat3D.plot3D.JatPlot3D;
-import jat.core.astronomy.SolarSystemBodies;
 
 import javax.media.j3d.Group;
 import javax.media.j3d.Node;

@@ -1,25 +1,11 @@
 package jat.coreNOSA.measurements;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
-//import jat.sim.closedLoopSim;
-
-import java.util.Random;
-
-import jat.core.algorithm.estimators.*;
 import jat.coreNOSA.algorithm.estimators.EKF;
 import jat.coreNOSA.algorithm.estimators.MeasurementFileModel;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
-import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.EstimatorSimModel;
 import jat.coreNOSA.simulation.initializer;
@@ -28,11 +14,20 @@ import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.trajectory.Trajectory;
 import jat.coreNOSA.util.FileUtil;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.StringTokenizer;
+
 public class rangeMeasurementModel implements MeasurementFileModel,MeasurementModel{
 	
 	private boolean obsfromfile = false;
-	private double pseudorange;
-	private int prn;
+	double pseudorange;
+	int prn;
 	private PreciseEphemeris[] ephem;
 	
 	public static VectorN R;
@@ -65,7 +60,7 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 		
 		if(obsfromfile){
 			int n = initializer.parseInt(hm,"RANGE.numsc");
-			String[] fileName = new String[n];
+			//String[] fileName = new String[n];
 			ephem = new PreciseEphemeris[n];
 			for(int i=0; i<n; i++){
 				ephem[i] = new PreciseEphemeris(initializer.parseString(hm,"RANGE.file."+i));
@@ -259,9 +254,9 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 				for(int i=0; i<23; i++){
 					line = in.readLine();
 				}
-				RotationMatrix rot;
+				//RotationMatrix rot;
 				earth = new EarthRef(new Time(53000));
-				boolean first = true;
+				//boolean first = true;
 				while(!line.equalsIgnoreCase("EOF")){
 					StringTokenizer tok = new StringTokenizer(line, " ");
 					int year,month,day,hour,min;
@@ -371,7 +366,7 @@ public class rangeMeasurementModel implements MeasurementFileModel,MeasurementMo
 	public static void main(String[] args0){
 		String file = "C:/Code/Misc/PreciseEphem/test3a.auro2.prec";
 		rangeMeasurementModel.PreciseEphemeris ephem = new rangeMeasurementModel.PreciseEphemeris(file);
-		int end = 0;
-		end++;
+		//int end = 0;
+		//end++;
 	}
 }

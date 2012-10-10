@@ -22,7 +22,7 @@ package jat.coreNOSA.trajectory;
  *
  */
  
- import java.io.*;
+ import java.io.Serializable;
  
 /**
 * <P>

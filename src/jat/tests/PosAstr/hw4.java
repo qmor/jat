@@ -22,7 +22,6 @@
 
 package jat.tests.PosAstr;
 
-import jat.core.cm.*;
 import jat.coreNOSA.astronomy.Angle;
 
 public class hw4

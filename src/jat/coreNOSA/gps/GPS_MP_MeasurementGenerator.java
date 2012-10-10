@@ -22,17 +22,14 @@
 
 package jat.coreNOSA.gps;
 
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.trajectory.Trajectory;
-//import jat.cm.*;
-//import jat.gps.*;
-import java.io.*;
-//import jat.gps_ins.*;
+
+import java.io.IOException;
 
 /**
 * The GPS_MeasurementGenerator.java Class generates GPS measurements

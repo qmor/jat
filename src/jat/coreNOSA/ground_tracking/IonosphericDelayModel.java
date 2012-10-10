@@ -21,13 +21,13 @@ package jat.coreNOSA.ground_tracking;
 * File Created on May 20, 2007
 */
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
 import jat.coreNOSA.groundstations.GroundStation;
 import jat.coreNOSA.groundstations.SimpleGroundStation;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
+
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 
 public class IonosphericDelayModel {

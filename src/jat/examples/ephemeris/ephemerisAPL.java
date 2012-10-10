@@ -17,11 +17,11 @@
 
 package jat.examples.ephemeris;
 
-import java.io.IOException;
-
 import jat.core.ephemeris.DE405APL;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
+
+import java.io.IOException;
 
 public class ephemerisAPL
 {

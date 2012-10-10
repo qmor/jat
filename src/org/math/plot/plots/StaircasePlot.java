@@ -1,11 +1,12 @@
 package org.math.plot.plots;
 
-import java.awt.*;
+import java.awt.Color;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import org.math.plot.*;
-import org.math.plot.render.*;
+import org.math.plot.FrameView;
+import org.math.plot.Plot2DPanel;
+import org.math.plot.render.AbstractDrawer;
 
 public class StaircasePlot extends ScatterPlot {
 

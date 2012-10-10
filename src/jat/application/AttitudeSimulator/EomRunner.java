@@ -22,7 +22,6 @@ package jat.application.AttitudeSimulator;
 
 import jat.application.AttitudeSimulator.animation.AnimationWindow;
 import jat.application.AttitudeSimulator.animation.AnimationWindow2;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.attitude.eom.BangBangTwoD;
 import jat.coreNOSA.attitude.eom.CMGManeuver;

@@ -1,6 +1,5 @@
 package jat.jat3D.FreeHEP;
-import java.util.*;
-import java.io.*;
+import java.util.Date;
 
 /** This is class TimeStamp - it has a print method which will keep track of the last 
  *  time it was called and print a message along with the elapsed time since the last call.

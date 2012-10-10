@@ -21,9 +21,6 @@ package jat.coreNOSA.gps_ins.relative;
  * 
  * File Created on May 9, 2003
  */
-import jat.core.algorithm.estimators.*;
-import jat.core.algorithm.integrators.*;
-//import jat.gps_ins.*;
 import jat.coreNOSA.algorithm.estimators.ExtendedKalmanFilter;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.algorithm.estimators.ProcessModel;

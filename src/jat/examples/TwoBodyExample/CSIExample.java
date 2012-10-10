@@ -21,10 +21,6 @@
 
 package jat.examples.TwoBodyExample;
 
-import jat.core.algorithm.*;
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
-import jat.core.cm.eom.*;
 import jat.coreNOSA.algorithm.VectorTimeFunction;
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
@@ -35,7 +31,7 @@ import jat.coreNOSA.cm.eom.TwoBodyCSI;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 
-import java.io.*;
+import java.io.IOException;
 
 /** This demo computes the trajectory of a spacecraft with a constant specific 
  * impulse propulsion system with the thrust pointing in the velocity direction. 

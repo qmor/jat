@@ -19,7 +19,6 @@
  */
 
 package jat.coreNOSA.forces;
-import jat.coreNOSA.timeRef.*;
 import jat.coreNOSA.audio.SoundPlayer;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -29,6 +28,7 @@ import jat.coreNOSA.spacetime.EarthTrueOfDateRef;
 import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.timeRef.EarthRef;
+import jat.coreNOSA.timeRef.Geodetic;
 
 
 /**

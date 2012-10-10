@@ -21,8 +21,13 @@
 
 package jat.jat3D;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.Appearance;
+import javax.media.j3d.Geometry;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.TransparencyAttributes;
+import javax.media.j3d.TriangleFanArray;
+import javax.vecmath.Color3f;
+import javax.vecmath.Point3f;
 
 public class Surface3D extends Shape3D
 {

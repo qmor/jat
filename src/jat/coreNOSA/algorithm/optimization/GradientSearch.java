@@ -20,7 +20,6 @@
 
 package jat.coreNOSA.algorithm.optimization;
 
-import jat.core.algorithm.*;
 import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 
 /**

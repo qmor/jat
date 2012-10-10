@@ -21,13 +21,11 @@
 
 package jat.examples.RK78F_Test;
 
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.RungeKuttaFehlberg78;
 import jat.coreNOSA.cm.TwoBody;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * <P>

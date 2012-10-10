@@ -51,11 +51,12 @@ package jat.examples.PlotExample;
 
 // This class is not in the ptolemy.plot package so that it is a
 // more realistic example.
-import ptolemy.plot.*;
-
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.JFrame;
+
+import ptolemy.plot.Plot;
 
 // The java.io imports are only necessary for the right hand plot.
 //import java.io.File;

@@ -1,6 +1,6 @@
 package jat.core.math.MatrixVector.examples;
 
-import jat.core.math.MatrixVector.*;import java.util.Date;
+import jat.core.math.MatrixVector.EigenvalueDecomposition;import jat.core.math.MatrixVector.LUDecomposition;import jat.core.math.MatrixVector.Matrix;import jat.core.math.MatrixVector.QRDecomposition;import java.util.Date;
 
 /** Example of use of Matrix Class, featuring magic squares. **/
 

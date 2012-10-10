@@ -3,7 +3,11 @@
  */
 package org.math.plot.utils;
 
-import static org.math.plot.utils.Array.*;
+import static org.math.plot.utils.Array.getColumnCopy;
+import static org.math.plot.utils.Array.insertColumn;
+import static org.math.plot.utils.Array.max;
+import static org.math.plot.utils.Array.mergeColumns;
+import static org.math.plot.utils.Array.min;
 
 public class Histogram {
 	//  histograms functions

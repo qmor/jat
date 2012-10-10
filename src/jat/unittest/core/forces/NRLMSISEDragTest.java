@@ -1,10 +1,9 @@
 package jat.unittest.core.forces;
 
-import java.io.IOException;
-
-import jat.coreNOSA.forces.CIRA_ExponentialDrag;
 import jat.coreNOSA.forces.NRLMSISE_Drag;
 import jat.coreNOSA.spacecraft.Spacecraft;
+
+import java.io.IOException;
 
 public class NRLMSISEDragTest extends ForceModelTest {
 

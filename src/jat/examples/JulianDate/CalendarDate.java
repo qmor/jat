@@ -21,12 +21,11 @@
 
 package jat.examples.JulianDate;
 
+import jat.coreNOSA.cm.cm;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import jat.core.cm.*;
-import jat.coreNOSA.cm.cm;
 
 /**
  * @author Tobias Berthold

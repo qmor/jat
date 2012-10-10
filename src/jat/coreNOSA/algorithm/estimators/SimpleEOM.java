@@ -21,8 +21,6 @@
  **/
 package jat.coreNOSA.algorithm.estimators;
 
-import java.util.HashMap;
-
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.ephemeris.DE405;
@@ -30,12 +28,13 @@ import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.forces.GravityModel;
 import jat.coreNOSA.forces.GravityModelType;
 import jat.coreNOSA.forces.SolarRadiationPressure;
-import jat.coreNOSA.gps.GPS_Utils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.UniverseModel;
+
+import java.util.HashMap;
 
 public class SimpleEOM implements Derivatives {
 	

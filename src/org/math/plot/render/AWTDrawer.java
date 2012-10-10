@@ -3,13 +3,27 @@
  */
 package org.math.plot.render;
 
-import java.awt.*;
-import java.awt.font.*;
-import java.awt.geom.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+import static java.lang.Math.acos;
+import static java.lang.Math.atan;
+import static java.lang.Math.cos;
+import static java.lang.Math.signum;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.tan;
 
-import org.math.plot.canvas.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Image;
+import java.awt.Stroke;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 
-import static java.lang.Math.*;
+import org.math.plot.canvas.PlotCanvas;
 
 public abstract class AWTDrawer extends AbstractDrawer {
 

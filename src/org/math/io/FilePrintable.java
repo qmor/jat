@@ -1,6 +1,6 @@
 package org.math.io;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * BSD License

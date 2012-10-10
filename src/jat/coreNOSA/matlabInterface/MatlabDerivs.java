@@ -19,7 +19,6 @@
  */
 package jat.coreNOSA.matlabInterface;
 
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

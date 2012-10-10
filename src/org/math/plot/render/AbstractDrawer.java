@@ -3,11 +3,13 @@
  */
 package org.math.plot.render;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
 
-import org.math.plot.canvas.*;
-import org.math.plot.plotObjects.Label;
-import org.math.plot.utils.*;
+import org.math.plot.canvas.PlotCanvas;
+import org.math.plot.utils.Array;
 
 public abstract class AbstractDrawer {
 

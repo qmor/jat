@@ -20,7 +20,7 @@
 package jat.coreNOSA.spacecraft;
 
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.matlabInterface.*;
+import jat.coreNOSA.matlabInterface.MatlabFunc;
 /**
  * This class represents a call to a Matlab function which runs a control algorithm.  The
  * class implements ControlLaw and can be used in JAT as any other Java based control law

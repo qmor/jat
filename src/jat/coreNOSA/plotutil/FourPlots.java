@@ -20,10 +20,12 @@
 
 package jat.coreNOSA.plotutil;
 
-import ptolemy.plot.*;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.JFrame;
+
+import ptolemy.plot.Plot;
 /**
  * <P>
  * The ThreePlots Class provides a way to create a page with three plots.

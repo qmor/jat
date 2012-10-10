@@ -20,9 +20,11 @@
 
 
 package jat.coreNOSA.cm;
-import java.io.*;
-
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /** Implements Hills Equations
  *

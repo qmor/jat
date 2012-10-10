@@ -20,9 +20,10 @@
 
 package jat.tests.core.algorithm.optimization;
 
-import jat.core.algorithm.optimization.*;
 import jat.coreNOSA.algorithm.optimization.GradientSearch;
-import jat.tests.core.algorithm.optimization.functions.*;
+import jat.tests.core.algorithm.optimization.functions.Function4;
+import jat.tests.core.algorithm.optimization.functions.QuadraticFunction;
+import jat.tests.core.algorithm.optimization.functions.Rosenbrock;
 
 public class GradientSearch_test
 {

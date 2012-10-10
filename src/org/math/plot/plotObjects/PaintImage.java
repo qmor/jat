@@ -3,10 +3,11 @@
  */
 package org.math.plot.plotObjects;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 
-
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 
 public class PaintImage implements Plotable {
 

@@ -32,7 +32,6 @@
 
 package jat.coreNOSA.algorithm.solver;
 
-import jat.core.math.*;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

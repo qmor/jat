@@ -2,7 +2,6 @@ package jat.examples.jat3D.Hellojat3D.simplest;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 
 import javax.media.j3d.BranchGroup;
@@ -11,7 +10,6 @@ import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.geometry.ColorCube;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 

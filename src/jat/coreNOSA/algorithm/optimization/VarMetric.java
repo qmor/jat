@@ -24,7 +24,8 @@ import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * @author Tobias Berthold

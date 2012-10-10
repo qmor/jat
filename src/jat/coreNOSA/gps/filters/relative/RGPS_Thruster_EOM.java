@@ -21,8 +21,6 @@
  */
  
 package jat.coreNOSA.gps.filters.relative;
-import jat.core.algorithm.estimators.*;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.estimators.EstSTM;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.cm.FiniteBurn;

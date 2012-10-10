@@ -20,11 +20,12 @@
 
 package jat.tests.core.algorithm.optimization;
 
-import java.util.Date;
-
-import jat.core.algorithm.optimization.*;
 import jat.coreNOSA.algorithm.optimization.LineSearch;
-import jat.tests.core.algorithm.optimization.functions.*;
+import jat.tests.core.algorithm.optimization.functions.Function1;
+import jat.tests.core.algorithm.optimization.functions.Function2;
+import jat.tests.core.algorithm.optimization.functions.Function3;
+
+import java.util.Date;
 
 /**
  * Test the line search with a given search direction.

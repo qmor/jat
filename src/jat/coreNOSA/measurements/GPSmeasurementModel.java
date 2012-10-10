@@ -22,7 +22,6 @@
 
 package jat.coreNOSA.measurements;
 
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.estimators.EKF;
 import jat.coreNOSA.algorithm.estimators.MeasurementFileModel;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
@@ -48,16 +47,10 @@ import jat.coreNOSA.spacetime.GPSTimeFormat;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.util.FileUtil;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
-
-import java.io.*;
-
-
-import ptolemy.plot.*;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JFrame;
 
 /**
 * The GPS_MeasurementGenerator.java Class generates GPS measurements

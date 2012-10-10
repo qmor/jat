@@ -19,7 +19,6 @@
  */
 
 package jat.coreNOSA.algorithm;
-import jat.core.math.*;
 import jat.coreNOSA.math.MathUtils;
 
 /**

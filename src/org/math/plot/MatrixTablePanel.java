@@ -1,14 +1,18 @@
 package org.math.plot;
 
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.io.File;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
-import org.math.io.files.*;
-import org.math.plot.utils.*;
+import org.math.io.files.ASCIIFile;
+import org.math.plot.utils.Array;
 
 /**
  * BSD License

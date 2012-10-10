@@ -20,7 +20,6 @@
  */
 package jat.examples.simulation;
 
-import jat.core.cm.*;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.GravitationalBody;
 import jat.coreNOSA.forces.Moon;

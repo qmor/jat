@@ -1,5 +1,12 @@
 package jat.unittest.core.forces;
 
+import jat.coreNOSA.forces.ForceModel;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
+import jat.coreNOSA.spacecraft.Spacecraft;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,12 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jat.coreNOSA.forces.ForceModel;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.spacecraft.Spacecraft;
-import jat.coreNOSA.spacetime.EarthRef;
-import jat.coreNOSA.spacetime.Time;
-import jat.coreNOSA.spacetime.TimeUtils;
 import junit.framework.TestCase;
 
 public class ForceModelTest extends TestCase {

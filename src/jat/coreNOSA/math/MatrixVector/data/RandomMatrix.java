@@ -1,7 +1,5 @@
 package jat.coreNOSA.math.MatrixVector.data;
 
-import jat.coreNOSA.math.MatrixVector.data.Matrix;
-import jat.coreNOSA.math.MatrixVector.data.RandomVariable;
 import jat.coreNOSA.math.MatrixVector.data.arrayTools.Shuffle;
 import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
 import jat.coreNOSA.math.MatrixVector.data.io.gui.FrameView;

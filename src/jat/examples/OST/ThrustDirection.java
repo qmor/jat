@@ -12,7 +12,8 @@ import jat.coreNOSA.math.Interpolator;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * @author Tobias Berthold

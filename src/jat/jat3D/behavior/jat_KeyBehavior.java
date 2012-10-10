@@ -29,7 +29,6 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.universe.ViewingPlatform;
 

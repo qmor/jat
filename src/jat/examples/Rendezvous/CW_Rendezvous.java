@@ -22,8 +22,6 @@ package jat.examples.Rendezvous;
  * File Created on Aug 25, 2003
  */
  
-import jat.core.algorithm.integrators.*;
-import jat.core.cm.*;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.ClohessyWiltshire;
 import jat.coreNOSA.cm.Constants;

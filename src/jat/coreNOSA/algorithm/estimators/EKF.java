@@ -21,8 +21,6 @@ package jat.coreNOSA.algorithm.estimators;
  * 
  * File Created on May 7, 2003
  */
-import java.util.HashMap;
-
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
@@ -30,11 +28,13 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.measurements.ObservationMeasurement;
 import jat.coreNOSA.measurements.ObservationMeasurementList;
 import jat.coreNOSA.measurements.createMeasurements;
-import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacecraft.SpacecraftModel;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.util.FileUtil;
+
+import java.util.HashMap;
 
 //import jat.audio.*;
 

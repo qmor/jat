@@ -19,8 +19,6 @@
 */
 package jat.coreNOSA.forces;
 
-import jat.core.ephemeris.*;
-import jat.core.spacetime.*;
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
@@ -38,7 +36,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Random;
+import java.util.StringTokenizer;
 
 /**
  * This class alows access to the gravity model data files (e.g. JGM2, JGM3, etc)

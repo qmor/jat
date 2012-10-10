@@ -1,9 +1,10 @@
 package org.math.plot;
 
-import java.awt.*;
+import java.awt.Color;
 
-import org.math.plot.canvas.*;
-import org.math.plot.utils.*;
+import org.math.plot.canvas.Plot3DCanvas;
+import org.math.plot.canvas.PlotCanvas;
+import org.math.plot.utils.Array;
 
 /**
  * BSD License

@@ -21,9 +21,9 @@
 
 package jat.jat3D;
 
-import java.awt.Button;
-
 import jat.coreNOSA.cm.cm;
+
+import java.awt.Button;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Material;

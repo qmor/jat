@@ -2,18 +2,12 @@ package jat.coreNOSA.math.MatrixVector.data.io.data.fileTools;
 
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 
-//import java.text.NumberFormat;
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-//import java.text.FieldPosition;
-
-import java.io.StringReader;
-//import java.io.PrintWriter;
-//import java.io.BufferedReader;
-import java.io.StreamTokenizer;
-
-import java.io.IOException;
 
 public class MatrixString {
 

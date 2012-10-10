@@ -62,15 +62,18 @@ similar.
 
 package jat.coreNOSA.ephemeris;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.util.FileUtil;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /** Compute planet positions and velocities from JPL DE405 Ephemerides.
  * Except for GEOCENTRIC_MOON and GEOCENTRIC_SUN, all planet positions 

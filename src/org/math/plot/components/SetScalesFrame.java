@@ -1,13 +1,28 @@
 package org.math.plot.components;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
-import org.math.io.*;
-import org.math.plot.canvas.*;
-import org.math.plot.plotObjects.*;
+import org.math.io.StringPrintable;
+import org.math.plot.canvas.PlotCanvas;
+import org.math.plot.plotObjects.Base;
 
 /**
  * BSD License

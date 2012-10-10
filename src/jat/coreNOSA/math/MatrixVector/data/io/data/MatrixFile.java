@@ -5,7 +5,6 @@ import jat.coreNOSA.math.MatrixVector.data.io.data.fileTools.CharFile;
 import jat.coreNOSA.math.MatrixVector.data.io.data.fileTools.MatrixString;
 
 import java.io.File;
-//import java.io.IOException;
 
 public class MatrixFile {
 

@@ -59,12 +59,17 @@
  */
 
 package jat.jat3D;
-import java.awt.*;
+import java.awt.GraphicsConfiguration;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import javax.media.j3d.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.GraphicsContext3D;
+import javax.media.j3d.ImageComponent;
+import javax.media.j3d.ImageComponent2D;
+import javax.media.j3d.Raster;
 import javax.vecmath.Point3f;
-import com.sun.image.codec.jpeg.*;
 
 // TODO: change code to javax.imageio.ImageIO.write(image, format, stream) 
 // http://www.java.net/node/662849

@@ -1,13 +1,17 @@
 package org.math.plot;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.io.File;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import org.math.io.*;
-import org.math.plot.components.*;
+import org.math.io.ClipBoardPrintable;
+import org.math.io.FilePrintable;
+import org.math.io.StringPrintable;
+import org.math.plot.components.DataToolBar;
 
 /**
  * BSD License

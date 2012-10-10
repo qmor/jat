@@ -1,6 +1,6 @@
 package org.math.plot.plotObjects;
 
-import org.math.plot.render.*;
+import org.math.plot.render.AbstractDrawer;
 
 /**
  * BSD License

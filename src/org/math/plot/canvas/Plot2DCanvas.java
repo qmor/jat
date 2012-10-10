@@ -1,15 +1,26 @@
 package org.math.plot.canvas;
 
-import java.awt.*;
+import static org.math.plot.plotObjects.Base.LINEAR;
+import static org.math.plot.utils.Array.getColumnCopy;
+import static org.math.plot.utils.Array.getColumnsRangeCopy;
+import static org.math.plot.utils.Array.increment;
+import static org.math.plot.utils.Array.mergeColumns;
+import static org.math.plot.utils.Histogram.histogram_classes;
+import static org.math.plot.utils.Histogram.histogram_classes_2D;
+
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 
-import org.math.plot.plotObjects.*;
-import org.math.plot.plots.*;
-import org.math.plot.render.*;
-
-import static org.math.plot.plotObjects.Base.*;
-import static org.math.plot.utils.Array.*;
-import static org.math.plot.utils.Histogram.*;
+import org.math.plot.plotObjects.Base;
+import org.math.plot.plotObjects.BasePlot;
+import org.math.plot.plots.BarPlot;
+import org.math.plot.plots.BoxPlot2D;
+import org.math.plot.plots.CloudPlot2D;
+import org.math.plot.plots.HistogramPlot2D;
+import org.math.plot.plots.LinePlot;
+import org.math.plot.plots.ScatterPlot;
+import org.math.plot.plots.StaircasePlot;
+import org.math.plot.render.AWTDrawer2D;
 
 /**
  * BSD License

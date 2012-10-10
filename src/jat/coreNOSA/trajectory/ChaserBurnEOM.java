@@ -22,7 +22,6 @@
  
 package jat.coreNOSA.trajectory;
 
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.EquationsOfMotion;
 import jat.coreNOSA.cm.FiniteBurn;
 import jat.coreNOSA.forces.HarrisPriester;

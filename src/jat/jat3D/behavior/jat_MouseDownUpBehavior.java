@@ -22,14 +22,20 @@ package jat.jat3D.behavior;
 
 import jat.jat3D.plot3D.JatPlot3D;
 
-import java.awt.event.*;
 import java.awt.AWTEvent;
-import javax.media.j3d.*;
+import java.awt.event.MouseEvent;
+import java.util.Enumeration;
+
+import javax.media.j3d.Behavior;
+import javax.media.j3d.Bounds;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.WakeupCondition;
+import javax.media.j3d.WakeupCriterion;
+import javax.media.j3d.WakeupOnAWTEvent;
+import javax.media.j3d.WakeupOr;
 import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.universe.ViewingPlatform;
-
-import java.util.Enumeration;
 
 public class jat_MouseDownUpBehavior extends Behavior {
 	WakeupOnAWTEvent w1 = new WakeupOnAWTEvent(MouseEvent.MOUSE_RELEASED);

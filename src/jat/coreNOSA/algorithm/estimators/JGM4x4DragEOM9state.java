@@ -21,8 +21,6 @@
  **/
 package jat.coreNOSA.algorithm.estimators;
 
-import java.util.HashMap;
-
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.forces.GravityModel;
@@ -34,6 +32,8 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.UniverseModel;
+
+import java.util.HashMap;
 
 /**
 * This file has to be reconstructed for each state used.  It uses a 

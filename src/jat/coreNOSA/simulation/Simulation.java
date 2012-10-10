@@ -19,19 +19,21 @@
  */
 package jat.coreNOSA.simulation;
 
-import java.util.Random;
-
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
-import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.RotationMatrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.matlabInterface.*;
+import jat.coreNOSA.matlabInterface.MatlabControl;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacecraft.SpacecraftModel;
-import jat.coreNOSA.spacetime.*;
+import jat.coreNOSA.spacetime.CalDate;
+import jat.coreNOSA.spacetime.EarthRef;
+import jat.coreNOSA.spacetime.FitIERS;
+import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.trajectory.Trajectory;
 import jat.coreNOSA.util.FileUtil;
+
+import java.util.Random;
 
 /**
  * This is the primary class for a simulation scenario.  It obtains input from files

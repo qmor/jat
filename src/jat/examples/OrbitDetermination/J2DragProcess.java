@@ -22,8 +22,6 @@
 
 package jat.examples.OrbitDetermination;
 
-import jat.core.algorithm.estimators.*;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.estimators.EstSTM;
 import jat.coreNOSA.algorithm.estimators.ProcessModel;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;

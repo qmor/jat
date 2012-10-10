@@ -20,8 +20,10 @@
 
 package jat.jat3D.plot3D;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.Node;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Vector3f;
 
 /**
  * @author Joy Kyriakopulos (joyk@fnal.gov)

@@ -20,8 +20,6 @@
 
 package jat.examples.OptimalLambert;
 
-import jat.core.algorithm.optimization.*;
-import jat.core.cm.*;
 import jat.coreNOSA.algorithm.optimization.DFP;
 import jat.coreNOSA.algorithm.optimization.GradientSearch;
 import jat.coreNOSA.cm.Constants;
@@ -30,7 +28,7 @@ import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.plotutil.SinglePlot;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * @author Tobias Berthold

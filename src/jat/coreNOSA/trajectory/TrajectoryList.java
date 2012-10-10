@@ -20,8 +20,8 @@ package jat.coreNOSA.trajectory;
  *
  */
  
-import java.util.*;
-import java.io.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
 * <P>

@@ -20,14 +20,14 @@
 
 package jat.coreNOSA.matlabInterface;
 
-import java.util.Arrays;
-import java.util.Vector;
-
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.SimModel;
 import jat.coreNOSA.spacecraft.SpacecraftModel;
+
+import java.util.Arrays;
+import java.util.Vector;
 
 /**
 * The JatAdaptor.java Class is an adaptor for Matlab to call the JAT Integrators in the same 

@@ -23,9 +23,8 @@ import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.math.MatrixVector.data.arrayTools.Sort;
-//import jat.alg.integrators.*;
-//import jat.alg.*;
-import java.io.*;
+
+import java.io.PrintWriter;
 
 /**
  * <P>

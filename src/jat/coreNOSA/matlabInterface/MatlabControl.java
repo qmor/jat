@@ -33,7 +33,7 @@
 
 package jat.coreNOSA.matlabInterface;
 
-import com.mathworks.jmi.*;
+import com.mathworks.jmi.Matlab;
 
 public class MatlabControl {
    Matlab matlab = null; //this is the com.mathworks.jmi.Matlab class,which has functionality allowing one to interact with the matlab session.

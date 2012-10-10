@@ -19,7 +19,6 @@
  */
 package jat.coreNOSA.forces;
 
-import jat.core.spacetime.*;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacecraft.Spacecraft;
 import jat.coreNOSA.spacetime.BodyRef;

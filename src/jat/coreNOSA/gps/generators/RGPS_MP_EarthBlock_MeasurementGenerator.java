@@ -22,7 +22,6 @@
 
 package jat.coreNOSA.gps.generators;
 
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.gps.Earth_Blockage;
@@ -41,9 +40,8 @@ import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.trajectory.Trajectory;
-//import jat.cm.*;
-import java.io.*;
-//import jat.gps_ins.*;
+
+import java.io.IOException;
 
 /**
 * The RGPS_MP_EarthBlock_MeasurementGenerator.java Class generates relative GPS measurements

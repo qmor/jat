@@ -1,7 +1,8 @@
 package jat.coreNOSA.math.MatrixVector.data.io.gui.plotTools;
 
 //import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 public class DataPlot3D {
 

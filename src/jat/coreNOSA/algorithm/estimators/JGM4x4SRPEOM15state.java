@@ -30,7 +30,7 @@ import jat.coreNOSA.forces.SolarRadiationPressure;
 import jat.coreNOSA.gps.GPS_Utils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.simulation.*;
+import jat.coreNOSA.simulation.initializer;
 import jat.coreNOSA.spacetime.EarthRef;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;

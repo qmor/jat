@@ -3,7 +3,7 @@
  */
 package org.math.plot.render;
 
-import org.math.plot.plotObjects.*;
+import org.math.plot.plotObjects.Base;
 
 public abstract class Projection {
 

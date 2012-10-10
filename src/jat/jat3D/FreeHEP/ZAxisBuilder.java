@@ -1,6 +1,8 @@
 package jat.jat3D.FreeHEP;
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.Node;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Vector3f;
 /**
  * @author Joy Kyriakopulos (joyk@fnal.gov)
  * @version $Id: ZAxisBuilder.java 8584 2006-08-10 23:06:37Z duns $

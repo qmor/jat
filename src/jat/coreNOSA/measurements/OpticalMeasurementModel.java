@@ -22,11 +22,6 @@
  **/
 package jat.coreNOSA.measurements;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-import jat.core.ephemeris.*;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.cm.Constants;
@@ -36,7 +31,6 @@ import jat.coreNOSA.math.Interpolator;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.Quaternion;
-import jat.coreNOSA.math.MatrixVector.data.RandomNumber;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.simulation.CEVLunarSim;
 import jat.coreNOSA.simulation.CEVSim;
@@ -52,6 +46,10 @@ import jat.coreNOSA.spacetime.ReferenceFrameTranslater;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
 import jat.coreNOSA.util.FileUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class OpticalMeasurementModel implements MeasurementModel{
 	

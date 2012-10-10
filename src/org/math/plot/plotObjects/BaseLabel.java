@@ -1,10 +1,10 @@
 package org.math.plot.plotObjects;
 
-import java.awt.*;
+import java.awt.Color;
 
-import org.math.plot.*;
-import org.math.plot.canvas.*;
-import org.math.plot.render.*;
+import org.math.plot.FrameView;
+import org.math.plot.canvas.Plot3DCanvas;
+import org.math.plot.render.AbstractDrawer;
 
 /**
  * BSD License

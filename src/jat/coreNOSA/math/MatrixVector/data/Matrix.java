@@ -20,9 +20,6 @@
 
 package jat.coreNOSA.math.MatrixVector.data;
 
-import java.io.*;
-
-
 import jat.coreNOSA.math.MatrixVector.data.arrayTools.Find;
 import jat.coreNOSA.math.MatrixVector.data.arrayTools.Sort;
 import jat.coreNOSA.math.MatrixVector.data.function.DoubleFunction;
@@ -38,6 +35,10 @@ import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.LUDecomposition;
 import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.Mathfun;
 import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.QRDecomposition;
 import jat.coreNOSA.math.MatrixVector.data.matrixDecompositions.SingularValueDecomposition;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.Serializable;
 
 /**
  * <P>

@@ -20,11 +20,11 @@
 
 package jat.tests.core.algorithm.optimization;
 
-import java.text.*;
-
-import jat.core.algorithm.optimization.*;
 import jat.coreNOSA.algorithm.optimization.VarMetric;
-import jat.tests.core.algorithm.optimization.functions.*;
+import jat.tests.core.algorithm.optimization.functions.Rosenbrock;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class VarMetric_test
 {

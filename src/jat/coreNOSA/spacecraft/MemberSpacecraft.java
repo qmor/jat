@@ -21,7 +21,6 @@ package jat.coreNOSA.spacecraft;
 
 import jat.coreNOSA.math.MatrixVector.data.Quaternion;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.timeRef.RSW_Frame;
 
 /**
  * Interface representing a member spacecraft of a formation.

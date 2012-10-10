@@ -20,14 +20,14 @@
  */
 package jat.jat3D;
 
-import jat.core.cm.*;
-import jat.core.math.*;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.math.CoordTransform;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.LineStripArray;
+import javax.media.j3d.Shape3D;
+import javax.vecmath.Color3f;
 
 /**
  * @author Tobias Berthold

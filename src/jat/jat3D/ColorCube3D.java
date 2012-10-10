@@ -19,7 +19,7 @@ package jat.jat3D;
 
 import javax.vecmath.Color3f;
 
-import com.sun.j3d.utils.geometry.*;
+import com.sun.j3d.utils.geometry.ColorCube;
 
 
 /**

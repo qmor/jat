@@ -1,11 +1,9 @@
 package jat.coreNOSA.math.MatrixVector.data.function.expressionParser;
 
-import java.util.HashMap;
-
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.RandomMatrix;
 
-import java.lang.Double;
+import java.util.HashMap;
 
 /************************************************************************
  * <i>Mathematic expression evaluator.</i> Supports the following functions:

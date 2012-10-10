@@ -1,6 +1,6 @@
 package org.math.plot.render;
 
-import org.math.plot.canvas.*;
+import org.math.plot.canvas.PlotCanvas;
 
 public class AWTDrawer3D extends AWTDrawer {
 

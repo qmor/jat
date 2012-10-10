@@ -22,7 +22,6 @@
 
 package jat.tests.PosAstr;
 
-import jat.core.cm.*;
 import jat.coreNOSA.astronomy.Angle;
 import jat.coreNOSA.astronomy.Position;
 
@@ -30,7 +29,7 @@ public class hw4b_Bessel
 {
 	public static void main(String[] args)
 	{
-		boolean plus=true,minus=false;
+		boolean plus=true;//,minus=false;
 		Angle m, n, alpha0, delta0;
 		Angle A1, B1, C1, D1, E1; //A, etc on June 3
 		Angle A2, B2, C2, D2, E2; //A, etc on June 3

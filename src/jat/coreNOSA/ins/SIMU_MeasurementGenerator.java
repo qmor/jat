@@ -22,7 +22,6 @@
  
 package jat.coreNOSA.ins;
 //import jat.gps_ins.*;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
 import jat.coreNOSA.cm.Constants;

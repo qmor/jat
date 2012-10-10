@@ -20,7 +20,6 @@
 package jat.coreNOSA.simulation;
 
 //import jat.matlabInterface.MatlabControl;
-import jat.core.algorithm.integrators.*;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
@@ -47,8 +46,6 @@ import jat.coreNOSA.spacetime.UniverseModel;
 import jat.coreNOSA.trajectory.RelativeTraj;
 import jat.coreNOSA.trajectory.Trajectory;
 import jat.coreNOSA.util.FileUtil;
-import jat.core.util.*;
-//import jat.forces.ForceModelList;
 
 /**
  * This is the primary helper class for Simulation.java.  It encapsulates the
