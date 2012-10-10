@@ -44,6 +44,11 @@ import java.util.StringTokenizer;
 */
 public class RGPS_MeasurementList implements MeasurementData, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 766341371287073898L;
+
 	private ArrayList list = new ArrayList();
 	
 	private boolean carrier = false;

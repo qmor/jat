@@ -33,6 +33,10 @@ import java.util.Vector;
 
 public class ObservationMeasurement implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7255344896250541223L;
 	//** Flags for measurement data type
 	public static final int DATA_UNKNOWN = 0;
 	public static final int DATA_PSEUDORANGE = 1;

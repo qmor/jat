@@ -328,7 +328,11 @@ public class DataSelectPanel extends JPanel {
 
     class ParameterRow extends JPanel {
 
-        String _paramName;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 8990268655548889372L;
+		String _paramName;
         JLabel name;
         JRadioButton xaxis, yaxis, zaxis;
         JComponent parameter;

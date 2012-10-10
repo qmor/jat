@@ -30,7 +30,12 @@ package jat.coreNOSA.math.MatrixVector.data;
  */
 public class UniformVector extends VectorN {
     
-    /** Seed for random number generator.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1483142200202199751L;
+
+	/** Seed for random number generator.
      */    
     protected long idum;
 

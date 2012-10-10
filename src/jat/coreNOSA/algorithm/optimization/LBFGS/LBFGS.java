@@ -78,6 +78,10 @@ public class LBFGS
 
 	public static class ExceptionWithIflag extends Exception
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -391463459832208186L;
 		public int iflag;
 		public ExceptionWithIflag( int i, String s ) { super(s); iflag = i; }
 		public String toString() { return getMessage()+" (iflag == "+iflag+")"; }

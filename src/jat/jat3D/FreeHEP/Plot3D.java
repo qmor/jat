@@ -28,7 +28,11 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  */
 public abstract class Plot3D extends Canvas3D
 {
-   protected boolean init = false;
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4351160237092040753L;
+protected boolean init = false;
    protected boolean parallelProjection = false;
    protected SimpleUniverse universe;
 

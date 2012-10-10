@@ -23,7 +23,11 @@ public class RandomMatrix extends Matrix {
    Class variables
  * ------------------------ */
 
-   /** Is the RandomMatrix a sample or an overal population?
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2148303790236983401L;
+/** Is the RandomMatrix a sample or an overal population?
    */
 
     private boolean isSample = true;

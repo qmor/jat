@@ -23,7 +23,11 @@ public class Text implements java.io.Serializable {
    Class variables
 * ------------------------ */
 
-  /** String for internal storage.
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3421968800724612257L;
+/** String for internal storage.
   @serial internal string storage.
   */
   private String string = new String("");

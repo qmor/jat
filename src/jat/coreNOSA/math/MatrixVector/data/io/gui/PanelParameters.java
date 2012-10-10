@@ -20,7 +20,12 @@ import javax.swing.JScrollPane;
 
 public class PanelParameters extends JPanel implements FocusListener {
 
-  private Dimension defaultSize ;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8372158758790562483L;
+
+private Dimension defaultSize ;
 
   private String[] paramLabels;
   private String[] paramValues;

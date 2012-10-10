@@ -77,6 +77,10 @@ import javax.vecmath.Point3f;
 
 public class CapturingCanvas3D extends Canvas3D
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4329234650673891337L;
 	//static String frames_path="frames/";
 	public boolean writeJPEG_;
 	private int postSwapCount_;

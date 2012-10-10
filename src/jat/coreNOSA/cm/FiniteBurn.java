@@ -34,6 +34,11 @@ import java.io.Serializable;
 */
 public class FiniteBurn implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8812477331675719590L;
+
 	/** Burn start time in sim time (seconds) */
 	public double tstart;
 	

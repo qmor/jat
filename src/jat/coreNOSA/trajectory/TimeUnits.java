@@ -32,7 +32,13 @@ package jat.coreNOSA.trajectory;
 
 public final class TimeUnits implements Serializable {
 
-  private String name;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6348915627577412589L;
+
+
+private String name;
 
   private TimeUnits(String nm) { name = nm; }
 

@@ -6,7 +6,12 @@ import javax.swing.JPanel;
 
 public class FrameView extends JFrame {
 
-  public FrameView(JPanel panel) {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6513530503609461907L;
+
+public FrameView(JPanel panel) {
     setContentPane(panel);
     pack();
     setVisible(true);

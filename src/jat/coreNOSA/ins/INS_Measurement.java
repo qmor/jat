@@ -34,6 +34,11 @@ import java.io.Serializable;
 */
 public class INS_Measurement implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 957649027695656863L;
+
 	/** Epoch time of measurement in sim time (seconds) */
 	public double t;
 		

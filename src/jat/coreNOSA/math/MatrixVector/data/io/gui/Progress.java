@@ -6,7 +6,11 @@ import javax.swing.JProgressBar;
 
 public class Progress extends JFrame {
 
-  private JProgressBar progress;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 9153646141419362522L;
+private JProgressBar progress;
   private int min;
   private int max;
   private int val;

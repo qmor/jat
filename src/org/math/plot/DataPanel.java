@@ -21,6 +21,11 @@ import org.math.plot.components.DataToolBar;
 
 public abstract class DataPanel extends JPanel implements ComponentListener, FilePrintable, ClipBoardPrintable, StringPrintable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1677970683091143235L;
+
 	protected DataToolBar toolBar;
 
 	protected JScrollPane scrollPane;

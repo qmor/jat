@@ -45,7 +45,12 @@ public class Quaternion extends VectorN {
    Constructors
  * ------------------------ */
     
-    /** Creates new Quaternion */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5493723214590889536L;
+
+	/** Creates new Quaternion */
     public Quaternion() {
         super(4);
     }

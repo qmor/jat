@@ -32,7 +32,13 @@ package jat.coreNOSA.trajectory;
 
 public final class CoordinateSystem implements Serializable {
 
-  private String name;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2568071532784654133L;
+
+
+private String name;
 
   private CoordinateSystem(String nm) { name = nm; }
 

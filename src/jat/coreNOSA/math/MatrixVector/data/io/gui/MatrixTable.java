@@ -12,7 +12,11 @@ import javax.swing.table.AbstractTableModel;
 
 public class MatrixTable extends JPanel {
 
-  private JTable table;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4755986900598754665L;
+private JTable table;
   private DoubleModel model;
   private boolean modificationEnabled = false;
 
@@ -79,7 +83,11 @@ public class MatrixTable extends JPanel {
 
   private class DoubleModel extends AbstractTableModel {
 
-    private Matrix M;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -776385216285315583L;
+	private Matrix M;
     private boolean modificationEnabled;
 
     public int getRowCount() {

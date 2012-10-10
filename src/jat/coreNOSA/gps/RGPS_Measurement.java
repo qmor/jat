@@ -32,6 +32,11 @@ import java.io.Serializable;
 */
 public class RGPS_Measurement implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4340254281927240454L;
+
 	/** Epoch time of measurement in sim time (seconds) */
 	private double t;
 	

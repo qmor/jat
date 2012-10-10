@@ -34,6 +34,11 @@ import java.io.Serializable;
 */
 public class DeltaV implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2858149764313424783L;
+
 	/** Epoch time of delta-v in sim time (seconds) */
 	public double t;
 		

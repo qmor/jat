@@ -37,6 +37,11 @@ import ptolemy.plot.Plot;
 
 public class TwoPlots extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7776468877249739810L;
+
 	/** the top plot */
     public Plot topPlot = new Plot();
     

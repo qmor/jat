@@ -175,6 +175,11 @@ public class AnimationWindow2 extends JPanel implements ActionListener,
 	// named following the same convensions as methods and fields
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8852112197036891596L;
+
+	/**
 	 * AnimationWindow2: A variable of AnimationWindow2
 	 */
 	private static AnimationWindow2 theAnimWindow;

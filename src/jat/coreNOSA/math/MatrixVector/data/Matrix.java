@@ -57,7 +57,12 @@ public class Matrix implements Cloneable, Serializable {
    Class variables
  * ------------------------ */
     
-    /** Array for internal storage of elements.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5889173925188282718L;
+
+	/** Array for internal storage of elements.
      * @serial internal array storage.
      */
     public double[][] A;

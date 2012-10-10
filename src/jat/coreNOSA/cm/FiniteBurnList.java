@@ -46,6 +46,10 @@ import java.util.StringTokenizer;
 */
 public class FiniteBurnList implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3126113111430876278L;
 	private ArrayList list = new ArrayList();
 	
 	/** Constructor

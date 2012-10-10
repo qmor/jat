@@ -79,7 +79,13 @@ java -classpath ../../.. ptolemy.plot.demo.PlotExample
 */
 public class PlotExample extends JFrame {
 
-    /** We use a constructor here so that we can call methods
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5797520212359599189L;
+
+
+	/** We use a constructor here so that we can call methods
      *  directly on the Frame.  The main method is static
      *  so getting at the Frame is a little trickier.
      */

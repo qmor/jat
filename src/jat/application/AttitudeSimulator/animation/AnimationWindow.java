@@ -145,6 +145,10 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class AnimationWindow extends JPanel implements ActionListener,
 		ChangeListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3712882429670450841L;
 	private static AnimationWindow theAnimWindow;
 	JFrame animFrame = new JFrame(" ");
 

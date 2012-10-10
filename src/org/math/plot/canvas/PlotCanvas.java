@@ -53,6 +53,10 @@ public abstract class PlotCanvas extends JPanel implements MouseListener,
 		MouseMotionListener, ComponentListener, BaseDependant,
 		MouseWheelListener, ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5417489777897747981L;
 	// public int[] panelSize = new int[] { 400, 400 };
 	public Base base;
 	protected AbstractDrawer draw;

@@ -32,6 +32,10 @@ import java.io.Serializable;
  * @version 1.0
  */
 public class MathUtils implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4379394846262822719L;
 	/** PI.
 	 */
 	public final static double PI = Math.acos(-1.0);

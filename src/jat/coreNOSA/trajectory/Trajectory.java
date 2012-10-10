@@ -47,6 +47,11 @@ import java.util.StringTokenizer;
 
 public class Trajectory implements Serializable, Printable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4914774244272991197L;
+
 	/** The trajectory data is stored in a TrajectoryList
 	 */
 	private TrajectoryList traj;

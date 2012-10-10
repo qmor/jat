@@ -32,7 +32,13 @@ package jat.coreNOSA.trajectory;
 
 public final class DistanceUnits implements Serializable {
 
-  private String name;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8789300122389311359L;
+
+
+private String name;
 
   private DistanceUnits(String nm) { name = nm; }
 

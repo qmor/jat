@@ -36,6 +36,11 @@ import ptolemy.plot.Plot;
 
 public class FourPlots extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8417772048069115864L;
+
 	/** The uppermost plot */
     public Plot firstPlot = new Plot();
         

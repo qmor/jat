@@ -8,7 +8,11 @@ import javax.swing.JTextArea;
 
 public class TextWindow extends JPanel {
 
-  private Text text;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7866316047060272256L;
+private Text text;
 
   public TextWindow(Text t) {
     text  = t;

@@ -37,6 +37,10 @@ import ptolemy.plot.Plot;
 
 public class SinglePlot extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 674515018881954664L;
 	/** The plot object */
     public Plot plot = new Plot();
 

@@ -33,6 +33,10 @@ import java.util.ArrayList;
 */
 
 public class TrajectoryList implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1622362061452168406L;
 	private ArrayList list = new ArrayList();
 	private int index = 0;
 	

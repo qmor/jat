@@ -46,6 +46,10 @@ import java.util.StringTokenizer;
 */
 public class INS_MeasurementList implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1937639510612385715L;
 	private ArrayList list = new ArrayList();
 	
 	/** Constructor

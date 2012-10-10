@@ -22,7 +22,12 @@ import javax.swing.JPanel;
 
 public class Plot3D extends JPanel implements MouseListener, MouseMotionListener {
 
-  protected Dimension defaultSize = new Dimension(400,400);
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6961177900994224396L;
+
+protected Dimension defaultSize = new Dimension(400,400);
 
   public static int PIXEL = DataPlot3D.PIXEL;
   public static int DOT = DataPlot3D.DOT;

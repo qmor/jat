@@ -44,6 +44,10 @@ import java.util.StringTokenizer;
 */
 public class DeltaV_List implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7216072208461602617L;
 	private ArrayList list = new ArrayList();
 	
 	/** Constructor

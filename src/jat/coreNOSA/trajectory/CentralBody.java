@@ -34,7 +34,13 @@ package jat.coreNOSA.trajectory;
 */
 public final class CentralBody implements Serializable {
 
-  private String name;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3323167295069025124L;
+
+
+private String name;
 
   private CentralBody(String nm) { name = nm; }
 

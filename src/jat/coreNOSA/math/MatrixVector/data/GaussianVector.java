@@ -33,7 +33,11 @@ import java.io.PrintWriter;
  */
 public class GaussianVector extends VectorN {
     
-    /** Seed for random number generator.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5300230095960432075L;
+	/** Seed for random number generator.
      */
     protected long idum;
     /** VectorN containing the mean for each component.

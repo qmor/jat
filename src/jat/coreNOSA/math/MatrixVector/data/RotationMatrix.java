@@ -35,7 +35,12 @@ public class RotationMatrix extends Matrix {
    Constructors
  * ------------------------ */
     
-    /** Construct a 3x3 identity matrix.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8626774206511056297L;
+
+	/** Construct a 3x3 identity matrix.
      */
     
     public RotationMatrix() {

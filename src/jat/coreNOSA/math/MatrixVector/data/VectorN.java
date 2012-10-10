@@ -41,6 +41,11 @@ public class VectorN implements Cloneable, Serializable {
 	   Class variables
 	 * ------------------------ */
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5400346413116110237L;
+
 	/** Array for internal storage of elements.
 	 * @serial internal array storage.
 	 */

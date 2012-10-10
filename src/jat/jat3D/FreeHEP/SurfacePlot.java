@@ -18,6 +18,10 @@ import javax.media.j3d.Node;
 
 public class SurfacePlot extends Plot3D
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6049917879597063362L;
 	private Binned2DData data;
 	private SurfaceBuilder builder;
 	private Node plot;
