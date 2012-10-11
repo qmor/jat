@@ -77,22 +77,13 @@
 		</jar>
 	</target>
 
-	<!--JAT JMathTools Creates the deployable jar file  -->
-	<target name="jatjmathtools.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatjmathtools.jar" basedir="${build.dir}" excludes="**/jat/">
-			<manifest>
-				<attribute name="Main-Class" value="test.Main" />
-			</manifest>
-		</jar>
-	</target>
-
 
 	<target name="zip">
 		<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/dist/**,**/lib/**,**/deploy/**,**/data/core/ephemeris/**,**/data/core/astronomy/**,**/data/jat3D/images_hires/**" />
 	</target>
 
 
-	<target name="main" depends="jatcore.jar, jat3D.jar, jatcoreNOSA.jar, jatapplication.jar, jatexamples.jar, jattests.jar, jatjmathtools.jar, zip">
+	<target name="main" depends="jatcore.jar, jat3D.jar, jatcoreNOSA.jar, jatapplication.jar, jatexamples.jar, jattests.jar, zip">
 		<description>Main target</description>
 	</target>
 

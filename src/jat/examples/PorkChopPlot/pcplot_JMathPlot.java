@@ -19,6 +19,7 @@ package jat.examples.PorkChopPlot;
 
 import jat.core.cm.porkChopPlot;
 import jat.core.ephemeris.DE405APL;
+import jat.core.plot.plot.Plot3DPanel;
 import jat.core.spacetime.TimeAPL;
 
 import java.awt.BorderLayout;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import javax.swing.JApplet;
 import javax.swing.JPanel;
 
-import org.math.plot.Plot3DPanel;
 
 public class pcplot_JMathPlot extends JApplet {
 

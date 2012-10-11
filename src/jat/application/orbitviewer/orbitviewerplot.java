@@ -17,11 +17,11 @@
 
 package jat.application.orbitviewer;
 
+import jat.core.plot.plot.Plot3DPanel;
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.cm.cm;
 
-import org.math.plot.Plot3DPanel;
 
 public class orbitviewerplot implements Printable {
 

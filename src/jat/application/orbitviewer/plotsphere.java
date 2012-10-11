@@ -17,9 +17,9 @@
 
 package jat.application.orbitviewer;
 
-import org.math.plot.FrameView;
-import org.math.plot.Plot3DPanel;
-import org.math.plot.PlotPanel;
+import jat.core.plot.plot.FrameView;
+import jat.core.plot.plot.Plot3DPanel;
+import jat.core.plot.plot.PlotPanel;
 
 public class plotsphere {
 
