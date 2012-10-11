@@ -32,6 +32,15 @@
 		</jar>
 	</target>
 
+	<!--JAT 3D Creates the deployable jar file  -->
+	<target name="jat3D.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jat3D.jar" basedir="${build.dir}" includes="**/jat3D/" excludes="**/examples/">
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
 	<!--JAT Core NOSA Creates the deployable jar file  -->
 	<target name="jatcoreNOSA.jar" depends="clean,makedir">
 		<jar destfile="${dist.dir}\jatcoreNOSA.jar" basedir="${build.dir}" includes="**/coreNOSA/">
@@ -61,7 +70,7 @@
 
 	<!--JAT Examples Creates the deployable jar file  -->
 	<target name="jattests.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jattests.jar" basedir="${build.dir}" includes="**/tests/" >
+		<jar destfile="${dist.dir}\jattests.jar" basedir="${build.dir}" includes="**/tests/">
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
@@ -70,7 +79,7 @@
 
 	<!--JAT JMathTools Creates the deployable jar file  -->
 	<target name="jatjmathtools.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatjmathtools.jar" basedir="${build.dir}" excludes="**/application/,**/core/,**/examples/,**/simulation/,**/tests/,**/unittest/">
+		<jar destfile="${dist.dir}\jatjmathtools.jar" basedir="${build.dir}" excludes="**/jat/">
 			<manifest>
 				<attribute name="Main-Class" value="test.Main" />
 			</manifest>
@@ -83,7 +92,7 @@
 	</target>
 
 
-	<target name="main" depends="jatcore.jar, jatcoreNOSA.jar,jatapplication.jar, jatexamples.jar, jattests.jar, jatjmathtools.jar, zip">
+	<target name="main" depends="jatcore.jar, jat3D.jar, jatcoreNOSA.jar, jatapplication.jar, jatexamples.jar, jattests.jar, jatjmathtools.jar, zip">
 		<description>Main target</description>
 	</target>
 
