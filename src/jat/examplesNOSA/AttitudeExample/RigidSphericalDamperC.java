@@ -19,7 +19,7 @@
  *
  */
 
-package jat.examples.AttitudeExample;
+package jat.examplesNOSA.AttitudeExample;
 
 import jat.coreNOSA.algorithm.integrators.EquationsOfMotion;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
@@ -31,10 +31,14 @@ import jat.coreNOSA.plotutil.TwoPlots;
  * <p>This class demonstrates a way to do a simple s/c attitude simulation.
  * The simulated s/c is assumed to be rigid. 
  * A circular orbit with gravity gradient effect is the torque environment for 
- * the spacecraft. </P>
+ * the spacecraft. </p>
+ * 
+ * Damping is provided by a damper spherical in shape. <br>
+ * 	c = damping coefficient <br>
+ *  j = spherical damper inertia <br> <br>
  * 
  * If the main()is assumed to be a client to JAT, the steps taken to do the 
- * simulation is as follows:<br>
+ * simulation is as follows: <br>
  * 1.	Create an object of an integrator (RungeKutta8) <br>
  * 2.	Create an object of the class containing EOM <br>
  * 3.	Initialize variables <br>
@@ -45,10 +49,11 @@ import jat.coreNOSA.plotutil.TwoPlots;
  * 
  * @author <a href="mailto:ntakada@users.sourceforge.net"> Noriko Takada
  * @version 1.6 
- *  
+ * 
+ *
  * */
 
-public class RigidGGCircularOrbit implements EquationsOfMotion{
+public class RigidSphericalDamperC implements EquationsOfMotion{
 
 ThreePlots rotation_plot = new ThreePlots();
 ThreePlots angle_plot = new ThreePlots();
@@ -59,7 +64,7 @@ TwoPlots quarternion_plot2 = new TwoPlots();
 public static final double PI = 3.14159;
 
     /** Creates a new instance of SimpleIntegrator */
-    public RigidGGCircularOrbit()
+    public RigidSphericalDamperC()
     {
         // set up the trajectory plot
         rotation_plot.setTitle("Angular Velocity");
@@ -104,23 +109,27 @@ public static final double PI = 3.14159;
     public double[] derivs(double t, double[] x)
     {
         
-        double I1 = 10.42;       // Spacecraft Principle Inertia
+        double I1 = 10.42;    // spacecraft inertia
         double I2 = 35.42;
         double I3 = 41.67;
+        double c  = 5;        // damping coefficient
+        double j  = 5;        // spherical damper inertia
         
         double c11 = 1- 2*( x[4]*x[4] + x[5]*x[5]);
         double c21 = 2* (x[3]*x[4]-x[5]*x[6]);
         double c31 = 2* (x[3]*x[5]+x[4]*x[6]); 
         
-        double [] out = new double[7];
-        out[0] = 2*PI*((I2-I3)/I1)* (x[1]*x[2] - 3*c21*c31);
-        out[1] = 2*PI*((I3-I1)/I2)* (x[0]*x[2] - 3*c31*c11) ;
-        out[2] = 2*PI*((I1-I2)/I3)* (x[0]*x[1] - 3*c11*c21) ;
+        double [] out = new double[10];
+        out[0] = 2*PI*((I2-I3)/I1)* (x[1]*x[2] - 3*c21*c31) - 2*PI*(c/I1)*(x[0]-x[7]);
+        out[1] = 2*PI*((I3-I1)/I2)* (x[0]*x[2] - 3*c31*c11) - 2*PI*(c/I2)*(x[1]-x[8]);
+        out[2] = 2*PI*((I1-I2)/I3)* (x[0]*x[1] - 3*c11*c21) - 2*PI*(c/I3)*(x[2]-x[9]);
         out[3] = -PI* (-(x[2]+1)*x[4] + x[1]*x[5] - x[0]*x[6]);
         out[4] = -PI* ((x[2]+1)*x[3]  - x[0]*x[5] - x[1]*x[6]);
         out[5] = -PI* (-(x[2]-1)*x[6] + x[0]*x[4] - x[1]*x[3]);
         out[6] = -PI* ((x[2]-1)*x[5]  + x[1]*x[4] + x[0]*x[3]);
-        
+        out[7] = 2*PI*(c/j)*(x[0]-x[7]) -2*PI*(x[1]*x[9] - x[2]*x[8]);
+        out[8] = 2*PI*(c/j)*(x[1]-x[8]) -2*PI*(x[2]*x[7] - x[0]*x[9]);
+        out[9] = 2*PI*(c/j)*(x[2]-x[9]) -2*PI*(x[0]*x[8] - x[1]*x[7]);
         
         return out;
     }
@@ -173,7 +182,7 @@ public static final double PI = 3.14159;
         quarternion_plot2.bottomPlot.addPoint(0,t,e4,first);
         
 
-        // also print to the screen 
+        // also print to the screen for 
         System.out.println(t+" "+y[0]+" "+y[1]+" "+y[2]);
     }
 
@@ -187,10 +196,10 @@ public static final double PI = 3.14159;
         RungeKutta8 rk8 = new RungeKutta8(0.1);
 
         // create an instance
-        RigidGGCircularOrbit si = new RigidGGCircularOrbit();
+        RigidSphericalDamperC si = new RigidSphericalDamperC();
 
         // initialize the variables
-        double [] x0 = new double[7];
+        double [] x0 = new double[10];
         x0[0] = 0.5;
         x0[1] = 0.0;
 		x0[2] = 1.0;
@@ -198,9 +207,12 @@ public static final double PI = 3.14159;
 		x0[4] = 0.0;
 		x0[5] = 0.0;
 		x0[6] = 1.0;
+		x0[7] = 0.0;
+		x0[8] = 0.0;
+		x0[9] = 1.0;
 		
         // set the final time
-        double tf = 10.0;
+        double tf = 20.0;
 
         // set the initial time to zero
         double t0 = 0.0;

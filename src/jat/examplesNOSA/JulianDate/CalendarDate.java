@@ -19,21 +19,46 @@
  *
  */
 
-package jat.examples.JulianDate;
+package jat.examplesNOSA.JulianDate;
 
 import jat.coreNOSA.cm.cm;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * @author Tobias Berthold
- *  Date        :   7-7-2002
+ *  Date        :   10-15-2003
  *  Description :   JAT Julian date demo
- *
+ * *
  */
-public class JulianDate
+public class CalendarDate
 {
 	public static void main(String argv[])
-	{
-		System.out.print("The Julian date on 1-1-2001 at 12:00pm is ");
-		System.out.println(cm.juliandate(2001, 1, 1, 12, 0, 0));
+	{	Date dd;
+
+		SimpleDateFormat sdf;
+		sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aaa");
+		
+		// Fixed time
+		//double JD = cm.juliandate(1985, 2, 17, 7, 38, 16);
+		//double JD = cm.juliandate(2001, 1, 1, 12, 0, 0);
+		double JD = cm.juliandate(2005, 3, 8, 14, 23, 56);
+		JD=2456033;
+		Calendar cal = cm.JD_to_Calendar(JD);
+		System.out.println("JD: " + JD + "   Greg: " + sdf.format(cal.getTime()));
+
+		// Current Time
+		dd = new Date(java.lang.System.currentTimeMillis());
+		//dd.setTime(java.lang.System.currentTimeMillis());
+		cal.setTime(dd);
+		JD = cm.juliandate(cal);
+		cal = cm.JD_to_Calendar(JD);
+		System.out.println("JD: " + JD + "   Greg: " + sdf.format(cal.getTime()));
+
 	}
 }
+
+// Practical Astronomy with your calculator by Peter Duffett-Smith 
+// 2446113.75 is 2-17-1985 at 6am

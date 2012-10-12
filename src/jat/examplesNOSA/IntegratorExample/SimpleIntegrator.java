@@ -18,7 +18,7 @@
  *
  */
 
-package jat.examples.IntegratorExample;
+package jat.examplesNOSA.IntegratorExample;
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;

@@ -19,7 +19,7 @@
  *
  */
 
-package jat.examples.RK78F_Test;
+package jat.examplesNOSA.TwoBodyExample;
 
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.algorithm.integrators.RungeKuttaFehlberg78;

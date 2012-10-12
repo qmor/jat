@@ -26,7 +26,7 @@
  *  Description :   main program, JAT ephemeris demo
  */
 
-package jat.examples.ephemeris;
+package jat.examplesNOSA.ephemeris;
 
 import jat.core.util.PathUtil;
 import jat.coreNOSA.ephemeris.DE405;

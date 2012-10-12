@@ -1,4 +1,4 @@
-package jat.examples.Rendezvous;
+package jat.examplesNOSA.Rendezvous;
 
 /* JAT: Java Astrodynamics Toolkit
  *

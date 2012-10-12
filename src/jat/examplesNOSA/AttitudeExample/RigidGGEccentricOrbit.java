@@ -19,7 +19,7 @@
  *
  */
 
-package jat.examples.AttitudeExample;
+package jat.examplesNOSA.AttitudeExample;
 
 import jat.coreNOSA.algorithm.integrators.EquationsOfMotion;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
@@ -28,12 +28,14 @@ import jat.coreNOSA.plotutil.ThreePlots;
 import jat.coreNOSA.plotutil.TwoPlots;
 
 /**
- * <P>This class demonstrates a way to do a simple s/c attitude simulation.
- * The simulated spacecraft is assumed to be rigid with constant external torque.
- * </P>
+ * <p>This class demonstrates a way to do a simple s/c attitude simulation.
+ * The simulated s/c is assumed to be rigid. 
+ * An eccentric orbit with gravity gradient effect is the torque environment for 
+ * the spacecraft. </p>
+ * 
  * If the main()is assumed to be a client to JAT, the steps taken to do the 
- * simulation is as follows:<br>
- * 1.	Create an object of an integrator (RungeKutta8)<br>
+ * simulation is as follows: <br>
+ * 1.	Create an object of an integrator (RungeKutta8) <br>
  * 2.	Create an object of the class containing EOM <br>
  * 3.	Initialize variables <br>
  * 4.	Set the start & end time of the simulation <br>
@@ -42,51 +44,55 @@ import jat.coreNOSA.plotutil.TwoPlots;
  * 7.	Make plots visible <br>
  * 
  * @author <a href="mailto:ntakada@users.sourceforge.net"> Noriko Takada
- * @version 1.6 
- */
-public class RigidConstantTorque implements EquationsOfMotion{
+ * @version 1.4 
+ * 
+ * */
+
+public class RigidGGEccentricOrbit implements EquationsOfMotion{
+
 ThreePlots rotation_plot = new ThreePlots();
-//TwoPlots quarternion_plot1 = new TwoPlots();
-//TwoPlots quarternion_plot2 = new TwoPlots();
 ThreePlots angle_plot = new ThreePlots();
 SinglePlot quarternion_check = new SinglePlot();
 TwoPlots quarternion_plot1 = new TwoPlots();
 TwoPlots quarternion_plot2 = new TwoPlots();
 
+public static final double PI = 3.14159;
+//public static final double e = 0.5;
+
     /** Creates a new instance of SimpleIntegrator */
-    public RigidConstantTorque()
+    public RigidGGEccentricOrbit()
     {
         // set up the trajectory plot
         rotation_plot.setTitle("Angular Velocity");
-        rotation_plot.topPlot.setXLabel("t(sec)");
+        rotation_plot.topPlot.setXLabel("# of orbits");
         rotation_plot.topPlot.setYLabel("w1(rad/sec)");
-		rotation_plot.middlePlot.setXLabel("t(sec)");
+		rotation_plot.middlePlot.setXLabel("# of orbits");
 		rotation_plot.middlePlot.setYLabel("w2(rad/sec)");
-        rotation_plot.bottomPlot.setXLabel("t(sec)");
+        rotation_plot.bottomPlot.setXLabel("# of orbits");
         rotation_plot.bottomPlot.setYLabel("w3(rad/sec)");
         
         quarternion_plot1.setTitle("Quaternions: e1 & e2");
-        quarternion_plot1.topPlot.setXLabel("t");
+        quarternion_plot1.topPlot.setXLabel("# of orbits");
         quarternion_plot1.topPlot.setYLabel("e1");
-        quarternion_plot1.bottomPlot.setXLabel("t");
+        quarternion_plot1.bottomPlot.setXLabel("# of orbits");
         quarternion_plot1.bottomPlot.setYLabel("e2");
         
         quarternion_plot2.setTitle("Quaternions: e3 & e4");
-        quarternion_plot2.topPlot.setXLabel("t");
-        quarternion_plot2.topPlot.setYLabel("e1");
-        quarternion_plot2.bottomPlot.setXLabel("t");
-        quarternion_plot2.bottomPlot.setYLabel("e2");
+        quarternion_plot2.topPlot.setXLabel("# of orbits");
+        quarternion_plot2.topPlot.setYLabel("e3");
+        quarternion_plot2.bottomPlot.setXLabel("# of orbits");
+        quarternion_plot2.bottomPlot.setYLabel("e4");
         
         angle_plot.setTitle("Angles between B and A frame");
-        angle_plot.topPlot.setXLabel("t(sec)");
+        angle_plot.topPlot.setXLabel("# of orbits");
         angle_plot.topPlot.setYLabel("angle between a1 & b1 (rad)");
-		angle_plot.middlePlot.setXLabel("t(sec)");
+		angle_plot.middlePlot.setXLabel("# of orbits");
 		angle_plot.middlePlot.setYLabel("angle between a2 & b2 (rad)");
-        angle_plot.bottomPlot.setXLabel("t(sec)");
+        angle_plot.bottomPlot.setXLabel("# of orbits");
         angle_plot.bottomPlot.setYLabel("angle between a3 & b3 (rad)");
         
         quarternion_check.setTitle("Quarternion Check");
-        quarternion_check.plot.setXLabel("t(sec)");
+        quarternion_check.plot.setXLabel("# of orbits");
         quarternion_check.plot.setYLabel("e1^2 + e2^2 + e3^2 + e4^2");
        
     }
@@ -98,23 +104,54 @@ TwoPlots quarternion_plot2 = new TwoPlots();
      */
     public double[] derivs(double t, double[] x)
     {
-        double M1 = 1;           // External torque
-        double M2 = 0;
-        double M3 = 0; 
-        double I1 = 10.42;       // Spacecraft Principle inertia
+        
+        double I1 = 10.42;
         double I2 = 35.42;
         double I3 = 41.67;
-        
-        double [] out = new double[7];
-        out[0] = ((I2-I3)/I1)*x[1]*x[2] + M1/I1 ;
-        out[1] = ((I3-I1)/I2)*x[0]*x[2] + M2/I2 ;
-        out[2] = ((I1-I2)/I3)*x[0]*x[1] + M3/I3 ;
-        out[3] = -0.5* (-x[2]*x[4] + x[1]*x[5] - x[0]*x[6]);
-        out[4] = -0.5* (x[2]*x[3]  - x[0]*x[5] - x[1]*x[6]);
-        out[5] = -0.5* (-x[2]*x[6] + x[0]*x[4] - x[1]*x[3]);
-        out[6] = -0.5* (x[2]*x[5]  + x[1]*x[4] + x[0]*x[3]);
+        double e  = 0.3;
         
         
+        double c11 = 1- 2*( x[4]*x[4] + x[5]*x[5]);
+        double c21 = 2* (x[3]*x[4]-x[5]*x[6]);
+        double c31 = 2* (x[3]*x[5]+x[4]*x[6]); 
+        
+        /* The non-dimensionalized equations of motion for this series are:
+
+         // *** Angular Velocity Equations ***
+         w1dot = (2*pi*A)*((iyy-izz)/ixx)*(w2*w3-3*c21*c31*B);
+         w2dot = (2*pi*A)*((izz-ixx)/iyy)*(w1*w3-3*c31*c11*B);
+         w3dot = (2*pi*A)*((ixx-iyy)/izz)*(w1*w2-3*c11*c21*B);
+
+         // *** Quaternions ***
+         e1dot = (-pi*A*(-(w3+1/A)*e2 + w2*e3 - w1*e4));
+         e2dot = (-pi*A*((w3+1/A)*e1 - w1*e3 - w2*e4));
+         e3dot = (-pi*A*(-w2*e1 + w1*e2 - (w3-1/A)*e4));
+         e4dot = (-pi*A*(w1*e1 + w2*e2 + (w3-1/A)*e3));
+
+         c11 = 1 - 2*(e2^2 + e3^2)
+         c21 = 2*(e1*e2 - e3*e4)
+         c31 = 2*(e1*e3 + e2*e4)
+			
+		 A = ((1-e^2)^(3/2)/(1+e*cos(2*pi*t))^2
+		 B = (1+e*cos(2*pi*t))^3/(1-e^2)^3	
+         */
+
+         double A=Math.pow((1-e*e),1.5)/Math.pow((1+ e*Math.cos(2*PI*t)),2);
+         double B=Math.pow((1+e*Math.cos(2*PI*t)),3)/Math.pow((1-e*e), 3);
+         
+         double [] out = new double[7];
+         // *** Angular Velocity Equations (dw/dnu (orbits)) *** //
+         out[0] = A*2*PI*((I2-I3)/I1)*(x[1]*x[2]-3*c21*c31*B);
+         out[1] = A*2*PI*((I3-I1)/I2)*(x[0]*x[2]-3*c31*c11*B);
+         out[2] = A*2*PI*((I1-I2)/I3)*(x[0]*x[1]-3*c11*c21*B);
+         
+         // *** Quaternions (de/dnu (orbits)) ***
+         out[3] = -PI*A*(-(x[2]+1/A)*x[4] + x[1]*x[5] - x[0]*x[6]);
+         out[4] = -PI*A*((x[2]+1/A)*x[3] - x[0]*x[5] - x[1]*x[6]);
+         out[5] = -PI*A*(-x[1]*x[3] + x[0]*x[4] - (x[2]-1/A)*x[6]);
+         out[6] = -PI*A*(x[0]*x[3] + x[1]*x[4] + (x[2]-1/A)*x[5]);
+         //System.out.println("e is "+ e+ " "+ x[0]+" "+A+" " +B);
+              
         return out;
     }
 
@@ -125,7 +162,7 @@ TwoPlots quarternion_plot2 = new TwoPlots();
      */
     public void print(double t, double [] y){
 
-        
+        // handle the first variable for plotting - this is a little mystery but it works
         boolean first = true;
         if (t == 0.0) first = false;
         
@@ -167,7 +204,8 @@ TwoPlots quarternion_plot2 = new TwoPlots();
         
 
         // also print to the screen 
-        System.out.println(t+" "+y[0]+" "+y[1]+" "+y[2]);
+        //System.out.println(t+" "+y[0]+" "+y[1]+" "+y[2]);
+        
     }
 
     /** Runs the example.
@@ -180,20 +218,20 @@ TwoPlots quarternion_plot2 = new TwoPlots();
         RungeKutta8 rk8 = new RungeKutta8(0.1);
 
         // create an instance
-        RigidConstantTorque si = new RigidConstantTorque();
+        RigidGGEccentricOrbit si = new RigidGGEccentricOrbit();
 
         // initialize the variables
         double [] x0 = new double[7];
         x0[0] = 0.0;
-        x0[1] = 0.1;
-		x0[2] = 0.0;
+        x0[1] = 0.0;
+		x0[2] = 1.0;
 		x0[3] = 0.0;
 		x0[4] = 0.0;
 		x0[5] = 0.0;
 		x0[6] = 1.0;
 		
         // set the final time
-        double tf = 30.0;
+        double tf = 10.0;
 
         // set the initial time to zero
         double t0 = 0.0;

@@ -18,7 +18,7 @@
  *
  */
 
-package jat.examples.FreeINS;
+package jat.examplesNOSA.FreeINS;
 
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;
