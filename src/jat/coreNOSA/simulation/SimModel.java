@@ -1057,7 +1057,7 @@ public class SimModel implements Derivatives {
      * Main method to test the class.  For a generic way to run the simulation, see
      * jat.demo.simulation.Simulation.java
      *
-     * @see jat.demo.simulation.Simulation
+     * @see jat.examplesNOSA.simulation.demo.simulation.Simulation
      * @param args
      */
     public static void main(String[] args) {

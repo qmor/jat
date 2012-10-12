@@ -40,7 +40,7 @@ import java.util.Random;
  * adhering to the specified XML Schema jat.sim.xml.input.sim_input.xsd, creates the necessary
  * objects, and propagates the trajectories.
  * 
- * @see jat.demo.simulation.Simulation
+ * @see jat.examplesNOSA.simulation.demo.simulation.Simulation
  * @author Richard C. Page III
  *
  */

@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  */
-package jat.examples.simulation;
+package jat.examplesNOSA.simulation;
 
 import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
