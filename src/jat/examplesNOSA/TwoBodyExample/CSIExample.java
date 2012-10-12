@@ -19,7 +19,7 @@
  *
  */
 
-package jat.examples.TwoBodyExample;
+package jat.examplesNOSA.TwoBodyExample;
 
 import jat.coreNOSA.algorithm.VectorTimeFunction;
 import jat.coreNOSA.algorithm.integrators.Printable;

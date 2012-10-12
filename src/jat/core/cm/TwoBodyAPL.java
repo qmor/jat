@@ -23,7 +23,10 @@ import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
-public class TwoBodyAPL extends TwoBody {
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+
+public class TwoBodyAPL extends TwoBody implements FirstOrderDifferentialEquations {
 	double initial_ta;
 
 	public TwoBodyAPL(double mu, VectorN r, VectorN v) {
@@ -50,7 +53,6 @@ public class TwoBodyAPL extends TwoBody {
 		double e0 = Math.atan2(sine0, cose0);
 
 		double ma = e0 - this.e * Math.sin(e0);
-		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
 
 		ma = ma + n * t;
 		double ea = solveKepler(ma, this.e);
@@ -77,12 +79,13 @@ public class TwoBodyAPL extends TwoBody {
 		out.x[0] = temp[0];
 		out.x[1] = temp[1];
 		out.x[2] = temp[2];
-		//out.print("sat pos at t");
+		// out.print("sat pos at t");
 		return out;
 
 	}
 
-	// propagates from whatever ta is starting from time t=0 relative to the starting point 
+	// propagates from whatever ta is starting from time t=0 relative to the
+	// starting point
 	public void propagate(double t0, double tf, Printable pr, boolean print_switch, double steps) {
 		double[] temp = new double[6];
 		// double ta_save = this.ta;
@@ -106,10 +109,6 @@ public class TwoBodyAPL extends TwoBody {
 		double e0 = Math.atan2(sine0, cose0);
 
 		double ma = e0 - this.e * Math.sin(e0);
-
-		// determine sqrt(1+e/1-e)
-
-		double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
 
 		// initialize t
 
@@ -228,88 +227,25 @@ public class TwoBodyAPL extends TwoBody {
 		return ta;
 	}
 
+	@Override
+	public void computeDerivatives(double t, double[] y, double[] yDot) {
+
+		Vector3D r = new Vector3D(y);
+		double rnorm = r.getNorm();
+		double r3 = rnorm * rnorm * rnorm;
+		double k = -1. * this.mu / r3;
+		yDot[0] = y[3];
+		yDot[1] = y[4];
+		yDot[2] = y[5];
+		yDot[3] = k * y[0];
+		yDot[4] = k * y[1];
+		yDot[5] = k * y[2];
+		
+	}
+
+	@Override
+	public int getDimension() {
+		return 6;
+	}
+
 }
-
-/*
- * public void propagate(double t0, double tf) { double[] temp = new double[6];
- * // this.ta = 0;
- * 
- * // Determine step size double n = this.meanMotion(); double period =
- * this.period(); double dt = period / steps; if ((t0 + dt) > tf) // check to
- * see if we're going past tf { dt = tf - t0; }
- * 
- * // determine initial E and M double sqrome2 = Math.sqrt(1.0 - this.e *
- * this.e); double cta = Math.cos(this.ta); double sta = Math.sin(this.ta);
- * double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta); double cose0 = (this.e
- * + cta) / (1.0 + this.e * cta); double e0 = Math.atan2(sine0, cose0);
- * 
- * double ma = e0 - this.e * Math.sin(e0);
- * 
- * // determine sqrt(1+e/1-e)
- * 
- * double q = Math.sqrt((1.0 + this.e) / (1.0 - this.e));
- * 
- * // initialize t
- * 
- * double t = t0;
- * 
- * while (t < tf) { ma = ma + n * dt; double ea = solveKepler(ma, this.e);
- * 
- * double sinE = Math.sin(ea); double cosE = Math.cos(ea); double den = 1.0 -
- * this.e * cosE;
- * 
- * double sinv = (sqrome2 * sinE) / den; double cosv = (cosE - this.e) / den;
- * 
- * this.ta = Math.atan2(sinv, cosv); if (this.ta < 0.0) { this.ta = this.ta +
- * 2.0 * Constants.pi; }
- * 
- * t = t + dt;
- * 
- * temp = this.randv(); this.rv = new VectorN(temp);
- * 
- * if ((t + dt) > tf) { dt = tf - t; }
- * 
- * } }
- */
-
-/*
- * public void propagate(double t0, double tf, Printable pr, boolean
- * print_switch) { double[] temp = new double[6];
- * 
- * // Determine step size double n = this.meanMotion(); double period =
- * this.period(); double dt = period / steps; if ((t0 + dt) > tf) // check to
- * see if we're going past tf { dt = tf - t0; }
- * 
- * // determine initial E and M double sqrome2 = Math.sqrt(1.0 - this.e *
- * this.e); double cta = Math.cos(this.ta); double sta = Math.sin(this.ta);
- * double sine0 = (sqrome2 * sta) / (1.0 + this.e * cta); double cose0 = (this.e
- * + cta) / (1.0 + this.e * cta); double e0 = Math.atan2(sine0, cose0);
- * 
- * double ma = e0 - this.e * Math.sin(e0);
- * 
- * // initialize t
- * 
- * double t = t0;
- * 
- * if (print_switch) { temp = this.randv(); pr.print(t, temp); }
- * 
- * while (t < tf) { ma = ma + n * dt; double ea = solveKepler(ma, this.e);
- * 
- * double sinE = Math.sin(ea); double cosE = Math.cos(ea); double den = 1.0 -
- * this.e * cosE;
- * 
- * double sinv = (sqrome2 * sinE) / den; double cosv = (cosE - this.e) / den;
- * 
- * this.ta = Math.atan2(sinv, cosv); if (this.ta < 0.0) { this.ta = this.ta +
- * 2.0 * Constants.pi; }
- * 
- * t = t + dt;
- * 
- * temp = this.randv(); this.rv = new VectorN(temp);
- * 
- * if (print_switch) { pr.print(t, temp); }
- * 
- * if ((t + dt) > tf) { dt = tf - t; }
- * 
- * } }
- */

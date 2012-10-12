@@ -18,7 +18,7 @@
  *
  */
 
-package jat.examples.TwoBodyExample;
+package jat.examplesNOSA.TwoBodyExample;
 
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.TwoBody;
@@ -74,7 +74,7 @@ public class TwoBodyExample implements Printable
         TwoBodyExample x = new TwoBodyExample();
 
         // create a TwoBody orbit using orbit elements
-        TwoBody sat = new TwoBody(7000.0, 0.1, 0.0, 0.0, 0.0, 0.0);
+        TwoBody sat = new TwoBody(7000.0, 0.3, 0.0, 0.0, 0.0, 0.0);
 
         // find out the period of the orbit
         double period = sat.period();
