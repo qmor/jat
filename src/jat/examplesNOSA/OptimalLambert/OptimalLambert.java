@@ -18,7 +18,7 @@
  *
  */
 
-package jat.examples.OptimalLambert;
+package jat.examplesNOSA.OptimalLambert;
 
 import jat.coreNOSA.algorithm.optimization.DFP;
 import jat.coreNOSA.algorithm.optimization.GradientSearch;

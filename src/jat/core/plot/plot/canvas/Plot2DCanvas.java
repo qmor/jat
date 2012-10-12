@@ -7,7 +7,6 @@ import static jat.core.plot.plot.utils.Array.increment;
 import static jat.core.plot.plot.utils.Array.mergeColumns;
 import static jat.core.plot.plot.utils.Histogram.histogram_classes;
 import static jat.core.plot.plot.utils.Histogram.histogram_classes_2D;
-
 import jat.core.plot.plot.plotObjects.Base;
 import jat.core.plot.plot.plotObjects.BasePlot;
 import jat.core.plot.plot.plots.BarPlot;

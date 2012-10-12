@@ -8,7 +8,6 @@ import static jat.core.plot.plot.utils.Histogram.histogram_classes_2D;
 import static jat.core.plot.plot.utils.Histogram.histogram_classes_3D;
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
-
 import jat.core.plot.plot.plotObjects.Base;
 import jat.core.plot.plot.plotObjects.BasePlot;
 import jat.core.plot.plot.plots.BarPlot;

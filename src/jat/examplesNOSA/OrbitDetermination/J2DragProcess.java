@@ -20,7 +20,7 @@
  * File Created on May 8, 2003
  */
 
-package jat.examples.OrbitDetermination;
+package jat.examplesNOSA.OrbitDetermination;
 
 import jat.coreNOSA.algorithm.estimators.EstSTM;
 import jat.coreNOSA.algorithm.estimators.ProcessModel;

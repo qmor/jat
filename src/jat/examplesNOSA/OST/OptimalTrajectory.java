@@ -19,7 +19,7 @@
  *
  */
 
-package jat.examples.OST;
+package jat.examplesNOSA.OST;
 
 import jat.coreNOSA.algorithm.optimization.DFP;
 import jat.coreNOSA.algorithm.optimization.GradientSearch;

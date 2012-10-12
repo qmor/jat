@@ -1,4 +1,4 @@
-package jat.examples.Lambert;
+package jat.examplesNOSA.Lambert;
 
 import jat.core.ephemeris.DE405APL;
 import jat.coreNOSA.cm.Constants;

@@ -47,7 +47,7 @@
 @AcceptedRating red (cxh@eecs.berkeley.edu)
 */
 
-package jat.examples.PlotExample;
+package jat.examplesNOSA.PlotExample;
 
 // This class is not in the ptolemy.plot package so that it is a
 // more realistic example.

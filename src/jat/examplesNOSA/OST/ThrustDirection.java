@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package jat.examples.OST;
+package jat.examplesNOSA.OST;
 
 import jat.coreNOSA.algorithm.VectorTimeFunction;
 import jat.coreNOSA.algorithm.integrators.Printable;

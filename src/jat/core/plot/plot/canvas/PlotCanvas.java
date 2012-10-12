@@ -5,7 +5,6 @@ import static jat.core.plot.plot.plotObjects.Base.LOGARITHM;
 import static jat.core.plot.plot.plotObjects.Base.STRINGS;
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
-
 import jat.core.plot.plot.components.DatasFrame;
 import jat.core.plot.plot.components.LegendPanel;
 import jat.core.plot.plot.components.SetScalesFrame;

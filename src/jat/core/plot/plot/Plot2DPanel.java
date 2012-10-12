@@ -2,7 +2,6 @@ package jat.core.plot.plot;
 
 import jat.core.plot.plot.canvas.Plot2DCanvas;
 import jat.core.plot.plot.canvas.PlotCanvas;
-import jat.core.plot.plot.plots.LinePlot;
 
 import java.awt.Color;
 

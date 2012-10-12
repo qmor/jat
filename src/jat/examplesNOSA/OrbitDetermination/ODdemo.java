@@ -1,4 +1,4 @@
-package jat.examples.OrbitDetermination;
+package jat.examplesNOSA.OrbitDetermination;
 
 /* JAT: Java Astrodynamics Toolkit
  *

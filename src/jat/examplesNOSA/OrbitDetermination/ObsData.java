@@ -20,7 +20,7 @@
  * File Created on May 7, 2003
  */
 
-package jat.examples.OrbitDetermination;
+package jat.examplesNOSA.OrbitDetermination;
 import jat.coreNOSA.algorithm.estimators.MeasurementData;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

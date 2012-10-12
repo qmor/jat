@@ -19,7 +19,7 @@
  * 
  * File Created on May 8, 2003
  */
-package jat.examples.OrbitDetermination;
+package jat.examplesNOSA.OrbitDetermination;
 
 import jat.coreNOSA.algorithm.integrators.Derivatives;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;

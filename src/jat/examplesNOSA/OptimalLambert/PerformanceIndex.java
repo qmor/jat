@@ -18,7 +18,7 @@
  *
  */
 
-package jat.examples.OptimalLambert;
+package jat.examplesNOSA.OptimalLambert;
 
 import jat.coreNOSA.algorithm.ScalarfromArrayFunction;
 import jat.coreNOSA.cm.Constants;

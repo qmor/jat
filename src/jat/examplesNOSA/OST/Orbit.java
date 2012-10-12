@@ -19,7 +19,7 @@
  *
  */
 
-package jat.examples.OST;
+package jat.examplesNOSA.OST;
 
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.algorithm.integrators.RungeKutta8;

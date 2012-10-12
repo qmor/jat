@@ -18,7 +18,7 @@
  *
  */
 
-package jat.examples.OptimalLambert;
+package jat.examplesNOSA.OptimalLambert;
 
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.KeplerElements;

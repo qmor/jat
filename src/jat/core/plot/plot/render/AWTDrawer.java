@@ -11,7 +11,6 @@ import static java.lang.Math.cos;
 import static java.lang.Math.signum;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
-
 import jat.core.plot.plot.canvas.PlotCanvas;
 
 import java.awt.AlphaComposite;
