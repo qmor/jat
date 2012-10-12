@@ -41,15 +41,6 @@
 		</jar>
 	</target>
 
-	<!--JAT Core NOSA Creates the deployable jar file  -->
-	<target name="jatcoreNOSA.jar" depends="clean,makedir">
-		<jar destfile="${dist.dir}\jatcoreNOSA.jar" basedir="${build.dir}" includes="**/coreNOSA/">
-			<manifest>
-				<attribute name="Main-Class" value="test.Main" />
-			</manifest>
-		</jar>
-	</target>
-
 	<!--JAT Application Creates the deployable jar file  -->
 	<target name="jatapplication.jar" depends="clean,makedir">
 		<jar destfile="${dist.dir}\jatapplication.jar" basedir="${build.dir}" includes="**/application/">
@@ -77,13 +68,31 @@
 		</jar>
 	</target>
 
+	<!--JAT Core NOSA Creates the deployable jar file  -->
+	<target name="jatcoreNOSA.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jatcoreNOSA.jar" basedir="${build.dir}" includes="**/coreNOSA/">
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
 
+	<!--JAT Examples Creates the deployable jar file  -->
+	<target name="jatexamplesNOSA.jar" depends="clean,makedir">
+		<jar destfile="${dist.dir}\jatexamplesNOSA.jar" basedir="${build.dir}" includes="**/examplesNOSA/" excludes="**/core/">
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	
 	<target name="zip">
 		<zip destfile="zip/jat.zip" basedir="${folder-to-zip}" includes="**/dist/**,**/lib/**,**/deploy/**,**/data/core/ephemeris/**,**/data/core/astronomy/**,**/data/jat3D/images_hires/**" />
 	</target>
 
 
-	<target name="main" depends="jatcore.jar, jat3D.jar, jatcoreNOSA.jar, jatapplication.jar, jatexamples.jar, jattests.jar, zip">
+	<target name="main" depends="jatcore.jar, jat3D.jar, jatcoreNOSA.jar, jatapplication.jar, jatexamples.jar, jattests.jar, jatexamplesNOSA.jar, zip">
 		<description>Main target</description>
 	</target>
 

@@ -25,6 +25,8 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math3.ode.sampling.StepHandler;
+import org.apache.commons.math3.ode.sampling.StepInterpolator;
 
 public class TwoBodyAPL extends TwoBody implements FirstOrderDifferentialEquations {
 	double initial_ta;
@@ -230,7 +232,7 @@ public class TwoBodyAPL extends TwoBody implements FirstOrderDifferentialEquatio
 	@Override
 	public void computeDerivatives(double t, double[] y, double[] yDot) {
 
-		Vector3D r = new Vector3D(y);
+		Vector3D r = new Vector3D(y[0],y[1],y[2]);
 		double rnorm = r.getNorm();
 		double r3 = rnorm * rnorm * rnorm;
 		double k = -1. * this.mu / r3;
@@ -243,6 +245,20 @@ public class TwoBodyAPL extends TwoBody implements FirstOrderDifferentialEquatio
 		
 	}
 
+	
+	public StepHandler stepHandler = new StepHandler() {
+		public void init(double t0, double[] y0, double t) {
+		}
+
+		public void handleStep(StepInterpolator interpolator, boolean isLast) {
+			double t = interpolator.getCurrentTime();
+			double[] y = interpolator.getInterpolatedState();
+			System.out.println(t + " " + y[0] + " " + y[1]);
+
+		}
+	};
+
+	
 	@Override
 	public int getDimension() {
 		return 6;
