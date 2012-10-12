@@ -17,6 +17,8 @@
 
 package jat.core.cm;
 
+import java.util.ArrayList;
+
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.TwoBody;
@@ -30,13 +32,53 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
 
 public class TwoBodyAPL extends TwoBody implements FirstOrderDifferentialEquations {
 	double initial_ta;
+	public ArrayList<Double> time = new ArrayList<Double>();
+	public ArrayList<Double> xsol = new ArrayList<Double>();
+	public ArrayList<Double> ysol = new ArrayList<Double>();
+	public ArrayList<Double> zsol = new ArrayList<Double>();
 
 	public TwoBodyAPL(double mu, VectorN r, VectorN v) {
 		super(mu, r, v);
 		initial_ta = ta;
 	}
 
-	public TwoBodyAPL(double d, double e, double f, double g, double h, double i) {
+	public TwoBodyAPL(double a, double e, double i, double raan, double w, double ta) {
+		super(a, e, i, raan, w, ta);
+	}
+
+	@Override
+	public void computeDerivatives(double t, double[] y, double[] yDot) {
+
+		Vector3D r = new Vector3D(y[0], y[1], y[2]);
+		double rnorm = r.getNorm();
+		double r3 = rnorm * rnorm * rnorm;
+		double k = -1. * this.mu / r3;
+		yDot[0] = y[3];
+		yDot[1] = y[4];
+		yDot[2] = y[5];
+		yDot[3] = k * y[0];
+		yDot[4] = k * y[1];
+		yDot[5] = k * y[2];
+	}
+
+	public StepHandler stepHandler = new StepHandler() {
+		public void init(double t0, double[] y0, double t) {
+		}
+
+		public void handleStep(StepInterpolator interpolator, boolean isLast) {
+			double t = interpolator.getCurrentTime();
+			double[] y = interpolator.getInterpolatedState();
+			// System.out.println(t + " " + y[0] + " " + y[1]+ " " + y[2]);
+			time.add(t);
+			xsol.add(y[0]);
+			ysol.add(y[1]);
+			zsol.add(y[2]);
+		}
+	};
+
+	@Override
+	public int getDimension() {
+		return 6;
 	}
 
 	public VectorN position(double t) {
@@ -227,41 +269,6 @@ public class TwoBodyAPL extends TwoBody implements FirstOrderDifferentialEquatio
 		}
 
 		return ta;
-	}
-
-	@Override
-	public void computeDerivatives(double t, double[] y, double[] yDot) {
-
-		Vector3D r = new Vector3D(y[0],y[1],y[2]);
-		double rnorm = r.getNorm();
-		double r3 = rnorm * rnorm * rnorm;
-		double k = -1. * this.mu / r3;
-		yDot[0] = y[3];
-		yDot[1] = y[4];
-		yDot[2] = y[5];
-		yDot[3] = k * y[0];
-		yDot[4] = k * y[1];
-		yDot[5] = k * y[2];
-		
-	}
-
-	
-	public StepHandler stepHandler = new StepHandler() {
-		public void init(double t0, double[] y0, double t) {
-		}
-
-		public void handleStep(StepInterpolator interpolator, boolean isLast) {
-			double t = interpolator.getCurrentTime();
-			double[] y = interpolator.getInterpolatedState();
-			System.out.println(t + " " + y[0] + " " + y[1]);
-
-		}
-	};
-
-	
-	@Override
-	public int getDimension() {
-		return 6;
 	}
 
 }

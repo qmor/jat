@@ -21,6 +21,7 @@
  */
 
 package jat.examplesNOSA.OrbitDetermination;
+import jat.core.util.PathUtil;
 import jat.coreNOSA.algorithm.estimators.MeasurementData;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
@@ -39,6 +40,8 @@ import java.util.StringTokenizer;
 *
 * @author 
 * @version 1.0
+2012: added PathUtil, JApplet
+*
 */
 public class ObsData implements MeasurementModel, MeasurementData
 {
@@ -55,12 +58,12 @@ public class ObsData implements MeasurementModel, MeasurementData
 	/**
 	 * default constructor, reads in data from OBSDAT2 file.
 	 */
-	public ObsData()
+	public ObsData(String currentPath)
 	{
 		try
 		{
-			String b=FileUtil.getClassFilePath("jat.demo.OrbitDetermination","ObsData");
-			String filename = b + "OBSDAT2";
+			String filename = currentPath + "OBSDAT2";
+			System.out.println(filename);
 			FileReader fr = new FileReader(filename);
 			BufferedReader in = new BufferedReader(fr);
 			String s;
