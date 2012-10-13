@@ -21,8 +21,6 @@ package jat.examplesNOSA.OrbitDetermination;
  * 
  * File Created on May 9, 2003
  */
-import java.awt.HeadlessException;
-
 import jat.core.util.PathUtil;
 import jat.coreNOSA.algorithm.estimators.ExtendedKalmanFilter;
 import jat.coreNOSA.algorithm.estimators.ProcessModel;
@@ -31,26 +29,25 @@ import jat.coreNOSA.algorithm.integrators.LinePrinter;
 import javax.swing.JApplet;
 
 /**
-* The ODdemo.java Class is a demonstration of Orbit Determination.
-* It processes range data in the file OBSDATA2 with an observation model
-* defined by the ObsData class and dynamics model defined by J2DragProcss
-* using an Extended Kalman Filter.
-* @author 
-* @version 1.0
-* 2012: added PathUtil, JApplet
+ * The ODdemo.java Class is a demonstration of Orbit Determination. It processes
+ * range data in the file OBSDATA2 with an observation model defined by the
+ * ObsData class and dynamics model defined by J2DragProcss using an Extended
+ * Kalman Filter.
+ * 
+ * @author
+ * @version 1.0 
+ * 2012: added PathUtil, JApplet
+ */
+public class ODdemo extends JApplet {
 
-*/
-public class ODdemo extends JApplet{
+	private static final long serialVersionUID = -8949808323540904434L;
 
-	
-	
-	
-	public ODdemo()  {
-		PathUtil p=new PathUtil(this);
+	public ODdemo() {
+		PathUtil p = new PathUtil(this);
 		ObsData obs = new ObsData(p.current_path);
 		LinePrinter lp = new LinePrinter();
 		LinePrinter lp2 = new LinePrinter("C:\\Jat\\output\\resid.txt");
-		ProcessModel process = new J2DragProcess(lp, lp2);		
+		ProcessModel process = new J2DragProcess(lp, lp2);
 		ExtendedKalmanFilter ekf = new ExtendedKalmanFilter(obs, obs, process);
 		System.out.println("Processing..");
 		ekf.process();
@@ -60,11 +57,12 @@ public class ODdemo extends JApplet{
 
 	/**
 	 * main - runs the demo.
+	 * 
 	 * @params args none.
 	 */
 	public static void main(String[] args) {
-		
-		ODdemo O=new ODdemo();
+
+		//ODdemo O = new ODdemo();
 
 	}
 }

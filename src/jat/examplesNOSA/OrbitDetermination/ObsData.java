@@ -62,7 +62,7 @@ public class ObsData implements MeasurementModel, MeasurementData
 	{
 		try
 		{
-			String filename = currentPath + "OBSDAT2";
+			String filename = currentPath + "OBSDAT2/"+"OBSDAT2";
 			System.out.println(filename);
 			FileReader fr = new FileReader(filename);
 			BufferedReader in = new BufferedReader(fr);
