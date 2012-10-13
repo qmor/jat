@@ -28,7 +28,7 @@
 // giving helpful messages if something goes wrong so that the user knows what to do to fix it.
 //
 
-package jat.examples.deployWeb;
+package jat.tests.core.util.messageConsole;
 
 import jat.core.util.messageConsole.MessageConsole;
 
@@ -42,11 +42,11 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-public class deployWeb extends JApplet {
+public class MessageConsoleTest extends JApplet {
 
 	private static final long serialVersionUID = -1835188793980442880L;
 
-	public deployWeb() {
+	public MessageConsoleTest() {
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		// Create a text pane.
@@ -70,10 +70,12 @@ public class deployWeb extends JApplet {
 			mc.redirectErr(Color.RED, null);
 			mc.setMessageLines(100);
 		}
-		System.out.println("deployWeb started in main");
-		System.out.println("redirected output");
-		for (int i = 0; i < 40; i++)
+		System.out.println("MessageConsoleTest");
+		System.out.println("redirected stdout output:");
+		for (int i = 0; i < 4; i++)
 			System.out.println("line" + i);
+		System.out.println("redirected stderr output:");
+
 	}
 
 	public static void main(String[] args) {
@@ -82,7 +84,7 @@ public class deployWeb extends JApplet {
 		// as an application, main is called. main will create a
 		// new frame and then add the applet inside the frame.
 
-		Component applet = new deployWeb();
+		Component applet = new MessageConsoleTest();
 		JFrame frame = new JFrame("My applet, as application");
 		frame.getContentPane().add(applet);
 		frame.setSize(600, 400);

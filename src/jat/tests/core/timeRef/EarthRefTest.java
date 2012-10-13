@@ -35,7 +35,7 @@ public class EarthRefTest extends JApplet {
 		mc.redirectOut();
 		mc.redirectErr(Color.RED, null);
 		mc.setMessageLines(100);
-		System.out.println("redirected output");
+		System.out.println("Earth Reference Frame Test");
 
 	}
 
