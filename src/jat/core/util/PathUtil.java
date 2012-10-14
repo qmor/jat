@@ -22,8 +22,16 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * @author Tobias Berthold File Utilities
- * 
+ * @author Tobias Berthold 
+ * Path Utilities
+ * returns the path to resources as a String
+ * possible scenarios:
+ * the class that uses PathUtil
+ * - is an application or an applet
+ * - inside a jar file or a file system with separate class files 
+ * - on the Internet or a local file system
+ * the resource to be used
+ * - is inside a jar file or in a separate file
  */
 public class PathUtil {
 
@@ -33,41 +41,43 @@ public class PathUtil {
 	public String data_path;
 	public String fs = File.separator;
 
+	/**
+	 * Use this if called from application
+	 */
 	public PathUtil() {
+		System.out.println("<PathUtil 1> constructor ");
 		root_path = find_root();
-		data_path = find_data_folder();
+		data_path = root_path +"data/";
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
-		
-	}
 
-	public PathUtil(Applet myapplet) {
-
-		current_path = find_current_path(myapplet);
-		data_path = find_data_folder();
-		root_path = find_root();
-		DE405Path = root_path + "data/core/ephemeris/DE405data/";
-		
-		System.out.print("<PathUtil 1> ");
-		System.out.println(current_path);
-	}
-
-	public String find_data_folder() {
-
-		return find_root() + "data";
 	}
 
 	/**
-	 * @return path to root Finds the path to the root of the project. Starts
+	 * Use this if called from applet
+	 */
+	public PathUtil(Applet myapplet) {
+
+		current_path = find_current_path(myapplet);
+		root_path = find_root();
+		data_path = root_path +"data/";
+		DE405Path = root_path + "data/core/ephemeris/DE405data/";
+
+		System.out.println("[PathUtil current_path] "+current_path);
+	}
+
+	/**
+	 * @return path to root of the project
+	 *         Finds the path to the root of the project. Starts
 	 *         with the path of the class from which it is called, strips
-	 *         everything after it finds the string "jat" or "jatdevelop". Works
-	 *         with an open folder structure or inside a jar file, on a local
-	 *         hard disk as well as on the Internet.
+	 *         everything from the end until it finds the string "jat" or 
+	 *         "jatdevelop". Works with an open folder structure or inside a 
+	 *         jar file, on a local hard disk as well as on the Internet.
 	 */
 	public String find_root() {
 
-		String resource_path = PathUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		// System.out.print("<PathUtil 2> ");
-		// System.out.println(resource_path);
+		String resource_path = PathUtil.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath();
+		System.out.println("[PathUtil resource_path] " + resource_path);
 		String[] numberSplit = resource_path.split("/");
 
 		String root_path = "/";
@@ -77,7 +87,8 @@ public class PathUtil {
 			// System.out.println(numberSplit[i]);
 			root_path = root_path + numberSplit[i] + "/";
 			i++;
-		} while (!(numberSplit[i].equals("jat")) && !(numberSplit[i].equals("jatdevelop"))
+		} while (!(numberSplit[i].equals("jat"))
+				&& !(numberSplit[i].equals("jatdevelop"))
 				&& !(numberSplit[i].equals("jatexperimental")));
 
 		root_path = root_path + "jat" + "/";
@@ -88,18 +99,34 @@ public class PathUtil {
 	}
 
 	public String find_current_path(Applet a) {
+		System.out.println("[PathUtil] current_path called");
 
 		try {
+//			ResourceLoader c = new ResourceLoader();
+//			URL url = c.loadURL(a.getClass(), ".");
+
 			ResourceLoader c = new ResourceLoader();
-			URL url = c.loadURL(a.getClass(), ".");
+			URL url = c.loadURL(a.getClass(), "/");
+
+//			ResourceLoader c=new ResourceLoader();
+//			URL helpURL2 = c.loadURL(this.getClass(), relative_path);
+			
 			// System.out.println(url.getPath());
 			return url.getPath();
 
 		} catch (Exception e) {
-			System.err.println("Couldn't find current path in jat.core.util.PathUtil");
-			System.exit(0);
+			System.err
+					.println("Couldn't find current path in jat.core.util.PathUtil");
+			//System.exit(0);
 			return "";
 		}
 	}
 
 }
+
+
+//public String find_data_folder() {
+//
+//	return find_root() + "data";
+//}
+//

@@ -151,13 +151,15 @@ public class DE405APL {
 	 */
 	double[][] planet_r = new double[12][4];
 	double[][] planet_rprime = new double[12][4];
-	PathUtil f;
+	public PathUtil p;
 	String DE405_path;
 
 	public DE405APL() {
 
-		f = new PathUtil();
-		DE405_path = f.root_path + f.fs + "data" + f.fs + "core" + f.fs + "ephemeris" + f.fs + "DE405data" + f.fs;
+		p = new PathUtil();
+		//DE405_path = p.root_path + p.fs + "data" + p.fs + "core" + p.fs + "ephemeris" + p.fs + "DE405data" + p.fs;
+		DE405_path = p.DE405Path;
+		System.out.println(DE405_path);
 	}
 
 	/**
