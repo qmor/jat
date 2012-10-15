@@ -74,6 +74,7 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 import jat.coreNOSA.spacetime.TimeUtils;
 
+import java.applet.Applet;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -158,6 +159,13 @@ public class DE405APL {
 
 		p = new PathUtil();
 		//DE405_path = p.root_path + p.fs + "data" + p.fs + "core" + p.fs + "ephemeris" + p.fs + "DE405data" + p.fs;
+		DE405_path = p.DE405Path;
+		System.out.println(DE405_path);
+	}
+
+	public DE405APL(Applet myApplet) {
+
+		p = new PathUtil(myApplet);
 		DE405_path = p.DE405Path;
 		System.out.println(DE405_path);
 	}

@@ -58,12 +58,42 @@ public class PathUtil {
 	public PathUtil(Applet myapplet) {
 
 		// current_path = find_current_path(myapplet);
-		root_path = find_root();
+		root_path = find_root(myapplet);
 		data_path = root_path + "data/";
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
 
 		// if (debug)
 		// System.out.println("[PathUtil current_path] " + current_path);
+	}
+
+	public String find_root(Applet myapplet) {
+
+		URL pathURL = myapplet.getCodeBase();
+		String pathName = pathURL.toExternalForm();
+		System.out.println("[PathUtil] getCodeBase "
+				+ myapplet.getCodeBase());
+		System.out.println("[PathUtil] getCodeBase " + pathName);
+		
+		// go forward in the directory tree until you find "jat"
+		String[] numberSplit = pathName.split("/");
+		String root_path="";
+		for (int i = 0; i < numberSplit.length; i++) {
+
+			System.out.println(numberSplit[i]);
+			if (numberSplit[i].equals("jat"))
+				break;
+			if (numberSplit[i].equals("jatdevelop"))
+				break;
+			if (numberSplit[i].equals("jatexperimental"))
+				break;
+			root_path = root_path + numberSplit[i] + "/";
+		}
+		root_path = root_path + "jat" + "/";
+
+		if (debug)
+			System.out.println("[PathUtil root_path] " + root_path);
+
+		return (root_path);
 	}
 
 	/**
@@ -76,38 +106,25 @@ public class PathUtil {
 	 */
 	public String find_root() {
 
-		String resource_path = PathUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String resource_path = PathUtil.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath();
 		if (debug)
 			System.out.println("[PathUtil resource_path] " + resource_path);
-		String[] numberSplit = resource_path.split("/");
 
-		String root_path = "/";
-		
 		// go forward in the directory tree until you find "jat"
-
+		String[] numberSplit = resource_path.split("/");
+		String root_path = "/";
 		for (int i = 1; i < numberSplit.length; i++) {
 
 			System.out.println(numberSplit[i]);
 			if (numberSplit[i].equals("jat"))
 				break;
-
-			//
-			// ) !) && !(numberSplit[i].equals("jatdevelop"))
-			// && !(numberSplit[i].equals("jatexperimental")
-			//
-
+			if (numberSplit[i].equals("jatdevelop"))
+				break;
+			if (numberSplit[i].equals("jatexperimental"))
+				break;
 			root_path = root_path + numberSplit[i] + "/";
 		}
-
-		// int i = 1;
-		// do {
-		// System.out.println(numberSplit[i]);
-		// root_path = root_path + numberSplit[i] + "/";
-		// i++;
-		// } while (!(numberSplit[i].equals("jat")) &&
-		// !(numberSplit[i].equals("jatdevelop"))
-		// && !(numberSplit[i].equals("jatexperimental")));
-
 		root_path = root_path + "jat" + "/";
 
 		if (debug)
@@ -139,10 +156,20 @@ public class PathUtil {
 			return url.getPath();
 
 		} catch (Exception e) {
-			System.err.println("Couldn't find current path in jat.core.util.PathUtil");
+			System.err
+					.println("Couldn't find current path in jat.core.util.PathUtil");
 			// System.exit(0);
 			return "";
 		}
 	}
 
 }
+
+// int i = 1;
+// do {
+// System.out.println(numberSplit[i]);
+// root_path = root_path + numberSplit[i] + "/";
+// i++;
+// } while (!(numberSplit[i].equals("jat")) &&
+// !(numberSplit[i].equals("jatdevelop"))
+// && !(numberSplit[i].equals("jatexperimental")));

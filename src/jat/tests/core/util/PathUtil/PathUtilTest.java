@@ -1,11 +1,13 @@
 package jat.tests.core.util.PathUtil;
 
+import jat.core.util.PathUtil;
 import jat.core.util.messageConsole.MessageConsole;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -26,7 +28,8 @@ public class PathUtilTest extends JApplet {
 		// Create a text pane.
 		JTextPane textPane = new JTextPane();
 		JScrollPane paneScrollPane = new JScrollPane(textPane);
-		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		paneScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		paneScrollPane.setPreferredSize(new Dimension(300, 155));
 		paneScrollPane.setMinimumSize(new Dimension(10, 10));
 		getContentPane().add(paneScrollPane, BorderLayout.CENTER);
@@ -36,7 +39,7 @@ public class PathUtilTest extends JApplet {
 		mc.redirectOut();
 		mc.redirectErr(Color.RED, null);
 		mc.setMessageLines(100);
-		System.out.println("PathUtil Test");
+		System.out.println("[PathUtilTest]");
 
 	}
 
@@ -49,47 +52,80 @@ public class PathUtilTest extends JApplet {
 		jf.setVisible(true);
 		E.init();
 		if (debug)
-			System.out.println("PathUtil Console created");
-
+			System.out.println("[PathUtilTest] Console created");
 		// main task
 
-//		PathUtil p = new PathUtil(this);
-//		if (debug) {
-//			System.out.println("[PathUtilTest current_path] " + p.current_path);
-//			System.out.println("[PathUtilTest root_path] " + p.root_path);
-//			System.out.println("[PathUtilTest data_path] " + p.data_path);
-//		}
-//
-//		String fileName = p.data_path + "tests/core/util/PathUtil/inputFile.txt";
-		
-		
-		String fileName="http://jat.sourceforge.net/jat/data/tests/core/util/PathUtil/inputFile.txt";
-		
-		
+		PathUtil p = new PathUtil(this);
+		String fileName = p.data_path
+				+ "tests/core/util/PathUtil/inputFile.txt";
+		if (debug) {
+			System.out.println("[PathUtilTest current_path] " + p.current_path);
+			System.out.println("[PathUtilTest root_path] " + p.root_path);
+			System.out.println("[PathUtilTest data_path] " + p.data_path);
+			System.out.println("[PathUtilTest fileName] " + fileName);
+		}
+
+//		String fileName = "http://jat.sourceforge.net/jat/data/tests/core/util/PathUtil/inputFile.txt";
+
 		try {
-		    // Create a URL for the desired page
-		    //URL url = new URL("http://www.cinndev.com/testFile.txt");
-		    URL url = new URL(fileName);
-		    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-		    String str;
-		    while ((str = in.readLine()) != null) {
-		        System.out.println(str);
-		    }
-		    in.close();
+			// Create a URL for the desired page
+			// URL url = new URL("http://www.cinndev.com/testFile.txt");
+			URL url = new URL(fileName);
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			String str;
+			while ((str = in.readLine()) != null) {
+				System.out.println(str);
+			}
+			in.close();
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
 		}
-		
-//		EasyReader inFile = new EasyReader(fileName);
-//		String Line = inFile.readLine();
-//		if (Line != null){
-//			System.out.println("The first line is  : " + Line);
-//			Line = inFile.readLine();
-//			System.out.println("The second line is : " + Line);
-//			Line = inFile.readLine();
-//			System.out.println("The third line is : " + Line);
-//		}
+
 
 	}
 
 }
+
+
+
+//try {
+//URL url2 = new URL("/");
+//System.out.println("[PathUtilTest] url . " + url2.toString());
+//} catch (MalformedURLException e1) {
+//// TODO Auto-generated catch block
+//e1.printStackTrace();
+//}
+
+// EasyReader inFile = new EasyReader(fileName);
+// String Line = inFile.readLine();
+// if (Line != null){
+// System.out.println("The first line is  : " + Line);
+// Line = inFile.readLine();
+// System.out.println("The second line is : " + Line);
+// Line = inFile.readLine();
+// System.out.println("The third line is : " + Line);
+// }
+
+
+//File here = new File(".");
+//File root = new File(here.getAbsolutePath()); // is not it something?
+//if (debug) {
+//	System.out.println("[PathUtilTest] here getAbsolutePath "
+//			+ here.getAbsolutePath());
+//	System.out.println("[PathUtilTest] here getPath " + here.getPath());
+//	System.out.println("[PathUtilTest] root getAbsolutePath "
+//			+ root.getAbsolutePath());
+//	try {
+//		System.out.println("[PathUtilTest] getCanonicalPath "
+//				+ root.getCanonicalPath());
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+
+//}
+
+//System.out.println("[PathUtilTest] getCodeBase "
+//			+ this.getCodeBase());	
+
