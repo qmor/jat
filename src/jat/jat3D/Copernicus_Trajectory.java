@@ -21,7 +21,7 @@
 
 package jat.jat3D;
 
-import jat.coreNOSA.util.EasyReader;
+import jat.core.util.EasyReader;
 
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineStripArray;

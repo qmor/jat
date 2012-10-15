@@ -22,18 +22,17 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * @author Tobias Berthold 
- * Path Utilities
- * returns the path to resources as a String
- * possible scenarios:
- * the class that uses PathUtil
- * - is an application or an applet
- * - inside a jar file or a file system with separate class files 
- * - on the Internet or a local file system
- * the resource to be used
- * - is inside a jar file or in a separate file
+ * @author Tobias Berthold Path Utilities returns the path to resources as a
+ *         String possible scenarios: the class that uses PathUtil - is an
+ *         application or an applet - inside a jar file or a file system with
+ *         separate class files - on the Internet or a local file system the
+ *         resource to be used - is inside a jar file or in a separate file
+ * 
+ *         Note: This relies on the root of the project being named "jat" !!!
+ * 
  */
 public class PathUtil {
+	boolean debug = true;
 
 	public String root_path;
 	public String current_path;
@@ -45,9 +44,10 @@ public class PathUtil {
 	 * Use this if called from application
 	 */
 	public PathUtil() {
-		System.out.println("<PathUtil 1> constructor ");
+		if (debug)
+			System.out.println("<PathUtil 1> constructor ");
 		root_path = find_root();
-		data_path = root_path +"data/";
+		data_path = root_path + "data/";
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
 
 	}
@@ -57,76 +57,92 @@ public class PathUtil {
 	 */
 	public PathUtil(Applet myapplet) {
 
-		current_path = find_current_path(myapplet);
+		// current_path = find_current_path(myapplet);
 		root_path = find_root();
-		data_path = root_path +"data/";
+		data_path = root_path + "data/";
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
 
-		System.out.println("[PathUtil current_path] "+current_path);
+		// if (debug)
+		// System.out.println("[PathUtil current_path] " + current_path);
 	}
 
 	/**
-	 * @return path to root of the project
-	 *         Finds the path to the root of the project. Starts
-	 *         with the path of the class from which it is called, strips
-	 *         everything from the end until it finds the string "jat" or 
-	 *         "jatdevelop". Works with an open folder structure or inside a 
-	 *         jar file, on a local hard disk as well as on the Internet.
+	 * @return path to root of the project Finds the path to the root of the
+	 *         project. Starts with the path of the class from which it is
+	 *         called, strips everything from the end until it finds the string
+	 *         "jat" or "jatdevelop". Works with an open folder structure or
+	 *         inside a jar file, on a local hard disk as well as on the
+	 *         Internet.
 	 */
 	public String find_root() {
 
-		String resource_path = PathUtil.class.getProtectionDomain()
-				.getCodeSource().getLocation().getPath();
-		System.out.println("[PathUtil resource_path] " + resource_path);
+		String resource_path = PathUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		if (debug)
+			System.out.println("[PathUtil resource_path] " + resource_path);
 		String[] numberSplit = resource_path.split("/");
 
 		String root_path = "/";
-		int i = 1;
-		// go back in the directory tree until you find "jat" or others
-		do {
-			// System.out.println(numberSplit[i]);
+		
+		// go forward in the directory tree until you find "jat"
+
+		for (int i = 1; i < numberSplit.length; i++) {
+
+			System.out.println(numberSplit[i]);
+			if (numberSplit[i].equals("jat"))
+				break;
+
+			//
+			// ) !) && !(numberSplit[i].equals("jatdevelop"))
+			// && !(numberSplit[i].equals("jatexperimental")
+			//
+
 			root_path = root_path + numberSplit[i] + "/";
-			i++;
-		} while (!(numberSplit[i].equals("jat"))
-				&& !(numberSplit[i].equals("jatdevelop"))
-				&& !(numberSplit[i].equals("jatexperimental")));
+		}
+
+		// int i = 1;
+		// do {
+		// System.out.println(numberSplit[i]);
+		// root_path = root_path + numberSplit[i] + "/";
+		// i++;
+		// } while (!(numberSplit[i].equals("jat")) &&
+		// !(numberSplit[i].equals("jatdevelop"))
+		// && !(numberSplit[i].equals("jatexperimental")));
 
 		root_path = root_path + "jat" + "/";
 
-		// System.out.println(root_path);
+		if (debug)
+			System.out.println("[PathUtil root_path] " + root_path);
 
 		return (root_path);
 	}
 
+	/**
+	 * @param a
+	 * @return path where the calling applet resides Does not work when applet
+	 *         is loaded from a web site
+	 */
 	public String find_current_path(Applet a) {
-		System.out.println("[PathUtil] current_path called");
+		if (debug)
+			System.out.println("[PathUtil] current_path called");
 
 		try {
-//			ResourceLoader c = new ResourceLoader();
-//			URL url = c.loadURL(a.getClass(), ".");
+			// ResourceLoader c = new ResourceLoader();
+			// URL url = c.loadURL(a.getClass(), ".");
 
 			ResourceLoader c = new ResourceLoader();
 			URL url = c.loadURL(a.getClass(), "/");
 
-//			ResourceLoader c=new ResourceLoader();
-//			URL helpURL2 = c.loadURL(this.getClass(), relative_path);
-			
+			// ResourceLoader c=new ResourceLoader();
+			// URL helpURL2 = c.loadURL(this.getClass(), relative_path);
+
 			// System.out.println(url.getPath());
 			return url.getPath();
 
 		} catch (Exception e) {
-			System.err
-					.println("Couldn't find current path in jat.core.util.PathUtil");
-			//System.exit(0);
+			System.err.println("Couldn't find current path in jat.core.util.PathUtil");
+			// System.exit(0);
 			return "";
 		}
 	}
 
 }
-
-
-//public String find_data_folder() {
-//
-//	return find_root() + "data";
-//}
-//
