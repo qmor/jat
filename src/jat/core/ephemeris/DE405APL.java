@@ -78,27 +78,35 @@ import java.applet.Applet;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.EnumSet;
 
 public class DE405APL {
 	public enum body {
 		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
-        private static final int amount = EnumSet.allOf(body.class).size();
-        private static body[] val = new body[amount];
-        static{ for(body q:EnumSet.allOf(body.class)){ val[q.ordinal()]=q; } }
-        public static body fromInt(int i) { return val[i]; }
-        public body next() { return fromInt((ordinal()+1)%amount); }
+		private static final int amount = EnumSet.allOf(body.class).size();
+		private static body[] val = new body[amount];
+		static {
+			for (body q : EnumSet.allOf(body.class)) {
+				val[q.ordinal()] = q;
+			}
+		}
+
+		public static body fromInt(int i) {
+			return val[i];
+		}
+
+		public body next() {
+			return fromInt((ordinal() + 1) % amount);
+		}
 
 	};
 
 	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus",
 			"Neptune", "Pluto", "Moon" };
 
-	
-	
-	
-	
-	
 	// static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon
 	static int interval_duration = 32; // duration of interval section in
@@ -158,7 +166,8 @@ public class DE405APL {
 	public DE405APL() {
 
 		p = new PathUtil();
-		//DE405_path = p.root_path + p.fs + "data" + p.fs + "core" + p.fs + "ephemeris" + p.fs + "DE405data" + p.fs;
+		// DE405_path = p.root_path + p.fs + "data" + p.fs + "core" + p.fs +
+		// "ephemeris" + p.fs + "DE405data" + p.fs;
 		DE405_path = p.DE405Path;
 		System.out.println(DE405_path);
 	}
@@ -167,7 +176,7 @@ public class DE405APL {
 
 		p = new PathUtil(myApplet);
 		DE405_path = p.DE405Path;
-		System.out.println(DE405_path);
+		System.out.println("[DE405APL] DE405_path " + DE405_path);
 	}
 
 	/**
@@ -451,9 +460,28 @@ public class DE405APL {
 				records = 230;
 			}
 
+			System.out.println("[DE405APL] DE405_path " + DE405_path);
+			System.out.println("[DE405APL] filename " + filename);
+
 			if (filename == null) {
 				System.out.println("Time period unavailable");
 				System.exit(0);
+			}
+
+			try {
+				// Create a URL for the desired page
+				URL url = new URL(filename);
+				int count = 0;
+				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+				String str;
+				while ((str = in.readLine()) != null) {
+					count++;
+					if (count > 77000)
+						System.out.println(count + " " + str);
+				}
+				in.close();
+			} catch (MalformedURLException e) {
+			} catch (IOException e) {
 			}
 
 			FileReader file = new FileReader(filename);
@@ -597,7 +625,6 @@ public class DE405APL {
 		return returnval;
 	}
 
-	
 	public static void main(String args[]) {
 
 		/* USER MUST SPECIFY jultime HERE. Example value is 2451545.0 */

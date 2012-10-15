@@ -31,7 +31,7 @@ public class EphemerisTestConsole extends JApplet {
 		MessageConsole mc = new MessageConsole(textPane);
 		mc.redirectOut();
 		mc.redirectErr(Color.RED, null);
-		mc.setMessageLines(100);
+		mc.setMessageLines(2000);
 		System.out.println("EphemerisTestConsole init out");
 		
 		

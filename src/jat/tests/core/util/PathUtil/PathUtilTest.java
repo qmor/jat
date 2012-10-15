@@ -69,7 +69,6 @@ public class PathUtilTest extends JApplet {
 
 		try {
 			// Create a URL for the desired page
-			// URL url = new URL("http://www.cinndev.com/testFile.txt");
 			URL url = new URL(fileName);
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					url.openStream()));
