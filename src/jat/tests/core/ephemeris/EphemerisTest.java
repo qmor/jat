@@ -77,8 +77,6 @@ public class EphemerisTest extends JApplet {
 			e.printStackTrace();
 		}
 
-
-
 	}
 
 }
