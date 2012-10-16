@@ -18,6 +18,7 @@
 package jat.application.porkChopPlot;
 
 import jat.core.cm.porkChopPlot;
+import jat.core.ephemeris.DE405APL;
 import jat.jat3D.plot3D.Binned2DData;
 import jat.jat3D.plot3D.Rainbow;
 
@@ -31,12 +32,14 @@ public class PorkChopPlot_Data implements Binned2DData {
 	private Rainbow rainbow = new Rainbow(0, 100);
 	public float[][] data;
 	porkChopPlot p;
+	PorkChopPlot_Parameters params;
 
-	public PorkChopPlot_Data(PorkChopPlot_Parameters params) throws IOException {
-		//p = new porkChopPlot(params.departure_planet, params.arrival_planet);
-		p = new porkChopPlot();
-		p.make_porkchop_plot(params.departure_planet, params.arrival_planet,params.search_depart_time_start, params.search_arrival_time_start, params.searchDays,
-				params.steps);
+	public PorkChopPlot_Data(PorkChopPlot_main pcMain) throws IOException {
+		this.params = pcMain.params;
+		params.myEph = new DE405APL(pcMain);
+		p = new porkChopPlot(params.myEph);
+		p.make_porkchop_plot(params.departure_planet, params.arrival_planet, params.search_depart_time_start,
+				params.search_arrival_time_start, params.searchDays, params.steps);
 		update();
 	}
 

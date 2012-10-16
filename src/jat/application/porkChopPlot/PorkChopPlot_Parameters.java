@@ -17,11 +17,13 @@
 
 package jat.application.porkChopPlot;
 
+import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405APL.body;
 import jat.core.spacetime.TimeAPL;
 
 public class PorkChopPlot_Parameters {
 
+	DE405APL myEph;
 	body departure_planet;
 	body arrival_planet;
 	int dep_year, dep_month, dep_day;

@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 
 public class PorkChopPlot_Plot extends JatPlot3D {
 	private static final long serialVersionUID = 4491485448719846256L;
-	private PorkChopPlot_main main;
+	private PorkChopPlot_main pcMain;
 	public PorkChopPlot_Data pcplot_data;
 	NormalizedBinned2DData ndata;
 	public SurfaceBuilder builder;
@@ -47,12 +47,12 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 	public Marker3D m;
 	public PorkChopPlot_KeyBehavior keyBehavior_u;
 
-	public PorkChopPlot_Plot(PorkChopPlot_main main) {
+	public PorkChopPlot_Plot(PorkChopPlot_main pcMain) {
 		super();
 		initialViewingPosition.x = -.5;
 		initialViewingPosition.y = -1;
 		initialViewingPosition.z = 2;
-		this.main = main;
+		this.pcMain = pcMain;
 	}
 
 	public Node createScene() {
@@ -60,7 +60,7 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 		jatScene = new jatScene3D();
 
 		try {
-			pcplot_data = new PorkChopPlot_Data(main.params);
+			pcplot_data = new PorkChopPlot_Data(pcMain);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "DE405 Ephemeris data file not found.");
 			e.printStackTrace();
@@ -141,7 +141,7 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 		keyBehavior_t.setSchedulingBounds(getDefaultBounds());
 		keyBehaviorSwitch.addChild(keyBehavior_t);
 		// pcplot_Jat3D_main main = null;
-		keyBehavior_u = new PorkChopPlot_KeyBehavior(main);
+		keyBehavior_u = new PorkChopPlot_KeyBehavior(pcMain);
 		keyBehavior_u.setSchedulingBounds(getDefaultBounds());
 		keyBehaviorSwitch.addChild(keyBehavior_u);
 	}

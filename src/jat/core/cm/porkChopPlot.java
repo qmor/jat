@@ -32,22 +32,17 @@ public class porkChopPlot {
 	public double mintotaldv, maxtotaldv;
 	public double DepartureDate[];
 	public double ArrivalDate[];
-	// int departure_planet, arrival_planet;
 	public int steps;
 	public float step_size;
 	DE405APL my_eph;
 
-	// public porkChopPlot(int departure_planet, int arrival_planet) {
-	// // super();
-	// this.departure_planet = departure_planet;
-	// this.arrival_planet = arrival_planet;
-	// }
-	//
-	// public void setPlanets(int departure_planet, int arrival_planet)
-	// {
-	// this.departure_planet = departure_planet;
-	// this.arrival_planet=arrival_planet;
-	// }
+	public porkChopPlot() {
+		my_eph = new DE405APL();
+	}
+
+	public porkChopPlot(DE405APL my_eph) {
+		this.my_eph = my_eph;
+	}
 
 	public void make_porkchop_plot(body departure_planet, body arrival_planet, TimeAPL search_depart_time_start,
 			TimeAPL search_arrival_time_start, int searchDays, int steps) throws IOException {
@@ -55,7 +50,6 @@ public class porkChopPlot {
 		this.steps = steps;
 		step_size = 1.f / steps;
 
-		my_eph = new DE405APL();
 		TimeAPL search_depart_time = new TimeAPL(search_depart_time_start.mjd_utc());
 		TimeAPL search_arrival_time = new TimeAPL(search_arrival_time_start.mjd_utc());
 		int search_time = 86400 * searchDays;
@@ -73,8 +67,10 @@ public class porkChopPlot {
 		mintotaldv = 1e9;
 		maxtotaldv = 0;
 
-		//System.out.println("[porkChopPlot.java] dep planet " + departure_planet + " arr planet " + arrival_planet);
-		//callLambert(departure_planet, arrival_planet,search_depart_time, search_arrival_time);
+		// System.out.println("[porkChopPlot.java] dep planet " +
+		// departure_planet + " arr planet " + arrival_planet);
+		// callLambert(departure_planet, arrival_planet,search_depart_time,
+		// search_arrival_time);
 
 		A.cornerlabel = "Dep / Arr";
 		String dateformat = "%tD";

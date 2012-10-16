@@ -54,7 +54,7 @@ public class MissionPlanPlot extends JatPlot3D {
 		planet = new Planet3D[10];
 
 		// Ephemeris data
-		myEph = new DE405APL();
+		myEph = new DE405APL(mpmain);
 
 		DE405APL.body body[] = DE405APL.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();
