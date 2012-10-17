@@ -19,6 +19,7 @@ package jat.application.missionPlanRunLocal;
 
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Plus;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.Ephemeris3D;
 import jat.jat3D.Planet3D;
@@ -36,7 +37,7 @@ public class MissionPlanPlot extends JatPlot3D {
 	private static final long serialVersionUID = 599884902601254854L;
 	Star3D sun;
 	MissionPlanMain mpmain;
-	DE405APL myEph; // Ephemeris class
+	DE405Plus myEph; // Ephemeris class
 	Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
 
@@ -54,7 +55,7 @@ public class MissionPlanPlot extends JatPlot3D {
 		planet = new Planet3D[10];
 
 		// Ephemeris data
-		myEph = new DE405APL(mpmain);
+		myEph = new DE405Plus(mpmain);
 
 		DE405APL.body body[] = DE405APL.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();

@@ -20,7 +20,11 @@ package jat.core.ephemeris;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
+import jat.coreNOSA.spacetime.Time;
+import jat.coreNOSA.spacetime.TimeUtils;
 
+import java.applet.Applet;
+import java.io.IOException;
 import java.util.EnumSet;
 
 public class DE405Plus extends DE405APL {
@@ -69,7 +73,17 @@ public class DE405Plus extends DE405APL {
 	 */
 
 	DE405Plus.frame ephFrame;
-	
+
+	public DE405Plus() {
+		super();
+		ephFrame = frame.ICRF;
+	}
+
+	public DE405Plus(Applet myApplet) {
+		super(myApplet);
+		ephFrame = frame.ICRF;
+	}
+
 	public enum frame {
 		ICRF, ECEF, ECI, HEEQ, HEE, HAE;
 		private static final int amount = EnumSet.allOf(frame.class).size();
@@ -83,9 +97,36 @@ public class DE405Plus extends DE405APL {
 	}
 
 	public void setFrame(DE405Plus.frame ephFrame) {
-		
-		this.ephFrame=ephFrame;
-		
+
+		this.ephFrame = ephFrame;
+
+	}
+
+	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
+		get_planet_posvel(bodyEnum, t.jd_tt());
+		double[] pos = new double[3];
+		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+
+		int bodyNumber = bodyEnum.ordinal();
+		planetary_ephemeris(jultime);
+		pos[0] = planet_r[bodyNumber][1];
+		pos[1] = planet_r[bodyNumber][2];
+		pos[2] = planet_r[bodyNumber][3];
+
+		VectorN out;
+		switch (ephFrame) {
+		case ICRF:
+			out = new VectorN(pos);
+			break;
+		case HEE:
+			out = new VectorN(ecliptic_obliquity_rotate(new VectorN(pos)));
+			break;
+		default:
+			out = new VectorN(pos);
+			break;
+		}
+
+		return out;
 	}
 
 	VectorN ecliptic_obliquity_rotate(VectorN r) {

@@ -772,16 +772,16 @@ public class DE405APL {
 
 	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
 		get_planet_posvel(bodyEnum, t.jd_tt());
-		double[] vel = new double[3];
+		double[] pos = new double[3];
 		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
 
 		int bodyNumber = bodyEnum.ordinal();
 		planetary_ephemeris(jultime);
-		vel[0] = planet_r[bodyNumber][1];
-		vel[1] = planet_r[bodyNumber][2];
-		vel[2] = planet_r[bodyNumber][3];
+		pos[0] = planet_r[bodyNumber][1];
+		pos[1] = planet_r[bodyNumber][2];
+		pos[2] = planet_r[bodyNumber][3];
 
-		VectorN out = new VectorN(vel);
+		VectorN out = new VectorN(pos);
 
 		return out;
 	}

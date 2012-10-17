@@ -19,6 +19,7 @@ package jat.application.missionPlanRunLocal;
 
 import jat.core.cm.TwoBodyAPL;
 import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;
@@ -51,7 +52,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	public Timer timer;
 	int i;
 	int time_advance = 10; // seconds
-	DE405APL myEph; // Ephemeris class
+	DE405Plus myEph; // Ephemeris class
 	Flight f;
 	Rainbow3f rainbow = new Rainbow3f();
 	ManageFlightsDialog myDialog;
@@ -239,11 +240,14 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 	void update_scene(TimeAPL mytime) {
 		myEph = mpmain.mpPlot.myEph;
+		myEph.setFrame(DE405Plus.frame.HEE);
+		//myEph.setFrame(DE405Plus.frame.ICRF);
 		DE405APL.body body[] = DE405APL.body.values();
 
 		try {
 			for (int i = 1; i < 7; i++) {
-				mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i], mytime)));
+				//mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i], mytime)));
+				mpmain.mpPlot.planet[i].set_position(myEph.get_planet_pos(body[i], mytime));
 			}
 
 		} catch (IOException e) {
