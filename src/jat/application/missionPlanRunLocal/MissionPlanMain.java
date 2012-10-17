@@ -17,6 +17,8 @@
 
 package jat.application.missionPlanRunLocal;
 
+import jat.core.util.PathUtil;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class MissionPlanMain extends JApplet {
 		mpGUI = new MissionPlanGUI(this);
 		mpPlot = new MissionPlanPlot(this);
 		mpParam = new MissionPlanParameters();
+		mpParam.p = new PathUtil(this);
 		level1_Pane = getContentPane();
 		level1_Pane.add(mpGUI, BorderLayout.WEST);
 		level1_Pane.add(mpPlot, BorderLayout.CENTER);
@@ -73,7 +76,7 @@ public class MissionPlanMain extends JApplet {
 		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
 		mApplet.mpPlot.requestFocusInWindow();
 
-		//mApplet.mpGUI.mpE.timer.start();
+		// mApplet.mpGUI.mpE.timer.start();
 		mApplet.start();
 		if (Java3dTree_debug) {
 			m_Java3dTree = new com.tornadolabs.j3dtree.Java3dTree();

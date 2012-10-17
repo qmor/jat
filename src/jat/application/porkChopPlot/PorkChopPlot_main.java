@@ -18,6 +18,7 @@
 package jat.application.porkChopPlot;
 
 import jat.core.ephemeris.DE405APL;
+import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -35,13 +36,14 @@ public class PorkChopPlot_main extends JApplet {
 	public PorkChopPlot_ReturnValue pReturn = new PorkChopPlot_ReturnValue();
 	PorkChopPlot_Parameters params;
 
-	public PorkChopPlot_main() {
-	}
-
-	public void init() {
-		params = new PorkChopPlot_Parameters(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
-		//params = new PorkChopPlot_Parameters(DE405APL.MERCURY, DE405APL.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
-		//params = new PorkChopPlot_Parameters(DE405APL.VENUS, DE405APL.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
+	public PorkChopPlot_main(PathUtil p) {
+		// PathUtil p =new PathUtil(this);
+		params = new PorkChopPlot_Parameters(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS, 2003, 1, 1, 2003, 7, 1,
+				500, 10);
+		// params = new PorkChopPlot_Parameters(DE405APL.MERCURY, DE405APL.MARS,
+		// 2003, 1, 1, 2003, 7, 1, 500, 10);
+		// params = new PorkChopPlot_Parameters(DE405APL.VENUS, DE405APL.MARS,
+		// 2003, 1, 1, 2003, 7, 1, 500, 10);
 		pcpGUI = new PorkChopPlot_GUI(this);
 		pcpGUI.pcpE.setMain(this);
 		pcpPlot = new PorkChopPlot_Plot(this);
@@ -49,6 +51,14 @@ public class PorkChopPlot_main extends JApplet {
 		level1_Pane = getContentPane();
 		level1_Pane.add(pcpGUI, BorderLayout.WEST);
 		level1_Pane.add(pcpPlot, BorderLayout.CENTER);
+		params.p = p;
+	}
+
+	public PorkChopPlot_main() {
+	}
+
+	public void init() {
+
 	}
 
 	public static void main(String[] args) {

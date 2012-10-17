@@ -20,6 +20,7 @@ package jat.application.porkChopPlot;
 import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405APL.body;
 import jat.core.spacetime.TimeAPL;
+import jat.core.util.PathUtil;
 
 public class PorkChopPlot_Parameters {
 
@@ -32,9 +33,10 @@ public class PorkChopPlot_Parameters {
 	TimeAPL search_arrival_time_start;
 	int searchDays;
 	int steps;
+	PathUtil p;
 
-	public PorkChopPlot_Parameters(body departure_planet, body arrival_planet, int dep_year, int dep_month, int dep_day,
-			int arr_year, int arr_month, int arr_day, int searchDays, int steps) {
+	public PorkChopPlot_Parameters(body departure_planet, body arrival_planet, int dep_year, int dep_month,
+			int dep_day, int arr_year, int arr_month, int arr_day, int searchDays, int steps) {
 		super();
 		this.departure_planet = departure_planet;
 		this.arrival_planet = arrival_planet;

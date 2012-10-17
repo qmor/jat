@@ -33,17 +33,17 @@ public class AddFlightDialog extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 6771932082871532590L;
 	JButton okButton;
 	JButton cancelButton;
-	MissionPlanMain ssmain;
+	MissionPlanMain mpMain;
 	PorkChopPlot_main p;
 	public boolean OK_pressed;
 
-	public AddFlightDialog(MissionPlanMain ssmain) {
-		super(ssmain.sFrame, true); // modal
+	public AddFlightDialog(MissionPlanMain mpMain) {
+		super(mpMain.sFrame, true); // modal
 		setTitle("Optimal Launch Date Finder");
-		this.ssmain = ssmain;
+		this.mpMain = mpMain;
 		setBounds(50, 50, 900, 700);
 		getContentPane().setLayout(new BorderLayout());
-		p = new PorkChopPlot_main();
+		p = new PorkChopPlot_main(mpMain.mpParam.p);
 		p.init();
 		p.setVisible(true);
 		getContentPane().add(p);
