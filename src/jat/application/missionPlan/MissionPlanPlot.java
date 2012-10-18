@@ -48,8 +48,8 @@ public class MissionPlanPlot extends JatPlot3D {
 	public Node createScene() {
 		Group g = new Group();
 		jatScene = new jatScene3D();
-		sun = new Star3D(10.f);
-		jatScene.add(sun, "sun");
+//		sun = new Star3D(10.f);
+//		jatScene.add(sun, "sun");
 		ephemerisPlanet = new Ephemeris3D[10];
 		planet = new Planet3D[10];
 
@@ -60,7 +60,7 @@ public class MissionPlanPlot extends JatPlot3D {
 		SolarSystemBodies sb = new SolarSystemBodies();
 
 		for (int i = 1; i < 7; i++) {
-			planet[i] = new Planet3D(body[i], 1000.f);
+			planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
 			jatScene.add(planet[i], DE405Plus.name[i]);
 			//if (i == 3)
 			{

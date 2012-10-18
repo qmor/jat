@@ -44,18 +44,18 @@ public class Body3D extends TransformGroup {
 	Vector3d VRot = new Vector3d();
 	Transform3D Trans = new Transform3D();
 	protected double scale = 1.0; // scale factor for 3D objects
-	static String images_path;
 	protected static String Lightwave_path;
 	protected static String Wavefront_path;
 	protected static String ThreeDStudio_path;
 
 	public Body3D() {
-		PathUtil f = new PathUtil();
-		String fs = f.fs;
-		images_path = f.root_path + "data" + fs + "jat3D" + fs + "images_hires" + fs;
-		Wavefront_path = f.root_path + "data" + fs + "jat3D" + fs + "Wavefront" + fs;
-		Lightwave_path = f.root_path + "data" + fs + "jat3D" + fs + "Lightwave" + fs;
-		ThreeDStudio_path = f.root_path + "data" + fs + "jat3D" + fs + "3DStudio" + fs;
+		PathUtil p = new PathUtil();
+		//String fs = f.fs;
+		//images_path = p.root_path + "data/jat3D/images_hires/";
+		//images_path = f.root_path + "data" + fs + "jat3D" + fs + "images_hires" + fs;
+//		Wavefront_path = f.root_path + "data" + fs + "jat3D" + fs + "Wavefront" + fs;
+//		Lightwave_path = f.root_path + "data" + fs + "jat3D" + fs + "Lightwave" + fs;
+//		ThreeDStudio_path = f.root_path + "data" + fs + "jat3D" + fs + "3DStudio" + fs;
 		// System.out.println(images_path);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		setCapability(TransformGroup.ALLOW_TRANSFORM_READ);

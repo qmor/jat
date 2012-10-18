@@ -60,7 +60,7 @@ public class MissionPlanMain extends JApplet {
 		mc.redirectOut();
 		mc.redirectErr(Color.RED, null);
 		mc.setMessageLines(100);
-		System.out.println("[MissionPlan]");
+		System.out.println("[MissionPlanMain]");
 
 	}
 
@@ -72,16 +72,23 @@ public class MissionPlanMain extends JApplet {
 		jf.getContentPane().add(E);
 		jf.setVisible(true);
 		E.init();
-		mpGUI = new MissionPlanGUI(this);
-		mpPlot = new MissionPlanPlot(this);
+
 		mpParam = new MissionPlanParameters();
 		mpParam.p = new PathUtil(this);
+
+		mpGUI = new MissionPlanGUI(this);
+		System.out.println("[MissionPlanMain before creating mpPlot]");
+		mpPlot = new MissionPlanPlot(this);
+		System.out.println("[MissionPlanMain after creating mpPlot]");
+		System.out.println("[MissionPlanMain before creating PathUtil]");
 		level1_Pane = getContentPane();
 		level1_Pane.add(mpGUI, BorderLayout.WEST);
+		System.out.println("[MissionPlanMain before adding mpPlot]");
 		level1_Pane.add(mpPlot, BorderLayout.CENTER);
 
 		// if (debug)
 		// System.out.println("[PathUtilTest] Console created");
+		System.out.println("[MissionPlanMain before starting timer]");
 		mpGUI.mpE.timer.start();
 	}
 

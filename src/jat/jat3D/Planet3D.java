@@ -19,6 +19,7 @@ package jat.jat3D;
 
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.util.PathUtil;
 import jat.coreNOSA.cm.cm;
 
 import java.awt.Button;
@@ -49,6 +50,16 @@ public class Planet3D extends Body3D implements ImageObserver {
 	int divisions = 60; // number of divisions for sphere
 	Button b; // for ImageObserver if Applet not used
 	Appearance appear;
+	PathUtil p;
+	String images_path;
+
+	public Planet3D(PathUtil p, DE405Plus.body planet, float scale) {
+		super.scale = scale;
+		this.p = p;
+		images_path = p.root_path + "data/jat3D/images_hires/";
+		b = new Button();
+		CreatePlanet(planet);
+	}
 
 	public Planet3D(DE405Plus.body planet, float scale) {
 		super.scale = scale;
@@ -86,7 +97,7 @@ public class Planet3D extends Body3D implements ImageObserver {
 			break;
 		case SATURN:
 			Texturefilename = images_path + "saturn.jpg";
-			radius = (float)SolarSystemBodies.Bodies[DE405Plus.body.SATURN.ordinal()].radius;
+			radius = (float) SolarSystemBodies.Bodies[DE405Plus.body.SATURN.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case MOON:

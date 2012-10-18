@@ -21,6 +21,7 @@
 
 package jat.jat3D;
 
+import jat.core.util.PathUtil;
 import jat.coreNOSA.cm.cm;
 
 import java.awt.Button;
@@ -33,32 +34,35 @@ import javax.vecmath.Color3f;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 
-/** Planet class
+/**
+ * Planet class
+ * 
  * @author Tobias Berthold
  */
-public class Star3D extends Body3D
-{
+public class Star3D extends Body3D {
 	float radius;
 	String Texturefilename;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
 	Button b; // for ImageObserver if applet not used
+	PathUtil p;
+	String images_path;
 
-	public Star3D( float scale)
-	{
+	public Star3D(float scale) {
+	}
+
+	public Star3D(PathUtil p, float scale) {
 		super();
+		images_path = p.root_path + "data/jat3D/images_hires/";
 		this.scale = scale;
-		b=new Button();
+		b = new Button();
 		Texturefilename = images_path + "sun.jpg";
 		radius = (float) cm.sun_radius;
 		Starcolor = Colors.blue;
 
-		if (Texturefilename == null)
-		{
+		if (Texturefilename == null) {
 			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
-		}
-		else
-		{
+		} else {
 			TextureLoader tex = new TextureLoader(Texturefilename, b);
 			TextureAttributes ta = new TextureAttributes();
 			ta.setTextureMode(TextureAttributes.MODULATE);
@@ -71,8 +75,7 @@ public class Star3D extends Body3D
 
 	}
 
-	static Appearance createMatAppear_star(Color3f dColor, Color3f sColor, float shine)
-	{
+	static Appearance createMatAppear_star(Color3f dColor, Color3f sColor, float shine) {
 		Appearance appear = new Appearance();
 		Material material = new Material();
 		material.setDiffuseColor(dColor);
