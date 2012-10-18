@@ -17,12 +17,15 @@
 
 package jat.application.missionPlanRunLocal;
 
+import jat.core.util.ResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -154,6 +157,19 @@ public class MissionPlanGUI extends JPanel {
 		level4_panel_Date.add(button_panel);
 		button_panel.setLayout(new BoxLayout(button_panel, BoxLayout.X_AXIS));
 
+		try {
+			ResourceLoader c=new ResourceLoader();
+			URL iconUrl = c.loadURL(this.getClass(), "icons/");
+			System.out.println("[MissionPlanGUI ]"+iconUrl);
+
+			//displayURL(helpURL2, editorPane, relative_path);
+
+		} catch (Exception e) {
+			System.err.println("[MissionPlanGUI Exception ]");
+			System.exit(0);
+		}
+
+		
 		
 		String iconPath="/jat/application/missionPlan/icons/";
 		

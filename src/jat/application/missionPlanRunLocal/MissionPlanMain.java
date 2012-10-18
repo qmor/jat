@@ -18,14 +18,19 @@
 package jat.application.missionPlanRunLocal;
 
 import jat.core.util.PathUtil;
+import jat.core.util.messageConsole.MessageConsole;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JApplet;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 public class MissionPlanMain extends JApplet {
 
@@ -42,7 +47,31 @@ public class MissionPlanMain extends JApplet {
 	List<Flight> flightList = new ArrayList<Flight>();
 
 	public void init() {
+		// Create a text pane.
+		JTextPane textPane = new JTextPane();
+		JScrollPane paneScrollPane = new JScrollPane(textPane);
+		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		paneScrollPane.setPreferredSize(new Dimension(300, 155));
+		paneScrollPane.setMinimumSize(new Dimension(10, 10));
+		getContentPane().add(paneScrollPane, BorderLayout.CENTER);
 
+		// Redirect stdout and stderr to the text pane
+		MessageConsole mc = new MessageConsole(textPane);
+		mc.redirectOut();
+		mc.redirectErr(Color.RED, null);
+		mc.setMessageLines(100);
+		System.out.println("[MissionPlan ]");
+
+	}
+
+	public void start() {
+		// Message console
+		MissionPlanConsole E = new MissionPlanConsole();
+		JFrame jf = new JFrame();
+		jf.setSize(600, 400);
+		jf.getContentPane().add(E);
+		jf.setVisible(true);
+		E.init();
 		mpGUI = new MissionPlanGUI(this);
 		mpPlot = new MissionPlanPlot(this);
 		mpParam = new MissionPlanParameters();
@@ -50,9 +79,9 @@ public class MissionPlanMain extends JApplet {
 		level1_Pane = getContentPane();
 		level1_Pane.add(mpGUI, BorderLayout.WEST);
 		level1_Pane.add(mpPlot, BorderLayout.CENTER);
-	}
 
-	public void start() {
+		// if (debug)
+		// System.out.println("[PathUtilTest] Console created");
 		mpGUI.mpE.timer.start();
 	}
 

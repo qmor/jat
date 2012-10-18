@@ -225,12 +225,4 @@ public class PorkChopPlot_GUI extends JPanel {
 
 	}
 
-	// private void JCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {
-	// plot.setParallelProjection(!jCheckBox2.isSelected());
-	// }
-	//
-	// private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {
-	// surf.setLogZscaling(jCheckBox1.isSelected());
-	// }
-
 }

@@ -46,17 +46,6 @@ public class Ephemeris3D extends Body3D {
 	Shape3D s;
 	TimeAPL startTime;
 
-	// Matrix MRot;
-
-	// public Ephemeris3D(DE405Plus.body body, double jd_start, double jd_end) {
-	// this.body = body;
-	// this.jd = jd_start;
-	// String fs = FileUtil.file_separator();
-	// my_eph = new DE405(FileUtil.getClassFilePath("jat.eph", "DE405") + fs +
-	// "DE405data" + fs);
-	// // MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
-	// draw();
-	// }
 
 	public Ephemeris3D(DE405Plus myEph, DE405Plus.body body, TimeAPL startTime, double days) {
 		this.myEph = myEph;
@@ -64,12 +53,6 @@ public class Ephemeris3D extends Body3D {
 		this.startTime = startTime;
 		this.days = (int) days;
 
-		// PathUtil f = new PathUtil();
-		// String fs = FileUtil.file_separator();
-		// String DE405_data_folder = f.root_path + "data" + fs + "core" + fs +
-		// "ephemeris" + fs + "DE405data" + fs;
-		// my_eph = new DE405(DE405_data_folder);
-		// MRot = new RotationMatrix(1, cm.Rad(Constants.eps));
 		draw();
 	}
 
@@ -139,3 +122,22 @@ public class Ephemeris3D extends Body3D {
 
 	}
 }
+
+// Matrix MRot;
+
+// public Ephemeris3D(DE405Plus.body body, double jd_start, double jd_end) {
+// this.body = body;
+// this.jd = jd_start;
+// String fs = FileUtil.file_separator();
+// my_eph = new DE405(FileUtil.getClassFilePath("jat.eph", "DE405") + fs +
+// "DE405data" + fs);
+// // MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
+// draw();
+// }
+
+// PathUtil f = new PathUtil();
+// String fs = FileUtil.file_separator();
+// String DE405_data_folder = f.root_path + "data" + fs + "core" + fs +
+// "ephemeris" + fs + "DE405data" + fs;
+// my_eph = new DE405(DE405_data_folder);
+// MRot = new RotationMatrix(1, cm.Rad(Constants.eps));

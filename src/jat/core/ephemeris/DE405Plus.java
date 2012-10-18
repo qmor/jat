@@ -17,6 +17,7 @@
 
 package jat.core.ephemeris;
 
+
 import jat.core.util.PathUtil;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
@@ -91,6 +92,7 @@ public class DE405Plus extends DE405APL {
 		this.p = p;
 		DE405_path = p.DE405Path;
 		System.out.println("[DE405Plus] DE405_path " + DE405_path);
+		ephFrame = frame.ICRF;
 	}
 
 	public DE405Plus(Applet myApplet) {

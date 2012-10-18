@@ -166,7 +166,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		}
 
 		// Periodic timer events
-
+		//System.out.println("alive");
 		CalDate caldate;
 		if (mpGUI.realtime_chk.isSelected()) {
 			// Date related functions
@@ -207,7 +207,8 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 		if (mpGUI.chckbxCameraRotate.isSelected()) {
 			Vector3f sphereCoord = jat_rotate.getV_current_sphere();
-			//System.out.println(sphereCoord.x + " " + sphereCoord.y + " " + sphereCoord.z);
+			// System.out.println(sphereCoord.x + " " + sphereCoord.y + " " +
+			// sphereCoord.z);
 
 			if (sphereCoord.z > 1)
 				directionDown = true;
@@ -240,12 +241,13 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	void update_scene(TimeAPL mytime) {
 		myEph = mpmain.mpPlot.myEph;
 		myEph.setFrame(DE405Plus.frame.HEE);
-		//myEph.setFrame(DE405Plus.frame.ICRF);
+		// myEph.setFrame(DE405Plus.frame.ICRF);
 		DE405Plus.body body[] = DE405Plus.body.values();
 
 		try {
 			for (int i = 1; i < 7; i++) {
-				//mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i], mytime)));
+				// mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i],
+				// mytime)));
 				mpmain.mpPlot.planet[i].set_position(myEph.get_planet_pos(body[i], mytime));
 			}
 

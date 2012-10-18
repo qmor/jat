@@ -78,16 +78,15 @@ public class PathUtil {
 
 		URL pathURL = myapplet.getCodeBase();
 		String pathName = pathURL.toExternalForm();
-		System.out.println("[PathUtil] getCodeBase "
-				+ myapplet.getCodeBase());
+		System.out.println("[PathUtil] getCodeBase " + myapplet.getCodeBase());
 		System.out.println("[PathUtil] getCodeBase " + pathName);
-		
+
 		// go forward in the directory tree until you find "jat"
 		String[] numberSplit = pathName.split("/");
-		String root_path="";
+		String root_path = "";
 		for (int i = 0; i < numberSplit.length; i++) {
 
-			//System.out.println(numberSplit[i]);
+			// System.out.println(numberSplit[i]);
 			if (numberSplit[i].equals("jat"))
 				break;
 			if (numberSplit[i].equals("jatdevelop"))
@@ -106,8 +105,7 @@ public class PathUtil {
 
 	public String find_root() {
 
-		String resource_path = PathUtil.class.getProtectionDomain()
-				.getCodeSource().getLocation().getPath();
+		String resource_path = PathUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		if (debug)
 			System.out.println("[PathUtil resource_path] " + resource_path);
 
@@ -116,7 +114,7 @@ public class PathUtil {
 		String root_path = "/";
 		for (int i = 1; i < numberSplit.length; i++) {
 
-			//System.out.println(numberSplit[i]);
+			// System.out.println(numberSplit[i]);
 			if (numberSplit[i].equals("jat"))
 				break;
 			if (numberSplit[i].equals("jatdevelop"))
@@ -143,21 +141,19 @@ public class PathUtil {
 			System.out.println("[PathUtil] current_path called");
 
 		try {
+			 ResourceLoader c = new ResourceLoader();
+			 URL url = c.loadURL(a.getClass(), ".");
 			// ResourceLoader c = new ResourceLoader();
-			// URL url = c.loadURL(a.getClass(), ".");
+			// URL url = c.loadURL(a.getClass(), "/");
 
-			ResourceLoader c = new ResourceLoader();
-			URL url = c.loadURL(a.getClass(), "/");
-
-			// ResourceLoader c=new ResourceLoader();
-			// URL helpURL2 = c.loadURL(this.getClass(), relative_path);
+//			ResourceLoader c = new ResourceLoader();
+//			URL helpURL2 = c.loadURL(this.getClass(), relative_path);
 
 			// System.out.println(url.getPath());
 			return url.getPath();
 
 		} catch (Exception e) {
-			System.err
-					.println("Couldn't find current path in jat.core.util.PathUtil");
+			System.err.println("Couldn't find current path in jat.core.util.PathUtil");
 			// System.exit(0);
 			return "";
 		}
