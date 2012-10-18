@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.application.missionPlanRunLocal;
+package jat.application.missionPlan;
 
 import jat.core.cm.TwoBodyAPL;
 import jat.core.ephemeris.DE405Plus;

@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.application.missionPlanRunLocal;
+package jat.application.missionPlan;
 
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Plus;

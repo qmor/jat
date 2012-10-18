@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.application.missionPlanRunLocal;
+package jat.application.missionPlan;
 
 import jat.application.porkChopPlot.PorkChopPlot_main;
 

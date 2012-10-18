@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.application.missionPlanRunLocal;
+package jat.application.missionPlan;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package jat.application.missionPlanRunLocal;
+package jat.application.missionPlan;
 
 import jat.core.util.messageConsole.MessageConsole;
 

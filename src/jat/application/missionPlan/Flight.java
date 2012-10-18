@@ -1,4 +1,4 @@
-package jat.application.missionPlanRunLocal;
+package jat.application.missionPlan;
 
 import jat.core.ephemeris.DE405APL.body;
 import jat.core.spacetime.TimeAPL;
