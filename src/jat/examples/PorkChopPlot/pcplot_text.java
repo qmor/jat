@@ -18,7 +18,7 @@
 package jat.examples.PorkChopPlot;
 
 import jat.core.cm.porkChopPlot;
-import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 
 import java.io.IOException;
@@ -29,10 +29,12 @@ public class pcplot_text {
 
 		TimeAPL search_depart_time_start = new TimeAPL(2003, 5, 1, 1, 1, 1);
 		TimeAPL search_arrival_time_start = new TimeAPL(2003, 12, 1, 1, 1, 1);
+		DE405Plus my_eph;
 
-		porkChopPlot p = new porkChopPlot();
+		my_eph = new DE405Plus();
+		porkChopPlot p = new porkChopPlot(my_eph);
 		try {
-			p.make_porkchop_plot(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS,search_depart_time_start, search_arrival_time_start, 500, 10);
+			p.make_porkchop_plot(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS,search_depart_time_start, search_arrival_time_start, 500, 10);
 			p.A.print();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -32,7 +32,7 @@ import java.net.URL;
  * 
  */
 public class PathUtil {
-	boolean debug = true;
+	boolean debug = false;
 
 	public String root_path;
 	public String current_path;
@@ -45,7 +45,7 @@ public class PathUtil {
 	 */
 	public PathUtil() {
 		if (debug)
-			System.out.println("<PathUtil 1> constructor ");
+			System.out.println("<PathUtil > constructor ");
 		root_path = find_root();
 		data_path = root_path + "data/";
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
@@ -66,6 +66,14 @@ public class PathUtil {
 		// System.out.println("[PathUtil current_path] " + current_path);
 	}
 
+	/**
+	 * @return path to root of the project Finds the path to the root of the
+	 *         project. Starts with the path of the class from which it is
+	 *         called, strips everything from the end until it finds the string
+	 *         "jat" or "jatdevelop". Works with an open folder structure or
+	 *         inside a jar file, on a local hard disk as well as on the
+	 *         Internet.
+	 */
 	public String find_root(Applet myapplet) {
 
 		URL pathURL = myapplet.getCodeBase();
@@ -79,7 +87,7 @@ public class PathUtil {
 		String root_path="";
 		for (int i = 0; i < numberSplit.length; i++) {
 
-			System.out.println(numberSplit[i]);
+			//System.out.println(numberSplit[i]);
 			if (numberSplit[i].equals("jat"))
 				break;
 			if (numberSplit[i].equals("jatdevelop"))
@@ -96,14 +104,6 @@ public class PathUtil {
 		return (root_path);
 	}
 
-	/**
-	 * @return path to root of the project Finds the path to the root of the
-	 *         project. Starts with the path of the class from which it is
-	 *         called, strips everything from the end until it finds the string
-	 *         "jat" or "jatdevelop". Works with an open folder structure or
-	 *         inside a jar file, on a local hard disk as well as on the
-	 *         Internet.
-	 */
 	public String find_root() {
 
 		String resource_path = PathUtil.class.getProtectionDomain()
@@ -116,7 +116,7 @@ public class PathUtil {
 		String root_path = "/";
 		for (int i = 1; i < numberSplit.length; i++) {
 
-			System.out.println(numberSplit[i]);
+			//System.out.println(numberSplit[i]);
 			if (numberSplit[i].equals("jat"))
 				break;
 			if (numberSplit[i].equals("jatdevelop"))

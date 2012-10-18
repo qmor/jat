@@ -179,6 +179,7 @@ public class DE405APL {
 		System.out.println("[DE405APL] DE405_path " + DE405_path);
 	}
 
+
 	/**
 	 * Procedure to calculate the position and velocity at jultime of the major
 	 * planets. Note that the planets are enumerated as follows: Mercury = 1,
@@ -359,17 +360,15 @@ public class DE405APL {
 
 	}
 
-	
-	
-	
 	/**
 	 * @param jultime
 	 * @throws IOException
-	 * different method of reading a file that works with files read from the Internet
-	 *
-	 *
+	 *             different method of reading a file that works with files read
+	 *             from the Internet
+	 * 
+	 * 
 	 */
-	
+
 	void get_ephemeris_coefficients_new(double jultime) throws IOException {
 
 		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
@@ -469,87 +468,85 @@ public class DE405APL {
 				URL url = new URL(filename);
 				int count = 0;
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-				//String str;
-//				while ((str = in.readLine()) != null) {
-//					count++;
-//					if (count > 77000)
-//						System.out.println(count + " " + str);
-//				}
+				// String str;
+				// while ((str = in.readLine()) != null) {
+				// count++;
+				// if (count > 77000)
+				// System.out.println(count + " " + str);
+				// }
 
-//			FileReader file = new FileReader(filename);
-//			BufferedReader buff = new BufferedReader(file);
+				// FileReader file = new FileReader(filename);
+				// BufferedReader buff = new BufferedReader(file);
 
-			/* Read each record in the file */
-			for (j = 1; j <= records; j++) {
+				/* Read each record in the file */
+				for (j = 1; j <= records; j++) {
 
-				/* read line 1 and ignore */
-				line = in.readLine();
-
-				/* read lines 2 through 274 and parse as appropriate */
-				for (i = 2; i <= 274; i++) {
+					/* read line 1 and ignore */
 					line = in.readLine();
-					if (i > 2) {
-						/* parse first entry */
-						mantissa1 = Integer.parseInt(line.substring(4, 13));
-						mantissa2 = Integer.parseInt(line.substring(13, 22));
-						exponent = Integer.parseInt(line.substring(24, 26));
-						if (line.substring(23, 24).equals("+"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
-									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
-						else
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
-									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
-						if (line.substring(1, 2).equals("-"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = -ephemeris_coefficients[(j - 1)
-									* 816 + (3 * (i - 2) - 1)];
+
+					/* read lines 2 through 274 and parse as appropriate */
+					for (i = 2; i <= 274; i++) {
+						line = in.readLine();
+						if (i > 2) {
+							/* parse first entry */
+							mantissa1 = Integer.parseInt(line.substring(4, 13));
+							mantissa2 = Integer.parseInt(line.substring(13, 22));
+							exponent = Integer.parseInt(line.substring(24, 26));
+							if (line.substring(23, 24).equals("+"))
+								ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
+										* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
+							else
+								ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
+										* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
+							if (line.substring(1, 2).equals("-"))
+								ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = -ephemeris_coefficients[(j - 1)
+										* 816 + (3 * (i - 2) - 1)];
+						}
+						if (i > 2) {
+							/* parse second entry */
+							mantissa1 = Integer.parseInt(line.substring(30, 39));
+							mantissa2 = Integer.parseInt(line.substring(39, 48));
+							exponent = Integer.parseInt(line.substring(50, 52));
+							if (line.substring(49, 50).equals("+"))
+								ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
+										* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
+							else
+								ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
+										* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
+							if (line.substring(27, 28).equals("-"))
+								ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = -ephemeris_coefficients[(j - 1)
+										* 816 + 3 * (i - 2)];
+						}
+						if (i < 274) {
+							/* parse third entry */
+							mantissa1 = Integer.parseInt(line.substring(56, 65));
+							mantissa2 = Integer.parseInt(line.substring(65, 74));
+							exponent = Integer.parseInt(line.substring(76, 78));
+							if (line.substring(75, 76).equals("+"))
+								ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
+										* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
+							else
+								ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
+										* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
+							if (line.substring(53, 54).equals("-"))
+								ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = -ephemeris_coefficients[(j - 1)
+										* 816 + (3 * (i - 2) + 1)];
+						}
 					}
-					if (i > 2) {
-						/* parse second entry */
-						mantissa1 = Integer.parseInt(line.substring(30, 39));
-						mantissa2 = Integer.parseInt(line.substring(39, 48));
-						exponent = Integer.parseInt(line.substring(50, 52));
-						if (line.substring(49, 50).equals("+"))
-							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
-									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
-						else
-							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
-									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
-						if (line.substring(27, 28).equals("-"))
-							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = -ephemeris_coefficients[(j - 1) * 816
-									+ 3 * (i - 2)];
-					}
-					if (i < 274) {
-						/* parse third entry */
-						mantissa1 = Integer.parseInt(line.substring(56, 65));
-						mantissa2 = Integer.parseInt(line.substring(65, 74));
-						exponent = Integer.parseInt(line.substring(76, 78));
-						if (line.substring(75, 76).equals("+"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
-									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
-						else
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
-									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
-						if (line.substring(53, 54).equals("-"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = -ephemeris_coefficients[(j - 1)
-									* 816 + (3 * (i - 2) + 1)];
-					}
+
+					/* read lines 275 through 341 and ignore */
+					for (i = 275; i <= 341; i++)
+						line = in.readLine();
+
 				}
 
-				/* read lines 275 through 341 and ignore */
-				for (i = 275; i <= 341; i++)
-					line = in.readLine();
+				// buff.close();
 
+				in.close();
+			} catch (MalformedURLException e) {
+			} catch (IOException e) {
 			}
 
-			//buff.close();
-
-			in.close();
-		} catch (MalformedURLException e) {
-		} catch (IOException e) {
-		}
-
-			
-			
 		} catch (StringIndexOutOfBoundsException e) {
 			System.out.println("String index out of bounds at i = " + i);
 		}
@@ -559,15 +556,6 @@ public class DE405APL {
 
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * 
 	 * Procedure to read the DE405 ephemeris file corresponding to jultime. The
@@ -818,40 +806,40 @@ public class DE405APL {
 		return returnval;
 	}
 
-	public static void main(String args[]) {
-
-		/* USER MUST SPECIFY jultime HERE. Example value is 2451545.0 */
-		double jultime = 2451545.0;
-
-		int i = 0, j = 0;
-
-		DE405APL testBody = new DE405APL();
-
-		/*
-		 * This is the call to "planetary_ephemeris", which will put planetary
-		 * positions into the array "planet_r", and planetary velocities into
-		 * the array "planet_rprime".
-		 */
-		try {
-			testBody.planetary_ephemeris(jultime);
-		} catch (IOException e) {
-			System.out.println("exception caught in DE405APL main:");
-			e.printStackTrace();
-		}
-
-		/* The following simply sends the output to the screen */
-		for (i = 1; i <= 11; i++) {
-
-			System.out.println("Planet " + i);
-			System.out.println("     position");
-			for (j = 1; j <= 3; j++)
-				System.out.println(testBody.planet_r[i][j]);
-			System.out.println("     velocity");
-			for (j = 1; j <= 3; j++)
-				System.out.println(testBody.planet_rprime[i][j]);
-
-		}
-
-	}
+//	public static void main(String args[]) {
+//
+//		/* USER MUST SPECIFY jultime HERE. Example value is 2451545.0 */
+//		double jultime = 2451545.0;
+//
+//		int i = 0, j = 0;
+//
+//		DE405APL testBody = new DE405APL();
+//
+//		/*
+//		 * This is the call to "planetary_ephemeris", which will put planetary
+//		 * positions into the array "planet_r", and planetary velocities into
+//		 * the array "planet_rprime".
+//		 */
+//		try {
+//			testBody.planetary_ephemeris(jultime);
+//		} catch (IOException e) {
+//			System.out.println("exception caught in DE405APL main:");
+//			e.printStackTrace();
+//		}
+//
+//		/* The following simply sends the output to the screen */
+//		for (i = 1; i <= 11; i++) {
+//
+//			System.out.println("Planet " + i);
+//			System.out.println("     position");
+//			for (j = 1; j <= 3; j++)
+//				System.out.println(testBody.planet_r[i][j]);
+//			System.out.println("     velocity");
+//			for (j = 1; j <= 3; j++)
+//				System.out.println(testBody.planet_rprime[i][j]);
+//
+//		}
+//
+//	}
 
 }

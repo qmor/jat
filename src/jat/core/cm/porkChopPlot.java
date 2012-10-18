@@ -16,8 +16,8 @@
  */
 package jat.core.cm;
 
-import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405APL.body;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.math.MatrixVector.util.LabeledMatrix;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Constants;
@@ -34,13 +34,13 @@ public class porkChopPlot {
 	public double ArrivalDate[];
 	public int steps;
 	public float step_size;
-	DE405APL my_eph;
+	DE405Plus my_eph;
 
-	public porkChopPlot() {
-		my_eph = new DE405APL();
-	}
+//	public porkChopPlot() {
+//		my_eph = new DE405Plus();
+//	}
 
-	public porkChopPlot(DE405APL my_eph) {
+	public porkChopPlot(DE405Plus my_eph) {
 		this.my_eph = my_eph;
 	}
 

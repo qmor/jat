@@ -17,14 +17,13 @@
 
 package jat.application.porkChopPlot;
 
-import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JApplet;
-import javax.swing.JFrame;
 
 public class PorkChopPlot_main extends JApplet {
 	private static final long serialVersionUID = 1122861326294482666L;
@@ -38,12 +37,22 @@ public class PorkChopPlot_main extends JApplet {
 
 	public PorkChopPlot_main(PathUtil p) {
 		// PathUtil p =new PathUtil(this);
-		params = new PorkChopPlot_Parameters(DE405APL.body.EARTH_MOON_BARY, DE405APL.body.MARS, 2003, 1, 1, 2003, 7, 1,
+		params = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003, 7, 1,
 				500, 10);
-		// params = new PorkChopPlot_Parameters(DE405APL.MERCURY, DE405APL.MARS,
-		// 2003, 1, 1, 2003, 7, 1, 500, 10);
-		// params = new PorkChopPlot_Parameters(DE405APL.VENUS, DE405APL.MARS,
-		// 2003, 1, 1, 2003, 7, 1, 500, 10);
+		params.p = p;
+	}
+
+	public PorkChopPlot_main() {
+		params = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003, 7, 1,
+				500, 10);
+		//params.p = new PathUtil(this);
+	}
+
+	public void init() {
+		// if we are the first class called, create PathUtil
+		if (params.p == null)
+			params.p = new PathUtil(this);
+		params.myEph = new DE405Plus(params.p);
 		pcpGUI = new PorkChopPlot_GUI(this);
 		pcpGUI.pcpE.setMain(this);
 		pcpPlot = new PorkChopPlot_Plot(this);
@@ -51,35 +60,33 @@ public class PorkChopPlot_main extends JApplet {
 		level1_Pane = getContentPane();
 		level1_Pane.add(pcpGUI, BorderLayout.WEST);
 		level1_Pane.add(pcpPlot, BorderLayout.CENTER);
-		params.p = p;
-	}
-
-	public PorkChopPlot_main() {
-	}
-
-	public void init() {
 
 	}
 
-	public static void main(String[] args) {
-		PorkChopPlot_main pApplet = new PorkChopPlot_main();
-		pApplet.init();
-
-		JFrame pFrame = new JFrame();
-		pFrame.setTitle("Optimal Launch Date Finder");
-		pFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// When running this file as a stand-alone app, add the applet to
-		// the frame.
-		pFrame.getContentPane().add(pApplet, BorderLayout.CENTER);
-		pFrame.setSize(appletwidth, appletheight);
-		pFrame.setVisible(true);
-
-		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
-		pApplet.pcpPlot.requestFocusInWindow();
-
-		// sApplet.ssE.timer.start();
-
-	}// End of main()
+	// public static void main(String[] args) {
+	// PorkChopPlot_main pApplet = new PorkChopPlot_main();
+	// pApplet.init();
+	//
+	// JFrame pFrame = new JFrame();
+	// pFrame.setTitle("Optimal Launch Date Finder");
+	// pFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	//
+	// // When running this file as a stand-alone app, add the applet to
+	// // the frame.
+	// pFrame.getContentPane().add(pApplet, BorderLayout.CENTER);
+	// pFrame.setSize(appletwidth, appletheight);
+	// pFrame.setVisible(true);
+	//
+	// // sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
+	// pApplet.pcpPlot.requestFocusInWindow();
+	//
+	// // sApplet.ssE.timer.start();
+	//
+	// }// End of main()
 
 }
+
+// params = new PorkChopPlot_Parameters(DE405Plus.MERCURY, DE405Plus.MARS,
+// 2003, 1, 1, 2003, 7, 1, 500, 10);
+// params = new PorkChopPlot_Parameters(DE405Plus.VENUS, DE405Plus.MARS,
+// 2003, 1, 1, 2003, 7, 1, 500, 10);

@@ -21,12 +21,10 @@
  */
 
 package jat.examplesNOSA.OrbitDetermination;
-import jat.core.util.PathUtil;
 import jat.coreNOSA.algorithm.estimators.MeasurementData;
 import jat.coreNOSA.algorithm.estimators.MeasurementModel;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
-import jat.coreNOSA.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

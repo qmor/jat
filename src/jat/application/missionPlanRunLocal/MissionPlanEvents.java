@@ -18,7 +18,6 @@
 package jat.application.missionPlanRunLocal;
 
 import jat.core.cm.TwoBodyAPL;
-import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Constants;
@@ -114,9 +113,9 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 					f.flightName = "flight" + i;
 					// retrieve selected values from dialog and store
 					f.departure_planet = myDialog.p.pReturn.departure_planet;
-					f.departurePlanetName = DE405APL.name[f.departure_planet.ordinal()];
+					f.departurePlanetName = DE405Plus.name[f.departure_planet.ordinal()];
 					f.arrival_planet = myDialog.p.pReturn.arrival_planet;
-					f.arrivalPlanetName = DE405APL.name[f.arrival_planet.ordinal()];
+					f.arrivalPlanetName = DE405Plus.name[f.arrival_planet.ordinal()];
 					f.departureDate = new TimeAPL(myDialog.p.pReturn.DepartureDate);
 					f.arrivalDate = new TimeAPL(myDialog.p.pReturn.ArrivalDate);
 
@@ -242,7 +241,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		myEph = mpmain.mpPlot.myEph;
 		myEph.setFrame(DE405Plus.frame.HEE);
 		//myEph.setFrame(DE405Plus.frame.ICRF);
-		DE405APL.body body[] = DE405APL.body.values();
+		DE405Plus.body body[] = DE405Plus.body.values();
 
 		try {
 			for (int i = 1; i < 7; i++) {

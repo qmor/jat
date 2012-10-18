@@ -18,7 +18,6 @@
 package jat.application.missionPlanRunLocal;
 
 import jat.core.astronomy.SolarSystemBodies;
-import jat.core.ephemeris.DE405APL;
 import jat.core.ephemeris.DE405Plus;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.Ephemeris3D;
@@ -57,17 +56,17 @@ public class MissionPlanPlot extends JatPlot3D {
 		// Ephemeris data
 		myEph = new DE405Plus(mpmain);
 
-		DE405APL.body body[] = DE405APL.body.values();
+		DE405Plus.body body[] = DE405Plus.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();
 
 		for (int i = 1; i < 7; i++) {
 			planet[i] = new Planet3D(body[i], 1000.f);
-			jatScene.add(planet[i], DE405APL.name[i]);
+			jatScene.add(planet[i], DE405Plus.name[i]);
 			//if (i == 3)
 			{
 				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
 						SolarSystemBodies.Bodies[i].orbitalPeriod);
-				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405APL.name[i]);
+				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
 			}
 		}
 

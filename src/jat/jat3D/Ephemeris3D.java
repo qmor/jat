@@ -17,7 +17,7 @@
 
 package jat.jat3D;
 
-import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
@@ -37,8 +37,8 @@ import javax.vecmath.Color3f;
  */
 public class Ephemeris3D extends Body3D {
 	float size;
-	DE405APL myEph;
-	DE405APL.body body;
+	DE405Plus myEph;
+	DE405Plus.body body;
 	double jd;
 	int steps = 100;
 	int days;
@@ -48,7 +48,7 @@ public class Ephemeris3D extends Body3D {
 
 	// Matrix MRot;
 
-	// public Ephemeris3D(DE405APL.body body, double jd_start, double jd_end) {
+	// public Ephemeris3D(DE405Plus.body body, double jd_start, double jd_end) {
 	// this.body = body;
 	// this.jd = jd_start;
 	// String fs = FileUtil.file_separator();
@@ -58,7 +58,7 @@ public class Ephemeris3D extends Body3D {
 	// draw();
 	// }
 
-	public Ephemeris3D(DE405APL myEph, DE405APL.body body, TimeAPL startTime, double days) {
+	public Ephemeris3D(DE405Plus myEph, DE405Plus.body body, TimeAPL startTime, double days) {
 		this.myEph = myEph;
 		this.body = body;
 		this.startTime = startTime;

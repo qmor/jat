@@ -1,6 +1,6 @@
 package jat.tests.core.ephemeris;
 
-import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 import jat.core.util.messageConsole.MessageConsole;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -60,10 +60,10 @@ public class EphemerisTest extends JApplet {
 		
 		Time mytime = new Time(2002, 2, 17, 12, 0, 0);
 		System.out.println("Loading DE405 Ephemeris File");
-		DE405APL ephem = new DE405APL(this);
+		DE405Plus ephem = new DE405Plus(this);
 		System.out.println("DE405 Ephemeris File loaded");
 		try {
-			VectorN rv = ephem.get_planet_posvel(DE405APL.body.MARS, mytime.jd_tt());
+			VectorN rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime.jd_tt());
 			System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
 			System.out.println("x= " + rv.get(0) + " km");
 			System.out.println("y= " + rv.get(1) + " km");

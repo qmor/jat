@@ -17,13 +17,13 @@
 
 package jat.core.cm;
 
-import java.util.ArrayList;
-
 import jat.coreNOSA.algorithm.integrators.Printable;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.TwoBody;
 import jat.coreNOSA.math.MatrixVector.data.Matrix;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
+
+import java.util.ArrayList;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;

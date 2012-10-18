@@ -17,7 +17,7 @@
 
 package jat.application.porkChopPlot;
 
-import jat.core.ephemeris.DE405APL.body;
+import jat.core.ephemeris.DE405Plus;
 import jat.jat3D.behavior.jat_KeyBehavior_UserCall;
 
 import javax.vecmath.Point3d;
@@ -83,8 +83,8 @@ public class PorkChopPlot_KeyBehavior extends jat_KeyBehavior_UserCall {
 		// TimeAPL(main.pcpPlot.pcplot_data.p.DepartureDate[x_index]).print();
 		// System.out.print("Arr ");
 		// new TimeAPL(main.pcpPlot.pcplot_data.p.ArrivalDate[y_index]).print();
-		main.pReturn.departure_planet = body.fromInt(main.pcpGUI.comboDepartPlanet.getSelectedIndex());
-		main.pReturn.arrival_planet = body.fromInt(main.pcpGUI.comboArrivalPlanet.getSelectedIndex());			
+		main.pReturn.departure_planet = DE405Plus.body.fromInt(main.pcpGUI.comboDepartPlanet.getSelectedIndex());
+		main.pReturn.arrival_planet = DE405Plus.body.fromInt(main.pcpGUI.comboArrivalPlanet.getSelectedIndex());			
 		main.pReturn.DepartureDate = main.pcpPlot.pcplot_data.p.DepartureDate[x_index];
 		main.pReturn.ArrivalDate = main.pcpPlot.pcplot_data.p.ArrivalDate[y_index];
 	}
