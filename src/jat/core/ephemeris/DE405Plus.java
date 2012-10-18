@@ -17,6 +17,7 @@
 
 package jat.core.ephemeris;
 
+import jat.core.util.PathUtil;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -27,58 +28,62 @@ import java.applet.Applet;
 import java.io.IOException;
 import java.util.EnumSet;
 
-/**
- * @author Tobias Berthold
- * 
- *         The DE405 Ephemeris data are given in the ICRF frame. This class
- *         allows to choose the frame in which position and velocity are given
- * 
- * 
- *         ECEF
- * 
- *         Earth-Centered Earth-Fixed
- * 
- *         ECI
- * 
- *         Earth-Centered Inertial
- * 
- *         ICRF
- * 
- *         International Celestial Reference Frame
- * 
- *         HEEQ - Heliocentric Earth equatorial
- * 
- *         This system has its Z axis parallel to the Sun's rotation axis
- *         (positive to the North) and its X axis towards the intersection of
- *         the solar equator and the solar central meridian as seen from the
- *         Earth. This system is sometimes known as heliocentric solar (HS).
- * 
- *         HEE - Heliocentric Earth ecliptic
- * 
- *         This system has its X axis towards the Earth and its Z axis
- *         perpendicular to the plane of the Earth's orbit around the Sun
- *         (positive North). This system is fixed with respect to the Earth-Sun
- *         line.
- * 
- *         HAE - Heliocentric Aries ecliptic
- * 
- *         This system has its Z axis perpendicular to the plane of the Earth's
- *         orbit around the Sun (positive North) and its X axis towards the
- *         First Point of Aries (the direction in space defined by the
- *         intersection between the Earth's equatorial plane and the plane of
- *         its orbit around the Sun (the plane of the ecliptic). This system is
- *         (to first order) fixed with respect to the distant stars. It is
- *         subject to slow change owing to the various slow motions of the
- *         Earth's rotation axis with respect to the fixed stars.
- * 
- */
 public class DE405Plus extends DE405APL {
+
+	// The DE405 Ephemeris data are given in the ICRF frame.
+	// This class allows to choose the frame in which position and velocity are
+	// given
+
+	/*
+	 * 
+	 * ECEF
+	 * 
+	 * Earth-Centered Earth-Fixed
+	 * 
+	 * ECI
+	 * 
+	 * Earth-Centered Inertial
+	 * 
+	 * ICRF
+	 * 
+	 * International Celestial Reference Frame
+	 * 
+	 * HEEQ - Heliocentric Earth equatorial
+	 * 
+	 * This system has its Z axis parallel to the Sun's rotation axis (positive
+	 * to the North) and its X axis towards the intersection of the solar
+	 * equator and the solar central meridian as seen from the Earth. This
+	 * system is sometimes known as heliocentric solar (HS).
+	 * 
+	 * HEE - Heliocentric Earth ecliptic
+	 * 
+	 * This system has its X axis towards the Earth and its Z axis perpendicular
+	 * to the plane of the Earth's orbit around the Sun (positive North). This
+	 * system is fixed with respect to the Earth-Sun line.
+	 * 
+	 * HAE - Heliocentric Aries ecliptic
+	 * 
+	 * This system has its Z axis perpendicular to the plane of the Earth's
+	 * orbit around the Sun (positive North) and its X axis towards the First
+	 * Point of Aries (the direction in space defined by the intersection
+	 * between the Earth's equatorial plane and the plane of its orbit around
+	 * the Sun (the plane of the ecliptic). This system is (to first order)
+	 * fixed with respect to the distant stars. It is subject to slow change
+	 * owing to the various slow motions of the Earth's rotation axis with
+	 * respect to the fixed stars.
+	 */
 
 	DE405Plus.frame ephFrame;
 
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
+	}
+
+	public DE405Plus(PathUtil p) {
+		this.p = p;
+		DE405_path = p.DE405Path;
+		System.out.println("[DE405APL] DE405_path " + DE405_path);
 	}
 
 	public DE405Plus(Applet myApplet) {
