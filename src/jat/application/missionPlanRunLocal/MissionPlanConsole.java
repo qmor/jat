@@ -30,7 +30,7 @@ public class MissionPlanConsole extends JApplet {
 		mc.redirectErr(Color.RED, null);
 		mc.setMessageLines(100);
 		//System.out.println("PathUtilTestConsole init out");
-		System.out.println("[MissionPlanConsole ]");
+		System.out.println("[MissionPlanConsole] ");
 		
 		
 	}

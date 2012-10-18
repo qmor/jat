@@ -25,6 +25,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.BoxLayout;
@@ -156,39 +157,48 @@ public class MissionPlanGUI extends JPanel {
 		button_panel = new JPanel();
 		level4_panel_Date.add(button_panel);
 		button_panel.setLayout(new BoxLayout(button_panel, BoxLayout.X_AXIS));
-
+		URL iconsUrl = null;
 		try {
 			ResourceLoader c=new ResourceLoader();
-			URL iconUrl = c.loadURL(this.getClass(), "icons/");
-			System.out.println("[MissionPlanGUI ]"+iconUrl);
+			iconsUrl = c.loadURL(this.getClass(), "icons/");
+			System.out.println("[MissionPlanGUI] "+iconsUrl);
 
 			//displayURL(helpURL2, editorPane, relative_path);
 
 		} catch (Exception e) {
-			System.err.println("[MissionPlanGUI Exception ]");
+			System.err.println("[MissionPlanGUI Exception]");
 			System.exit(0);
 		}
-
+		URL rewindURL = null;
+		try {
+			rewindURL=new URL(iconsUrl.toExternalForm()+"Rewind12.gif");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		//String iconPath="/jat/application/missionPlan/icons/";
+		//String iconPath=iconUrl.getFile();
 		
-		String iconPath="/jat/application/missionPlan/icons/";
-		
+		System.out.println("[MissionPlanGUI before button icons] ");
 		
 		btn_rewind = new JButton("");
-		btn_rewind.setIcon(new ImageIcon(MissionPlanGUI.class
-				.getResource(iconPath+"Rewind12.gif")));
+		//btn_rewind.setIcon(new ImageIcon(rewindURL));
+//		btn_rewind.setIcon(new ImageIcon(MissionPlanGUI.class
+//		.getResource(iconPath+"Rewind12.gif")));
 		button_panel.add(btn_rewind);
 
 		btn_stop = new JButton("");
-		btn_stop.setIcon(new ImageIcon(MissionPlanGUI.class
-				.getResource(iconPath+"Stop12.gif")));
+//		btn_stop.setIcon(new ImageIcon(MissionPlanGUI.class
+//				.getResource(iconPath+"Stop12.gif")));
 		button_panel.add(btn_stop);
 
 		btn_forward = new JButton("");
-		btn_forward.setIcon(new ImageIcon(MissionPlanGUI.class
-				.getResource(iconPath+"FastForward12.gif")));
+//		btn_forward.setIcon(new ImageIcon(MissionPlanGUI.class
+//				.getResource(iconPath+"FastForward12.gif")));
 		button_panel.add(btn_forward);
 
+		System.out.println("[MissionPlanGUI after button icons] ");
 
 		JLabel lblNewLabel = new JLabel("time step");
 		level4_panel_Date.add(lblNewLabel);

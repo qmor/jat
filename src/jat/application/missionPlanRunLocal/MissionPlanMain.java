@@ -53,14 +53,14 @@ public class MissionPlanMain extends JApplet {
 		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		paneScrollPane.setPreferredSize(new Dimension(300, 155));
 		paneScrollPane.setMinimumSize(new Dimension(10, 10));
-		getContentPane().add(paneScrollPane, BorderLayout.CENTER);
+		getContentPane().add(paneScrollPane, BorderLayout.NORTH);
 
 		// Redirect stdout and stderr to the text pane
 		MessageConsole mc = new MessageConsole(textPane);
 		mc.redirectOut();
 		mc.redirectErr(Color.RED, null);
 		mc.setMessageLines(100);
-		System.out.println("[MissionPlan ]");
+		System.out.println("[MissionPlan]");
 
 	}
 
@@ -68,7 +68,7 @@ public class MissionPlanMain extends JApplet {
 		// Message console
 		MissionPlanConsole E = new MissionPlanConsole();
 		JFrame jf = new JFrame();
-		jf.setSize(600, 400);
+		jf.setSize(800, 400);
 		jf.getContentPane().add(E);
 		jf.setVisible(true);
 		E.init();
