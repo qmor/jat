@@ -169,14 +169,14 @@ public class DE405APL {
 		// DE405_path = p.root_path + p.fs + "data" + p.fs + "core" + p.fs +
 		// "ephemeris" + p.fs + "DE405data" + p.fs;
 		DE405_path = p.DE405Path;
-		System.out.println(DE405_path);
+		System.out.println("[DE405APL 1 DE405_path] "+DE405_path);
 	}
 
 	public DE405APL(Applet myApplet) {
 
 		p = new PathUtil(myApplet);
 		DE405_path = p.DE405Path;
-		System.out.println("[DE405APL] DE405_path " + DE405_path);
+		System.out.println("[DE405APL 2 DE405_path] " + DE405_path);
 	}
 
 
@@ -368,6 +368,21 @@ public class DE405APL {
 	 * 
 	 * 
 	 */
+	/**
+	 * 
+	 * Procedure to read the DE405 ephemeris file corresponding to jultime. The
+	 * start and end dates of the ephemeris file are returned, as are the
+	 * Chebyshev coefficients for Mercury, Venus, Earth-Moon, Mars, Jupiter,
+	 * Saturn, Uranus, Neptune, Pluto, Geocentric Moon, and Sun.
+	 * 
+	 * Note that the DE405 ephemeris files should be in the same folder as this
+	 * class.
+	 * 
+	 * Tested and verified 7-16-99.
+	 * 
+	 * @param jultime
+	 * @throws IOException
+	 */
 
 	void get_ephemeris_coefficients_new(double jultime) throws IOException {
 
@@ -455,8 +470,8 @@ public class DE405APL {
 				records = 230;
 			}
 
-			System.out.println("[DE405APL] DE405_path " + DE405_path);
-			System.out.println("[DE405APL] filename " + filename);
+			//System.out.println("[DE405APL DE405_path] " + DE405_path);
+			//System.out.println("[DE405APL filename] " + filename);
 
 			if (filename == null) {
 				System.out.println("Time period unavailable");
@@ -465,6 +480,8 @@ public class DE405APL {
 
 			try {
 				// Create a URL for the desired page
+				if (!filename.startsWith("file"))
+					filename="file:"+filename;
 				URL url = new URL(filename);
 				int count = 0;
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -483,6 +500,7 @@ public class DE405APL {
 
 					/* read line 1 and ignore */
 					line = in.readLine();
+					//System.out.println("[DE405APL line ] " + line);
 
 					/* read lines 2 through 274 and parse as appropriate */
 					for (i = 2; i <= 274; i++) {
@@ -544,6 +562,7 @@ public class DE405APL {
 
 				in.close();
 			} catch (MalformedURLException e) {
+				System.out.println("MalformedURLException");
 			} catch (IOException e) {
 			}
 
@@ -556,192 +575,178 @@ public class DE405APL {
 
 	}
 
-	/**
-	 * 
-	 * Procedure to read the DE405 ephemeris file corresponding to jultime. The
-	 * start and end dates of the ephemeris file are returned, as are the
-	 * Chebyshev coefficients for Mercury, Venus, Earth-Moon, Mars, Jupiter,
-	 * Saturn, Uranus, Neptune, Pluto, Geocentric Moon, and Sun.
-	 * 
-	 * Note that the DE405 ephemeris files should be in the same folder as this
-	 * class.
-	 * 
-	 * Tested and verified 7-16-99.
-	 * 
-	 * @param jultime
-	 * @throws IOException
-	 */
-	void get_ephemeris_coefficients(double jultime) throws IOException {
 
-		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
-		String filename = null;
-		String line = " ";
+//	void get_ephemeris_coefficients(double jultime) throws IOException {
+//
+//		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
+//		String filename = null;
+//		String line = " ";
+//
+//		try {
+//
+//			/* Select the proper ephemeris file */
+//			if ((jultime >= 2414992.5) && (jultime < 2422320.5)) {
+//				ephemeris_dates[1] = 2414992.5;
+//				ephemeris_dates[2] = 2422320.5;
+//				filename = DE405_path + "ascp1900.405";
+//				records = 230;
+//			} else if ((jultime >= 2422320.5) && (jultime < 2429616.5)) {
+//				ephemeris_dates[1] = 2422320.5;
+//				ephemeris_dates[2] = 2429616.5;
+//				filename = DE405_path + "ascp1920.405";
+//				records = 229;
+//			} else if ((jultime >= 2429616.5) && (jultime < 2436912.5)) {
+//				ephemeris_dates[1] = 2429616.5;
+//				ephemeris_dates[2] = 2436912.5;
+//				filename = DE405_path + "ascp1940.405";
+//				records = 229;
+//			} else if ((jultime >= 2436912.5) && (jultime < 2444208.5)) {
+//				ephemeris_dates[1] = 2436912.5;
+//				ephemeris_dates[2] = 2444208.5;
+//				filename = DE405_path + "ascp1960.405";
+//				records = 229;
+//			} else if ((jultime >= 2444208.5) && (jultime < 2451536.5)) {
+//				ephemeris_dates[1] = 2444208.5;
+//				ephemeris_dates[2] = 2451536.5;
+//				filename = DE405_path + "ascp1980.405";
+//				records = 230;
+//			} else if ((jultime >= 2451536.5) && (jultime < 2458832.5)) {
+//				ephemeris_dates[1] = 2451536.5;
+//				ephemeris_dates[2] = 2458832.5;
+//				filename = DE405_path + "ascp2000.405";
+//				records = 229;
+//			} else if ((jultime >= 2458832.5) && (jultime < 2466128.5)) {
+//				ephemeris_dates[1] = 2458832.5;
+//				ephemeris_dates[2] = 2466128.5;
+//				filename = DE405_path + "ascp2020.405";
+//				records = 229;
+//			} else if ((jultime >= 2466128.5) && (jultime < 2473456.5)) {
+//				ephemeris_dates[1] = 2466128.5;
+//				ephemeris_dates[2] = 2473456.5;
+//				filename = DE405_path + "ascp2040.405";
+//				records = 230;
+//			} else if ((jultime >= 2473456.5) && (jultime < 2480752.5)) {
+//				ephemeris_dates[1] = 2473456.5;
+//				ephemeris_dates[2] = 2480752.5;
+//				filename = DE405_path + "ascp2060.405";
+//				records = 229;
+//			} else if ((jultime >= 2480752.5) && (jultime < 2488048.5)) {
+//				ephemeris_dates[1] = 2480752.5;
+//				ephemeris_dates[2] = 2488048.5;
+//				filename = DE405_path + "ascp2080.405";
+//				records = 229;
+//			} else if ((jultime >= 2488048.5) && (jultime < 2495344.5)) {
+//				ephemeris_dates[1] = 2488048.5;
+//				ephemeris_dates[2] = 2495344.5;
+//				filename = DE405_path + "ascp2100.405";
+//				records = 229;
+//			} else if ((jultime >= 2495344.5) && (jultime < 2502672.5)) {
+//				ephemeris_dates[1] = 2495344.5;
+//				ephemeris_dates[2] = 2502672.5;
+//				filename = DE405_path + "ascp2120.405";
+//				records = 230;
+//			} else if ((jultime >= 2502672.5) && (jultime < 2509968.5)) {
+//				ephemeris_dates[1] = 2502672.5;
+//				ephemeris_dates[2] = 2509968.5;
+//				filename = DE405_path + "ascp2140.405";
+//				records = 229;
+//			} else if ((jultime >= 2509968.5) && (jultime < 2517264.5)) {
+//				ephemeris_dates[1] = 2509968.5;
+//				ephemeris_dates[2] = 2517264.5;
+//				filename = DE405_path + "ascp2160.405";
+//				records = 229;
+//			} else if ((jultime >= 2517264.5) && (jultime < 2524624.5)) {
+//				ephemeris_dates[1] = 2517264.5;
+//				ephemeris_dates[2] = 2524624.5;
+//				filename = DE405_path + "ascp2180.405";
+//				records = 230;
+//			}
+//
+//			System.out.println("[DE405APL] DE405_path " + DE405_path);
+//			System.out.println("[DE405APL] filename " + filename);
+//
+//			if (filename == null) {
+//				System.out.println("Time period unavailable");
+//				System.exit(0);
+//			}
+//
+//			FileReader file = new FileReader(filename);
+//			BufferedReader buff = new BufferedReader(file);
+//
+//			/* Read each record in the file */
+//			for (j = 1; j <= records; j++) {
+//
+//				/* read line 1 and ignore */
+//				line = buff.readLine();
+//
+//				/* read lines 2 through 274 and parse as appropriate */
+//				for (i = 2; i <= 274; i++) {
+//					line = buff.readLine();
+//					if (i > 2) {
+//						/* parse first entry */
+//						mantissa1 = Integer.parseInt(line.substring(4, 13));
+//						mantissa2 = Integer.parseInt(line.substring(13, 22));
+//						exponent = Integer.parseInt(line.substring(24, 26));
+//						if (line.substring(23, 24).equals("+"))
+//							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
+//									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
+//						else
+//							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
+//									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
+//						if (line.substring(1, 2).equals("-"))
+//							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = -ephemeris_coefficients[(j - 1)
+//									* 816 + (3 * (i - 2) - 1)];
+//					}
+//					if (i > 2) {
+//						/* parse second entry */
+//						mantissa1 = Integer.parseInt(line.substring(30, 39));
+//						mantissa2 = Integer.parseInt(line.substring(39, 48));
+//						exponent = Integer.parseInt(line.substring(50, 52));
+//						if (line.substring(49, 50).equals("+"))
+//							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
+//									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
+//						else
+//							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
+//									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
+//						if (line.substring(27, 28).equals("-"))
+//							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = -ephemeris_coefficients[(j - 1) * 816
+//									+ 3 * (i - 2)];
+//					}
+//					if (i < 274) {
+//						/* parse third entry */
+//						mantissa1 = Integer.parseInt(line.substring(56, 65));
+//						mantissa2 = Integer.parseInt(line.substring(65, 74));
+//						exponent = Integer.parseInt(line.substring(76, 78));
+//						if (line.substring(75, 76).equals("+"))
+//							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
+//									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
+//						else
+//							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
+//									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
+//						if (line.substring(53, 54).equals("-"))
+//							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = -ephemeris_coefficients[(j - 1)
+//									* 816 + (3 * (i - 2) + 1)];
+//					}
+//				}
+//
+//				/* read lines 275 through 341 and ignore */
+//				for (i = 275; i <= 341; i++)
+//					line = buff.readLine();
+//
+//			}
+//
+//			buff.close();
+//
+//		} catch (StringIndexOutOfBoundsException e) {
+//			System.out.println("String index out of bounds at i = " + i);
+//		}
+//		// catch (FileNotFoundException e) {
+//		// System.out.println("String index out of bounds at i = " + i);
+//		// }
+//
+//	}
 
-		try {
-
-			/* Select the proper ephemeris file */
-			if ((jultime >= 2414992.5) && (jultime < 2422320.5)) {
-				ephemeris_dates[1] = 2414992.5;
-				ephemeris_dates[2] = 2422320.5;
-				filename = DE405_path + "ascp1900.405";
-				records = 230;
-			} else if ((jultime >= 2422320.5) && (jultime < 2429616.5)) {
-				ephemeris_dates[1] = 2422320.5;
-				ephemeris_dates[2] = 2429616.5;
-				filename = DE405_path + "ascp1920.405";
-				records = 229;
-			} else if ((jultime >= 2429616.5) && (jultime < 2436912.5)) {
-				ephemeris_dates[1] = 2429616.5;
-				ephemeris_dates[2] = 2436912.5;
-				filename = DE405_path + "ascp1940.405";
-				records = 229;
-			} else if ((jultime >= 2436912.5) && (jultime < 2444208.5)) {
-				ephemeris_dates[1] = 2436912.5;
-				ephemeris_dates[2] = 2444208.5;
-				filename = DE405_path + "ascp1960.405";
-				records = 229;
-			} else if ((jultime >= 2444208.5) && (jultime < 2451536.5)) {
-				ephemeris_dates[1] = 2444208.5;
-				ephemeris_dates[2] = 2451536.5;
-				filename = DE405_path + "ascp1980.405";
-				records = 230;
-			} else if ((jultime >= 2451536.5) && (jultime < 2458832.5)) {
-				ephemeris_dates[1] = 2451536.5;
-				ephemeris_dates[2] = 2458832.5;
-				filename = DE405_path + "ascp2000.405";
-				records = 229;
-			} else if ((jultime >= 2458832.5) && (jultime < 2466128.5)) {
-				ephemeris_dates[1] = 2458832.5;
-				ephemeris_dates[2] = 2466128.5;
-				filename = DE405_path + "ascp2020.405";
-				records = 229;
-			} else if ((jultime >= 2466128.5) && (jultime < 2473456.5)) {
-				ephemeris_dates[1] = 2466128.5;
-				ephemeris_dates[2] = 2473456.5;
-				filename = DE405_path + "ascp2040.405";
-				records = 230;
-			} else if ((jultime >= 2473456.5) && (jultime < 2480752.5)) {
-				ephemeris_dates[1] = 2473456.5;
-				ephemeris_dates[2] = 2480752.5;
-				filename = DE405_path + "ascp2060.405";
-				records = 229;
-			} else if ((jultime >= 2480752.5) && (jultime < 2488048.5)) {
-				ephemeris_dates[1] = 2480752.5;
-				ephemeris_dates[2] = 2488048.5;
-				filename = DE405_path + "ascp2080.405";
-				records = 229;
-			} else if ((jultime >= 2488048.5) && (jultime < 2495344.5)) {
-				ephemeris_dates[1] = 2488048.5;
-				ephemeris_dates[2] = 2495344.5;
-				filename = DE405_path + "ascp2100.405";
-				records = 229;
-			} else if ((jultime >= 2495344.5) && (jultime < 2502672.5)) {
-				ephemeris_dates[1] = 2495344.5;
-				ephemeris_dates[2] = 2502672.5;
-				filename = DE405_path + "ascp2120.405";
-				records = 230;
-			} else if ((jultime >= 2502672.5) && (jultime < 2509968.5)) {
-				ephemeris_dates[1] = 2502672.5;
-				ephemeris_dates[2] = 2509968.5;
-				filename = DE405_path + "ascp2140.405";
-				records = 229;
-			} else if ((jultime >= 2509968.5) && (jultime < 2517264.5)) {
-				ephemeris_dates[1] = 2509968.5;
-				ephemeris_dates[2] = 2517264.5;
-				filename = DE405_path + "ascp2160.405";
-				records = 229;
-			} else if ((jultime >= 2517264.5) && (jultime < 2524624.5)) {
-				ephemeris_dates[1] = 2517264.5;
-				ephemeris_dates[2] = 2524624.5;
-				filename = DE405_path + "ascp2180.405";
-				records = 230;
-			}
-
-			System.out.println("[DE405APL] DE405_path " + DE405_path);
-			System.out.println("[DE405APL] filename " + filename);
-
-			if (filename == null) {
-				System.out.println("Time period unavailable");
-				System.exit(0);
-			}
-
-			FileReader file = new FileReader(filename);
-			BufferedReader buff = new BufferedReader(file);
-
-			/* Read each record in the file */
-			for (j = 1; j <= records; j++) {
-
-				/* read line 1 and ignore */
-				line = buff.readLine();
-
-				/* read lines 2 through 274 and parse as appropriate */
-				for (i = 2; i <= 274; i++) {
-					line = buff.readLine();
-					if (i > 2) {
-						/* parse first entry */
-						mantissa1 = Integer.parseInt(line.substring(4, 13));
-						mantissa2 = Integer.parseInt(line.substring(13, 22));
-						exponent = Integer.parseInt(line.substring(24, 26));
-						if (line.substring(23, 24).equals("+"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
-									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
-						else
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = mantissa1
-									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
-						if (line.substring(1, 2).equals("-"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) - 1)] = -ephemeris_coefficients[(j - 1)
-									* 816 + (3 * (i - 2) - 1)];
-					}
-					if (i > 2) {
-						/* parse second entry */
-						mantissa1 = Integer.parseInt(line.substring(30, 39));
-						mantissa2 = Integer.parseInt(line.substring(39, 48));
-						exponent = Integer.parseInt(line.substring(50, 52));
-						if (line.substring(49, 50).equals("+"))
-							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
-									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
-						else
-							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = mantissa1
-									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
-						if (line.substring(27, 28).equals("-"))
-							ephemeris_coefficients[(j - 1) * 816 + 3 * (i - 2)] = -ephemeris_coefficients[(j - 1) * 816
-									+ 3 * (i - 2)];
-					}
-					if (i < 274) {
-						/* parse third entry */
-						mantissa1 = Integer.parseInt(line.substring(56, 65));
-						mantissa2 = Integer.parseInt(line.substring(65, 74));
-						exponent = Integer.parseInt(line.substring(76, 78));
-						if (line.substring(75, 76).equals("+"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
-									* Math.pow(10, (exponent - 9)) + mantissa2 * Math.pow(10, (exponent - 18));
-						else
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = mantissa1
-									* Math.pow(10, -(exponent + 9)) + mantissa2 * Math.pow(10, -(exponent + 18));
-						if (line.substring(53, 54).equals("-"))
-							ephemeris_coefficients[(j - 1) * 816 + (3 * (i - 2) + 1)] = -ephemeris_coefficients[(j - 1)
-									* 816 + (3 * (i - 2) + 1)];
-					}
-				}
-
-				/* read lines 275 through 341 and ignore */
-				for (i = 275; i <= 341; i++)
-					line = buff.readLine();
-
-			}
-
-			buff.close();
-
-		} catch (StringIndexOutOfBoundsException e) {
-			System.out.println("String index out of bounds at i = " + i);
-		}
-		// catch (FileNotFoundException e) {
-		// System.out.println("String index out of bounds at i = " + i);
-		// }
-
-	}
-
-	public VectorN get_planet_posvel(body bodyEnum, double jd) throws IOException {
+	protected VectorN get_planet_posvel(body bodyEnum, double jd) throws IOException {
 		double daysec = 3600. * 24.;
 
 		double[] posvel = new double[6];

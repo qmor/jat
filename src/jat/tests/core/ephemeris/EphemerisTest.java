@@ -63,7 +63,9 @@ public class EphemerisTest extends JApplet {
 		DE405Plus ephem = new DE405Plus(this);
 		System.out.println("DE405 Ephemeris File loaded");
 		try {
-			VectorN rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime.jd_tt());
+			VectorN rv;
+			//rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime.jd_tt());
+			rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime);
 			System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
 			System.out.println("x= " + rv.get(0) + " km");
 			System.out.println("y= " + rv.get(1) + " km");
