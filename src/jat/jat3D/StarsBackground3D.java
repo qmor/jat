@@ -20,6 +20,7 @@ package jat.jat3D;
 import jat.core.astronomy.StarCatalog;
 import jat.core.astronomy.Stardata;
 import jat.core.util.PathUtil;
+import jat.core.util.jatMessages;
 import jat.coreNOSA.math.CoordTransform;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -45,10 +46,13 @@ public class StarsBackground3D extends BranchGroup {
 	Color3f Starcolor; // Star color if texture not found
 	public StarCatalog s;
 	PathUtil p;
+	jatMessages messages;
+	boolean bugFound = true;
 
-	public StarsBackground3D(PathUtil p, float radius) {
+	public StarsBackground3D(PathUtil p,  jatMessages messages, float radius) {
 		super();
 		this.p = p;
+		this.messages=messages;
 		this.radius = radius;
 		Starcolor = Colors.blue;
 
@@ -60,36 +64,39 @@ public class StarsBackground3D extends BranchGroup {
 
 		BranchGroup bg = new BranchGroup();
 
-		s = new StarCatalog(p);
+		s = new StarCatalog(p,messages);
+
 		s.load();
+		if (bugFound) {
 
-		PointArray starfield = new PointArray(99, PointArray.COORDINATES | PointArray.COLOR_3);
-		float[] brightness = new float[3];
-		Stardata sd;
-		for (int i = 0; i < 99; i++) {
-			// for (int i = 0; i < manystardata.size(); i++)
-			sd = (Stardata) s.manystardata.get(i);
+			PointArray starfield = new PointArray(99, PointArray.COORDINATES | PointArray.COLOR_3);
+			float[] brightness = new float[3];
+			Stardata sd;
+			for (int i = 0; i < s.manystardata.size(); i++) {
+				// for (int i = 0; i < manystardata.size(); i++)
+				sd = (Stardata) s.manystardata.get(i);
 
-			// System.out.println(sd.ProperName + " " + sd.RA + " " + sd.dec);
-			VectorN point3 = CoordTransform.Spherical_to_Cartesian_deg(radius, sd.RA / MathUtils.DEG2RAD, sd.dec
-					/ MathUtils.DEG2RAD);
+				// System.out.println(sd.ProperName + " " + sd.RA + " " +
+				// sd.dec);
+				VectorN point3 = CoordTransform.Spherical_to_Cartesian_deg(radius, sd.RA / MathUtils.DEG2RAD, sd.dec
+						/ MathUtils.DEG2RAD);
 
-			// point[0] = 1;
-			// point[1] = 1;
-			// point[2] = 1;
-			// point[0] *= 1.e8;
-			// point[1] *= 1.e8;
-			// point[2] *= 1.e8;
-			starfield.setCoordinate(i, point3.x);
-			// final float mag = rand.nextFloat();
-			final float mag = 1.f;
-			brightness[0] = mag;
-			brightness[1] = mag;
-			brightness[2] = mag;
-			starfield.setColor(i, brightness);
+				// point[0] = 1;
+				// point[1] = 1;
+				// point[2] = 1;
+				// point[0] *= 1.e8;
+				// point[1] *= 1.e8;
+				// point[2] *= 1.e8;
+				starfield.setCoordinate(i, point3.x);
+				// final float mag = rand.nextFloat();
+				final float mag = 1.f;
+				brightness[0] = mag;
+				brightness[1] = mag;
+				brightness[2] = mag;
+				starfield.setColor(i, brightness);
+			}
+			bg.addChild(new Shape3D(starfield));
 		}
-		bg.addChild(new Shape3D(starfield));
-
 		return bg;
 
 	}

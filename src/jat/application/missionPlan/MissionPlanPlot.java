@@ -72,12 +72,12 @@ public class MissionPlanPlot extends JatPlot3D {
 				}
 			}
 
-			jatScene.add(new RGBAxes3D(100000000), "Axis");
 			// jatScene.InitialRotation.rotX(-cm.Rad(Constants.eps));
-			g.addChild(jatScene);
 		}
-		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.p,15f);
+		g.addChild(jatScene);
+		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.p,mpmain.mpParam.messages,15f);
 		g.addChild(s);
+		jatScene.add(new RGBAxes3D(100000000), "Axis");
 		// initial zoom: exponent of ten times kilometers
 		exponent = 8;
 		bbox = new BoundingBox3D(-.5f, .5f);

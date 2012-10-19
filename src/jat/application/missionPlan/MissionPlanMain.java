@@ -18,10 +18,8 @@
 package jat.application.missionPlan;
 
 import jat.core.util.PathUtil;
-import jat.core.util.messageConsole.MessageConsole;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ import java.util.List;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 public class MissionPlanMain extends JApplet {
@@ -45,42 +44,52 @@ public class MissionPlanMain extends JApplet {
 	Container level1_Pane;
 	JFrame sFrame;
 	List<Flight> flightList = new ArrayList<Flight>();
+	public JTextPane textPane = new JTextPane();
+	public JTextArea textArea;
 
 	public void init() {
 		// Create a text pane.
-		JTextPane textPane = new JTextPane();
-		JScrollPane paneScrollPane = new JScrollPane(textPane);
+		textPane = new JTextPane();
+//		JScrollPane paneScrollPane = new JScrollPane(textPane);
+//		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		paneScrollPane.setPreferredSize(new Dimension(300, 155));
+//		paneScrollPane.setMinimumSize(new Dimension(10, 10));
+//		getContentPane().add(paneScrollPane, BorderLayout.NORTH);
+
+		// Redirect stdout and stderr to the text pane
+		// MessageConsole mc = new MessageConsole(textPane);
+		// mc.redirectOut();
+		// mc.redirectErr(Color.RED, null);
+		// mc.setMessageLines(100);
+
+		textArea = new JTextArea(5, 20);
+		JScrollPane paneScrollPane = new JScrollPane(textArea);
 		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		paneScrollPane.setPreferredSize(new Dimension(300, 155));
 		paneScrollPane.setMinimumSize(new Dimension(10, 10));
 		getContentPane().add(paneScrollPane, BorderLayout.NORTH);
 
-		// Redirect stdout and stderr to the text pane
-		MessageConsole mc = new MessageConsole(textPane);
-//		mc.redirectOut();
-//		mc.redirectErr(Color.RED, null);
-		mc.setMessageLines(100);
 		System.out.println("[MissionPlanMain]");
 
 	}
 
 	public void start() {
 		// Message console
-		MissionPlanConsole E = new MissionPlanConsole();
-		JFrame jf = new JFrame();
-		jf.setSize(800, 400);
-		jf.getContentPane().add(E);
-		jf.setVisible(true);
-		E.init();
+		// MissionPlanConsole E = new MissionPlanConsole();
+		// JFrame jf = new JFrame();
+		// jf.setSize(800, 400);
+		// jf.getContentPane().add(E);
+		// jf.setVisible(true);
+		// E.init();
 
 		mpParam = new MissionPlanParameters();
+		System.out.println("[MissionPlanMain before creating PathUtil]");
 		mpParam.p = new PathUtil(this);
 
 		mpGUI = new MissionPlanGUI(this);
 		System.out.println("[MissionPlanMain before creating mpPlot]");
 		mpPlot = new MissionPlanPlot(this);
 		System.out.println("[MissionPlanMain after creating mpPlot]");
-		System.out.println("[MissionPlanMain before creating PathUtil]");
 		level1_Pane = getContentPane();
 		level1_Pane.add(mpGUI, BorderLayout.WEST);
 		System.out.println("[MissionPlanMain before adding mpPlot]");
@@ -89,36 +98,40 @@ public class MissionPlanMain extends JApplet {
 		// if (debug)
 		// System.out.println("[PathUtilTest] Console created");
 		System.out.println("[MissionPlanMain before starting timer]");
-		//mpGUI.mpE.timer.start();
+		// mpGUI.mpE.timer.start();
+
+		mpParam.messages.printMessages();
+		mpParam.messages.printMessagesToTextArea(textArea);
+
 	}
 
 	/**
 	 * Used when run as an application
 	 */
-//	public static void main(String[] args) {
-//		MissionPlanMain mApplet = new MissionPlanMain();
-//		mApplet.init();
-//
-//		mApplet.sFrame = new JFrame();
-//		mApplet.sFrame.setTitle("JAT Solar System Mission Planner");
-//		mApplet.sFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//		// When running this file as a stand-alone app, add the applet to
-//		// the frame.
-//		mApplet.sFrame.getContentPane().add(mApplet, BorderLayout.CENTER);
-//		mApplet.sFrame.setSize(appletwidth, appletheight);
-//		mApplet.sFrame.setVisible(true);
-//
-//		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
-//		mApplet.mpPlot.requestFocusInWindow();
-//
-//		// mApplet.mpGUI.mpE.timer.start();
-//		mApplet.start();
-//		if (Java3dTree_debug) {
-//			m_Java3dTree = new com.tornadolabs.j3dtree.Java3dTree();
-//			m_Java3dTree.recursiveApplyCapability(mApplet.mpPlot.jatScene);
-//			m_Java3dTree.updateNodes(mApplet.mpPlot.universe);
-//		}
-//	}// End of main()
+	// public static void main(String[] args) {
+	// MissionPlanMain mApplet = new MissionPlanMain();
+	// mApplet.init();
+	//
+	// mApplet.sFrame = new JFrame();
+	// mApplet.sFrame.setTitle("JAT Solar System Mission Planner");
+	// mApplet.sFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	//
+	// // When running this file as a stand-alone app, add the applet to
+	// // the frame.
+	// mApplet.sFrame.getContentPane().add(mApplet, BorderLayout.CENTER);
+	// mApplet.sFrame.setSize(appletwidth, appletheight);
+	// mApplet.sFrame.setVisible(true);
+	//
+	// // sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
+	// mApplet.mpPlot.requestFocusInWindow();
+	//
+	// // mApplet.mpGUI.mpE.timer.start();
+	// mApplet.start();
+	// if (Java3dTree_debug) {
+	// m_Java3dTree = new com.tornadolabs.j3dtree.Java3dTree();
+	// m_Java3dTree.recursiveApplyCapability(mApplet.mpPlot.jatScene);
+	// m_Java3dTree.updateNodes(mApplet.mpPlot.universe);
+	// }
+	// }// End of main()
 
 }
