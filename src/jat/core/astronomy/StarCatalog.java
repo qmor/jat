@@ -28,25 +28,28 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class StarCatalog {
 	public List<Stardata> manystardata;
-	
+	PathUtil p;
 	public int a;
-	
-	
+
+	public StarCatalog(PathUtil p) {
+		this.p = p;
+	}
+
 	public void load() {
 		manystardata = new ArrayList<Stardata>();
 
-		PathUtil f = new PathUtil();
-		String fs = f.fs;
-		String star_data_file = f.root_path + "data" + fs + "core" + fs + "astronomy" + fs + "hyg_100.csv";
+		// PathUtil f = new PathUtil();
+		// String fs = f.fs;
+		 String star_data_file = p.data_path+"astronomy/hyg_100.csv";
 		String[] nextLine;
 		CSVReader reader;
 		try {
 			reader = new CSVReader(new FileReader(star_data_file));
 			reader.readNext(); // read over header line
 			while ((nextLine = reader.readNext()) != null) {
-		//		for (int i = 0; i < nextLine.length; i++)
-		//			System.out.print(nextLine[i] + " | ");
-		//		System.out.println();
+				// for (int i = 0; i < nextLine.length; i++)
+				// System.out.print(nextLine[i] + " | ");
+				// System.out.println();
 				manystardata.add(new Stardata(nextLine[6], Double.parseDouble(nextLine[7]), Double
 						.parseDouble(nextLine[8])));
 			}
@@ -57,5 +60,4 @@ public class StarCatalog {
 
 	}
 
-	
 }

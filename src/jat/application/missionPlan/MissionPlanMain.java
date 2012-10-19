@@ -57,8 +57,8 @@ public class MissionPlanMain extends JApplet {
 
 		// Redirect stdout and stderr to the text pane
 		MessageConsole mc = new MessageConsole(textPane);
-		mc.redirectOut();
-		mc.redirectErr(Color.RED, null);
+//		mc.redirectOut();
+//		mc.redirectErr(Color.RED, null);
 		mc.setMessageLines(100);
 		System.out.println("[MissionPlanMain]");
 
@@ -89,36 +89,36 @@ public class MissionPlanMain extends JApplet {
 		// if (debug)
 		// System.out.println("[PathUtilTest] Console created");
 		System.out.println("[MissionPlanMain before starting timer]");
-		mpGUI.mpE.timer.start();
+		//mpGUI.mpE.timer.start();
 	}
 
 	/**
 	 * Used when run as an application
 	 */
-	public static void main(String[] args) {
-		MissionPlanMain mApplet = new MissionPlanMain();
-		mApplet.init();
-
-		mApplet.sFrame = new JFrame();
-		mApplet.sFrame.setTitle("JAT Solar System Mission Planner");
-		mApplet.sFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// When running this file as a stand-alone app, add the applet to
-		// the frame.
-		mApplet.sFrame.getContentPane().add(mApplet, BorderLayout.CENTER);
-		mApplet.sFrame.setSize(appletwidth, appletheight);
-		mApplet.sFrame.setVisible(true);
-
-		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
-		mApplet.mpPlot.requestFocusInWindow();
-
-		// mApplet.mpGUI.mpE.timer.start();
-		mApplet.start();
-		if (Java3dTree_debug) {
-			m_Java3dTree = new com.tornadolabs.j3dtree.Java3dTree();
-			m_Java3dTree.recursiveApplyCapability(mApplet.mpPlot.jatScene);
-			m_Java3dTree.updateNodes(mApplet.mpPlot.universe);
-		}
-	}// End of main()
+//	public static void main(String[] args) {
+//		MissionPlanMain mApplet = new MissionPlanMain();
+//		mApplet.init();
+//
+//		mApplet.sFrame = new JFrame();
+//		mApplet.sFrame.setTitle("JAT Solar System Mission Planner");
+//		mApplet.sFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//		// When running this file as a stand-alone app, add the applet to
+//		// the frame.
+//		mApplet.sFrame.getContentPane().add(mApplet, BorderLayout.CENTER);
+//		mApplet.sFrame.setSize(appletwidth, appletheight);
+//		mApplet.sFrame.setVisible(true);
+//
+//		// sApplet.ssp.mouseZoom.setupCallback(sApplet.ssE);
+//		mApplet.mpPlot.requestFocusInWindow();
+//
+//		// mApplet.mpGUI.mpE.timer.start();
+//		mApplet.start();
+//		if (Java3dTree_debug) {
+//			m_Java3dTree = new com.tornadolabs.j3dtree.Java3dTree();
+//			m_Java3dTree.recursiveApplyCapability(mApplet.mpPlot.jatScene);
+//			m_Java3dTree.updateNodes(mApplet.mpPlot.universe);
+//		}
+//	}// End of main()
 
 }

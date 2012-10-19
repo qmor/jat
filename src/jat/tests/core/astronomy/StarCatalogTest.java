@@ -19,6 +19,7 @@ package jat.tests.core.astronomy;
 
 import jat.core.astronomy.StarCatalog;
 import jat.core.astronomy.Stardata;
+import jat.core.util.PathUtil;
 
 import java.io.IOException;
 
@@ -26,8 +27,8 @@ public class StarCatalogTest {
 
 	public static void main(String[] args) throws IOException {
 		StarCatalog s;
-
-		s = new StarCatalog();
+		PathUtil p = new PathUtil();
+		s = new StarCatalog(p);
 		s.load();
 		int number_of_stars = s.manystardata.size();
 		Stardata sd;

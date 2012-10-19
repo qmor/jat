@@ -37,8 +37,9 @@ public class MissionPlanPlot extends JatPlot3D {
 	Star3D sun;
 	MissionPlanMain mpmain;
 	DE405Plus myEph; // Ephemeris class
-	Planet3D[] planet;
+	// Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
+	boolean foundBug = false;
 
 	public MissionPlanPlot(MissionPlanMain mpmain) {
 		super();
@@ -48,40 +49,41 @@ public class MissionPlanPlot extends JatPlot3D {
 	public Node createScene() {
 		Group g = new Group();
 		jatScene = new jatScene3D();
-//		sun = new Star3D(10.f);
-//		jatScene.add(sun, "sun");
-		ephemerisPlanet = new Ephemeris3D[10];
-		planet = new Planet3D[10];
+		if (foundBug) {
+			// sun = new Star3D(10.f);
+			// jatScene.add(sun, "sun");
+			ephemerisPlanet = new Ephemeris3D[10];
+			// planet = new Planet3D[10];
 
-		// Ephemeris data
-		myEph = new DE405Plus(mpmain);
+			// Ephemeris data
+			myEph = new DE405Plus(mpmain);
 
-		DE405Plus.body body[] = DE405Plus.body.values();
-		SolarSystemBodies sb = new SolarSystemBodies();
+			DE405Plus.body body[] = DE405Plus.body.values();
+			SolarSystemBodies sb = new SolarSystemBodies();
 
-		for (int i = 1; i < 7; i++) {
-			planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
-			jatScene.add(planet[i], DE405Plus.name[i]);
-			//if (i == 3)
-			{
-				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
-						SolarSystemBodies.Bodies[i].orbitalPeriod);
-				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
+			for (int i = 1; i < 7; i++) {
+				// planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
+				// jatScene.add(planet[i], DE405Plus.name[i]);
+				// if (i == 3)
+				{
+					ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
+							SolarSystemBodies.Bodies[i].orbitalPeriod);
+					jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
+				}
 			}
-		}
 
-		jatScene.add(new RGBAxes3D(100000000), "Axis");
-		// jatScene.InitialRotation.rotX(-cm.Rad(Constants.eps));
-		g.addChild(jatScene);
+			jatScene.add(new RGBAxes3D(100000000), "Axis");
+			// jatScene.InitialRotation.rotX(-cm.Rad(Constants.eps));
+			g.addChild(jatScene);
+		}
+		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.p,15f);
+		g.addChild(s);
 		// initial zoom: exponent of ten times kilometers
 		exponent = 8;
-		StarsBackground3D s = new StarsBackground3D(15f);
-		g.addChild(s);
 		bbox = new BoundingBox3D(-.5f, .5f);
 		bbox.createAxes(exponent);
 		bboxgroup = new BodyGroup3D(bbox, "Box");
 		g.addChild(bboxgroup);
-
 		return g;
 	}
 

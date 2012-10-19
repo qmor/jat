@@ -19,6 +19,7 @@ package jat.jat3D;
 
 import jat.core.astronomy.StarCatalog;
 import jat.core.astronomy.Stardata;
+import jat.core.util.PathUtil;
 import jat.coreNOSA.math.CoordTransform;
 import jat.coreNOSA.math.MathUtils;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -43,10 +44,12 @@ public class StarsBackground3D extends BranchGroup {
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
 	public StarCatalog s;
+	PathUtil p;
 
-	public StarsBackground3D(float radius) {
+	public StarsBackground3D(PathUtil p, float radius) {
 		super();
-		this.radius=radius;
+		this.p = p;
+		this.radius = radius;
 		Starcolor = Colors.blue;
 
 		addChild(createStarSphere());
@@ -57,7 +60,7 @@ public class StarsBackground3D extends BranchGroup {
 
 		BranchGroup bg = new BranchGroup();
 
-		s = new StarCatalog();
+		s = new StarCatalog(p);
 		s.load();
 
 		PointArray starfield = new PointArray(99, PointArray.COORDINATES | PointArray.COLOR_3);
@@ -67,8 +70,9 @@ public class StarsBackground3D extends BranchGroup {
 			// for (int i = 0; i < manystardata.size(); i++)
 			sd = (Stardata) s.manystardata.get(i);
 
-			//System.out.println(sd.ProperName + " " + sd.RA + " " + sd.dec);
-			VectorN point3 = CoordTransform.Spherical_to_Cartesian_deg(radius, sd.RA/MathUtils.DEG2RAD, sd.dec/MathUtils.DEG2RAD);
+			// System.out.println(sd.ProperName + " " + sd.RA + " " + sd.dec);
+			VectorN point3 = CoordTransform.Spherical_to_Cartesian_deg(radius, sd.RA / MathUtils.DEG2RAD, sd.dec
+					/ MathUtils.DEG2RAD);
 
 			// point[0] = 1;
 			// point[1] = 1;
