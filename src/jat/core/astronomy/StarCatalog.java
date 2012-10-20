@@ -50,7 +50,8 @@ public class StarCatalog {
 			manystardata = new ArrayList<Stardata>();
 
 			String fileName = p.data_path + "core/astronomy/hyg_100.csv";
-			System.out.println("[StarCatalog] " + fileName);
+			messages.addln("[StarCatalog] " + fileName);
+			// System.out.println("[StarCatalog] " + fileName);
 			String[] nextLine;
 
 			try {
@@ -71,8 +72,8 @@ public class StarCatalog {
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 				String line;
 				while (null != (line = in.readLine())) {
-					System.out.println("[StarCatalog] " + line);
-					messages.add(line);
+					// System.out.println("[StarCatalog] " + line);
+					messages.addln("[StarCatalog] " + line);
 				}
 				in.close();
 			} catch (MalformedURLException e) {

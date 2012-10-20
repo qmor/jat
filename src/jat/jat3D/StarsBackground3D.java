@@ -55,7 +55,15 @@ public class StarsBackground3D extends BranchGroup {
 		this.messages=messages;
 		this.radius = radius;
 		Starcolor = Colors.blue;
+		addChild(createStarSphere());
+		// addChild(createPointCloud());
+	}
 
+	public StarsBackground3D(PathUtil p,   float radius) {
+		super();
+		this.p = p;
+		this.radius = radius;
+		Starcolor = Colors.blue;
 		addChild(createStarSphere());
 		// addChild(createPointCloud());
 	}
