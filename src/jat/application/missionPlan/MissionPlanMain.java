@@ -83,22 +83,22 @@ public class MissionPlanMain extends JApplet {
 		// E.init();
 
 		mpParam = new MissionPlanParameters();
-		System.out.println("[MissionPlanMain before creating PathUtil]");
-		mpParam.p = new PathUtil(this);
+		//System.out.println("[MissionPlanMain before creating PathUtil]");
+		mpParam.p = new PathUtil(this,mpParam.messages);
 
 		mpGUI = new MissionPlanGUI(this);
-		System.out.println("[MissionPlanMain before creating mpPlot]");
+		//System.out.println("[MissionPlanMain before creating mpPlot]");
 		mpPlot = new MissionPlanPlot(this);
-		System.out.println("[MissionPlanMain after creating mpPlot]");
+		//System.out.println("[MissionPlanMain after creating mpPlot]");
 		level1_Pane = getContentPane();
 		level1_Pane.add(mpGUI, BorderLayout.WEST);
-		System.out.println("[MissionPlanMain before adding mpPlot]");
+		//System.out.println("[MissionPlanMain before adding mpPlot]");
 		level1_Pane.add(mpPlot, BorderLayout.CENTER);
 
 		// if (debug)
 		// System.out.println("[PathUtilTest] Console created");
-		System.out.println("[MissionPlanMain before starting timer]");
-		// mpGUI.mpE.timer.start();
+		//System.out.println("[MissionPlanMain before starting timer]");
+		mpGUI.mpE.timer.start();
 
 		mpParam.messages.printMessages();
 		mpParam.messages.printMessagesToTextArea(textArea);

@@ -33,7 +33,8 @@ public class StarCatalog {
 	PathUtil p;
 	public int a;
 	jatMessages messages;
-	boolean bugFound = true;
+
+	// boolean bugFound = true;
 
 	public StarCatalog(PathUtil p) {
 		this.p = p;
@@ -45,45 +46,61 @@ public class StarCatalog {
 	}
 
 	public void load() {
-		if (bugFound) {
+		// if (bugFound) {
 
-			manystardata = new ArrayList<Stardata>();
+		manystardata = new ArrayList<Stardata>();
 
-			String fileName = p.data_path + "core/astronomy/hyg_100.csv";
+		String fileName = p.data_path + "core/astronomy/hyg_100.csv";
+		if (messages != null)
 			messages.addln("[StarCatalog] " + fileName);
-			// System.out.println("[StarCatalog] " + fileName);
-			String[] nextLine;
+		// System.out.println("[StarCatalog] " + fileName);
 
-			try {
-				// Create a URL for the desired page
-				// If it is called from an applet, it starts with "file:" or
-				// "http:"
-				// If it's an application, we need to add "file:" so that
-				// BufferReader works
-				boolean application;
-				if (fileName.startsWith("file") || fileName.startsWith("http"))
-					application = false;
-				else
-					application = true;
-				if (application)
-					fileName = "file:" + fileName;
-				URL url = new URL(fileName);
-				int count = 0;
-				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-				String line;
-				while (null != (line = in.readLine())) {
-					// System.out.println("[StarCatalog] " + line);
-					messages.addln("[StarCatalog] " + line);
-				}
-				in.close();
-			} catch (MalformedURLException e) {
-				System.out.println("MalformedURLException");
-			} catch (IOException e) {
+		try {
+			// Create a URL for the desired page
+			// If it is called from an applet, it starts with "file:" or
+			// "http:"
+			// If it's an application, we need to add "file:" so that
+			// BufferReader works
+			boolean application;
+			if (fileName.startsWith("file") || fileName.startsWith("http"))
+				application = false;
+			else
+				application = true;
+			if (application)
+				fileName = "file:" + fileName;
+			URL url = new URL(fileName);
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			
+//			Scanner s=new Scanner(in);
+//            s.useLocale(Locale.US);
+			
+			
+			String line;
+			// read over first row header line
+			in.readLine();
+
+			while (null != (line = in.readLine())) {
+				// System.out.println("[StarCatalog] " + line);
+//				if (messages != null)
+//					messages.addln("[StarCatalog] " + line);
+				String[] tokens = line.split(",");
+//				for (int i = 0; i < tokens.length; i++)
+//					System.out.println("[StarCatalog] " + tokens[i]);
+				//System.out.println("[StarCatalog] " + tokens[6]+" "+tokens[7]+" "+tokens[8]);
+				Stardata sd=new Stardata(tokens[6],Double.parseDouble(tokens[7]), Double.parseDouble(tokens[8]));
+				 manystardata.add(sd);
+
 			}
-
+			in.close();
+		} catch (MalformedURLException e) {
+			System.out.println("MalformedURLException");
+		} catch (IOException e) {
 		}
-		System.out.println("[StarCatalog] load out");
+
 	}
+	// System.out.println("[StarCatalog] load out");
+	// }
 }
 
 // try {

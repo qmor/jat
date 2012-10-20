@@ -49,28 +49,30 @@ public class MissionPlanPlot extends JatPlot3D {
 	public Node createScene() {
 		Group g = new Group();
 		jatScene = new jatScene3D();
+		// Ephemeris data
+		myEph = new DE405Plus(mpmain.mpParam.p,mpmain.mpParam.messages);
+
+		ephemerisPlanet = new Ephemeris3D[10];
+		DE405Plus.body body[] = DE405Plus.body.values();
+		SolarSystemBodies sb = new SolarSystemBodies();
+		for (int i = 1; i < 7; i++) {
+			// planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
+			// jatScene.add(planet[i], DE405Plus.name[i]);
+			// if (i == 3)
+			{
+				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
+						SolarSystemBodies.Bodies[i].orbitalPeriod);
+				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
+			}
+		}
+
 		if (foundBug) {
 			// sun = new Star3D(10.f);
 			// jatScene.add(sun, "sun");
-			ephemerisPlanet = new Ephemeris3D[10];
 			// planet = new Planet3D[10];
 
-			// Ephemeris data
-			myEph = new DE405Plus(mpmain);
 
-			DE405Plus.body body[] = DE405Plus.body.values();
-			SolarSystemBodies sb = new SolarSystemBodies();
 
-			for (int i = 1; i < 7; i++) {
-				// planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
-				// jatScene.add(planet[i], DE405Plus.name[i]);
-				// if (i == 3)
-				{
-					ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
-							SolarSystemBodies.Bodies[i].orbitalPeriod);
-					jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
-				}
-			}
 
 			// jatScene.InitialRotation.rotX(-cm.Rad(Constants.eps));
 		}

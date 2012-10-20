@@ -39,6 +39,7 @@ public class PathUtil {
 	public String DE405Path;
 	public String data_path;
 	public String fs = File.separator;
+	jatMessages messages;
 
 	/**
 	 * Use this if called from application
@@ -50,6 +51,24 @@ public class PathUtil {
 		data_path = root_path + "data/";
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
 
+	}
+
+	/**
+	 * Use this if called from applet
+	 */
+	public PathUtil(Applet myapplet, jatMessages messages) {
+
+		this.messages = messages;
+		// current_path = find_current_path(myapplet);
+		root_path = find_root(myapplet);
+		data_path = root_path + "data/";
+		DE405Path = root_path + "data/core/ephemeris/DE405data/";
+
+		if (messages != null) {
+			messages.addln("[PathUtil] " + root_path);
+			messages.addln("[PathUtil] " + data_path);
+			messages.addln("[PathUtil] " + DE405Path);
+		}
 	}
 
 	/**
@@ -105,7 +124,8 @@ public class PathUtil {
 
 	public String find_root() {
 
-		String resource_path = PathUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String resource_path = PathUtil.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath();
 		if (debug)
 			System.out.println("[PathUtil resource_path] " + resource_path);
 
@@ -141,19 +161,20 @@ public class PathUtil {
 			System.out.println("[PathUtil] current_path called");
 
 		try {
-			 ResourceLoader c = new ResourceLoader();
-			 URL url = c.loadURL(a.getClass(), ".");
+			ResourceLoader c = new ResourceLoader();
+			URL url = c.loadURL(a.getClass(), ".");
 			// ResourceLoader c = new ResourceLoader();
 			// URL url = c.loadURL(a.getClass(), "/");
 
-//			ResourceLoader c = new ResourceLoader();
-//			URL helpURL2 = c.loadURL(this.getClass(), relative_path);
+			// ResourceLoader c = new ResourceLoader();
+			// URL helpURL2 = c.loadURL(this.getClass(), relative_path);
 
 			// System.out.println(url.getPath());
 			return url.getPath();
 
 		} catch (Exception e) {
-			System.err.println("Couldn't find current path in jat.core.util.PathUtil");
+			System.err
+					.println("Couldn't find current path in jat.core.util.PathUtil");
 			// System.exit(0);
 			return "";
 		}

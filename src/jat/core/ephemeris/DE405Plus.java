@@ -17,8 +17,8 @@
 
 package jat.core.ephemeris;
 
-
 import jat.core.util.PathUtil;
+import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -82,16 +82,25 @@ public class DE405Plus extends DE405APL {
 	}
 
 	DE405Plus.frame ephFrame;
+	jatMessages messages;
 
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
 	}
 
+	public DE405Plus(PathUtil p, jatMessages messages) {
+		this.p = p;
+		DE405_path = p.DE405Path;
+		if (messages != null) 
+			messages.addln("[DE405Plus] " + DE405_path);
+		//System.out.println("[DE405Plus] DE405_path " + DE405_path);
+		ephFrame = frame.ICRF;
+	}
+
 	public DE405Plus(PathUtil p) {
 		this.p = p;
 		DE405_path = p.DE405Path;
-		System.out.println("[DE405Plus] DE405_path " + DE405_path);
 		ephFrame = frame.ICRF;
 	}
 
