@@ -43,7 +43,7 @@ public class AddFlightDialog extends JDialog implements ActionListener {
 		this.mpMain = mpMain;
 		setBounds(50, 50, 900, 700);
 		getContentPane().setLayout(new BorderLayout());
-		p = new PorkChopPlot_main(mpMain.mpParam.p);
+		p = new PorkChopPlot_main(mpMain.mpParam.path);
 		p.init();
 		p.setVisible(true);
 		getContentPane().add(p);

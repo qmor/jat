@@ -1,31 +1,32 @@
 /* JAT: Java Astrodynamics Toolkit
- *
- * Copyright (c) 2002 National Aeronautics and Space Administration and the Center for Space Research (CSR),
- * The University of Texas at Austin. All rights reserved.
- *
- * This file is part of JAT. JAT is free software; you can
- * redistribute it and/or modify it under the terms of the
- * NASA Open Source Agreement
  * 
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * NASA Open Source Agreement for more details.
- *
- * You should have received a copy of the NASA Open Source Agreement
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
+  Copyright 2012 Tobias Berthold
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
  */
 
 package jat.jat3D;
 
 import jat.core.util.PathUtil;
+import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.cm;
 
-import java.awt.Button;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Material;
 import javax.media.j3d.TextureAttributes;
@@ -35,41 +36,59 @@ import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 
 /**
- * Planet class
+ * Star3D class
  * 
  * @author Tobias Berthold
  */
 public class Star3D extends Body3D {
 	float radius;
-	String Texturefilename;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
-	Button b; // for ImageObserver if applet not used
 	PathUtil p;
 	String images_path;
 
 	public Star3D(float scale) {
 	}
 
-	public Star3D(PathUtil p, float scale) {
+	public Star3D(PathUtil path, jatMessages messages, float scale) {
 		super();
-		images_path = p.root_path + "data/jat3D/images_hires/";
+		this.messages=messages;
+		images_path = path.root_path + "data/jat3D/images_hires/";
 		this.scale = scale;
-		b = new Button();
-		Texturefilename = images_path + "sun.jpg";
 		radius = (float) cm.sun_radius;
 		Starcolor = Colors.blue;
+		
+		String fileName= images_path + "sun.jpg";
 
-		if (Texturefilename == null) {
-			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
-		} else {
-			TextureLoader tex = new TextureLoader(Texturefilename, b);
+		
+		// Create a URL for the desired page
+		// If it is called from an applet, it starts with "file:" or "http:"
+		// If it's an application, we need to add "file:" so that BufferReader works
+		boolean application;
+		if (fileName.startsWith("file") || fileName.startsWith("http"))
+			application = false;
+		else
+			application = true;
+		if (application)
+			fileName = "file:" + fileName;
+		messages.addln("[Star3D] "+fileName);
+		try {
+			URL TextureURL = new URL(fileName);
+			BufferedImage img = ImageIO.read(TextureURL);
+			TextureLoader tex = new TextureLoader(img);
 			TextureAttributes ta = new TextureAttributes();
 			ta.setTextureMode(TextureAttributes.MODULATE);
 			app = createMatAppear_star(Colors.white, Colors.white, 10.0f);
 			app.setTextureAttributes(ta);
 			app.setTexture(tex.getTexture());
+		} catch (MalformedURLException e) {
+			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
+			//e.printStackTrace();
+		} catch (IOException e) {
+			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
+			//e.printStackTrace();
 		}
+		
 
 		addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));
 

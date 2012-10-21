@@ -50,11 +50,12 @@ public class MissionPlanPlot extends JatPlot3D {
 		Group g = new Group();
 		jatScene = new jatScene3D();
 		// Ephemeris data
-		myEph = new DE405Plus(mpmain.mpParam.p,mpmain.mpParam.messages);
+		myEph = new DE405Plus(mpmain.mpParam.path, mpmain.mpParam.messages);
 
 		ephemerisPlanet = new Ephemeris3D[10];
 		DE405Plus.body body[] = DE405Plus.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();
+		// planet = new Planet3D[10];
 		for (int i = 1; i < 7; i++) {
 			// planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
 			// jatScene.add(planet[i], DE405Plus.name[i]);
@@ -66,18 +67,15 @@ public class MissionPlanPlot extends JatPlot3D {
 			}
 		}
 
+		sun = new Star3D(mpmain.mpParam.path,mpmain.mpParam.messages, 10.f);
+		jatScene.add(sun, "sun");
+		
+		
 		if (foundBug) {
-			// sun = new Star3D(10.f);
-			// jatScene.add(sun, "sun");
-			// planet = new Planet3D[10];
 
-
-
-
-			// jatScene.InitialRotation.rotX(-cm.Rad(Constants.eps));
 		}
 		g.addChild(jatScene);
-		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.p,mpmain.mpParam.messages,15f);
+		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.path, mpmain.mpParam.messages, 15f);
 		g.addChild(s);
 		jatScene.add(new RGBAxes3D(100000000), "Axis");
 		// initial zoom: exponent of ten times kilometers

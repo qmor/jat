@@ -9,7 +9,7 @@ public class MissionPlanParameters {
 	TimeAPL simulationDate;
 	int number = DE405Plus.body.values().length;
 	boolean[] planetOnOff;
-	PathUtil p;
+	PathUtil path;
 	jatMessages messages;
 
 	public MissionPlanParameters() {

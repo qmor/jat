@@ -225,7 +225,7 @@ public class TwoBody implements Derivatives
 		
 	
 	/** Copy a TwoBody orbit into a new TwoBody orbit.
-	 * @param p PrintWriter.
+	 * @param path PrintWriter.
 	 * @return Newly created copy of the TwoBody orbit.
 	 */
 	public TwoBody copy()

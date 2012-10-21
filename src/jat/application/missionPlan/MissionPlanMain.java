@@ -84,7 +84,7 @@ public class MissionPlanMain extends JApplet {
 
 		mpParam = new MissionPlanParameters();
 		//System.out.println("[MissionPlanMain before creating PathUtil]");
-		mpParam.p = new PathUtil(this,mpParam.messages);
+		mpParam.path = new PathUtil(this,mpParam.messages);
 
 		mpGUI = new MissionPlanGUI(this);
 		//System.out.println("[MissionPlanMain before creating mpPlot]");
