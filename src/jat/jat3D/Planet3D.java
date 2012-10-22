@@ -20,18 +20,18 @@ package jat.jat3D;
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
+import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.cm;
 
-import java.awt.Button;
-import java.awt.Image;
-import java.awt.image.ImageObserver;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.media.j3d.Appearance;
-import javax.media.j3d.ImageComponent2D;
 import javax.media.j3d.Material;
-import javax.media.j3d.Texture;
-import javax.media.j3d.Texture2D;
-import javax.media.j3d.Transform3D;
+import javax.media.j3d.TextureAttributes;
 import javax.vecmath.Color3f;
 
 import com.sun.j3d.utils.geometry.Sphere;
@@ -42,110 +42,218 @@ import com.sun.j3d.utils.image.TextureLoader;
  * 
  * @author Tobias Berthold
  */
-public class Planet3D extends Body3D implements ImageObserver {
+public class Planet3D extends Body3D {
 	float radius;
-	String Texturefilename;
 	Appearance app;
 	Color3f Planetcolor; // planet color if texture not found
-	int divisions = 60; // number of divisions for sphere
-	Button b; // for ImageObserver if Applet not used
 	Appearance appear;
-	PathUtil p;
 	String images_path;
+	//int divisions = 60; // number of divisions for sphere
 
-	public Planet3D(PathUtil p, DE405Plus.body planet, float scale) {
-		super.scale = scale;
-		this.p = p;
+	public Planet3D(PathUtil p, jatMessages messages, DE405Plus.body planet, float scale) {
+		super();
+		this.scale = scale;
+		radius = (float) 1000f;
+		this.messages = messages;
 		images_path = p.root_path + "data/jat3D/images_hires/";
-		b = new Button();
-		CreatePlanet(planet);
-	}
+		
 
-	public Planet3D(DE405Plus.body planet, float scale) {
-		super.scale = scale;
-		b = new Button();
-		CreatePlanet(planet);
-	}
+		
+		
+		
+		String fileName = null;
+		//String fileName= images_path + "moon.jpg";
 
-	private void CreatePlanet(DE405Plus.body planet) {
-
+		
 		switch (planet) {
 		case MERCURY:
-			Texturefilename = images_path + "mercury.jpg";
+			fileName = images_path + "mercury.jpg";
 			radius = (float) cm.mercury_radius;
 			Planetcolor = Colors.red;
 			break;
 		case VENUS:
-			Texturefilename = images_path + "venus.jpg";
+			fileName = images_path + "venus.jpg";
 			radius = (float) cm.venus_radius;
 			Planetcolor = Colors.green;
 			break;
 		case EARTH_MOON_BARY:
-			Texturefilename = images_path + "earth.jpg";
+			fileName = images_path + "earth.jpg";
 			radius = (float) cm.earth_radius;
 			Planetcolor = Colors.blue;
 			break;
 		case MARS:
-			Texturefilename = images_path + "mars.jpg";
+			fileName = images_path + "mars.jpg";
 			radius = (float) cm.mars_radius;
 			Planetcolor = Colors.blue;
 			break;
 		case JUPITER:
-			Texturefilename = images_path + "jupiter.jpg";
+			fileName = images_path + "jupiter.jpg";
 			radius = (float) cm.jupiter_radius;
 			Planetcolor = Colors.orange;
 			break;
 		case SATURN:
-			Texturefilename = images_path + "saturn.jpg";
+			fileName = images_path + "saturn.jpg";
 			radius = (float) SolarSystemBodies.Bodies[DE405Plus.body.SATURN.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case MOON:
-			Texturefilename = images_path + "moon.jpg";
+			fileName = images_path + "moon.jpg";
 			radius = (float) cm.moon_radius;
 			Planetcolor = Colors.blue;
 			break;
 		}
 
-		if (Texturefilename == null) {
-			app = createMatAppear_planet(Planetcolor, Colors.white, 10.0f);
-		} else {
+		
+		
+		
+		
+		
+		// Create a URL for the desired page
+		// If it is called from an applet, it starts with "file:" or "http:"
+		// If it's an application, we need to add "file:" so that BufferReader works
+		boolean application;
+		if (fileName.startsWith("file") || fileName.startsWith("http"))
+			application = false;
+		else
+			application = true;
+		if (application)
+			fileName = "file:" + fileName;
+		messages.addln("[Planet3D] "+fileName);
+		try {
+			URL TextureURL = new URL(fileName);
+			BufferedImage img = ImageIO.read(TextureURL);
+			TextureLoader tex = new TextureLoader(img);
+			TextureAttributes ta = new TextureAttributes();
+			ta.setTextureMode(TextureAttributes.MODULATE);
+			app = createMatAppear_star(Colors.white, Colors.white, 10.0f);
+			app.setTextureAttributes(ta);
+			app.setTexture(tex.getTexture());
+		} catch (MalformedURLException e) {
+			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
+			//e.printStackTrace();
+		} catch (IOException e) {
+			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
+			//e.printStackTrace();
+		}
+		
+		addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));		
+		
+		
+		//CreatePlanet(planet);
 
-			appear = createAppearance();
+	
+	}
+
+	private void CreatePlanet(DE405Plus.body planet) {
+		String TextureFileName = null;
+
+		switch (planet) {
+		case MERCURY:
+			TextureFileName = images_path + "mercury.jpg";
+			radius = (float) cm.mercury_radius;
+			Planetcolor = Colors.red;
+			break;
+		case VENUS:
+			TextureFileName = images_path + "venus.jpg";
+			radius = (float) cm.venus_radius;
+			Planetcolor = Colors.green;
+			break;
+		case EARTH_MOON_BARY:
+			TextureFileName = images_path + "earth.jpg";
+			radius = (float) cm.earth_radius;
+			Planetcolor = Colors.blue;
+			break;
+		case MARS:
+			TextureFileName = images_path + "mars.jpg";
+			radius = (float) cm.mars_radius;
+			Planetcolor = Colors.blue;
+			break;
+		case JUPITER:
+			TextureFileName = images_path + "jupiter.jpg";
+			radius = (float) cm.jupiter_radius;
+			Planetcolor = Colors.orange;
+			break;
+		case SATURN:
+			TextureFileName = images_path + "saturn.jpg";
+			radius = (float) SolarSystemBodies.Bodies[DE405Plus.body.SATURN.ordinal()].radius;
+			Planetcolor = Colors.orange;
+			break;
+		case MOON:
+			TextureFileName = images_path + "moon.jpg";
+			radius = (float) cm.moon_radius;
+			Planetcolor = Colors.blue;
+			break;
 		}
 
-		addChild(new Sphere(radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, divisions, appear));
+//		if (Texturefilename == null) {
+//			app = createMatAppear_planet(Planetcolor, Colors.white, 10.0f);
+//		} else {
+//
+//			appear = createAppearance();
+//		}
 
-		Transform3D transform2 = new Transform3D();
-		transform2.rotX(Math.PI / 2);
-		setTransform(transform2);
+		// Create a URL for the desired page
+		// If it is called from an applet, it starts with "file:" or "http:"
+		// If it's an application, we need to add "file:" so that BufferReader works
+		boolean application;
+		if (TextureFileName.startsWith("file") || TextureFileName.startsWith("http"))
+			application = false;
+		else
+			application = true;
+		if (application)
+			TextureFileName = "file:" + TextureFileName;
+		messages.addln("[Planet3D] "+TextureFileName);
+		try {
+			URL TextureURL = new URL(TextureFileName);
+			BufferedImage img = ImageIO.read(TextureURL);
+			TextureLoader tex = new TextureLoader(img);
+			TextureAttributes ta = new TextureAttributes();
+			ta.setTextureMode(TextureAttributes.MODULATE);
+			app = createMatAppear_planet(Colors.white, Colors.white, 10.0f);
+			app.setTextureAttributes(ta);
+			app.setTexture(tex.getTexture());
+		} catch (MalformedURLException e) {
+			app = createMatAppear_planet(Colors.blue, Colors.white, 10.0f);
+			//e.printStackTrace();
+		} catch (IOException e) {
+			app = createMatAppear_planet(Colors.blue, Colors.white, 10.0f);
+			//e.printStackTrace();
+		}
+		
+		//addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));
+//		addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));
+//		addChild(new Sphere(radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, divisions, appear));
 
-		set_scale(scale);
+//		Transform3D transform2 = new Transform3D();
+//		transform2.rotX(Math.PI / 2);
+//		setTransform(transform2);
+//
+//		set_scale(scale);
 
 	}
 
-	Appearance createAppearance() {
-
-		Appearance planetAppear = new Appearance();
-
-		TextureLoader loader = new TextureLoader(Texturefilename, b);
-		ImageComponent2D image = loader.getImage();
-
-		if (image == null) {
-			System.out.println("load failed for texture: " + Texturefilename);
-		}
-
-		Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
-		texture.setImage(0, image);
-		texture.setEnable(true);
-
-		texture.setMagFilter(Texture.BASE_LEVEL_LINEAR);
-		texture.setMinFilter(Texture.BASE_LEVEL_LINEAR);
-
-		planetAppear.setTexture(texture);
-
-		return planetAppear;
-	}
+//	Appearance createAppearance() {
+//
+//		Appearance planetAppear = new Appearance();
+//
+//		TextureLoader loader = new TextureLoader(TextureFileName, b);
+//		ImageComponent2D image = loader.getImage();
+//
+//		if (image == null) {
+//			System.out.println("load failed for texture: " + TextureFileName);
+//		}
+//
+//		Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
+//		texture.setImage(0, image);
+//		texture.setEnable(true);
+//
+//		texture.setMagFilter(Texture.BASE_LEVEL_LINEAR);
+//		texture.setMinFilter(Texture.BASE_LEVEL_LINEAR);
+//
+//		planetAppear.setTexture(texture);
+//
+//		return planetAppear;
+//	}
 
 	protected static Appearance createMatAppear_planet(Color3f dColor, Color3f sColor, float shine) {
 		Appearance appear = new Appearance();
@@ -158,7 +266,21 @@ public class Planet3D extends Body3D implements ImageObserver {
 		return appear;
 	}
 
-	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		return false;
+	
+	static Appearance createMatAppear_star(Color3f dColor, Color3f sColor, float shine) {
+		Appearance appear = new Appearance();
+		Material material = new Material();
+		material.setDiffuseColor(dColor);
+		material.setSpecularColor(sColor);
+		material.setShininess(shine);
+		material.setEmissiveColor(1.f, 1.f, 1.f);
+		appear.setMaterial(material);
+		return appear;
 	}
+	
+	
+	// public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int
+	// arg4, int arg5) {
+	// return false;
+	// }
 }

@@ -65,9 +65,9 @@ public class PathUtil {
 		DE405Path = root_path + "data/core/ephemeris/DE405data/";
 
 		if (messages != null) {
-			messages.addln("[PathUtil] " + root_path);
-			messages.addln("[PathUtil] " + data_path);
-			messages.addln("[PathUtil] " + DE405Path);
+			messages.addln("[PathUtil root path] " + root_path);
+			// messages.addln("[PathUtil] " + data_path);
+			// messages.addln("[PathUtil] " + DE405Path);
 		}
 	}
 

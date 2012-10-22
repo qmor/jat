@@ -44,17 +44,13 @@ public class Star3D extends Body3D {
 	float radius;
 	Appearance app;
 	Color3f Starcolor; // Star color if texture not found
-	PathUtil p;
 	String images_path;
-
-	public Star3D(float scale) {
-	}
 
 	public Star3D(PathUtil path, jatMessages messages, float scale) {
 		super();
 		this.messages=messages;
-		images_path = path.root_path + "data/jat3D/images_hires/";
 		this.scale = scale;
+		images_path = path.root_path + "data/jat3D/images_hires/";
 		radius = (float) cm.sun_radius;
 		Starcolor = Colors.blue;
 		
@@ -89,7 +85,6 @@ public class Star3D extends Body3D {
 			//e.printStackTrace();
 		}
 		
-
 		addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));
 
 	}

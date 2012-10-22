@@ -47,7 +47,7 @@ public class Body3D extends TransformGroup {
 	jatMessages messages;
 
 	public Body3D() {
-		PathUtil p = new PathUtil();
+//		PathUtil p = new PathUtil();
 		// String fs = f.fs;
 		// images_path = p.root_path + "data/jat3D/images_hires/";
 		// images_path = f.root_path + "data" + fs + "jat3D" + fs +

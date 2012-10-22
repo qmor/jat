@@ -44,7 +44,7 @@ public class MissionPlanMain extends JApplet {
 	Container level1_Pane;
 	JFrame sFrame;
 	List<Flight> flightList = new ArrayList<Flight>();
-	public JTextPane textPane = new JTextPane();
+	public JTextPane textPane;
 	public JTextArea textArea;
 
 	public void init() {

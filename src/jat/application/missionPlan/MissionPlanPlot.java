@@ -37,7 +37,7 @@ public class MissionPlanPlot extends JatPlot3D {
 	Star3D sun;
 	MissionPlanMain mpmain;
 	DE405Plus myEph; // Ephemeris class
-	// Planet3D[] planet;
+	Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
 	boolean foundBug = false;
 
