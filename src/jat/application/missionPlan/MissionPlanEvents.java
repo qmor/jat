@@ -244,19 +244,19 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		// myEph.setFrame(DE405Plus.frame.ICRF);
 		DE405Plus.body body[] = DE405Plus.body.values();
 
-//		try {
-//			for (int i = 1; i < 7; i++) {
-//				// mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i],
-//				// mytime)));
-//				mpmain.mpPlot.planet[i].set_position(myEph.get_planet_pos(body[i], mytime));
-//			}
-//
-//		} catch (IOException e) {
-//			JOptionPane.showMessageDialog(mpGUI, "DE405 Ephemeris data file not found.");
-//			e.printStackTrace();
-//			System.exit(0);
-//			// e.printStackTrace();
-//		}
+		try {
+			for (int i = 1; i < 7; i++) {
+				// mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i],
+				// mytime)));
+				mpmain.mpPlot.planet[i].set_position(myEph.get_planet_pos(body[i], mytime));
+			}
+
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(mpGUI, "DE405 Ephemeris data file not found.");
+			e.printStackTrace();
+			System.exit(0);
+			// e.printStackTrace();
+		}
 
 		for (int i = 0; i < mpmain.flightList.size(); i++) {
 

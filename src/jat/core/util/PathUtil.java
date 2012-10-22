@@ -182,11 +182,3 @@ public class PathUtil {
 
 }
 
-// int i = 1;
-// do {
-// System.out.println(numberSplit[i]);
-// root_path = root_path + numberSplit[i] + "/";
-// i++;
-// } while (!(numberSplit[i].equals("jat")) &&
-// !(numberSplit[i].equals("jatdevelop"))
-// && !(numberSplit[i].equals("jatexperimental")));

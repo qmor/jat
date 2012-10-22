@@ -55,10 +55,10 @@ public class MissionPlanPlot extends JatPlot3D {
 		ephemerisPlanet = new Ephemeris3D[10];
 		DE405Plus.body body[] = DE405Plus.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();
-		// planet = new Planet3D[10];
+		planet = new Planet3D[10];
 		for (int i = 1; i < 7; i++) {
-			// planet[i] = new Planet3D(mpmain.mpParam.p,body[i], 1000.f);
-			// jatScene.add(planet[i], DE405Plus.name[i]);
+			planet[i] = new Planet3D(mpmain.mpParam.path,mpmain.mpParam.messages,body[i], 1000.f);
+			jatScene.add(planet[i], DE405Plus.name[i]);
 			// if (i == 3)
 			{
 				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
@@ -69,7 +69,8 @@ public class MissionPlanPlot extends JatPlot3D {
 
 		sun = new Star3D(mpmain.mpParam.path,mpmain.mpParam.messages, 10.f);
 		jatScene.add(sun, "sun");
-		
+
+		sun.set_position(1e7, 1e6, 1e5);
 		
 		if (foundBug) {
 
