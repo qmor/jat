@@ -246,7 +246,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		
 		try {
 			
-			for (int i = 1; i < 4; i++) {
+			for (int i = 1; i < 5; i++) {
 				// mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i],
 				// mytime)));
 				mpmain.mpPlot.planet[i].set_position(myEph.get_planet_pos(body[i], mytime));

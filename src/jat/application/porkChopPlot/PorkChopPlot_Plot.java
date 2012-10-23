@@ -69,7 +69,6 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 
 		builder = new SurfaceBuilder();
 
-
 		if (logZscaling)
 			plot = builder.buildContent(new NormalizedBinned2DLogData(pcplot_data));
 		else {
@@ -99,7 +98,8 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 				+ pcplot_data.p.A.RowLabels[pcplot_data.xBins() - 1];
 		bbox.yAxisLabel = "Arr " + pcplot_data.p.A.ColumnLabels[0] + " to "
 				+ pcplot_data.p.A.ColumnLabels[pcplot_data.xBins() - 1];
-		bbox.zAxisLabel = (int) pcplot_data.zMin()+" to " + (int) pcplot_data.zMax()+" km/s";
+		bbox.zAxisLabel = (int) pcplot_data.zMin() + " to " + (int) pcplot_data.zMax();
+		bbox.zunitsPart = " km/s";
 		bbox.createAxes(exponent);
 		bboxgroup = new BodyGroup3D(bbox, "Box");
 
@@ -120,12 +120,12 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 	public void setData(PorkChopPlot_Data data) {
 		this.pcplot_data = data;
 
-		System.out.println(pcplot_data.p.A.ColumnLabels[0]);
+		// System.out.println(pcplot_data.p.A.ColumnLabels[0]);
 		bbox.xAxisLabel = "Dep " + pcplot_data.p.A.RowLabels[0] + " to "
 				+ pcplot_data.p.A.RowLabels[pcplot_data.xBins() - 1];
 		bbox.yAxisLabel = "Arr " + pcplot_data.p.A.ColumnLabels[0] + " to "
 				+ pcplot_data.p.A.ColumnLabels[pcplot_data.xBins() - 1];
-		bbox.zAxisLabel = (int) pcplot_data.zMin()+" to " + (int) pcplot_data.zMax()+" km/s";
+		bbox.zAxisLabel = (int) pcplot_data.zMin() + " to " + (int) pcplot_data.zMax();
 		bbox.setLabels(exponent);
 
 		if (logZscaling)

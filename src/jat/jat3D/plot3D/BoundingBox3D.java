@@ -60,6 +60,9 @@ public class BoundingBox3D extends Body3D {
 	public String yAxisLabel = "Y";
 	public String zAxisLabel = "Z";
 	public String exponentPart;
+	public String xunitsPart = "";
+	public String yunitsPart = "";
+	public String zunitsPart = "";
 
 	public BoundingBox3D(float lo, float hi) {
 
@@ -112,17 +115,25 @@ public class BoundingBox3D extends Body3D {
 		addChild(new Shape3D(xCube));
 	}
 
+	public void createAxes(int exponent, String xunitsPart,String yunitsPart,String zunitsPart) {
+		this.xunitsPart=xunitsPart;
+		this.yunitsPart=yunitsPart;
+		this.zunitsPart=zunitsPart;
+		createAxes(exponent);
+	}
+
 	public void createAxes(int exponent) {
 
 		// Axes labels and tick marks
 		float range = hi - lo;
 		double[] tick = { 0, range / 4f, range / 2f, 3 * range / 4f, range };
 		float[] pos = { lo, lo + range / 4, lo + range / 2, lo + 3 * range / 4, hi };
-		String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]), String.valueOf(pos[2]), String.valueOf(pos[3]), String.valueOf(pos[4]) };
+		String[] labels = { String.valueOf(pos[0]), String.valueOf(pos[1]), String.valueOf(pos[2]),
+				String.valueOf(pos[3]), String.valueOf(pos[4]) };
 		setExponentPart(exponent);
-		xAxis = new XAxisBuilder(xAxisLabel + exponentPart, labels, tick);
-		yAxis = new YAxisBuilder(yAxisLabel + exponentPart, labels, tick);
-		zAxis = new ZAxisBuilder(zAxisLabel + exponentPart, labels, tick);
+		xAxis = new XAxisBuilder(xAxisLabel + exponentPart + xunitsPart, labels, tick);
+		yAxis = new YAxisBuilder(yAxisLabel + exponentPart + yunitsPart, labels, tick);
+		zAxis = new ZAxisBuilder(zAxisLabel + exponentPart + zunitsPart, labels, tick);
 		xAxis.lo = lo;
 		xAxis.hi = hi;
 		yAxis.lo = lo;
@@ -142,9 +153,9 @@ public class BoundingBox3D extends Body3D {
 
 	public void setLabels(int exponent) {
 		setExponentPart(exponent);
-		xAxis.setLabel(xAxisLabel + exponentPart);
-		yAxis.setLabel(yAxisLabel + exponentPart);
-		zAxis.setLabel(zAxisLabel + exponentPart);
+		xAxis.setLabel(xAxisLabel + exponentPart + xunitsPart);
+		yAxis.setLabel(yAxisLabel + exponentPart + yunitsPart);
+		zAxis.setLabel(zAxisLabel + exponentPart + zunitsPart);
 
 		xAxis.apply();
 		yAxis.apply();

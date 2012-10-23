@@ -35,24 +35,24 @@ public class PorkChopPlot_main extends JApplet {
 	public PorkChopPlot_ReturnValue pReturn = new PorkChopPlot_ReturnValue();
 	PorkChopPlot_Parameters params;
 
-	public PorkChopPlot_main(PathUtil p) {
+	public PorkChopPlot_main(PathUtil path) {
 		// PathUtil p =new PathUtil(this);
 		params = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003, 7, 1,
 				500, 10);
-		params.p = p;
+		params.path = path;
 	}
 
 	public PorkChopPlot_main() {
 		params = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003, 7, 1,
 				500, 10);
-		//params.p = new PathUtil(this);
 	}
 
 	public void init() {
 		// if we are the first class called, create PathUtil
-		if (params.p == null)
-			params.p = new PathUtil(this);
-		params.myEph = new DE405Plus(params.p);
+		if (params.path == null)
+			params.path = new PathUtil(this);
+		params.myEph = new DE405Plus(params.path);
+		params.myEph.setFrame(DE405Plus.frame.HEE);
 		pcpGUI = new PorkChopPlot_GUI(this);
 		pcpGUI.pcpE.setMain(this);
 		pcpPlot = new PorkChopPlot_Plot(this);

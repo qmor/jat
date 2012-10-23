@@ -33,7 +33,7 @@ public class PorkChopPlot_Parameters {
 	TimeAPL search_arrival_time_start;
 	int searchDays;
 	int steps;
-	PathUtil p;
+	PathUtil path;
 
 	public PorkChopPlot_Parameters(body departure_planet, body arrival_planet, int dep_year, int dep_month,
 			int dep_day, int arr_year, int arr_month, int arr_day, int searchDays, int steps) {
