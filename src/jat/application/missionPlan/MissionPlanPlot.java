@@ -39,7 +39,6 @@ public class MissionPlanPlot extends JatPlot3D {
 	DE405Plus myEph; // Ephemeris class
 	Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
-	boolean foundBug = false;
 
 	public MissionPlanPlot(MissionPlanMain mpmain) {
 		super();
@@ -51,13 +50,15 @@ public class MissionPlanPlot extends JatPlot3D {
 		jatScene = new jatScene3D();
 		// Ephemeris data
 		myEph = new DE405Plus(mpmain.mpParam.path, mpmain.mpParam.messages);
+		sun = new Star3D(mpmain.mpParam.path,mpmain.mpParam.messages, 3.f);
+		jatScene.add(sun, "sun");
 
 		ephemerisPlanet = new Ephemeris3D[10];
 		DE405Plus.body body[] = DE405Plus.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();
 		planet = new Planet3D[10];
-		for (int i = 1; i < 7; i++) {
-			planet[i] = new Planet3D(mpmain.mpParam.path,mpmain.mpParam.messages,body[i], 1000.f);
+		for (int i = 1; i < 4; i++) {
+			planet[i] = new Planet3D(mpmain.mpParam.path,mpmain.mpParam.messages,body[i], 30.f);
 			jatScene.add(planet[i], DE405Plus.name[i]);
 			// if (i == 3)
 			{
@@ -66,21 +67,13 @@ public class MissionPlanPlot extends JatPlot3D {
 				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
 			}
 		}
-
-		sun = new Star3D(mpmain.mpParam.path,mpmain.mpParam.messages, 10.f);
-		jatScene.add(sun, "sun");
-
-		sun.set_position(1e7, 1e6, 1e5);
 		
-		if (foundBug) {
-
-		}
 		g.addChild(jatScene);
 		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.path, mpmain.mpParam.messages, 15f);
 		g.addChild(s);
-		jatScene.add(new RGBAxes3D(100000000), "Axis");
 		// initial zoom: exponent of ten times kilometers
 		exponent = 8;
+		jatScene.add(new RGBAxes3D(1e8), "Axis");
 		bbox = new BoundingBox3D(-.5f, .5f);
 		bbox.createAxes(exponent);
 		bboxgroup = new BodyGroup3D(bbox, "Box");

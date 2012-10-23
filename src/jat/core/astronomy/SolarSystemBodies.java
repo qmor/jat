@@ -45,7 +45,7 @@ public class SolarSystemBodies {
 
 		Bodies[1] = new Body(DE405Plus.body.MERCURY, 2439.7, 330.2e21, 88);
 		Bodies[2] = new Body(DE405Plus.body.VENUS, 6051.8, 4868.5e21, 225);
-		Bodies[3] = new Body(DE405Plus.body.EARTH_MOON_BARY, 4880., 5972.2E21, 365);
+		Bodies[3] = new Body(DE405Plus.body.EARTH_MOON_BARY, 6378.1, 5972.2E21, 365);
 		Bodies[4] = new Body(DE405Plus.body.MARS, 3396., 641.85e21, 687);
 		Bodies[5] = new Body(DE405Plus.body.JUPITER, 69911, 1898600.0e21, 4332.59);
 		Bodies[6] = new Body(DE405Plus.body.SATURN, 54364, 568460.0e21, 10759.22);

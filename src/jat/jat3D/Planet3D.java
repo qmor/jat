@@ -53,7 +53,7 @@ public class Planet3D extends Body3D {
 	public Planet3D(PathUtil p, jatMessages messages, DE405Plus.body planet, float scale) {
 		super();
 		this.scale = scale;
-		radius = (float) 1000f;
+		//radius = (float) 1000f;
 		this.messages = messages;
 		images_path = p.root_path + "data/jat3D/images_hires/";
 		
@@ -68,17 +68,17 @@ public class Planet3D extends Body3D {
 		switch (planet) {
 		case MERCURY:
 			fileName = images_path + "mercury.jpg";
-			radius = (float) cm.mercury_radius;
+			radius = (float) SolarSystemBodies.Bodies[DE405Plus.body.MERCURY.ordinal()].radius;
 			Planetcolor = Colors.red;
 			break;
 		case VENUS:
 			fileName = images_path + "venus.jpg";
-			radius = (float) cm.venus_radius;
+			radius = (float) SolarSystemBodies.Bodies[DE405Plus.body.VENUS.ordinal()].radius;
 			Planetcolor = Colors.green;
 			break;
 		case EARTH_MOON_BARY:
 			fileName = images_path + "earth.jpg";
-			radius = (float) cm.earth_radius;
+			radius = (float) SolarSystemBodies.Bodies[DE405Plus.body.EARTH_MOON_BARY.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		case MARS:
