@@ -19,8 +19,6 @@ package jat.jat3D;
 
 import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
-import jat.coreNOSA.cm.Constants;
-import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.io.IOException;
@@ -46,8 +44,8 @@ public class Ephemeris3D extends Body3D {
 	Shape3D s;
 	TimeAPL startTime;
 
-
-	public Ephemeris3D(DE405Plus myEph, DE405Plus.body body, TimeAPL startTime, double days) {
+	public Ephemeris3D(DE405Plus myEph, DE405Plus.body body, TimeAPL startTime,
+			double days) {
 		this.myEph = myEph;
 		this.body = body;
 		this.startTime = startTime;
@@ -63,27 +61,20 @@ public class Ephemeris3D extends Body3D {
 		boolean allDataLoaded = true;
 		double step = days * 86400 / steps;
 		for (int k = 0; k < steps; k++) {
-			// double mjd_tt = TimeUtils.JDtoMJD(jd);
-			// rv = MRot.times(new VectorN(my_eph.get_planet_pos(body,
-			// mjd_tt+k)));
+
 			time.step_seconds(step);
 			// time.println();
 			try {
 				r = new VectorN(myEph.get_planet_pos(body, time));
-				double x, y, z, eps, c, s;
+				double x, y, z;
 				x = r.get(0);
 				y = r.get(1);
 				z = r.get(2);
-				eps = cm.Rad(Constants.eps);
-				c = Math.cos(eps);
-				s = Math.sin(eps);
-				coordinates.add(x);
-				coordinates.add(c * y + s * z);
-				coordinates.add(-s * y + c * z);
 
-				// coords[k * 3 + 0] = x;
-				// coords[k * 3 + 1] = c * y + s * z;
-				// coords[k * 3 + 2] = -s * y + c * z;
+				coordinates.add(x);
+				coordinates.add(y);
+				coordinates.add(z);
+
 			} catch (IOException e) {
 				allDataLoaded = false;
 				break;// e.printStackTrace();
@@ -92,11 +83,11 @@ public class Ephemeris3D extends Body3D {
 
 		// Create coords array
 		double[] coords;
-		if (allDataLoaded) 
-		coords = new double[coordinates.size()+3];
+		if (allDataLoaded)
+			coords = new double[coordinates.size() + 3];
 		else
 			coords = new double[coordinates.size()];
-			
+
 		for (int i = 0; i < coordinates.size(); i++)
 			coords[i] = coordinates.get(i);
 
@@ -122,22 +113,3 @@ public class Ephemeris3D extends Body3D {
 
 	}
 }
-
-// Matrix MRot;
-
-// public Ephemeris3D(DE405Plus.body body, double jd_start, double jd_end) {
-// this.body = body;
-// this.jd = jd_start;
-// String fs = FileUtil.file_separator();
-// my_eph = new DE405(FileUtil.getClassFilePath("jat.eph", "DE405") + fs +
-// "DE405data" + fs);
-// // MRot=new RotationMatrix(1,cm.Rad(Constants.eps));
-// draw();
-// }
-
-// PathUtil f = new PathUtil();
-// String fs = FileUtil.file_separator();
-// String DE405_data_folder = f.root_path + "data" + fs + "core" + fs +
-// "ephemeris" + fs + "DE405data" + fs;
-// my_eph = new DE405(DE405_data_folder);
-// MRot = new RotationMatrix(1, cm.Rad(Constants.eps));

@@ -52,7 +52,7 @@ public class MissionPlanGUI extends JPanel {
 	JFormattedTextField secondfield;
 	JFormattedTextField timestepfield;
 	JFormattedTextField viewdistancefield;
-	public MissionPlanMain mpmain;
+	public MissionPlanMain mpMain;
 	JPanel level2_Pane_Plot;
 	JPanel button_panel;
 	JPanel mission_panel;
@@ -67,9 +67,9 @@ public class MissionPlanGUI extends JPanel {
 	public MissionPlanEvents mpE;
 	public JCheckBox chckbxCameraRotate;
 
-	public MissionPlanGUI(MissionPlanMain mpmain) {
-		this.mpmain = mpmain;
-		mpE = new MissionPlanEvents(mpmain,mpmain.mpParam.Eph);
+	public MissionPlanGUI(MissionPlanMain mpMain) {
+		this.mpMain = mpMain;
+		mpE = new MissionPlanEvents(mpMain, mpMain.mpParam.Eph);
 
 		setLayout(new BorderLayout(0, 0));
 		JPanel level1_Pane = new JPanel();
@@ -85,12 +85,15 @@ public class MissionPlanGUI extends JPanel {
 
 		JPanel level3_panel_box = new JPanel();
 		level2_Pane_Control.add(level3_panel_box);
-		level3_panel_box.setLayout(new BoxLayout(level3_panel_box, BoxLayout.Y_AXIS));
+		level3_panel_box.setLayout(new BoxLayout(level3_panel_box,
+				BoxLayout.Y_AXIS));
 
 		JPanel level4_panel_Date = new JPanel();
-		level4_panel_Date.setBorder(new TitledBorder(null, "Date", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		level4_panel_Date.setBorder(new TitledBorder(null, "Date",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		level3_panel_box.add(level4_panel_Date);
-		level4_panel_Date.setLayout(new BoxLayout(level4_panel_Date, BoxLayout.Y_AXIS));
+		level4_panel_Date.setLayout(new BoxLayout(level4_panel_Date,
+				BoxLayout.Y_AXIS));
 
 		realtime_chk = new JCheckBox("Realtime");
 		realtime_chk.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -98,11 +101,15 @@ public class MissionPlanGUI extends JPanel {
 		realtime_chk.setHorizontalAlignment(SwingConstants.CENTER);
 		JPanel level5_Pane_numbers = new JPanel();
 		level4_panel_Date.add(level5_Pane_numbers);
-		level5_Pane_numbers.setLayout(new FormLayout(new ColumnSpec[] { FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("right:default"), FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("left:max(17dlu;default)"), }, new RowSpec[] {
-				FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+		level5_Pane_numbers.setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("right:default"),
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("left:max(17dlu;default)"), }, new RowSpec[] {
+				FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC, }));
 		level5_Pane_numbers.setBorder(null);
 
@@ -158,11 +165,11 @@ public class MissionPlanGUI extends JPanel {
 		button_panel.setLayout(new BoxLayout(button_panel, BoxLayout.X_AXIS));
 		URL iconsUrl = null;
 		try {
-			ResourceLoader c=new ResourceLoader();
+			ResourceLoader c = new ResourceLoader();
 			iconsUrl = c.loadURL(this.getClass(), "icons/");
-			System.out.println("[MissionPlanGUI] "+iconsUrl);
-
-			//displayURL(helpURL2, editorPane, relative_path);
+			//System.out.println("[MissionPlanGUI] " + iconsUrl);
+			mpMain.mpParam.messages.addln("[MissionPlanGUI] " + iconsUrl);
+			// displayURL(helpURL2, editorPane, relative_path);
 
 		} catch (Exception e) {
 			System.err.println("[MissionPlanGUI Exception]");
@@ -170,34 +177,33 @@ public class MissionPlanGUI extends JPanel {
 		}
 		URL rewindURL = null;
 		try {
-			rewindURL=new URL(iconsUrl.toExternalForm()+"Rewind12.gif");
+			rewindURL = new URL(iconsUrl.toExternalForm() + "Rewind12.gif");
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//String iconPath="/jat/application/missionPlan/icons/";
-		//String iconPath=iconUrl.getFile();
-		
-		System.out.println("[MissionPlanGUI before button icons] ");
-		
+
+		// String iconPath="/jat/application/missionPlan/icons/";
+		// String iconPath=iconUrl.getFile();
+
+		//System.out.println("[MissionPlanGUI before button icons] ");
+
 		btn_rewind = new JButton("");
-		//btn_rewind.setIcon(new ImageIcon(rewindURL));
-//		btn_rewind.setIcon(new ImageIcon(MissionPlanGUI.class
-//		.getResource(iconPath+"Rewind12.gif")));
+		// btn_rewind.setIcon(new ImageIcon(rewindURL));
+		// btn_rewind.setIcon(new ImageIcon(MissionPlanGUI.class
+		// .getResource(iconPath+"Rewind12.gif")));
 		button_panel.add(btn_rewind);
 
 		btn_stop = new JButton("");
-//		btn_stop.setIcon(new ImageIcon(MissionPlanGUI.class
-//				.getResource(iconPath+"Stop12.gif")));
+		// btn_stop.setIcon(new ImageIcon(MissionPlanGUI.class
+		// .getResource(iconPath+"Stop12.gif")));
 		button_panel.add(btn_stop);
 
 		btn_forward = new JButton("");
-//		btn_forward.setIcon(new ImageIcon(MissionPlanGUI.class
-//				.getResource(iconPath+"FastForward12.gif")));
+		// btn_forward.setIcon(new ImageIcon(MissionPlanGUI.class
+		// .getResource(iconPath+"FastForward12.gif")));
 		button_panel.add(btn_forward);
 
-		System.out.println("[MissionPlanGUI after button icons] ");
+		//System.out.println("[MissionPlanGUI after button icons] ");
 
 		JLabel lblNewLabel = new JLabel("time step");
 		level4_panel_Date.add(lblNewLabel);
@@ -213,20 +219,21 @@ public class MissionPlanGUI extends JPanel {
 		viewdistancefield = new JFormattedTextField();
 		viewdistancefield.setColumns(5);
 		level3_panel_box.add(viewdistancefield);
-		
+
 		chckbxCameraRotate = new JCheckBox("Camera Rotate");
 		chckbxCameraRotate.setAlignmentX(Component.CENTER_ALIGNMENT);
 		chckbxCameraRotate.setHorizontalAlignment(SwingConstants.LEFT);
 		level3_panel_box.add(chckbxCameraRotate);
 
 		mission_panel = new JPanel();
-		mission_panel.setBorder(new TitledBorder(null, "Mission", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		mission_panel.setBorder(new TitledBorder(null, "Mission",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		level3_panel_box.add(mission_panel);
 		mission_panel.setLayout(new GridLayout(0, 1, 0, 0));
 
 		btnAddFlight = new JButton("Add Flight");
 		mission_panel.add(btnAddFlight);
-		
+
 		btnManageFlights = new JButton("Manage Flights");
 		btnManageFlights.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -239,7 +246,6 @@ public class MissionPlanGUI extends JPanel {
 
 		label_1 = new JLabel("");
 		mission_panel.add(label_1);
-
 
 		realtime_chk.addItemListener(mpE);
 		btnAddFlight.addActionListener(mpE);

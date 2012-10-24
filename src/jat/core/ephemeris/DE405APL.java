@@ -76,7 +76,6 @@ import jat.coreNOSA.spacetime.TimeUtils;
 
 import java.applet.Applet;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -475,7 +474,7 @@ public class DE405APL {
 				if (application)
 					fileName = "file:" + fileName;
 				URL url = new URL(fileName);
-				System.out.println("[DE405APL filename] " + fileName);
+				//System.out.println("[DE405APL filename] " + fileName);
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
 				/* Read each record in the file */
@@ -571,7 +570,7 @@ public class DE405APL {
 		return out;
 	}
 
-	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
+	private VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
 		get_planet_posvel(bodyEnum, t.jd_tt());
 		double[] pos = new double[3];
 		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
@@ -587,7 +586,7 @@ public class DE405APL {
 		return out;
 	}
 
-	public VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
+	private VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
 		double daysec = 3600. * 24.;
 		get_planet_posvel(bodyEnum, t.jd_tt());
 		double[] vel = new double[3];

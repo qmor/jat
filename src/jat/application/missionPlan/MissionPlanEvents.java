@@ -20,6 +20,7 @@ package jat.application.missionPlan;
 import jat.core.cm.TwoBodyAPL;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
+import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.cm.LambertException;
@@ -43,9 +44,10 @@ import javax.vecmath.Vector3f;
 
 class MissionPlanEvents implements ActionListener, ItemListener {
 
-	MissionPlanMain mpmain;
+	MissionPlanMain mpMain;
 	MissionPlanGUI mpGUI;
 	jat_Rotate jat_rotate;
+	jatMessages messages;
 	public Timer timer;
 	int i;
 	int time_advance = 10; // seconds
@@ -55,17 +57,18 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	ManageFlightsDialog myDialog;
 	boolean directionDown;
 
-	public MissionPlanEvents(MissionPlanMain mpmain, DE405Plus Eph) {
-		this.mpmain = mpmain;
-		this.Eph=Eph;
+	public MissionPlanEvents(MissionPlanMain mpMain, DE405Plus Eph) {
+		this.mpMain = mpMain;
+		this.Eph = Eph;
+		messages = mpMain.mpParam.messages;
 		timer = new Timer(50, this);
 		// timer = new Timer(1000, this);
 		// timer.start();
 	}
 
 	public void actionPerformed(ActionEvent ev) {
-		this.mpGUI = mpmain.mpGUI;
-		this.jat_rotate = mpmain.mpPlot.jat_rotate;
+		this.mpGUI = mpMain.mpGUI;
+		this.jat_rotate = mpMain.mpPlot.jat_rotate;
 		i++;
 
 		if (ev.getSource() == mpGUI.btn_stop) {
@@ -102,8 +105,9 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		}
 
 		if (ev.getSource() == mpGUI.btnAddFlight) {
+			messages.addln("[MissionPlanEvents add flight]");
 			// System.out.println("add flight");
-			AddFlightDialog myDialog = new AddFlightDialog(mpmain);
+			AddFlightDialog myDialog = new AddFlightDialog(mpMain);
 			// Get the resulting dates and delta-v's and add trajectory to
 			// plot
 			if (myDialog.pcpMain.pReturn.DepartureDate > 0.) {
@@ -112,23 +116,30 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 					f.flightName = "flight" + i;
 					// retrieve selected values from dialog and store
 					f.departure_planet = myDialog.pcpMain.pReturn.departure_planet;
-					f.departurePlanetName = DE405Plus.name[f.departure_planet.ordinal()];
+					f.departurePlanetName = DE405Plus.name[f.departure_planet
+							.ordinal()];
 					f.arrival_planet = myDialog.pcpMain.pReturn.arrival_planet;
-					f.arrivalPlanetName = DE405Plus.name[f.arrival_planet.ordinal()];
-					f.departureDate = new TimeAPL(myDialog.pcpMain.pReturn.DepartureDate);
-					f.arrivalDate = new TimeAPL(myDialog.pcpMain.pReturn.ArrivalDate);
+					f.arrivalPlanetName = DE405Plus.name[f.arrival_planet
+							.ordinal()];
+					f.departureDate = new TimeAPL(
+							myDialog.pcpMain.pReturn.DepartureDate);
+					f.arrivalDate = new TimeAPL(
+							myDialog.pcpMain.pReturn.ArrivalDate);
 
 					f.mu = Constants.GM_Sun / 1.e9;
 
 					f.tof = TimeAPL.minus(f.arrivalDate, f.departureDate) * 86400.0;
 
 					f.lambert = new Lambert(Constants.GM_Sun / 1.e9);
-					f.r0 = Eph.get_planet_pos(f.departure_planet, f.departureDate);
-					f.v0 = Eph.get_planet_vel(f.departure_planet, f.departureDate);
+					f.r0 = Eph.get_planet_pos(f.departure_planet,
+							f.departureDate);
+					f.v0 = Eph.get_planet_vel(f.departure_planet,
+							f.departureDate);
 					f.rf = Eph.get_planet_pos(f.arrival_planet, f.arrivalDate);
 					f.vf = Eph.get_planet_vel(f.arrival_planet, f.arrivalDate);
 					try {
-						f.totaldv = f.lambert.compute(f.r0, f.v0, f.rf, f.vf, f.tof);
+						f.totaldv = f.lambert.compute(f.r0, f.v0, f.rf, f.vf,
+								f.tof);
 						// apply the first delta-v
 						f.dv0 = f.lambert.deltav0;
 						f.v0 = f.v0.plus(f.dv0);
@@ -136,17 +147,20 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 						TwoBodyAPL temp = new TwoBodyAPL(f.mu, f.r0, f.v0);
 						f.t0_on_orbit = temp.t_from_ta();
-						//VectorN rot_r0 = f.r0;
-						//VectorN rot_v0 = f.v0;
-						f.color = rainbow.colorFor(10 * mpmain.flightList.size());
-//						f.orbit = new TwoBodyOrbit3D(f.mu, rot_r0, rot_v0, f.t0_on_orbit, f.t0_on_orbit + f.tof,
-//								f.color);
-						f.orbit = new TwoBodyOrbit3D(f.mu, f.r0, f.v0, f.t0_on_orbit, f.t0_on_orbit + f.tof,
-								f.color);
-						mpmain.mpPlot.jatScene.add(f.orbit, f.flightName);
+						// VectorN rot_r0 = f.r0;
+						// VectorN rot_v0 = f.v0;
+						f.color = rainbow.colorFor(10 * mpMain.flightList
+								.size());
+						// f.orbit = new TwoBodyOrbit3D(f.mu, rot_r0, rot_v0,
+						// f.t0_on_orbit, f.t0_on_orbit + f.tof,
+						// f.color);
+						f.orbit = new TwoBodyOrbit3D(f.mu, f.r0, f.v0,
+								f.t0_on_orbit, f.t0_on_orbit + f.tof, f.color);
+						mpMain.mpPlot.jatScene.add(f.orbit, f.flightName);
 						f.satellite = new Sphere3D(5000000.f, Colors.gold);
-						mpmain.mpPlot.jatScene.add(f.satellite, f.satelliteName);
-						mpmain.flightList.add(f);
+						mpMain.mpPlot.jatScene
+								.add(f.satellite, f.satelliteName);
+						mpMain.flightList.add(f);
 
 					} catch (LambertException e) {
 						// totaldv = -1;
@@ -162,11 +176,11 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 		if (ev.getSource() == mpGUI.btnManageFlights) {
 			// System.out.println("manage flights");
-			myDialog = new ManageFlightsDialog(mpmain);
+			myDialog = new ManageFlightsDialog(mpMain);
 		}
 
 		// Periodic timer events
-		//System.out.println("alive");
+		// System.out.println("alive");
 		CalDate caldate;
 		if (mpGUI.realtime_chk.isSelected()) {
 			Calendar cal = Calendar.getInstance();
@@ -178,11 +192,11 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 			m = cal.get(Calendar.MINUTE);
 			s = cal.get(Calendar.SECOND);
 			caldate = new CalDate(Y, M, D, h, m, s);
-			mpmain.mpParam.simulationDate = new TimeAPL(caldate);
+			mpMain.mpParam.simulationDate = new TimeAPL(caldate);
 		} else {
-			mpmain.mpParam.simulationDate.step_seconds(time_advance);
+			mpMain.mpParam.simulationDate.step_seconds(time_advance);
 			mpGUI.timestepfield.setText("" + time_advance);
-			caldate = new CalDate(mpmain.mpParam.simulationDate.mjd_utc());
+			caldate = new CalDate(mpMain.mpParam.simulationDate.mjd_utc());
 		}
 
 		mpGUI.yearfield.setText("" + caldate.year());
@@ -192,7 +206,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		mpGUI.minutefield.setText("" + caldate.min());
 		mpGUI.secondfield.setText("" + (int) caldate.sec());
 
-		update_scene(mpmain.mpParam.simulationDate);
+		update_scene(mpMain.mpParam.simulationDate);
 
 		if (mpGUI.chckbxCameraRotate.isSelected()) {
 			Vector3f sphereCoord = jat_rotate.getV_current_sphere();
@@ -204,10 +218,13 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 			if (sphereCoord.z < -1)
 				directionDown = false;
 			if (directionDown)
-				jat_rotate.jat_rotate(.01f, -.002f);
+				jat_rotate.jat_rotate(.005f, -.002f);
 			else
-				jat_rotate.jat_rotate(.01f, .002f);
+				jat_rotate.jat_rotate(.005f, .002f);
 		}
+		if (mpMain.mpParam.messages.changed)
+			mpMain.mpParam.messages.printMessages();
+
 	}// End of ActionPerformed
 
 	public void itemStateChanged(ItemEvent e) {
@@ -229,29 +246,32 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 	void update_scene(TimeAPL mytime) {
 		DE405Plus.body body[] = DE405Plus.body.values();
-		
+
 		try {
-			
+
 			for (int i = 1; i < 5; i++) {
-				mpmain.mpPlot.planet[i].set_position(Eph.get_planet_pos(body[i], mytime));
+				mpMain.mpPlot.planet[i].set_position(Eph.get_planet_pos(
+						body[i], mytime));
 			}
 
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(mpGUI, "DE405 Ephemeris data file not found.");
+			JOptionPane.showMessageDialog(mpGUI,
+					"DE405 Ephemeris data file not found.");
 			e.printStackTrace();
 			System.exit(0);
 			// e.printStackTrace();
 		}
 
-		for (int i = 0; i < mpmain.flightList.size(); i++) {
+		for (int i = 0; i < mpMain.flightList.size(); i++) {
 
 			double satelliteTime;
-			Flight f = mpmain.flightList.get(i);
+			Flight f = mpMain.flightList.get(i);
 			satelliteTime = TimeAPL.minus(mytime, f.departureDate);
 
-			mpmain.mpGUI.viewdistancefield.setText("" + satelliteTime);
+			mpMain.mpGUI.viewdistancefield.setText("" + satelliteTime);
 			if (satelliteTime > 0 && satelliteTime < f.tof / 86400.) {
-				f.satellite.set_position(f.orbit.sat.position(satelliteTime * 86400));
+				f.satellite.set_position(f.orbit.sat
+						.position(satelliteTime * 86400));
 
 			} else
 				f.satellite.set_position(0, 0, 0);
@@ -259,18 +279,18 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		}
 	}
 
-//	VectorN ecliptic_obliquity_rotate(VectorN r) {
-//		VectorN returnval = new VectorN(3);
-//		double x, y, z, eps, c, s;
-//		x = r.get(0);
-//		y = r.get(1);
-//		z = r.get(2);
-//		eps = cm.Rad(Constants.eps);
-//		c = Math.cos(eps);
-//		s = Math.sin(eps);
-//		returnval.x[0] = x;
-//		returnval.x[1] = c * y + s * z;
-//		returnval.x[2] = -s * y + c * z;
-//		return returnval;
-//	}
+	// VectorN ecliptic_obliquity_rotate(VectorN r) {
+	// VectorN returnval = new VectorN(3);
+	// double x, y, z, eps, c, s;
+	// x = r.get(0);
+	// y = r.get(1);
+	// z = r.get(2);
+	// eps = cm.Rad(Constants.eps);
+	// c = Math.cos(eps);
+	// s = Math.sin(eps);
+	// returnval.x[0] = x;
+	// returnval.x[1] = c * y + s * z;
+	// returnval.x[2] = -s * y + c * z;
+	// return returnval;
+	// }
 }

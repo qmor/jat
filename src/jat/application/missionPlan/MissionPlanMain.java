@@ -20,7 +20,6 @@ package jat.application.missionPlan;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
-import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -89,6 +88,8 @@ public class MissionPlanMain extends JApplet {
 		mpParam.Eph = new DE405Plus(mpParam.path,mpParam.messages);
 		mpParam.Eph.setFrame(DE405Plus.frame.HEE);
 
+		mpParam.messages.printMessages();
+		
 		mpGUI = new MissionPlanGUI(this);
 		mpPlot = new MissionPlanPlot(this);
 		level1_Pane = getContentPane();
@@ -100,7 +101,7 @@ public class MissionPlanMain extends JApplet {
 		//System.out.println("[MissionPlanMain before starting timer]");
 		mpGUI.mpE.timer.start();
 
-		mpParam.messages.printMessages();
+		//mpParam.messages.printMessages();
 		mpParam.messages.printMessagesToTextArea(textArea);
 
 	}

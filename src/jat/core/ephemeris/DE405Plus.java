@@ -24,7 +24,6 @@ import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
-import java.applet.Applet;
 import java.io.IOException;
 import java.util.EnumSet;
 
@@ -81,7 +80,9 @@ public class DE405Plus extends DE405APL {
 
 	}
 
-	DE405Plus.frame ephFrame;
+	public static String[] name = { "ICRF", "ECEF", "ECI", "HEEQ", "HEE", "HAE" };
+	
+	public DE405Plus.frame ephFrame;
 	jatMessages messages;
 
 	public DE405Plus() {
@@ -97,16 +98,16 @@ public class DE405Plus extends DE405APL {
 		ephFrame = frame.ICRF;
 	}
 
-	public DE405Plus(PathUtil p) {
-		this.path = p;
-		DE405_path = p.DE405Path;
+	public DE405Plus(PathUtil path) {
+		this.path = path;
+		DE405_path = path.DE405Path;
 		ephFrame = frame.ICRF;
 	}
 
-	public DE405Plus(Applet myApplet) {
-		super(myApplet);
-		ephFrame = frame.ICRF;
-	}
+//	public DE405Plus(Applet myApplet) {
+//		super(myApplet);
+//		ephFrame = frame.ICRF;
+//	}
 
 	public void setFrame(DE405Plus.frame ephFrame) {
 
@@ -145,6 +146,18 @@ public class DE405Plus extends DE405APL {
 		return out;
 	}
 
+	public VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
+		VectorN in = get_planet_posvel(bodyEnum, t);
+		VectorN out = new VectorN(3);
+
+		out.x[0] = in.x[3];
+		out.x[1] = in.x[4];
+		out.x[2] = in.x[5];
+
+		return out;
+
+	}
+	
 	VectorN ecliptic_obliquity_rotate(VectorN rv) {
 		VectorN returnval = new VectorN(6);
 		double x, y, z, vx, vy, vz, eps, c, s;

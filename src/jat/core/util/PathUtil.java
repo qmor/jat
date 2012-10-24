@@ -97,8 +97,8 @@ public class PathUtil {
 
 		URL pathURL = myapplet.getCodeBase();
 		String pathName = pathURL.toExternalForm();
-		System.out.println("[PathUtil] getCodeBase " + myapplet.getCodeBase());
-		System.out.println("[PathUtil] getCodeBase " + pathName);
+		//System.out.println("[PathUtil] getCodeBase " + myapplet.getCodeBase());
+		//System.out.println("[PathUtil] getCodeBase " + pathName);
 
 		// go forward in the directory tree until you find "jat"
 		String[] numberSplit = pathName.split("/");

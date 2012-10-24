@@ -37,21 +37,20 @@ public class MissionPlanPlot extends JatPlot3D {
 	private static final long serialVersionUID = 599884902601254854L;
 	Star3D sun;
 	MissionPlanMain mpmain;
-	DE405Plus myEph; // Ephemeris class
+	DE405Plus Eph; // Ephemeris class
 	Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
 
-	public MissionPlanPlot(MissionPlanMain mpmain) {
+	public MissionPlanPlot(MissionPlanMain mpMain) {
 		super();
-		this.mpmain = mpmain;
+		this.mpmain = mpMain;
+		this.Eph=mpMain.mpParam.Eph;
 	}
 
 	public Node createScene() {
 		Group g = new Group();
 		jatScene = new jatScene3D();
 		initialViewingPosition = new Point3d(1, -3, 1);
-		// Ephemeris data
-		myEph = new DE405Plus(mpmain.mpParam.path, mpmain.mpParam.messages);
 		sun = new Star3D(mpmain.mpParam.path, mpmain.mpParam.messages, 3.f);
 		jatScene.add(sun, "sun");
 
@@ -64,7 +63,7 @@ public class MissionPlanPlot extends JatPlot3D {
 			jatScene.add(planet[i], DE405Plus.name[i]);
 			// if (i == 3)
 			{
-				ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], mpmain.mpParam.simulationDate,
+				ephemerisPlanet[i] = new Ephemeris3D(Eph, body[i], mpmain.mpParam.simulationDate,
 						SolarSystemBodies.Bodies[i].orbitalPeriod);
 				jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
 			}
