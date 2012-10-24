@@ -34,7 +34,7 @@ public class AddFlightDialog extends JDialog implements ActionListener {
 	JButton okButton;
 	JButton cancelButton;
 	MissionPlanMain mpMain;
-	PorkChopPlot_main p;
+	PorkChopPlot_main pcpMain;
 	public boolean OK_pressed;
 
 	public AddFlightDialog(MissionPlanMain mpMain) {
@@ -43,10 +43,10 @@ public class AddFlightDialog extends JDialog implements ActionListener {
 		this.mpMain = mpMain;
 		setBounds(50, 50, 900, 700);
 		getContentPane().setLayout(new BorderLayout());
-		p = new PorkChopPlot_main(mpMain.mpParam.path);
-		p.init();
-		p.setVisible(true);
-		getContentPane().add(p);
+		pcpMain = new PorkChopPlot_main(mpMain.mpParam.path,mpMain.mpParam.Eph);
+		pcpMain.init();
+		pcpMain.setVisible(true);
+		getContentPane().add(pcpMain);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

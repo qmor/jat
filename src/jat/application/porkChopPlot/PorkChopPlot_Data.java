@@ -30,27 +30,27 @@ public class PorkChopPlot_Data implements Binned2DData {
 	private int yBins;
 	private Rainbow rainbow = new Rainbow(0, 100);
 	public float[][] data;
-	porkChopPlot p;
-	PorkChopPlot_Parameters params;
+	porkChopPlot pcpPlot;
+	PorkChopPlot_Parameters pcpParams;
 
 	public PorkChopPlot_Data(PorkChopPlot_main pcMain) throws IOException {
-		this.params = pcMain.params;
-		p = new porkChopPlot(params.myEph);
-		p.make_porkchop_plot(params.departure_planet, params.arrival_planet, params.search_depart_time_start,
-				params.search_arrival_time_start, params.searchDays, params.steps);
+		this.pcpParams = pcMain.pcpParams;
+		pcpPlot = new porkChopPlot(pcpParams.Eph);
+		pcpPlot.make_porkchop_plot(pcpParams.departure_planet, pcpParams.arrival_planet, pcpParams.search_depart_time_start,
+				pcpParams.search_arrival_time_start, pcpParams.searchDays, pcpParams.steps);
 		update();
 	}
 
 	public void update() {
-		xBins = p.steps;
-		yBins = p.steps;
+		xBins = pcpPlot.steps;
+		yBins = pcpPlot.steps;
 		data = new float[xBins][yBins];
 		for (int i = 0; i < xBins; i++)
 			for (int j = 0; j < yBins; j++)
-				if (p.A.A[i][j] < 0)
-					data[i][j] = (float) p.maxtotaldv;
+				if (pcpPlot.A.A[i][j] < 0)
+					data[i][j] = (float) pcpPlot.maxtotaldv;
 				else
-					data[i][j] = (float) p.A.A[i][j];
+					data[i][j] = (float) pcpPlot.A.A[i][j];
 	}
 
 	public int xBins() {
@@ -78,11 +78,11 @@ public class PorkChopPlot_Data implements Binned2DData {
 	}
 
 	public float zMin() {
-		return (float) p.mintotaldv;
+		return (float) pcpPlot.mintotaldv;
 	}
 
 	public float zMax() {
-		return (float) p.maxtotaldv;
+		return (float) pcpPlot.maxtotaldv;
 	}
 
 	public float zAt(int xIndex, int yIndex) {

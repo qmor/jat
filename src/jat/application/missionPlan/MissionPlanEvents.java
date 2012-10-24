@@ -23,8 +23,6 @@ import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.cm.LambertException;
-import jat.coreNOSA.cm.cm;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.CalDate;
 import jat.jat3D.Colors;
 import jat.jat3D.Sphere3D;
@@ -51,14 +49,15 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	public Timer timer;
 	int i;
 	int time_advance = 10; // seconds
-	DE405Plus myEph; // Ephemeris class
+	DE405Plus Eph; // Ephemeris class
 	Flight f;
 	Rainbow3f rainbow = new Rainbow3f();
 	ManageFlightsDialog myDialog;
 	boolean directionDown;
 
-	public MissionPlanEvents(MissionPlanMain mpmain) {
+	public MissionPlanEvents(MissionPlanMain mpmain, DE405Plus Eph) {
 		this.mpmain = mpmain;
+		this.Eph=Eph;
 		timer = new Timer(50, this);
 		// timer = new Timer(1000, this);
 		// timer.start();
@@ -107,28 +106,27 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 			AddFlightDialog myDialog = new AddFlightDialog(mpmain);
 			// Get the resulting dates and delta-v's and add trajectory to
 			// plot
-			if (myDialog.p.pReturn.DepartureDate > 0.) {
+			if (myDialog.pcpMain.pReturn.DepartureDate > 0.) {
 				try {
 					f = new Flight();
 					f.flightName = "flight" + i;
 					// retrieve selected values from dialog and store
-					f.departure_planet = myDialog.p.pReturn.departure_planet;
+					f.departure_planet = myDialog.pcpMain.pReturn.departure_planet;
 					f.departurePlanetName = DE405Plus.name[f.departure_planet.ordinal()];
-					f.arrival_planet = myDialog.p.pReturn.arrival_planet;
+					f.arrival_planet = myDialog.pcpMain.pReturn.arrival_planet;
 					f.arrivalPlanetName = DE405Plus.name[f.arrival_planet.ordinal()];
-					f.departureDate = new TimeAPL(myDialog.p.pReturn.DepartureDate);
-					f.arrivalDate = new TimeAPL(myDialog.p.pReturn.ArrivalDate);
+					f.departureDate = new TimeAPL(myDialog.pcpMain.pReturn.DepartureDate);
+					f.arrivalDate = new TimeAPL(myDialog.pcpMain.pReturn.ArrivalDate);
 
 					f.mu = Constants.GM_Sun / 1.e9;
 
 					f.tof = TimeAPL.minus(f.arrivalDate, f.departureDate) * 86400.0;
 
 					f.lambert = new Lambert(Constants.GM_Sun / 1.e9);
-					myEph = mpmain.mpPlot.myEph;
-					f.r0 = myEph.get_planet_pos(f.departure_planet, f.departureDate);
-					f.v0 = myEph.get_planet_vel(f.departure_planet, f.departureDate);
-					f.rf = myEph.get_planet_pos(f.arrival_planet, f.arrivalDate);
-					f.vf = myEph.get_planet_vel(f.arrival_planet, f.arrivalDate);
+					f.r0 = Eph.get_planet_pos(f.departure_planet, f.departureDate);
+					f.v0 = Eph.get_planet_vel(f.departure_planet, f.departureDate);
+					f.rf = Eph.get_planet_pos(f.arrival_planet, f.arrivalDate);
+					f.vf = Eph.get_planet_vel(f.arrival_planet, f.arrivalDate);
 					try {
 						f.totaldv = f.lambert.compute(f.r0, f.v0, f.rf, f.vf, f.tof);
 						// apply the first delta-v
@@ -138,10 +136,12 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 						TwoBodyAPL temp = new TwoBodyAPL(f.mu, f.r0, f.v0);
 						f.t0_on_orbit = temp.t_from_ta();
-						VectorN rot_r0 = ecliptic_obliquity_rotate(f.r0);
-						VectorN rot_v0 = ecliptic_obliquity_rotate(f.v0);
+						//VectorN rot_r0 = f.r0;
+						//VectorN rot_v0 = f.v0;
 						f.color = rainbow.colorFor(10 * mpmain.flightList.size());
-						f.orbit = new TwoBodyOrbit3D(f.mu, rot_r0, rot_v0, f.t0_on_orbit, f.t0_on_orbit + f.tof,
+//						f.orbit = new TwoBodyOrbit3D(f.mu, rot_r0, rot_v0, f.t0_on_orbit, f.t0_on_orbit + f.tof,
+//								f.color);
+						f.orbit = new TwoBodyOrbit3D(f.mu, f.r0, f.v0, f.t0_on_orbit, f.t0_on_orbit + f.tof,
 								f.color);
 						mpmain.mpPlot.jatScene.add(f.orbit, f.flightName);
 						f.satellite = new Sphere3D(5000000.f, Colors.gold);
@@ -169,17 +169,6 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		//System.out.println("alive");
 		CalDate caldate;
 		if (mpGUI.realtime_chk.isSelected()) {
-			// Date related functions
-			// sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aaa");
-			// dd = new Date(java.lang.System.currentTimeMillis());
-			// dd.setTime(java.lang.System.currentTimeMillis());
-			// cal = new GregorianCalendar();
-			// cal.setTime(dd);
-			// jd = cm.juliandate(cal);
-			// long cur_mil;
-			// cur_mil = System.currentTimeMillis();
-			// cal.setTimeInMillis(cur_mil);
-
 			Calendar cal = Calendar.getInstance();
 			int Y, M, D, h, m, s;
 			Y = cal.get(Calendar.YEAR);
@@ -239,17 +228,12 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	}
 
 	void update_scene(TimeAPL mytime) {
-		myEph = mpmain.mpPlot.myEph;
-		myEph.setFrame(DE405Plus.frame.HEE);
-		// myEph.setFrame(DE405Plus.frame.ICRF);
 		DE405Plus.body body[] = DE405Plus.body.values();
 		
 		try {
 			
 			for (int i = 1; i < 5; i++) {
-				// mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i],
-				// mytime)));
-				mpmain.mpPlot.planet[i].set_position(myEph.get_planet_pos(body[i], mytime));
+				mpmain.mpPlot.planet[i].set_position(Eph.get_planet_pos(body[i], mytime));
 			}
 
 		} catch (IOException e) {
@@ -275,18 +259,18 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		}
 	}
 
-	VectorN ecliptic_obliquity_rotate(VectorN r) {
-		VectorN returnval = new VectorN(3);
-		double x, y, z, eps, c, s;
-		x = r.get(0);
-		y = r.get(1);
-		z = r.get(2);
-		eps = cm.Rad(Constants.eps);
-		c = Math.cos(eps);
-		s = Math.sin(eps);
-		returnval.x[0] = x;
-		returnval.x[1] = c * y + s * z;
-		returnval.x[2] = -s * y + c * z;
-		return returnval;
-	}
+//	VectorN ecliptic_obliquity_rotate(VectorN r) {
+//		VectorN returnval = new VectorN(3);
+//		double x, y, z, eps, c, s;
+//		x = r.get(0);
+//		y = r.get(1);
+//		z = r.get(2);
+//		eps = cm.Rad(Constants.eps);
+//		c = Math.cos(eps);
+//		s = Math.sin(eps);
+//		returnval.x[0] = x;
+//		returnval.x[1] = c * y + s * z;
+//		returnval.x[2] = -s * y + c * z;
+//		return returnval;
+//	}
 }

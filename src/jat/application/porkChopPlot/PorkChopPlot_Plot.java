@@ -94,10 +94,10 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 		// initial zoom: exponent of ten times graph unit
 		exponent = 0;
 		bbox = new BoundingBox3D(0, 1);
-		bbox.xAxisLabel = "Dep " + pcplot_data.p.A.RowLabels[0] + " to "
-				+ pcplot_data.p.A.RowLabels[pcplot_data.xBins() - 1];
-		bbox.yAxisLabel = "Arr " + pcplot_data.p.A.ColumnLabels[0] + " to "
-				+ pcplot_data.p.A.ColumnLabels[pcplot_data.xBins() - 1];
+		bbox.xAxisLabel = "Dep " + pcplot_data.pcpPlot.A.RowLabels[0] + " to "
+				+ pcplot_data.pcpPlot.A.RowLabels[pcplot_data.xBins() - 1];
+		bbox.yAxisLabel = "Arr " + pcplot_data.pcpPlot.A.ColumnLabels[0] + " to "
+				+ pcplot_data.pcpPlot.A.ColumnLabels[pcplot_data.xBins() - 1];
 		bbox.zAxisLabel = (int) pcplot_data.zMin() + " to " + (int) pcplot_data.zMax();
 		bbox.zunitsPart = " km/s";
 		bbox.createAxes(exponent);
@@ -121,10 +121,10 @@ public class PorkChopPlot_Plot extends JatPlot3D {
 		this.pcplot_data = data;
 
 		// System.out.println(pcplot_data.p.A.ColumnLabels[0]);
-		bbox.xAxisLabel = "Dep " + pcplot_data.p.A.RowLabels[0] + " to "
-				+ pcplot_data.p.A.RowLabels[pcplot_data.xBins() - 1];
-		bbox.yAxisLabel = "Arr " + pcplot_data.p.A.ColumnLabels[0] + " to "
-				+ pcplot_data.p.A.ColumnLabels[pcplot_data.xBins() - 1];
+		bbox.xAxisLabel = "Dep " + pcplot_data.pcpPlot.A.RowLabels[0] + " to "
+				+ pcplot_data.pcpPlot.A.RowLabels[pcplot_data.xBins() - 1];
+		bbox.yAxisLabel = "Arr " + pcplot_data.pcpPlot.A.ColumnLabels[0] + " to "
+				+ pcplot_data.pcpPlot.A.ColumnLabels[pcplot_data.xBins() - 1];
 		bbox.zAxisLabel = (int) pcplot_data.zMin() + " to " + (int) pcplot_data.zMax();
 		bbox.setLabels(exponent);
 

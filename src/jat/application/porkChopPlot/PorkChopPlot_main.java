@@ -33,26 +33,28 @@ public class PorkChopPlot_main extends JApplet {
 	public PorkChopPlot_Plot pcpPlot;
 	Container level1_Pane;
 	public PorkChopPlot_ReturnValue pReturn = new PorkChopPlot_ReturnValue();
-	PorkChopPlot_Parameters params;
+	PorkChopPlot_Parameters pcpParams;
 
-	public PorkChopPlot_main(PathUtil path) {
+	public PorkChopPlot_main(PathUtil path, DE405Plus Eph) {
 		// PathUtil p =new PathUtil(this);
-		params = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003, 7, 1,
-				500, 10);
-		params.path = path;
+		pcpParams = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003,
+				7, 1, 500, 10);
+		pcpParams.path = path;
+		pcpParams.Eph = Eph;
 	}
 
 	public PorkChopPlot_main() {
-		params = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003, 7, 1,
-				500, 10);
+		pcpParams = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003,
+				7, 1, 500, 10);
 	}
 
 	public void init() {
-		// if we are the first class called, create PathUtil
-		if (params.path == null)
-			params.path = new PathUtil(this);
-		params.myEph = new DE405Plus(params.path);
-		params.myEph.setFrame(DE405Plus.frame.HEE);
+		// if we are the first class called, create PathUtil and Ephemeris
+		if (pcpParams.path == null) {
+			pcpParams.path = new PathUtil(this);
+			pcpParams.Eph = new DE405Plus(pcpParams.path);
+			pcpParams.Eph.setFrame(DE405Plus.frame.HEE);
+		}
 		pcpGUI = new PorkChopPlot_GUI(this);
 		pcpGUI.pcpE.setMain(this);
 		pcpPlot = new PorkChopPlot_Plot(this);
@@ -60,7 +62,6 @@ public class PorkChopPlot_main extends JApplet {
 		level1_Pane = getContentPane();
 		level1_Pane.add(pcpGUI, BorderLayout.WEST);
 		level1_Pane.add(pcpPlot, BorderLayout.CENTER);
-
 	}
 
 	// public static void main(String[] args) {

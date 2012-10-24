@@ -11,6 +11,7 @@ public class MissionPlanParameters {
 	boolean[] planetOnOff;
 	PathUtil path;
 	jatMessages messages;
+	DE405Plus Eph;
 
 	public MissionPlanParameters() {
 		messages=new jatMessages();

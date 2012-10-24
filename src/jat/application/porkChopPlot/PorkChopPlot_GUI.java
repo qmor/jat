@@ -212,16 +212,16 @@ public class PorkChopPlot_GUI extends JPanel {
 		rdbtnFlightSelect.addActionListener(pcpE);
 
 		// set initial parameters
-		depart_date_picker.getModel().setYear(main.params.dep_year);
-		depart_date_picker.getModel().setMonth(main.params.dep_month);
-		depart_date_picker.getModel().setDay(main.params.dep_day);
+		depart_date_picker.getModel().setYear(main.pcpParams.dep_year);
+		depart_date_picker.getModel().setMonth(main.pcpParams.dep_month);
+		depart_date_picker.getModel().setDay(main.pcpParams.dep_day);
 		depart_date_picker.getModel().setSelected(true);
-		arrival_date_picker.getModel().setYear(main.params.arr_year);
-		arrival_date_picker.getModel().setMonth(main.params.arr_month);
-		arrival_date_picker.getModel().setDay(main.params.arr_day);
+		arrival_date_picker.getModel().setYear(main.pcpParams.arr_year);
+		arrival_date_picker.getModel().setMonth(main.pcpParams.arr_month);
+		arrival_date_picker.getModel().setDay(main.pcpParams.arr_day);
 		arrival_date_picker.getModel().setSelected(true);
-		comboDepartPlanet.setSelectedIndex(main.params.departure_planet.ordinal());
-		comboArrivalPlanet.setSelectedIndex(main.params.arrival_planet.ordinal());
+		comboDepartPlanet.setSelectedIndex(main.pcpParams.departure_planet.ordinal());
+		comboArrivalPlanet.setSelectedIndex(main.pcpParams.arrival_planet.ordinal());
 
 	}
 

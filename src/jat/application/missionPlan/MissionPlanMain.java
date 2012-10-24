@@ -17,8 +17,10 @@
 
 package jat.application.missionPlan;
 
+import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
+import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -83,16 +85,14 @@ public class MissionPlanMain extends JApplet {
 		// E.init();
 
 		mpParam = new MissionPlanParameters();
-		//System.out.println("[MissionPlanMain before creating PathUtil]");
 		mpParam.path = new PathUtil(this,mpParam.messages);
+		mpParam.Eph = new DE405Plus(mpParam.path,mpParam.messages);
+		mpParam.Eph.setFrame(DE405Plus.frame.HEE);
 
 		mpGUI = new MissionPlanGUI(this);
-		//System.out.println("[MissionPlanMain before creating mpPlot]");
 		mpPlot = new MissionPlanPlot(this);
-		//System.out.println("[MissionPlanMain after creating mpPlot]");
 		level1_Pane = getContentPane();
 		level1_Pane.add(mpGUI, BorderLayout.WEST);
-		//System.out.println("[MissionPlanMain before adding mpPlot]");
 		level1_Pane.add(mpPlot, BorderLayout.CENTER);
 
 		// if (debug)

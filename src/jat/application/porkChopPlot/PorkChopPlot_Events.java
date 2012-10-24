@@ -42,7 +42,7 @@ public class PorkChopPlot_Events implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ev) {
-		params = main.params;
+		params = main.pcpParams;
 		if (ev.getSource() == pcpGUI.btn_make_plot) {
 			// System.out.println("make plot button");
 
@@ -70,7 +70,7 @@ public class PorkChopPlot_Events implements ActionListener {
 					params.arr_day, 1, 1, 1);
 
 			try {
-				main.pcpPlot.pcplot_data.p.make_porkchop_plot(
+				main.pcpPlot.pcplot_data.pcpPlot.make_porkchop_plot(
 						params.departure_planet, params.arrival_planet,
 						params.search_depart_time_start,
 						params.search_arrival_time_start, params.searchDays,

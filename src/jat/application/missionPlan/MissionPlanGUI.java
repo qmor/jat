@@ -29,7 +29,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -70,7 +69,7 @@ public class MissionPlanGUI extends JPanel {
 
 	public MissionPlanGUI(MissionPlanMain mpmain) {
 		this.mpmain = mpmain;
-		mpE = new MissionPlanEvents(mpmain);
+		mpE = new MissionPlanEvents(mpmain,mpmain.mpParam.Eph);
 
 		setLayout(new BorderLayout(0, 0));
 		JPanel level1_Pane = new JPanel();

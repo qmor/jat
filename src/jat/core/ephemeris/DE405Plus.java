@@ -89,17 +89,16 @@ public class DE405Plus extends DE405APL {
 		ephFrame = frame.ICRF;
 	}
 
-	public DE405Plus(PathUtil p, jatMessages messages) {
-		this.p = p;
-		DE405_path = p.DE405Path;
+	public DE405Plus(PathUtil path, jatMessages messages) {
+		this.path = path;
+		DE405_path = path.DE405Path;
 		if (messages != null) 
 			messages.addln("[DE405Plus] " + DE405_path);
-		//System.out.println("[DE405Plus] DE405_path " + DE405_path);
 		ephFrame = frame.ICRF;
 	}
 
 	public DE405Plus(PathUtil p) {
-		this.p = p;
+		this.path = p;
 		DE405_path = p.DE405Path;
 		ephFrame = frame.ICRF;
 	}

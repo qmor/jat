@@ -160,20 +160,20 @@ public class DE405APL {
 	 */
 	double[][] planet_r = new double[12][4];
 	double[][] planet_rprime = new double[12][4];
-	public PathUtil p;
+	public PathUtil path;
 	String DE405_path;
 
 	public DE405APL() {
 
-		p = new PathUtil();
-		DE405_path = p.DE405Path;
+		path = new PathUtil();
+		DE405_path = path.DE405Path;
 		//System.out.println("[DE405APL 1 DE405_path] " + DE405_path);
 	}
 
 	public DE405APL(Applet myApplet) {
 
-		p = new PathUtil(myApplet);
-		DE405_path = p.DE405Path;
+		path = new PathUtil(myApplet);
+		DE405_path = path.DE405Path;
 		//System.out.println("[DE405APL 2 DE405_path] " + DE405_path);
 	}
 

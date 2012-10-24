@@ -34,14 +34,14 @@ public class porkChopPlot {
 	public double ArrivalDate[];
 	public int steps;
 	public float step_size;
-	DE405Plus my_eph;
+	DE405Plus Eph;
 
 //	public porkChopPlot() {
 //		my_eph = new DE405Plus();
 //	}
 
-	public porkChopPlot(DE405Plus my_eph) {
-		this.my_eph = my_eph;
+	public porkChopPlot(DE405Plus Eph) {
+		this.Eph = Eph;
 	}
 
 	public void make_porkchop_plot(body departure_planet, body arrival_planet, TimeAPL search_depart_time_start,
@@ -87,10 +87,10 @@ public class porkChopPlot {
 				double tof = TimeAPL.minus(search_arrival_time, search_depart_time) * 86400.0;
 
 				Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
-				VectorN r0 = my_eph.get_planet_pos(departure_planet, search_depart_time);
-				VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);
-				VectorN rf = my_eph.get_planet_pos(arrival_planet, search_arrival_time);
-				VectorN vf = my_eph.get_planet_vel(arrival_planet, search_arrival_time);
+				VectorN r0 = Eph.get_planet_pos(departure_planet, search_depart_time);
+				VectorN v0 = Eph.get_planet_vel(departure_planet, search_depart_time);
+				VectorN rf = Eph.get_planet_pos(arrival_planet, search_arrival_time);
+				VectorN vf = Eph.get_planet_vel(arrival_planet, search_arrival_time);
 				// r0.print("r0");
 				// v0.print("v0");
 				// System.out.println("orbital velocity of departure planet " +
@@ -132,11 +132,11 @@ public class porkChopPlot {
 		Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
 
 		try {
-			VectorN r0 = my_eph.get_planet_pos(departure_planet, search_depart_time);
+			VectorN r0 = Eph.get_planet_pos(departure_planet, search_depart_time);
 			System.out.println("length of r0 " + r0.mag());
-			VectorN v0 = my_eph.get_planet_vel(departure_planet, search_depart_time);
-			VectorN rf = my_eph.get_planet_pos(arrival_planet, search_arrival_time);
-			VectorN vf = my_eph.get_planet_vel(arrival_planet, search_arrival_time);
+			VectorN v0 = Eph.get_planet_vel(departure_planet, search_depart_time);
+			VectorN rf = Eph.get_planet_pos(arrival_planet, search_arrival_time);
+			VectorN vf = Eph.get_planet_vel(arrival_planet, search_arrival_time);
 			totaldv = lambert.compute(r0, v0, rf, vf, tof);
 		} catch (IOException e1) {
 			e1.printStackTrace();
