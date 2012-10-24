@@ -19,7 +19,6 @@ package jat.application.missionPlan;
 
 import jat.core.cm.TwoBodyAPL;
 import jat.core.ephemeris.DE405Body.body;
-import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 import jat.core.util.jatMessages;
@@ -113,6 +112,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 			// Get the resulting dates and delta-v's and add trajectory to
 			// plot
 			if (myDialog.pcpMain.pReturn.DepartureDate > 0.) {
+
 				try {
 					f = new Flight();
 					f.flightName = "flight" + i;
@@ -135,6 +135,9 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 					f.vf = Eph.get_planet_vel(f.arrival_planet, f.arrivalDate);
 					try {
 						f.totaldv = f.lambert.compute(f.r0, f.v0, f.rf, f.vf, f.tof);
+						messages.addln("[MissionPlanEvents] total DV "+f.totaldv+"km/s");
+						// totaldv = -1;
+
 						// apply the first delta-v
 						f.dv0 = f.lambert.deltav0;
 						f.v0 = f.v0.plus(f.dv0);
@@ -155,7 +158,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 						mpMain.flightList.add(f);
 
 					} catch (LambertException e) {
-						// totaldv = -1;
+						messages.addln("Lambert failed"); // totaldv = -1;
 						// System.out.println(e.message);
 						// e.printStackTrace();
 					}
@@ -214,9 +217,10 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 			else
 				jat_rotate.jat_rotate(.005f, .002f);
 		}
-		if (mpMain.mpParam.messages.changed)
-			mpMain.mpParam.messages.printMessages();
-
+		if (messages.changed) {
+			messages.printMessages();
+			messages.printMessagesToTextArea(mpMain.textArea);
+		}
 	}// End of ActionPerformed
 
 	public void itemStateChanged(ItemEvent e) {

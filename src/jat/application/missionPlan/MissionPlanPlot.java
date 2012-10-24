@@ -37,40 +37,40 @@ import javax.vecmath.Point3d;
 public class MissionPlanPlot extends JatPlot3D {
 	private static final long serialVersionUID = 599884902601254854L;
 	Star3D sun;
-	MissionPlanMain mpmain;
+	MissionPlanMain mpMain;
 	DE405Plus Eph; // Ephemeris class
 	Planet3D[] planet;
 	Ephemeris3D[] ephemerisPlanet;
 
 	public MissionPlanPlot(MissionPlanMain mpMain) {
 		super();
-		this.mpmain = mpMain;
+		this.mpMain = mpMain;
 		this.Eph=mpMain.mpParam.Eph;
 	}
 
 	public Node createScene() {
 		Group g = new Group();
-		jatScene = new jatScene3D();
+		jatScene = new jatScene3D(mpMain.mpParam.messages);
 		initialViewingPosition = new Point3d(1, -3, 1);
-		sun = new Star3D(mpmain.mpParam.path, mpmain.mpParam.messages, 3.f);
+		sun = new Star3D(mpMain.mpParam.path, mpMain.mpParam.messages, 3.f);
 		jatScene.add(sun, "sun");
 
 		ephemerisPlanet = new Ephemeris3D[10];
 		SolarSystemBodies sb = new SolarSystemBodies();
 		planet = new Planet3D[10];
 		for (int i = 1; i < 5; i++) {
-			planet[i] = new Planet3D(mpmain.mpParam.path, mpmain.mpParam.messages, body.fromInt(i), 30.f);
+			planet[i] = new Planet3D(mpMain.mpParam.path, mpMain.mpParam.messages, body.fromInt(i), 30.f);
 			jatScene.add(planet[i], body.name[i]);
 			// if (i == 3)
 			{
-				ephemerisPlanet[i] = new Ephemeris3D(Eph, body.fromInt(i), mpmain.mpParam.simulationDate,
+				ephemerisPlanet[i] = new Ephemeris3D(Eph, body.fromInt(i), mpMain.mpParam.simulationDate,
 						SolarSystemBodies.Bodies[i].orbitalPeriod);
 				jatScene.add(ephemerisPlanet[i], "ephemeris" + body.name[i]);
 			}
 		}
 
 		g.addChild(jatScene);
-		StarsBackground3D s = new StarsBackground3D(mpmain.mpParam.path, mpmain.mpParam.messages, 15f);
+		StarsBackground3D s = new StarsBackground3D(mpMain.mpParam.path, mpMain.mpParam.messages, 15f);
 		g.addChild(s);
 		// initial zoom: exponent of ten times kilometers
 		exponent = 8;

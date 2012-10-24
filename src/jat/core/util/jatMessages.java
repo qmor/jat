@@ -31,6 +31,7 @@ public class jatMessages {
 	}
 
 	public void printMessagesToTextArea(JTextArea textArea) {
+		textArea.setText("");
 		for (int i = 0; i < jatMessageList.size(); i++) {
 			textArea.append(jatMessageList.get(i));
 			changed = false;

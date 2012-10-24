@@ -17,6 +17,8 @@
 
 package jat.jat3D;
 
+import jat.core.util.jatMessages;
+
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.SceneGraphObject;
@@ -36,9 +38,10 @@ public class jatScene3D extends TransformGroup {
 	private BranchGroup jatBranchGroup;
 	public Transform3D InitialRotation;
 	public Vector3f InitialTranslation;
+	jatMessages messages;
 
 	public jatScene3D() {
-		super();
+		// super();
 		InitialRotation = new Transform3D();
 		InitialTranslation = new Vector3f();
 		setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -55,6 +58,12 @@ public class jatScene3D extends TransformGroup {
 		addChild(jatBranchGroup);
 	}
 
+	public jatScene3D(jatMessages messages) {
+		this();
+		this.messages = messages;
+
+	}
+
 	/**
 	 * Add an element to the scene
 	 * 
@@ -65,6 +74,10 @@ public class jatScene3D extends TransformGroup {
 	 *            removed
 	 */
 	public void add(Body3D b, String name) {
+		if(messages!=null)
+		{
+			messages.addln("[jatScene3D add]");
+		}
 		BranchGroup bg = new BranchGroup();
 		bg.setUserData(name);
 		bg.setCapability(BranchGroup.ALLOW_DETACH);
@@ -76,6 +89,7 @@ public class jatScene3D extends TransformGroup {
 	}
 
 	public void add(Body3D b, Vector3f position, String name) {
+
 		b.set_position(position);
 		BranchGroup bg = new BranchGroup();
 		bg.setUserData(name);
@@ -115,7 +129,7 @@ public class jatScene3D extends TransformGroup {
 
 				if (userData instanceof String && ((String) userData).compareTo(name) == 0) {
 					System.out.println("Removing: " + sgObject.getUserData());
-					//jatBranchGroup.detach();
+					// jatBranchGroup.detach();
 					jatBranchGroup.removeChild(index);
 				}
 				index++;
