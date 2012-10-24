@@ -15,7 +15,7 @@ JARLIBPATH="../lib"
 
 pwd
 
-java -cp $JARDISTPATH/jatapplication.jar:$JARDISTPATH/jatcore.jar:$JARLIBPATH/j3dcore.jar:$JARLIBPATH/j3dutils.jar:$JARLIBPATH/vecmath.jar:$JARLIBPATH/jdatepicker-1.3.2.jar   jat.application.porkChopPlot.PorkChopPlot_main
+java -cp $JARDISTPATH/jatapplication.jar:$JARDISTPATH/jatcore.jar:$JARDISTPATH/jat3D.jar:$JARLIBPATH/j3dcore.jar:$JARLIBPATH/j3dutils.jar:$JARLIBPATH/vecmath.jar:$JARLIBPATH/jdatepicker-1.3.2.jar   jat.application.porkChopPlot.PorkChopPlotMain
 
 echo press enter
 

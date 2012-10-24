@@ -17,6 +17,8 @@
 
 package jat.core.ephemeris;
 
+import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
@@ -25,64 +27,16 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 import java.io.IOException;
-import java.util.EnumSet;
 
 /**
- * The DE405 Ephemeris data files are given in the ICRF frame. This class allows
- * to choose the frame in which position and velocity are given
+ * The DE405 Ephemeris data files from JPL are given in the ICRF frame. This
+ * class allows to choose the frame in which position and velocity are given
+ * (See DE405Frame)
  * 
- * ECEF
- * 
- * Earth-Centered Earth-Fixed
- * 
- * ECI
- * 
- * Earth-Centered Inertial
- * 
- * ICRF
- * 
- * International Celestial Reference Frame
- * 
- * HEEQ - Heliocentric Earth equatorial
- * 
- * This system has its Z axis parallel to the Sun's rotation axis (positive to
- * the North) and its X axis towards the intersection of the solar equator and
- * the solar central meridian as seen from the Earth. This system is sometimes
- * known as heliocentric solar (HS).
- * 
- * HEE - Heliocentric Earth ecliptic
- * 
- * This system has its X axis towards the Earth and its Z axis perpendicular to
- * the plane of the Earth's orbit around the Sun (positive North). This system
- * is fixed with respect to the Earth-Sun line.
- * 
- * HAE - Heliocentric Aries ecliptic
- * 
- * This system has its Z axis perpendicular to the plane of the Earth's orbit
- * around the Sun (positive North) and its X axis towards the First Point of
- * Aries (the direction in space defined by the intersection between the Earth's
- * equatorial plane and the plane of its orbit around the Sun (the plane of the
- * ecliptic). This system is (to first order) fixed with respect to the distant
- * stars. It is subject to slow change owing to the various slow motions of the
- * Earth's rotation axis with respect to the fixed stars.
  */
 public class DE405Plus extends DE405APL {
 
-	public enum frame {
-		ICRF, ECEF, ECI, HEEQ, HEE, HAE;
-		private static final int amount = EnumSet.allOf(frame.class).size();
-		private static frame[] val = new frame[amount];
-		static {
-			for (frame q : EnumSet.allOf(frame.class)) {
-				val[q.ordinal()] = q;
-			}
-		}
-
-	}
-
-	public static String[] name = { "ICRF", "ECEF", "ECI", "HEEQ", "HEE", "HAE" };
-	
-	public DE405Plus.frame ephFrame;
+	public frame ephFrame;
 	jatMessages messages;
 
 	public DE405Plus() {
@@ -93,7 +47,7 @@ public class DE405Plus extends DE405APL {
 	public DE405Plus(PathUtil path, jatMessages messages) {
 		this.path = path;
 		DE405_path = path.DE405Path;
-		if (messages != null) 
+		if (messages != null)
 			messages.addln("[DE405Plus] " + DE405_path);
 		ephFrame = frame.ICRF;
 	}
@@ -104,12 +58,12 @@ public class DE405Plus extends DE405APL {
 		ephFrame = frame.ICRF;
 	}
 
-//	public DE405Plus(Applet myApplet) {
-//		super(myApplet);
-//		ephFrame = frame.ICRF;
-//	}
+	// public DE405Plus(Applet myApplet) {
+	// super(myApplet);
+	// ephFrame = frame.ICRF;
+	// }
 
-	public void setFrame(DE405Plus.frame ephFrame) {
+	public void setFrame(frame ephFrame) {
 
 		this.ephFrame = ephFrame;
 
@@ -157,7 +111,7 @@ public class DE405Plus extends DE405APL {
 		return out;
 
 	}
-	
+
 	VectorN ecliptic_obliquity_rotate(VectorN rv) {
 		VectorN returnval = new VectorN(6);
 		double x, y, z, vx, vy, vz, eps, c, s;

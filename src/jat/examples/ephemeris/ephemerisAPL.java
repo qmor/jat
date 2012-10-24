@@ -18,6 +18,8 @@
 package jat.examples.ephemeris;
 
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Frame.frame;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
@@ -31,10 +33,10 @@ public class ephemerisAPL
 		DE405Plus ephem = new DE405Plus();
         VectorN rv;
 		try {
+			ephem.setFrame(frame.ICRF);
 	        System.out.println("ICRF Frame");
-			ephem.setFrame(DE405Plus.frame.ICRF);
 			//rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime.jd_tt());
-			rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime);
+			rv = ephem.get_planet_posvel(body.MARS, mytime);
 	        System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
 	        System.out.println("x= "+rv.get(0)+" km");
 	        System.out.println("y= "+rv.get(1)+" km");
@@ -44,9 +46,9 @@ public class ephemerisAPL
 	        System.out.println("vy= "+rv.get(4)+" km/s");
 	        System.out.println("vz= "+rv.get(5)+" km/s");
 	        System.out.println("HEE Frame");
-			ephem.setFrame(DE405Plus.frame.HEE);
+			ephem.setFrame(frame.HEE);
 			//rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime.jd_tt());
-			rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime);
+			rv = ephem.get_planet_posvel(body.MARS, mytime);
 	        System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
 	        System.out.println("x= "+rv.get(0)+" km");
 	        System.out.println("y= "+rv.get(1)+" km");

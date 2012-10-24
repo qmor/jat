@@ -1,5 +1,6 @@
 package jat.application.missionPlan;
 
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
@@ -7,7 +8,7 @@ import jat.core.util.jatMessages;
 
 public class MissionPlanParameters {
 	TimeAPL simulationDate;
-	int number = DE405Plus.body.values().length;
+	int number = body.values().length;
 	boolean[] planetOnOff;
 	PathUtil path;
 	jatMessages messages;

@@ -18,6 +18,7 @@
 package jat.application.missionPlan;
 
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;
@@ -86,7 +87,7 @@ public class MissionPlanMain extends JApplet {
 		mpParam = new MissionPlanParameters();
 		mpParam.path = new PathUtil(this,mpParam.messages);
 		mpParam.Eph = new DE405Plus(mpParam.path,mpParam.messages);
-		mpParam.Eph.setFrame(DE405Plus.frame.HEE);
+		mpParam.Eph.setFrame(frame.HEE);
 
 		mpParam.messages.printMessages();
 		

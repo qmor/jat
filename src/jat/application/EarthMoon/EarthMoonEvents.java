@@ -18,6 +18,7 @@
 package jat.application.EarthMoon;
 
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
@@ -158,13 +159,13 @@ class EarthMoonEvents implements ActionListener, ItemListener {
 		}
 	}
 
+
 	void update_scene(TimeAPL mytime) {
 		myEph = mpmain.emPlot.myEph;
-		DE405Plus.body body[] = DE405Plus.body.values();
 
 //		try {
 ////			for (int i = 1; i < 7; i++) {
-////				mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body[i], mytime)));
+////				mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body.fromInt(i), mytime)));
 //
 //			
 //			//myEph.get_planet_pos(DE405Plus.body.MOON, mytime).print("Moon");

@@ -17,7 +17,7 @@
 
 package jat.application.porkChopPlot;
 
-import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.algorithm.optimization.DataArraySearch;
 
@@ -27,17 +27,17 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-public class PorkChopPlot_Events implements ActionListener {
+public class PorkChopPlotEvents implements ActionListener {
 
-	PorkChopPlot_GUI pcpGUI;
-	PorkChopPlot_main main;
-	PorkChopPlot_Parameters params;
+	PorkChopPlotGUI pcpGUI;
+	PorkChopPlotMain main;
+	PorkChopPlotParameters params;
 
-	public PorkChopPlot_Events(PorkChopPlot_GUI pcpGUI) {
+	public PorkChopPlotEvents(PorkChopPlotGUI pcpGUI) {
 		this.pcpGUI = pcpGUI;
 	}
 
-	public void setMain(PorkChopPlot_main main) {
+	public void setMain(PorkChopPlotMain main) {
 		this.main = main;
 	}
 
@@ -48,8 +48,8 @@ public class PorkChopPlot_Events implements ActionListener {
 
 			// retrieve parameters from GUI
 
-			params.departure_planet=DE405Plus.body.fromInt(main.pcpGUI.comboDepartPlanet.getSelectedIndex());
-			params.arrival_planet=DE405Plus.body.fromInt(main.pcpGUI.comboArrivalPlanet.getSelectedIndex());
+			params.departure_planet=body.fromInt(main.pcpGUI.comboDepartPlanet.getSelectedIndex());
+			params.arrival_planet=body.fromInt(main.pcpGUI.comboArrivalPlanet.getSelectedIndex());
 			//System.out.println("[PorkChopPlot_Events.java] sel. index dep " + params.departure_planet + " sel. index planet " + params.arrival_planet);
 			params.dep_year = pcpGUI.depart_date_picker.getModel().getYear();
 			params.dep_month = pcpGUI.depart_date_picker.getModel().getMonth() + 1;

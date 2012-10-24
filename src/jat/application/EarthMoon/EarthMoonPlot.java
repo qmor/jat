@@ -18,7 +18,7 @@
 package jat.application.EarthMoon;
 
 import jat.core.astronomy.SolarSystemBodies;
-import jat.core.ephemeris.DE405APL;
+import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Plus;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.Ephemeris3D;
@@ -57,10 +57,10 @@ public class EarthMoonPlot extends JatPlot3D {
 		myEph = new DE405Plus();
 
 		// which planets
-		emMain.emParam.planetOnOff[DE405Plus.body.EARTH_MOON_BARY.ordinal()] = true;
-		emMain.emParam.planetOnOff[DE405Plus.body.MOON.ordinal()] = true;
+		emMain.emParam.planetOnOff[DE405Body.body.EARTH_MOON_BARY.ordinal()] = true;
+		emMain.emParam.planetOnOff[DE405Body.body.MOON.ordinal()] = true;
 
-		DE405Plus.body body[] = DE405Plus.body.values();
+		DE405Body.body body[] = DE405Body.body.values();
 		SolarSystemBodies sb = new SolarSystemBodies();
 
 		// planet[0] = new Planet3D(DE405Plus.body.EARTH_MOON_BARY, 10.f);
@@ -72,7 +72,7 @@ public class EarthMoonPlot extends JatPlot3D {
 		//sun = new Star3D(emMain.emParam.path,emMain.emParam.messages, .001f);
 		//jatScene.add(sun, "sun");
 
-		moon = new Planet3D(emMain.emParam.path,emMain.emParam.messages, DE405APL.body.EARTH_MOON_BARY, 1.f);
+		moon = new Planet3D(emMain.emParam.path,emMain.emParam.messages, DE405Body.body.EARTH_MOON_BARY, 1.f);
 		jatScene.add(moon, "moon");
 
 				

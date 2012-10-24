@@ -67,6 +67,7 @@
 
 package jat.core.ephemeris;
 
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.util.PathUtil;
 import jat.coreNOSA.cm.Constants;
 import jat.coreNOSA.cm.cm;
@@ -80,31 +81,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.EnumSet;
 
 public class DE405APL {
-	public enum body {
-		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
-		private static final int amount = EnumSet.allOf(body.class).size();
-		private static body[] val = new body[amount];
-		static {
-			for (body q : EnumSet.allOf(body.class)) {
-				val[q.ordinal()] = q;
-			}
-		}
 
-		public static body fromInt(int i) {
-			return val[i];
-		}
-
-		public body next() {
-			return fromInt((ordinal() + 1) % amount);
-		}
-
-	};
-
-	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus",
-			"Neptune", "Pluto", "Moon" };
 
 	// static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon

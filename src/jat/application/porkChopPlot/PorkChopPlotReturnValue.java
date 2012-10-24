@@ -1,10 +1,11 @@
 package jat.application.porkChopPlot;
 
-import jat.core.ephemeris.DE405APL.body;
+import jat.core.ephemeris.DE405Body.body;
 
 
 
-public class PorkChopPlot_ReturnValue {
+
+public class PorkChopPlotReturnValue {
 
 	public body departure_planet;
 	public body arrival_planet;

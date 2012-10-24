@@ -17,6 +17,8 @@
 
 package jat.application.porkChopPlot;
 
+import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
@@ -25,26 +27,26 @@ import java.awt.Container;
 
 import javax.swing.JApplet;
 
-public class PorkChopPlot_main extends JApplet {
+public class PorkChopPlotMain extends JApplet {
 	private static final long serialVersionUID = 1122861326294482666L;
 	static int appletwidth = 900; // Width of Applet
 	static int appletheight = 700;
-	public PorkChopPlot_GUI pcpGUI;
-	public PorkChopPlot_Plot pcpPlot;
+	public PorkChopPlotGUI pcpGUI;
+	public PorkChopPlotPlot pcpPlot;
 	Container level1_Pane;
-	public PorkChopPlot_ReturnValue pReturn = new PorkChopPlot_ReturnValue();
-	PorkChopPlot_Parameters pcpParams;
+	public PorkChopPlotReturnValue pReturn = new PorkChopPlotReturnValue();
+	PorkChopPlotParameters pcpParams;
 
-	public PorkChopPlot_main(PathUtil path, DE405Plus Eph) {
+	public PorkChopPlotMain(PathUtil path, DE405Plus Eph) {
 		// PathUtil p =new PathUtil(this);
-		pcpParams = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003,
+		pcpParams = new PorkChopPlotParameters(body.EARTH_MOON_BARY, body.MARS, 2003, 1, 1, 2003,
 				7, 1, 500, 10);
 		pcpParams.path = path;
 		pcpParams.Eph = Eph;
 	}
 
-	public PorkChopPlot_main() {
-		pcpParams = new PorkChopPlot_Parameters(DE405Plus.body.EARTH_MOON_BARY, DE405Plus.body.MARS, 2003, 1, 1, 2003,
+	public PorkChopPlotMain() {
+		pcpParams = new PorkChopPlotParameters(body.EARTH_MOON_BARY, body.MARS, 2003, 1, 1, 2003,
 				7, 1, 500, 10);
 	}
 
@@ -53,11 +55,11 @@ public class PorkChopPlot_main extends JApplet {
 		if (pcpParams.path == null) {
 			pcpParams.path = new PathUtil(this);
 			pcpParams.Eph = new DE405Plus(pcpParams.path);
-			pcpParams.Eph.setFrame(DE405Plus.frame.HEE);
+			pcpParams.Eph.setFrame(frame.HEE);
 		}
-		pcpGUI = new PorkChopPlot_GUI(this);
+		pcpGUI = new PorkChopPlotGUI(this);
 		pcpGUI.pcpE.setMain(this);
-		pcpPlot = new PorkChopPlot_Plot(this);
+		pcpPlot = new PorkChopPlotPlot(this);
 
 		level1_Pane = getContentPane();
 		level1_Pane.add(pcpGUI, BorderLayout.WEST);

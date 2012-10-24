@@ -16,7 +16,7 @@
  */
 package jat.core.cm;
 
-import jat.core.ephemeris.DE405APL.body;
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.math.MatrixVector.util.LabeledMatrix;
 import jat.core.spacetime.TimeAPL;

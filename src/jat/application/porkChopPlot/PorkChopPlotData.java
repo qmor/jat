@@ -25,15 +25,15 @@ import java.io.IOException;
 
 import javax.vecmath.Color3b;
 
-public class PorkChopPlot_Data implements Binned2DData {
+public class PorkChopPlotData implements Binned2DData {
 	private int xBins;
 	private int yBins;
 	private Rainbow rainbow = new Rainbow(0, 100);
 	public float[][] data;
 	porkChopPlot pcpPlot;
-	PorkChopPlot_Parameters pcpParams;
+	PorkChopPlotParameters pcpParams;
 
-	public PorkChopPlot_Data(PorkChopPlot_main pcMain) throws IOException {
+	public PorkChopPlotData(PorkChopPlotMain pcMain) throws IOException {
 		this.pcpParams = pcMain.pcpParams;
 		pcpPlot = new porkChopPlot(pcpParams.Eph);
 		pcpPlot.make_porkchop_plot(pcpParams.departure_planet, pcpParams.arrival_planet, pcpParams.search_depart_time_start,

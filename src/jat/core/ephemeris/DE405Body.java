@@ -17,19 +17,31 @@
 
 package jat.core.ephemeris;
 
-public class DE405_Body_APL {
+import java.util.EnumSet;
 
-//	public final static int MERCURY = 1;
-//	public final static int VENUS = 2;
-//	public final static int EARTH = 3;
-//	public final static int MARS = 4;
-//	public final static int JUPITER = 5;
-//
-//	public enum body {
-//		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
-//	};
-//
-//	public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus",
-//			"Neptune", "Pluto", "Moon" };
+public class DE405Body {
+
+	public enum body {
+		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
+		private static final int amount = EnumSet.allOf(body.class).size();
+		private static body[] val = new body[amount];
+		static {
+			for (body q : EnumSet.allOf(body.class)) {
+				val[q.ordinal()] = q;
+			}
+		}
+
+		public static body fromInt(int i) {
+			return val[i];
+		}
+
+		public body next() {
+			return fromInt((ordinal() + 1) % amount);
+		}
+		public static String[] name = { "===", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus",
+			"Neptune", "Pluto", "Moon" };
+
+	};
+
 
 }

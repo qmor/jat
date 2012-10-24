@@ -1,5 +1,7 @@
 package jat.tests.core.ephemeris;
 
+import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 import jat.core.util.messageConsole.MessageConsole;
@@ -61,12 +63,12 @@ public class EphemerisTest extends JApplet {
 		Time mytime = new Time(2002, 2, 17, 12, 0, 0);
 		System.out.println("Loading DE405 Ephemeris File");
 		DE405Plus ephem = new DE405Plus(path);
-		ephem.setFrame(DE405Plus.frame.HEE);
+		ephem.setFrame(frame.HEE);
 		System.out.println("DE405 Ephemeris File loaded");
 		try {
 			VectorN rv;
 			//rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime.jd_tt());
-			rv = ephem.get_planet_posvel(DE405Plus.body.MARS, mytime);
+			rv = ephem.get_planet_posvel(body.MARS, mytime);
 			System.out.println("Reference Frame: "+ephem.ephFrame);
 			System.out.println("The position of Mars on 10-17-2002 at 12:00pm was ");
 			System.out.println("x= " + rv.get(0) + " km");

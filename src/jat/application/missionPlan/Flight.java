@@ -1,6 +1,6 @@
 package jat.application.missionPlan;
 
-import jat.core.ephemeris.DE405APL.body;
+import jat.core.ephemeris.DE405Body;
 import jat.core.spacetime.TimeAPL;
 import jat.coreNOSA.cm.Lambert;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
@@ -14,10 +14,10 @@ public class Flight {
 	Color3f color;
 	String satelliteName;
 	public double mu;
-	body departure_planet;
+	DE405Body.body departure_planet;
 	String departurePlanetName;
 	String arrivalPlanetName;
-	body arrival_planet;
+	DE405Body.body arrival_planet;
 	TimeAPL departureDate;
 	TimeAPL arrivalDate;
 	double tof;

@@ -16,7 +16,7 @@
  */
 package jat.application.porkChopPlot;
 
-import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
 
 import java.awt.GridLayout;
 
@@ -37,9 +37,9 @@ import net.sourceforge.jdatepicker.JDateComponentFactory;
 import net.sourceforge.jdatepicker.JDatePicker;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
-public class PorkChopPlot_GUI extends JPanel {
+public class PorkChopPlotGUI extends JPanel {
 	private static final long serialVersionUID = 7907463395861359469L;
-	PorkChopPlot_Events pcpE;
+	PorkChopPlotEvents pcpE;
 	private JPanel SearchIntervalPanel;
 	private JPanel MissionSelectPanel;
 	private JPanel DatesPanel;
@@ -71,11 +71,11 @@ public class PorkChopPlot_GUI extends JPanel {
 	public JComboBox comboDepartPlanet;
 	private JLabel lblArrivalPlanet;
 	public JComboBox comboArrivalPlanet;
-	PorkChopPlot_main main;
+	PorkChopPlotMain main;
 
-	public PorkChopPlot_GUI(PorkChopPlot_main main) {
+	public PorkChopPlotGUI(PorkChopPlotMain main) {
 		this.main = main;
-		pcpE = new PorkChopPlot_Events(this);
+		pcpE = new PorkChopPlotEvents(this);
 		SearchIntervalPanel = new JPanel();
 		MissionSelectPanel = new JPanel();
 		DatesPanel = new JPanel();
@@ -112,13 +112,13 @@ public class PorkChopPlot_GUI extends JPanel {
 		lblDeparturePlanet = new JLabel("Departure Planet");
 		PlanetSelectionPanel.add(lblDeparturePlanet);
 
-		comboDepartPlanet = new JComboBox(DE405Plus.name);
+		comboDepartPlanet = new JComboBox(body.name);
 		PlanetSelectionPanel.add(comboDepartPlanet);
 
 		lblArrivalPlanet = new JLabel("Arrival Planet");
 		PlanetSelectionPanel.add(lblArrivalPlanet);
 
-		comboArrivalPlanet = new JComboBox(DE405Plus.name);
+		comboArrivalPlanet = new JComboBox(body.name);
 		PlanetSelectionPanel.add(comboArrivalPlanet);
 
 		add(SearchIntervalPanel);
