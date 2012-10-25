@@ -1,6 +1,10 @@
 package jat.core.cm;
 
+import java.util.ArrayList;
+
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math3.ode.sampling.StepHandler;
+import org.apache.commons.math3.ode.sampling.StepInterpolator;
 
 /**
  * @author Tobias Berthold
@@ -9,6 +13,10 @@ import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
  */
 public class CRTBP implements FirstOrderDifferentialEquations {
 	public double mu; // CRTBP parameter
+	public static ArrayList<Double> time = new ArrayList<Double>();
+	public ArrayList<Double> xsol = new ArrayList<Double>();
+	public ArrayList<Double> ysol = new ArrayList<Double>();
+	public ArrayList<Double> zsol = new ArrayList<Double>();
 
 	
 	
@@ -45,6 +53,22 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		yDot[5] = fac1 * (zc) + fac2 * (zc);
 	}
 
+	
+	public StepHandler stepHandler = new StepHandler() {
+		public void init(double t0, double[] y0, double t) {
+		}
+
+		public void handleStep(StepInterpolator interpolator, boolean isLast) {
+			double t = interpolator.getCurrentTime();
+			double[] y = interpolator.getInterpolatedState();
+			System.out.println(t + " " + y[0] + " " + y[1]+ " " + y[2]);
+
+			time.add(t);
+			xsol.add(y[0]);
+			ysol.add(y[1]);
+		}
+	};
+	
 	@Override
 	public int getDimension() {
 		return 6;
