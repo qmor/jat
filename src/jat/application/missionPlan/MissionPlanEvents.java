@@ -47,6 +47,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 	MissionPlanMain mpMain;
 	MissionPlanGUI mpGUI;
+	MissionPlanParameters param;
 	jat_Rotate jat_rotate;
 	jatMessages messages;
 	public Timer timer;
@@ -58,10 +59,11 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 	ManageFlightsDialog myDialog;
 	boolean directionDown;
 
-	public MissionPlanEvents(MissionPlanMain mpMain, DE405Plus Eph) {
+	public MissionPlanEvents(MissionPlanMain mpMain) {
 		this.mpMain = mpMain;
-		this.Eph = Eph;
-		messages = mpMain.mpParam.messages;
+		this.param = mpMain.mpParam;
+		this.Eph = param.Eph;
+		messages = param.messages;
 		timer = new Timer(50, this);
 		// timer = new Timer(1000, this);
 		// timer.start();
@@ -135,7 +137,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 					f.vf = Eph.get_planet_vel(f.arrival_planet, f.arrivalDate);
 					try {
 						f.totaldv = f.lambert.compute(f.r0, f.v0, f.rf, f.vf, f.tof);
-						messages.addln("[MissionPlanEvents] total DV "+f.totaldv+"km/s");
+						messages.addln("[MissionPlanEvents] total DV " + f.totaldv + "km/s");
 						// totaldv = -1;
 
 						// apply the first delta-v
@@ -187,11 +189,11 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 			m = cal.get(Calendar.MINUTE);
 			s = cal.get(Calendar.SECOND);
 			caldate = new CalDate(Y, M, D, h, m, s);
-			mpMain.mpParam.simulationDate = new TimeAPL(caldate);
+			param.simulationDate = new TimeAPL(caldate);
 		} else {
-			mpMain.mpParam.simulationDate.step_seconds(time_advance);
+			param.simulationDate.step_seconds(time_advance);
 			mpGUI.timestepfield.setText("" + time_advance);
-			caldate = new CalDate(mpMain.mpParam.simulationDate.mjd_utc());
+			caldate = new CalDate(param.simulationDate.mjd_utc());
 		}
 
 		mpGUI.yearfield.setText("" + caldate.year());
@@ -201,7 +203,7 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 		mpGUI.minutefield.setText("" + caldate.min());
 		mpGUI.secondfield.setText("" + (int) caldate.sec());
 
-		update_scene(mpMain.mpParam.simulationDate);
+		update_scene(param.simulationDate);
 
 		if (mpGUI.chckbxCameraRotate.isSelected()) {
 			Vector3f sphereCoord = jat_rotate.getV_current_sphere();
@@ -244,8 +246,11 @@ class MissionPlanEvents implements ActionListener, ItemListener {
 
 		try {
 
-			for (int i = 1; i < 5; i++) {
-				mpMain.mpPlot.planet[i].set_position(Eph.get_planet_pos(body.fromInt(i), mytime));
+			for (int i = 1; i < 6; i++) {
+				if (param.planetOnOff[i]) {
+
+					mpMain.mpPlot.planets[i].set_position(Eph.get_planet_pos(body.fromInt(i), mytime));
+				}
 			}
 
 		} catch (IOException e) {

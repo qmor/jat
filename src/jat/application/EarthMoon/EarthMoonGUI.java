@@ -61,12 +61,12 @@ public class EarthMoonGUI extends JPanel {
 	private JLabel label;
 	private JLabel label_1;
 	public JButton btnManageFlights;
-	public EarthMoonEvents mpE;
+	public EarthMoonEvents emE;
 	public JCheckBox chckbxCameraRotate;
 
 	public EarthMoonGUI(EarthMoonMain mpmain) {
 		this.mpmain = mpmain;
-		mpE = new EarthMoonEvents(mpmain);
+		emE = new EarthMoonEvents(mpmain);
 
 		setLayout(new BorderLayout(0, 0));
 		JPanel level1_Pane = new JPanel();
@@ -216,12 +216,12 @@ public class EarthMoonGUI extends JPanel {
 		mission_panel.add(label_1);
 
 
-		realtime_chk.addItemListener(mpE);
-		btnAddFlight.addActionListener(mpE);
-		btnManageFlights.addActionListener(mpE);
-		btn_stop.addActionListener(mpE);
-		btn_rewind.addActionListener(mpE);
-		btn_forward.addActionListener(mpE);
-		chckbxCameraRotate.addItemListener(mpE);
+		realtime_chk.addItemListener(emE);
+		btnAddFlight.addActionListener(emE);
+		btnManageFlights.addActionListener(emE);
+		btn_stop.addActionListener(emE);
+		btn_rewind.addActionListener(emE);
+		btn_forward.addActionListener(emE);
+		chckbxCameraRotate.addItemListener(emE);
 	}
 }

@@ -20,6 +20,7 @@ package jat.application.EarthMoon;
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.Ephemeris3D;
 import jat.jat3D.Planet3D;
@@ -32,76 +33,59 @@ import jat.jat3D.plot3D.JatPlot3D;
 
 import javax.media.j3d.Group;
 import javax.media.j3d.Node;
+import javax.vecmath.Point3d;
 
 public class EarthMoonPlot extends JatPlot3D {
 	private static final long serialVersionUID = 599884902601254854L;
 	Star3D sun;
-	Planet3D moon;
 	EarthMoonMain emMain;
-	DE405Plus myEph; // Ephemeris class
-	Planet3D[] bodies;
-	Ephemeris3D[] ephemerisPlanet;
+	EarthMoonParameters param;
+	DE405Plus Eph; // Ephemeris class
+	Planet3D[] planets;
+	Ephemeris3D[] ephemerisPlanets;
 
 	public EarthMoonPlot(EarthMoonMain emMain) {
 		super();
 		this.emMain = emMain;
+		this.param = emMain.emParam;
+		this.Eph = param.Eph;
 	}
 
 	public Node createScene() {
 		Group g = new Group();
 		jatScene = new jatScene3D();
-		ephemerisPlanet = new Ephemeris3D[emMain.emParam.numberOfBodies];
-		bodies = new Planet3D[emMain.emParam.numberOfBodies];
+		initialViewingPosition = new Point3d(1, -3, 1);
+		sun = new Star3D(param.path, param.messages, 3.f);
+		jatScene.add(sun, "sun");
 
-		// Ephemeris data
-		myEph = new DE405Plus();
-
-		// which planets
-		emMain.emParam.planetOnOff[DE405Body.body.EARTH_MOON_BARY.ordinal()] = true;
-		emMain.emParam.planetOnOff[DE405Body.body.MOON.ordinal()] = true;
-
-		DE405Body.body body[] = DE405Body.body.values();
+		ephemerisPlanets = new Ephemeris3D[emMain.emParam.numberOfBodies];
+		planets = new Planet3D[emMain.emParam.numberOfBodies];
 		SolarSystemBodies sb = new SolarSystemBodies();
 
-		// planet[0] = new Planet3D(DE405Plus.body.EARTH_MOON_BARY, 10.f);
-		// jatScene.add(planet[0], DE405Plus.name[3]);
-		// planet[1] = new Planet3D(DE405Plus.body.MOON, 10.f);
-		// jatScene.add(planet[1], DE405Plus.name[10]);
+		for (int i = 1; i < 6; i++) {
+			if (param.planetOnOff[i]) {
+				planets[i] = new Planet3D(param.path, param.messages, body.fromInt(i), 30.f);
+				jatScene.add(planets[i], body.name[i]);
+				// if (i == 3)
+				{
+					ephemerisPlanets[i] = new Ephemeris3D(Eph, body.fromInt(i), param.simulationDate,
+							SolarSystemBodies.Bodies[i].orbitalPeriod);
+					jatScene.add(ephemerisPlanets[i], "ephemeris" + body.name[i]);
+				}
+			}
+		}
 
-		
-		//sun = new Star3D(emMain.emParam.path,emMain.emParam.messages, .001f);
-		//jatScene.add(sun, "sun");
-
-		moon = new Planet3D(emMain.emParam.path,emMain.emParam.messages, DE405Body.body.EARTH_MOON_BARY, 1.f);
-		jatScene.add(moon, "moon");
-
-				
-		
-//		for (int i = 1; i < emMain.emParam.numberOfBodies; i++) {
-//			if (emMain.emParam.planetOnOff[i]) {
-//				bodies[i] = new Planet3D(emMain.emParam.path,emMain.emParam.messages,DE405Plus.body.fromInt(i), 1.f);
-//				jatScene.add(bodies[i], DE405Plus.name[i]);
-//				// if (i == 3)
-//				{
-//					ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i], emMain.emParam.simulationDate,
-//							SolarSystemBodies.Bodies[i].orbitalPeriod);
-//					jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
-//				}
-//			}
-//		}
-
-		jatScene.add(new RGBAxes3D(10e3), "Axis");
-		// jatScene.InitialRotation.rotX(-cm.Rad(Constants.eps));
 		g.addChild(jatScene);
+		StarsBackground3D s = new StarsBackground3D(emMain.emParam.path, 15f);
+		g.addChild(s);
 		// initial zoom: exponent of ten times kilometers
 		exponent = 4;
-		StarsBackground3D s = new StarsBackground3D(emMain.emParam.path,15f);
-		g.addChild(s);
+		jatScene.add(new RGBAxes3D(10e3), "Axis");
+		// Bounding Box
 		bbox = new BoundingBox3D(-.5f, .5f);
-		bbox.createAxes(exponent);
+		bbox.createAxes(exponent, " km", " km", " km");
 		bboxgroup = new BodyGroup3D(bbox, "Box");
 		g.addChild(bboxgroup);
-
 		return g;
 	}
 
@@ -109,3 +93,34 @@ public class EarthMoonPlot extends JatPlot3D {
 		// mpGUI.viewdistancefield.setText("" + mpGUI.mpp.get_vp_t().length());
 	}
 }
+
+// which planets
+//emMain.emParam.planetOnOff[DE405Body.body.EARTH_MOON_BARY.ordinal()] = true;
+//emMain.emParam.planetOnOff[DE405Body.body.MOON.ordinal()] = true;
+
+// planet[0] = new Planet3D(DE405Plus.body.EARTH_MOON_BARY, 10.f);
+// jatScene.add(planet[0], DE405Plus.name[3]);
+// planet[1] = new Planet3D(DE405Plus.body.MOON, 10.f);
+// jatScene.add(planet[1], DE405Plus.name[10]);
+
+// sun = new Star3D(emMain.emParam.path,emMain.emParam.messages, .001f);
+// jatScene.add(sun, "sun");
+
+//moon = new Planet3D(emMain.emParam.path, emMain.emParam.messages, DE405Body.body.EARTH_MOON_BARY, 1.f);
+//jatScene.add(moon, "moon");
+// for (int i = 1; i < emMain.emParam.numberOfBodies; i++) {
+// if (emMain.emParam.planetOnOff[i]) {
+// bodies[i] = new
+// Planet3D(emMain.emParam.path,emMain.emParam.messages,DE405Plus.body.fromInt(i),
+// 1.f);
+// jatScene.add(bodies[i], DE405Plus.name[i]);
+// // if (i == 3)
+// {
+// ephemerisPlanet[i] = new Ephemeris3D(myEph, body[i],
+// emMain.emParam.simulationDate,
+// SolarSystemBodies.Bodies[i].orbitalPeriod);
+// jatScene.add(ephemerisPlanet[i], "ephemeris" + DE405Plus.name[i]);
+// }
+// }
+// }
+

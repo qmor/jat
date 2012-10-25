@@ -71,7 +71,7 @@ public class MissionPlanMain extends JApplet {
 		paneScrollPane.setMinimumSize(new Dimension(10, 10));
 		getContentPane().add(paneScrollPane, BorderLayout.NORTH);
 
-		System.out.println("[MissionPlanMain]");
+		//System.out.println("[MissionPlanMain]");
 
 	}
 
@@ -89,7 +89,7 @@ public class MissionPlanMain extends JApplet {
 		mpParam.Eph = new DE405Plus(mpParam.path,mpParam.messages);
 		mpParam.Eph.setFrame(frame.HEE);
 
-		mpParam.messages.printMessages();
+		//mpParam.messages.printMessages();
 		
 		mpGUI = new MissionPlanGUI(this);
 		mpPlot = new MissionPlanPlot(this);
@@ -103,7 +103,7 @@ public class MissionPlanMain extends JApplet {
 		mpGUI.mpE.timer.start();
 
 		//mpParam.messages.printMessages();
-		mpParam.messages.printMessagesToTextArea(textArea);
+		//mpParam.messages.printMessagesToTextArea(textArea);
 
 	}
 

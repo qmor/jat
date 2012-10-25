@@ -38,39 +38,44 @@ public class MissionPlanPlot extends JatPlot3D {
 	private static final long serialVersionUID = 599884902601254854L;
 	Star3D sun;
 	MissionPlanMain mpMain;
+	MissionPlanParameters param;
 	DE405Plus Eph; // Ephemeris class
-	Planet3D[] planet;
-	Ephemeris3D[] ephemerisPlanet;
+	Planet3D[] planets;
+	Ephemeris3D[] ephemerisPlanets;
 
 	public MissionPlanPlot(MissionPlanMain mpMain) {
 		super();
 		this.mpMain = mpMain;
-		this.Eph=mpMain.mpParam.Eph;
+		this.param = mpMain.mpParam;
+		this.Eph = param.Eph;
 	}
 
 	public Node createScene() {
 		Group g = new Group();
-		jatScene = new jatScene3D(mpMain.mpParam.messages);
+		jatScene = new jatScene3D(param.messages);
 		initialViewingPosition = new Point3d(1, -3, 1);
-		sun = new Star3D(mpMain.mpParam.path, mpMain.mpParam.messages, 3.f);
+		sun = new Star3D(param.path, param.messages, 3.f);
 		jatScene.add(sun, "sun");
 
-		ephemerisPlanet = new Ephemeris3D[10];
+		ephemerisPlanets = new Ephemeris3D[10];
 		SolarSystemBodies sb = new SolarSystemBodies();
-		planet = new Planet3D[10];
-		for (int i = 1; i < 5; i++) {
-			planet[i] = new Planet3D(mpMain.mpParam.path, mpMain.mpParam.messages, body.fromInt(i), 30.f);
-			jatScene.add(planet[i], body.name[i]);
-			// if (i == 3)
-			{
-				ephemerisPlanet[i] = new Ephemeris3D(Eph, body.fromInt(i), mpMain.mpParam.simulationDate,
-						SolarSystemBodies.Bodies[i].orbitalPeriod);
-				jatScene.add(ephemerisPlanet[i], "ephemeris" + body.name[i]);
+		planets = new Planet3D[10];
+
+		for (int i = 1; i < 6; i++) {
+			if (param.planetOnOff[i]) {
+				planets[i] = new Planet3D(param.path, param.messages, body.fromInt(i), 30.f);
+				jatScene.add(planets[i], body.name[i]);
+				// if (i == 3)
+				{
+					ephemerisPlanets[i] = new Ephemeris3D(Eph, body.fromInt(i), param.simulationDate,
+							SolarSystemBodies.Bodies[i].orbitalPeriod);
+					jatScene.add(ephemerisPlanets[i], "ephemeris" + body.name[i]);
+				}
 			}
 		}
 
 		g.addChild(jatScene);
-		StarsBackground3D s = new StarsBackground3D(mpMain.mpParam.path, mpMain.mpParam.messages, 15f);
+		StarsBackground3D s = new StarsBackground3D(param.path, param.messages, 15f);
 		g.addChild(s);
 		// initial zoom: exponent of ten times kilometers
 		exponent = 8;

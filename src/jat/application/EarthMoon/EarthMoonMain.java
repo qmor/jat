@@ -17,11 +17,15 @@
 
 package jat.application.EarthMoon;
 
+import jat.application.missionPlan.Flight;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JApplet;
 import javax.swing.JFrame;
@@ -41,29 +45,43 @@ public class EarthMoonMain extends JApplet {
 	private static boolean Java3dTree_debug = false;
 	Container level1_Pane;
 	JFrame sFrame;
+	List<Flight> flightList = new ArrayList<Flight>();
 	public JTextPane textPane;
 	public JTextArea textArea;
 
 	public void init() {
 		textPane = new JTextPane();
+//		JScrollPane paneScrollPane = new JScrollPane(textArea);
+//		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		paneScrollPane.setPreferredSize(new Dimension(300, 155));
+//		paneScrollPane.setMinimumSize(new Dimension(10, 10));
+//		getContentPane().add(paneScrollPane, BorderLayout.NORTH);
+
+		
 		textArea = new JTextArea(5, 20);
 		JScrollPane paneScrollPane = new JScrollPane(textArea);
 		paneScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		paneScrollPane.setPreferredSize(new Dimension(300, 155));
 		paneScrollPane.setMinimumSize(new Dimension(10, 10));
 		getContentPane().add(paneScrollPane, BorderLayout.NORTH);
+
+	}
+
+	public void start() {
+		// Ephemeris data
+		
 		emParam = new EarthMoonParameters();
 		emParam.path = new PathUtil(this);
-
+		emParam.path = new PathUtil(this,emParam.messages);
+		emParam.Eph = new DE405Plus(emParam.path,emParam.messages);
+		
 		emGUI = new EarthMoonGUI(this);
 		emPlot = new EarthMoonPlot(this);
 		level1_Pane = getContentPane();
 		level1_Pane.add(emGUI, BorderLayout.WEST);
 		level1_Pane.add(emPlot, BorderLayout.CENTER);
-	}
-
-	public void start() {
-		emGUI.mpE.timer.start();
+		
+		emGUI.emE.timer.start();
 		emParam.messages.printMessages();
 		emParam.messages.printMessagesToTextArea(textArea);
 }

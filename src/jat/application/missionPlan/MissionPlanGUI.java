@@ -69,7 +69,7 @@ public class MissionPlanGUI extends JPanel {
 
 	public MissionPlanGUI(MissionPlanMain mpMain) {
 		this.mpMain = mpMain;
-		mpE = new MissionPlanEvents(mpMain, mpMain.mpParam.Eph);
+		mpE = new MissionPlanEvents(mpMain);
 
 		setLayout(new BorderLayout(0, 0));
 		JPanel level1_Pane = new JPanel();

@@ -30,8 +30,8 @@ import java.io.IOException;
 
 /**
  * The DE405 Ephemeris data files from JPL are given in the ICRF frame. This
- * class allows to choose the frame in which position and velocity are given
- * (See DE405Frame)
+ * class allows to choose the frame for which position and velocity are
+ * calculated (See DE405Frame)
  * 
  */
 public class DE405Plus extends DE405APL {
@@ -39,6 +39,8 @@ public class DE405Plus extends DE405APL {
 	public frame ephFrame;
 	jatMessages messages;
 
+
+	//TODO: this for applications. to be tested.
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
