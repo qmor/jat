@@ -13,13 +13,12 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
  */
 public class CRTBP implements FirstOrderDifferentialEquations {
 	public double mu; // CRTBP parameter
-	public static ArrayList<Double> time = new ArrayList<Double>();
+	public boolean printSteps = true;
+	public ArrayList<Double> time = new ArrayList<Double>();
 	public ArrayList<Double> xsol = new ArrayList<Double>();
 	public ArrayList<Double> ysol = new ArrayList<Double>();
 	public ArrayList<Double> zsol = new ArrayList<Double>();
 
-	
-	
 	public CRTBP(double mu) {
 		this.mu = mu;
 	}
@@ -53,7 +52,6 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		yDot[5] = fac1 * (zc) + fac2 * (zc);
 	}
 
-	
 	public StepHandler stepHandler = new StepHandler() {
 		public void init(double t0, double[] y0, double t) {
 		}
@@ -61,17 +59,43 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		public void handleStep(StepInterpolator interpolator, boolean isLast) {
 			double t = interpolator.getCurrentTime();
 			double[] y = interpolator.getInterpolatedState();
-			System.out.println(t + " " + y[0] + " " + y[1]+ " " + y[2]);
-
+			// System.out.println(t + " " + y[0] + " " + y[1] + " " + y[2] + " "
+			// + JacobiIntegral(y));
+			if (printSteps) {
+				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2],
+						JacobiIntegral(y));
+				System.out.println();
+			}
 			time.add(t);
 			xsol.add(y[0]);
 			ysol.add(y[1]);
 		}
 	};
-	
-	@Override
+
 	public int getDimension() {
 		return 6;
+	}
+
+	public double JacobiIntegral(double yin[]) {
+		double x = yin[0];
+		double y = yin[1];
+		double z = yin[2];
+		double xdot = yin[3];
+		double ydot = yin[4];
+		double zdot = yin[5];
+		double x2 = x * x;
+		double y2 = y * y;
+		double z2 = z * z;
+		double xdot2 = xdot * xdot;
+		double ydot2 = ydot * ydot;
+		double zdot2 = zdot * zdot;
+
+		double r1 = Math.sqrt((x + mu) * (x + mu) + y2 + z2);
+		double r2 = Math.sqrt((x - 1 + mu) * (x - 1 + mu) + y2 + z2);
+
+		double C = x2 + y2 + 2.0 * (1. - mu) / r1 + 2.0 * mu / r2 - xdot2
+				- ydot2 - zdot2;
+		return C;
 	}
 
 }

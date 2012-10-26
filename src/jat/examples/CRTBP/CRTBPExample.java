@@ -34,22 +34,36 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 
 public class CRTBPExample {
 
-
 	public static void main(String[] args) {
 
-		CRTBP myCRTBP=new CRTBP(0.15);
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+		CRTBP myCRTBP = new CRTBP(0.15);
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8,
+				100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
 
 		FirstOrderDifferentialEquations ode = myCRTBP;
-		double[] y = new double[] { .1, .2, 0, .2, .3, 0 }; // initial state
-		dp853.integrate(ode, 0.0, y, 10.0, y); // now y contains final state at
-												// time t=16.0
 
-		Double[] objArray = myCRTBP.time.toArray(new Double[myCRTBP.time.size()]);
+		double tf = 10.;
+		double[] y ; // initial state
+
+		for (int i = 1; i < 2; i++) {
+			tf=i*20.;
+			y = new double[] { .0, .5, 0, .0, .5, 0 }; // initial state
+
+			dp853.integrate(ode, 0.0, y, tf, y); // now y contains final state
+													// at
+													// time t=16.0
+			System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", tf, y[0], y[1], y[2],
+					myCRTBP.JacobiIntegral(y));
+			System.out.println();
+		}
+		Double[] objArray = myCRTBP.time
+				.toArray(new Double[myCRTBP.time.size()]);
 		double[] timeArray = ArrayUtils.toPrimitive(objArray);
-		double[] xsolArray = ArrayUtils.toPrimitive(myCRTBP.xsol.toArray(new Double[myCRTBP.time.size()]));
-		double[] ysolArray = ArrayUtils.toPrimitive(myCRTBP.ysol.toArray(new Double[myCRTBP.time.size()]));
+		double[] xsolArray = ArrayUtils.toPrimitive(myCRTBP.xsol
+				.toArray(new Double[myCRTBP.time.size()]));
+		double[] ysolArray = ArrayUtils.toPrimitive(myCRTBP.ysol
+				.toArray(new Double[myCRTBP.time.size()]));
 
 		double[][] XY = new double[timeArray.length][2];
 
@@ -58,7 +72,7 @@ public class CRTBPExample {
 		// System.arraycopy(ysolArray,0,XY[1],0,ysolArray.length);
 
 		for (int i = 0; i < timeArray.length; i++) {
-			//XY[i][0] = timeArray[i];
+			// XY[i][0] = timeArray[i];
 			XY[i][0] = xsolArray[i];
 			XY[i][1] = ysolArray[i];
 		}
@@ -70,8 +84,6 @@ public class CRTBPExample {
 		p.setLegendOrientation(PlotPanel.SOUTH);
 
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		System.out.println("end");
 
 	}
 }
