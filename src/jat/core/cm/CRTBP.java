@@ -2,6 +2,8 @@ package jat.core.cm;
 
 import java.util.ArrayList;
 
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
+import org.apache.commons.math3.analysis.solvers.LaguerreSolver;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.sampling.StepHandler;
 import org.apache.commons.math3.ode.sampling.StepInterpolator;
@@ -13,7 +15,7 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
  */
 public class CRTBP implements FirstOrderDifferentialEquations {
 	public double mu; // CRTBP parameter
-	public boolean printSteps = true;
+	public boolean printSteps = false;
 	public ArrayList<Double> time = new ArrayList<Double>();
 	public ArrayList<Double> xsol = new ArrayList<Double>();
 	public ArrayList<Double> ysol = new ArrayList<Double>();
@@ -62,8 +64,7 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 			// System.out.println(t + " " + y[0] + " " + y[1] + " " + y[2] + " "
 			// + JacobiIntegral(y));
 			if (printSteps) {
-				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2],
-						JacobiIntegral(y));
+				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2], JacobiIntegral(y));
 				System.out.println();
 			}
 			time.add(t);
@@ -93,9 +94,21 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		double r1 = Math.sqrt((x + mu) * (x + mu) + y2 + z2);
 		double r2 = Math.sqrt((x - 1 + mu) * (x - 1 + mu) + y2 + z2);
 
-		double C = x2 + y2 + 2.0 * (1. - mu) / r1 + 2.0 * mu / r2 - xdot2
-				- ydot2 - zdot2;
+		double C = x2 + y2 + 2.0 * (1. - mu) / r1 + 2.0 * mu / r2 - xdot2 - ydot2 - zdot2;
 		return C;
+	}
+
+	public void findLibrationPoints() {
+
+		double rp = 1, M=10000, Mp = 500; 
+		double rrp = rp*rp, rp2 = 2.0*rp; // shorthand variables for powers of rp
+		double[] c = { -rrp*rrp, rp2*rrp, -(Mp/M+1)*rrp, rrp, rp2, 1.0 };
+
+		PolynomialFunction lagrangian = new PolynomialFunction(c);
+		LaguerreSolver solver = new LaguerreSolver();
+		double rs = solver.solve(100, lagrangian, rp, 2*rp);
+		System.out.println("rs: "+rs);
+	
 	}
 
 }

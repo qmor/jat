@@ -33,37 +33,35 @@ import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 
 public class CRTBPExample {
+	static boolean print=false;
 
 	public static void main(String[] args) {
 
 		CRTBP myCRTBP = new CRTBP(0.15);
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8,
-				100.0, 1.0e-10, 1.0e-10);
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
 
 		FirstOrderDifferentialEquations ode = myCRTBP;
 
 		double tf = 10.;
-		double[] y ; // initial state
+		double[] y; // initial state
 
 		for (int i = 1; i < 2; i++) {
-			tf=i*20.;
+			tf = i * 20.;
 			y = new double[] { .0, .5, 0, .0, .5, 0 }; // initial state
 
 			dp853.integrate(ode, 0.0, y, tf, y); // now y contains final state
 													// at
 													// time t=16.0
-			System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", tf, y[0], y[1], y[2],
-					myCRTBP.JacobiIntegral(y));
-			System.out.println();
+			if (print) {
+				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", tf, y[0], y[1], y[2], myCRTBP.JacobiIntegral(y));
+				System.out.println();
+			}
 		}
-		Double[] objArray = myCRTBP.time
-				.toArray(new Double[myCRTBP.time.size()]);
+		Double[] objArray = myCRTBP.time.toArray(new Double[myCRTBP.time.size()]);
 		double[] timeArray = ArrayUtils.toPrimitive(objArray);
-		double[] xsolArray = ArrayUtils.toPrimitive(myCRTBP.xsol
-				.toArray(new Double[myCRTBP.time.size()]));
-		double[] ysolArray = ArrayUtils.toPrimitive(myCRTBP.ysol
-				.toArray(new Double[myCRTBP.time.size()]));
+		double[] xsolArray = ArrayUtils.toPrimitive(myCRTBP.xsol.toArray(new Double[myCRTBP.time.size()]));
+		double[] ysolArray = ArrayUtils.toPrimitive(myCRTBP.ysol.toArray(new Double[myCRTBP.time.size()]));
 
 		double[][] XY = new double[timeArray.length][2];
 
@@ -84,6 +82,8 @@ public class CRTBPExample {
 		p.setLegendOrientation(PlotPanel.SOUTH);
 
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		myCRTBP.findLibrationPoints();
 
 	}
 }
