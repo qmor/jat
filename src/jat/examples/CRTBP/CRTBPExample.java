@@ -33,11 +33,13 @@ import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 
 public class CRTBPExample {
-	static boolean print=false;
+	static boolean print = false;
 
 	public static void main(String[] args) {
 
-		CRTBP myCRTBP = new CRTBP(0.15);
+		double mu = 0.15;
+		// CRTBP myCRTBP = new CRTBP(0.15);
+		CRTBP myCRTBP = new CRTBP(mu);
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
 
@@ -75,12 +77,25 @@ public class CRTBPExample {
 			XY[i][1] = ysolArray[i];
 		}
 		Plot2DPanel p = new Plot2DPanel();
-		LinePlot l = new LinePlot("sin", Color.RED, XY);
+		LinePlot l = new LinePlot("spacecraft", Color.RED, XY);
 		l.closed_curve = false;
 		l.draw_dot = true;
 		p.addPlot(l);
+		double[][] points1 = new double[1][2];
+		points1[0][0] = -mu;
+		points1[0][1] = 0;
+		p.addScatterPlot("Earth", java.awt.Color.BLUE, points1);
+		double[][] points2 = new double[1][2];
+		points2[0][0] = 1.-mu;
+		points2[0][1] = 0;
+		p.addScatterPlot("Moon", java.awt.Color.gray, points2);
+		String Jacobi="Jacobi + "+myCRTBP.C;
+		
+		p.addLabel(Jacobi,java.awt.Color.black , 1,1.1);
 		p.setLegendOrientation(PlotPanel.SOUTH);
-
+		double size=1.5;
+		p.setFixedBounds(0, -size, size);
+		p.setFixedBounds(1, -size, size);
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		myCRTBP.findLibrationPoints();

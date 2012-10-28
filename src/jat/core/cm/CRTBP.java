@@ -3,10 +3,7 @@ package jat.core.cm;
 import java.util.ArrayList;
 
 import org.apache.commons.math3.analysis.UnivariateFunction;
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-import org.apache.commons.math3.analysis.solvers.BrentSolver;
-import org.apache.commons.math3.analysis.solvers.LaguerreSolver;
-import org.apache.commons.math3.analysis.solvers.UnivariateSolver;
+import org.apache.commons.math3.analysis.solvers.BisectionSolver;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.sampling.StepHandler;
 import org.apache.commons.math3.ode.sampling.StepInterpolator;
@@ -17,12 +14,14 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
  *         Central Restricted Three Body Problem
  */
 public class CRTBP implements FirstOrderDifferentialEquations {
-	public double mu; // CRTBP parameter
+	public static double mu; // CRTBP parameter
 	public boolean printSteps = false;
 	public ArrayList<Double> time = new ArrayList<Double>();
 	public ArrayList<Double> xsol = new ArrayList<Double>();
 	public ArrayList<Double> ysol = new ArrayList<Double>();
 	public ArrayList<Double> zsol = new ArrayList<Double>();
+	double[] yStart;
+	public double C;
 
 	public CRTBP(double mu) {
 		this.mu = mu;
@@ -59,6 +58,7 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 
 	public StepHandler stepHandler = new StepHandler() {
 		public void init(double t0, double[] y0, double t) {
+			C = JacobiIntegral(y0);
 		}
 
 		public void handleStep(StepInterpolator interpolator, boolean isLast) {
@@ -100,41 +100,56 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		double C = x2 + y2 + 2.0 * (1. - mu) / r1 + 2.0 * mu / r2 - xdot2 - ydot2 - zdot2;
 		return C;
 	}
-	 private static class MyFunction implements UnivariateFunction {
-		   public double value(double x) {
-		     double y = x*x-2.;
-//		     if (somethingBadHappens) {
-//		       throw new LocalException(x);
-//		     }
-		     return y;
-		   }
-		 }
 
+	private static class MyFunction implements UnivariateFunction {
+		public double value(double x) {
+			double y = x * x - 2.;
+			return y;
+		}
+	}
+
+	private static class L123Func implements UnivariateFunction {
+		public double value(double x) {
+
+			double xpmu = x + mu;
+			double omu = 1 - mu;
+			double xmomu = x - omu;
+			double denominator1 = Math.abs(xpmu * xpmu * xpmu);
+
+			double y = x - xpmu * omu / Math.abs(xpmu * xpmu * xpmu) - mu * xmomu / Math.abs(xmomu * xmomu * xmomu);
+
+			return y;
+		}
+	}
 
 	public void findLibrationPoints() {
 
-		
-		UnivariateFunction function = new MyFunction();// some user defined function object
-				final double relativeAccuracy = 1.0e-12;
-				final double absoluteAccuracy = 1.0e-8;
-				UnivariateSolver nonBracketing = new BrentSolver(relativeAccuracy, absoluteAccuracy);
-				double baseRoot = nonBracketing.solve(100, function, -2.0, 0);
-				
-				System.out.println("rs: "+baseRoot);
-				System.out.println("rs: "+Math.sqrt(2.));
-				
-				
-				
+		UnivariateFunction function = new MyFunction();
+		final double relativeAccuracy = 1.0e-12;
+		final double absoluteAccuracy = 1.0e-8;
+		BisectionSolver bs = new BisectionSolver();
+		double baseRoot = bs.solve(100, function, -2.0, 0);
+		// UnivariateSolver nonBracketing = new BrentSolver(relativeAccuracy,
+		// absoluteAccuracy);
+		// double baseRoot = nonBracketing.solve(100, function, -2.0, 0);
 
-//		double rp = 1, M=10000, Mp = 500; 
-//		double rrp = rp*rp, rp2 = 2.0*rp; // shorthand variables for powers of rp
-//		double[] c = { -rrp*rrp, rp2*rrp, -(Mp/M+1)*rrp, rrp, rp2, 1.0 };
-//
-//		PolynomialFunction lagrangian = new PolynomialFunction(c);
-//		LaguerreSolver solver = new LaguerreSolver();
-//		double rs = solver.solve(100, lagrangian, rp, 2*rp);
-//		System.out.println("rs: "+rs);
-	
+		System.out.println("rs: " + baseRoot);
+		System.out.println("rs: " + Math.sqrt(2.));
+
+		UnivariateFunction Lfunction = new L123Func();
+		double L1 = bs.solve(100, Lfunction, -2.0, 0);
+		System.out.println("L1: " + L1);
+
 	}
 
 }
+
+// double rp = 1, M=10000, Mp = 500;
+// double rrp = rp*rp, rp2 = 2.0*rp; // shorthand variables for powers
+// of rp
+// double[] c = { -rrp*rrp, rp2*rrp, -(Mp/M+1)*rrp, rrp, rp2, 1.0 };
+//
+// PolynomialFunction lagrangian = new PolynomialFunction(c);
+// LaguerreSolver solver = new LaguerreSolver();
+// double rs = solver.solve(100, lagrangian, rp, 2*rp);
+// System.out.println("rs: "+rs);
