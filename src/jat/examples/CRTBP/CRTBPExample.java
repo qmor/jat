@@ -35,10 +35,11 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 public class CRTBPExample {
 	static boolean print = false;
 
-	public static void main(String[] args) {
-
+	
+	void doExample()
+	{
 		double mu = 0.15;
-		// CRTBP myCRTBP = new CRTBP(0.15);
+		//double mu = 0.3;
 		CRTBP myCRTBP = new CRTBP(mu);
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
@@ -81,24 +82,52 @@ public class CRTBPExample {
 		l.closed_curve = false;
 		l.draw_dot = true;
 		p.addPlot(l);
-		double[][] points1 = new double[1][2];
-		points1[0][0] = -mu;
-		points1[0][1] = 0;
-		p.addScatterPlot("Earth", java.awt.Color.BLUE, points1);
-		double[][] points2 = new double[1][2];
-		points2[0][0] = 1.-mu;
-		points2[0][1] = 0;
-		p.addScatterPlot("Moon", java.awt.Color.gray, points2);
-		String Jacobi="Jacobi + "+myCRTBP.C;
+		double size = 1.2;
+		myCRTBP.findLibrationPoints();
+		Color darkGreen = new java.awt.Color(0,190,0);
 		
-		p.addLabel(Jacobi,java.awt.Color.black , 1,1.1);
+		addPoint(p,"Earth", java.awt.Color.BLUE,-mu,0);
+		addPoint(p,"Moon", java.awt.Color.gray,1-mu,0);
+		addPoint(p,"L1", darkGreen,myCRTBP.LibPoints[0].getX(),0);
+		addPoint(p,"L2", darkGreen,myCRTBP.LibPoints[1].getX(),0);
+		addPoint(p,"L3", darkGreen,myCRTBP.LibPoints[2].getX(),0);
+
+		String Jacobi = "Jacobi = " + myCRTBP.C;
+		p.addLabel(Jacobi, java.awt.Color.black, 1, .8 * size);
+		String Labelmu = "mu = " + myCRTBP.mu;
+		p.addLabel(Labelmu, java.awt.Color.black, 1, .9 * size);
+
 		p.setLegendOrientation(PlotPanel.SOUTH);
-		double size=1.5;
 		p.setFixedBounds(0, -size, size);
 		p.setFixedBounds(1, -size, size);
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		myCRTBP.findLibrationPoints();
+				
+	}
+	
+	void addPoint(Plot2DPanel p, String s, Color c, double x, double y) {
+		double[][] points = new double[1][2];
+		points[0][0] = x;
+		points[0][1] = y;
+		p.addScatterPlot(s, c, points);
+	}
+
+	public static void main(String[] args) {
+
+		CRTBPExample ex=new CRTBPExample();
+		ex.doExample();
 
 	}
+
+
 }
+
+
+//double[][] points1 = new double[1][2];
+//points1[0][0] = -mu;
+//points1[0][1] = 0;
+//p.addScatterPlot("Earth", java.awt.Color.BLUE, points1);
+//double[][] points2 = new double[1][2];
+//points2[0][0] = 1. - mu;
+//points2[0][1] = 0;
+//p.addScatterPlot("Moon", java.awt.Color.gray, points2);

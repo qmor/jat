@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.solvers.BisectionSolver;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.sampling.StepHandler;
 import org.apache.commons.math3.ode.sampling.StepInterpolator;
@@ -22,9 +23,11 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	public ArrayList<Double> zsol = new ArrayList<Double>();
 	double[] yStart;
 	public double C;
+	public Vector3D LibPoints[];
 
 	public CRTBP(double mu) {
 		this.mu = mu;
+		LibPoints=new Vector3D [5];
 	}
 
 	public void computeDerivatives(double t, double[] y, double[] yDot) {
@@ -138,8 +141,19 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 
 		UnivariateFunction Lfunction = new L123Func();
 		double L1 = bs.solve(100, Lfunction, -2.0, 0);
+		LibPoints[0]=new Vector3D(L1,0,0);		
+		double L2 = bs.solve(100, Lfunction, 0, 1.);
+		LibPoints[1]=new Vector3D(L2,0,0);		
+		LibPoints[0]=new Vector3D(L1,0,0);		
+		double L3 = bs.solve(100, Lfunction, 1, 2.);
+		LibPoints[2]=new Vector3D(L3,0,0);		
+	
 		System.out.println("L1: " + L1);
-
+		System.out.println("L2: " + L2);
+		System.out.println("L3: " + L3);
+	
+	
+	
 	}
 
 }
