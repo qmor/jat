@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Rob Antonucci 
  **/
-package jat.unittest.core.ephemeris;
+package jat.unittest.coreNOSA.ephemeris;
 
 import jat.coreNOSA.ephemeris.DE405;
 import jat.coreNOSA.ephemeris.DE405_Body;

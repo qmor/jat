@@ -1,4 +1,4 @@
-package jat.unittest.core.forces;
+package jat.unittest.coreNOSA.forces;
 
 import jat.coreNOSA.forces.ForceModel;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

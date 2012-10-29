@@ -19,7 +19,7 @@
  * National Aeronautics and Space Administration
  * File created by Rob Antonucci 
  **/
-package jat.unittest.core.spacetime;
+package jat.unittest.coreNOSA.spacetime;
 
 import jat.coreNOSA.ephemeris.DE405_Body;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;

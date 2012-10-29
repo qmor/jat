@@ -1,4 +1,4 @@
-package jat.unittest.core.forces;
+package jat.unittest.coreNOSA.forces;
 
 import jat.coreNOSA.forces.SolarRadiationPressure;
 import jat.coreNOSA.spacecraft.Spacecraft;

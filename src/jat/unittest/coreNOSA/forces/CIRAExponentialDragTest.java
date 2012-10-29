@@ -1,14 +1,14 @@
-package jat.unittest.core.forces;
+package jat.unittest.coreNOSA.forces;
 
-import jat.coreNOSA.forces.HarrisPriester;
+import jat.coreNOSA.forces.CIRA_ExponentialDrag;
 import jat.coreNOSA.spacecraft.Spacecraft;
 
 import java.io.IOException;
 
-public class HarrisPriesterTest extends ForceModelTest {
+public class CIRAExponentialDragTest extends ForceModelTest {
 
   public static void main(String[] args) {
-    junit.textui.TestRunner.run(HarrisPriesterTest.class);
+    junit.textui.TestRunner.run(CIRAExponentialDragTest.class);
   }
 
   /*
@@ -19,9 +19,9 @@ public class HarrisPriesterTest extends ForceModelTest {
     sc.set_area(20);
     sc.set_mass(1000);
     sc.set_cd(1.2);
-    HarrisPriester force = new HarrisPriester(sc.cd(), sc.area(), sc.mass());
+    CIRA_ExponentialDrag force = new CIRA_ExponentialDrag(sc.cd(), sc.area(), sc.mass());
     
-    testForceModelAcceleration(sc, force, "harris_priester.txt", 
-        "Harris Priester atmosphere drag");
+    testForceModelAcceleration(sc, force, "cira_drag.txt", 
+        "CIRA exponential atmosphere drag");
   }
 }
