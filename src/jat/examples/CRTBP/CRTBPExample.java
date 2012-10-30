@@ -104,6 +104,7 @@ public class CRTBPExample {
 		p.setFixedBounds(1, -size, size);
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		myCRTBP.findZeroVelocity();
 				
 	}
 	

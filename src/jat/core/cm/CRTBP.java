@@ -1,3 +1,20 @@
+/* JAT: Java Astrodynamics Toolkit
+ * 
+  Copyright 2012 Tobias Berthold
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
 package jat.core.cm;
 
 import java.util.ArrayList;
@@ -104,13 +121,6 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		return C;
 	}
 
-	private static class MyFunction implements UnivariateFunction {
-		public double value(double x) {
-			double y = x * x - 2.;
-			return y;
-		}
-	}
-
 	private static class L123Func implements UnivariateFunction {
 		public double value(double x) {
 
@@ -127,17 +137,7 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 
 	public void findLibrationPoints() {
 
-		UnivariateFunction function = new MyFunction();
-		final double relativeAccuracy = 1.0e-12;
-		final double absoluteAccuracy = 1.0e-8;
 		BisectionSolver bs = new BisectionSolver();
-		double baseRoot = bs.solve(100, function, -2.0, 0);
-		// UnivariateSolver nonBracketing = new BrentSolver(relativeAccuracy,
-		// absoluteAccuracy);
-		// double baseRoot = nonBracketing.solve(100, function, -2.0, 0);
-
-		System.out.println("rs: " + baseRoot);
-		System.out.println("rs: " + Math.sqrt(2.));
 
 		UnivariateFunction Lfunction = new L123Func();
 		double L1 = bs.solve(100, Lfunction, 0, 1.);
@@ -147,26 +147,62 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		LibPoints[0] = new Vector3D(L1, 0, 0);
 		double L3 = bs.solve(100, Lfunction, -2.0, 0);
 		LibPoints[2] = new Vector3D(L3, 0, 0);
-		double y45=Math.sqrt(3.)/2;
-		LibPoints[3] = new Vector3D(.5-mu, y45, 0);
-		LibPoints[4] = new Vector3D(.5-mu, -y45, 0);
+		double y45 = Math.sqrt(3.) / 2;
+		LibPoints[3] = new Vector3D(.5 - mu, y45, 0);
+		LibPoints[4] = new Vector3D(.5 - mu, -y45, 0);
 
 		System.out.println("L1: " + L1);
 		System.out.println("L2: " + L2);
 		System.out.println("L3: " + L3);
-		System.out.println("L4= (" + LibPoints[3].getX()+","+LibPoints[3].getY()+")");
-		System.out.println("L5= (" + LibPoints[4].getX()+","+LibPoints[4].getY()+")");
+		System.out.println("L4= (" + LibPoints[3].getX() + "," + LibPoints[3].getY() + ")");
+		System.out.println("L5= (" + LibPoints[4].getX() + "," + LibPoints[4].getY() + ")");
+
+	}
+
+	private static class JacobiFixedx implements UnivariateFunction {
+		double x, C;
+		double z = 0;
+
+		public JacobiFixedx(double x, double C) {
+			this.x = x;
+			this.C = C;
+		}
+
+		public void setx(double x) {
+			this.x = x;
+		}
+
+		public void setC(double C) {
+			this.C = C;
+		}
+
+		public double value(double y) {
+
+			double J;
+
+			double x2 = x * x;
+			double y2 = y * y;
+			double z2 = z * z;
+
+			double r1 = Math.sqrt((x + mu) * (x + mu) + y2 + z2);
+			double r2 = Math.sqrt((x - 1 + mu) * (x - 1 + mu) + y2 + z2);
+
+			J = -C + x2 + y2 + 2.0 * (1. - mu) / r1 + 2.0 * mu / r2;
+			return J;
+		}
+	}
+
+	public void findZeroVelocity() {
+		JacobiFixedx JF = new JacobiFixedx(.1, 3.1);
+		BisectionSolver bs = new BisectionSolver();
+		JF.setC(3.2);
+		for (double x = -.5; x < .9; x += .1) {
+			JF.setx(x);
+			double zv = bs.solve(100, JF, 0, 2);
+			System.out.println("x y " + x + " " + zv);
+		}
+		// double x=0.3;
 
 	}
 
 }
-
-// double rp = 1, M=10000, Mp = 500;
-// double rrp = rp*rp, rp2 = 2.0*rp; // shorthand variables for powers
-// of rp
-// double[] c = { -rrp*rrp, rp2*rrp, -(Mp/M+1)*rrp, rrp, rp2, 1.0 };
-//
-// PolynomialFunction lagrangian = new PolynomialFunction(c);
-// LaguerreSolver solver = new LaguerreSolver();
-// double rs = solver.solve(100, lagrangian, rp, 2*rp);
-// System.out.println("rs: "+rs);
