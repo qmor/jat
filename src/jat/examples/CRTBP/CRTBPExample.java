@@ -38,11 +38,13 @@ public class CRTBPExample {
 	
 	void doExample()
 	{
-		//double mu = 0.15;
-		//double mu = 0.15;
+		double mu = 0.15;
+		//double mu = 0.1;
 		//double mu = 3.035909999e-6;
 		//double mu=0.012277471;
-		double mu = 0.2;
+		//double mu = 0.2;
+		double[] y0 = { .1, 0, 0, 1.33, 1.33, 0 }; // initial state
+
 		CRTBP myCRTBP = new CRTBP(mu);
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
@@ -50,15 +52,15 @@ public class CRTBPExample {
 		FirstOrderDifferentialEquations ode = myCRTBP;
 
 		double tf = 10.;
-		double[] y; // initial state
+		double[] y=new double[6]; // initial state
 
 		for (int i = 1; i < 2; i++) {
 			tf = i * 20.;
-			y = new double[] { .0, .5, 0, .0, .5, 0 }; // initial state
+			System.arraycopy(y0, 0, y, 0, 6);
 
 			dp853.integrate(ode, 0.0, y, tf, y); // now y contains final state
 													// at
-													// time t=16.0
+													// time tf
 			if (print) {
 				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", tf, y[0], y[1], y[2], myCRTBP.JacobiIntegral(y));
 				System.out.println();
@@ -85,7 +87,7 @@ public class CRTBPExample {
 		l.closed_curve = false;
 		l.draw_dot = true;
 		p.addPlot(l);
-		double size = 1.2;
+		double plotSize = 1.2;
 		myCRTBP.findLibrationPoints();
 		Color darkGreen = new java.awt.Color(0,190,0);
 		
@@ -95,24 +97,32 @@ public class CRTBPExample {
 		addPoint(p,"L2", darkGreen,myCRTBP.LibPoints[1].getX(),0);
 		addPoint(p,"L3", darkGreen,myCRTBP.LibPoints[2].getX(),0);
 
-		String Jacobi = "Jacobi = " + myCRTBP.C;
-		p.addLabel(Jacobi, java.awt.Color.black, 1, .8 * size);
 		String Labelmu = "mu = " + myCRTBP.mu;
-		p.addLabel(Labelmu, java.awt.Color.black, 1, .9 * size);
+		p.addLabel(Labelmu, java.awt.Color.black, 1, .9 * plotSize);
+		String initial = "initial x,v = (" +y0[0]+","+y0[1]+"),("+y0[3]+","+y0[4]+")";
+		p.addLabel(initial, java.awt.Color.black, 1, .8 * plotSize);
+		String Jacobi = "Jacobi = " + myCRTBP.C;
+		p.addLabel(Jacobi, java.awt.Color.black, 1, .7 * plotSize);
 
 		myCRTBP.findZeroVelocity();
-		LinePlot lzv = new LinePlot("zero vel", Color.blue,myCRTBP.zerovel2D );
+		int size=myCRTBP.xzv.size();
+		double[] xzvArray = ArrayUtils.toPrimitive(myCRTBP.xzv.toArray(new Double[size]));
+		double[] yzvArray = ArrayUtils.toPrimitive(myCRTBP.yzv.toArray(new Double[size]));
+		double[][] XYzv = new double[size][2];
+		for (int i = 0; i < size; i++) {
+			XYzv[i][0] = xzvArray[i];
+			XYzv[i][1] = yzvArray[i];
+		}
+		LinePlot lzv = new LinePlot("zero vel", Color.blue,XYzv );
 		lzv.closed_curve = false;
 		lzv.draw_dot = true;
 		p.addPlot(lzv);
 
-		
-		
+				
 		p.setLegendOrientation(PlotPanel.SOUTH);
-		p.setFixedBounds(0, -size, size);
-		p.setFixedBounds(1, -size, size);
+		p.setFixedBounds(0, -plotSize, plotSize);
+		p.setFixedBounds(1, -plotSize, plotSize);
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 				
 	}
 	

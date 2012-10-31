@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.solvers.BisectionSolver;
+import org.apache.commons.math3.analysis.solvers.BrentSolver;
+import org.apache.commons.math3.exception.NoBracketingException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.sampling.StepHandler;
@@ -38,10 +40,14 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	public ArrayList<Double> xsol = new ArrayList<Double>();
 	public ArrayList<Double> ysol = new ArrayList<Double>();
 	public ArrayList<Double> zsol = new ArrayList<Double>();
-	public double[][] zerovel2D;
+	public ArrayList<Double> xzv = new ArrayList<Double>();
+	public ArrayList<Double> yzv = new ArrayList<Double>();
+	// public double[][] zerovel2D;
 	double[] yStart;
 	public double C;
 	public Vector3D LibPoints[];
+	 double C1, C2, C3, C4, C5;
+	double[] Ci = new double[5];
 
 	public CRTBP(double mu) {
 		this.mu = mu;
@@ -102,12 +108,17 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	}
 
 	public double JacobiIntegral(double yin[]) {
+		// double[] yin = new double[6];
 		double x = yin[0];
 		double y = yin[1];
 		double z = yin[2];
 		double xdot = yin[3];
 		double ydot = yin[4];
 		double zdot = yin[5];
+		return JacobiIntegral(x, y, z, xdot, ydot, zdot);
+	}
+
+	public double JacobiIntegral(double x, double y, double z, double xdot, double ydot, double zdot) {
 		double x2 = x * x;
 		double y2 = y * y;
 		double z2 = z * z;
@@ -143,18 +154,20 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		UnivariateFunction Lfunction = new L123Func();
 		double L1 = bs.solve(100, Lfunction, 0, 1.);
 		LibPoints[0] = new Vector3D(L1, 0, 0);
+		C1 = JacobiIntegral(L1, 0, 0, 0, 0, 0);
 		double L2 = bs.solve(100, Lfunction, 1, 2.);
 		LibPoints[1] = new Vector3D(L2, 0, 0);
-		LibPoints[0] = new Vector3D(L1, 0, 0);
+		C2 = JacobiIntegral(L2, 0, 0, 0, 0, 0);
 		double L3 = bs.solve(100, Lfunction, -2.0, 0);
 		LibPoints[2] = new Vector3D(L3, 0, 0);
+		C3 = JacobiIntegral(L3, 0, 0, 0, 0, 0);
 		double y45 = Math.sqrt(3.) / 2;
 		LibPoints[3] = new Vector3D(.5 - mu, y45, 0);
 		LibPoints[4] = new Vector3D(.5 - mu, -y45, 0);
 
-		System.out.println("L1: " + L1);
-		System.out.println("L2: " + L2);
-		System.out.println("L3: " + L3);
+		System.out.println("L1: " + L1 + " C1 " + C1);
+		System.out.println("L2: " + L2 + " C2 " + C2);
+		System.out.println("L3: " + L3 + " C3 " + C3);
 		System.out.println("L4= (" + LibPoints[3].getX() + "," + LibPoints[3].getY() + ")");
 		System.out.println("L5= (" + LibPoints[4].getX() + "," + LibPoints[4].getY() + ")");
 
@@ -199,23 +212,35 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	}
 
 	public void findZeroVelocity() {
-		zerovel2D = new double[20][2];
 		JacobiFixedx JF = new JacobiFixedx();
-		BisectionSolver bs = new BisectionSolver();
-		JF.setC(3.2);
-		double x=-.5;
-		for (int i=0;i<16;i++) {
-			//for (double x = -.5; x < .9; x += .1) {
-			x+=.1;
+		BisectionSolver bis = new BisectionSolver();
+		BrentSolver brs = new BrentSolver();
+		JF.setC(C);
+		double x = -1.;
+		while ((x += .01) < 1.3) {
 			JF.setx(x);
-			double y = bs.solve(100, JF, 0, 2);
-			System.out.println("x y " + x + " " + y);
-			zerovel2D[i][0]=x;
-			zerovel2D[i][1]=y;
-		
-		}
-		// double x=0.3;
 
+			double y = 0;
+			boolean success = false;
+			try {
+				success = true;
+				y = brs.solve(100, JF, -.1, .8);
+				// double y = bis.solve(100, JF, 0, 2);
+			} catch (NoBracketingException e) {
+				success = false;
+				// System.out.println("exception at x y " + x + " " + y);
+
+			} finally {
+
+				if (success) {
+					// System.out.println("x y " + x + " " + y);
+
+					xzv.add(x);
+					yzv.add(y);
+				}
+
+			}
+		}
 	}
 
 }
