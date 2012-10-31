@@ -38,6 +38,7 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	public ArrayList<Double> xsol = new ArrayList<Double>();
 	public ArrayList<Double> ysol = new ArrayList<Double>();
 	public ArrayList<Double> zsol = new ArrayList<Double>();
+	public double[][] zerovel2D;
 	double[] yStart;
 	public double C;
 	public Vector3D LibPoints[];
@@ -163,6 +164,11 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		double x, C;
 		double z = 0;
 
+		public JacobiFixedx() {
+			this.x = .2;
+			this.C = 3.0;
+		}
+
 		public JacobiFixedx(double x, double C) {
 			this.x = x;
 			this.C = C;
@@ -193,13 +199,20 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	}
 
 	public void findZeroVelocity() {
-		JacobiFixedx JF = new JacobiFixedx(.1, 3.1);
+		zerovel2D = new double[20][2];
+		JacobiFixedx JF = new JacobiFixedx();
 		BisectionSolver bs = new BisectionSolver();
 		JF.setC(3.2);
-		for (double x = -.5; x < .9; x += .1) {
+		double x=-.5;
+		for (int i=0;i<16;i++) {
+			//for (double x = -.5; x < .9; x += .1) {
+			x+=.1;
 			JF.setx(x);
-			double zv = bs.solve(100, JF, 0, 2);
-			System.out.println("x y " + x + " " + zv);
+			double y = bs.solve(100, JF, 0, 2);
+			System.out.println("x y " + x + " " + y);
+			zerovel2D[i][0]=x;
+			zerovel2D[i][1]=y;
+		
 		}
 		// double x=0.3;
 

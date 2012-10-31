@@ -39,9 +39,10 @@ public class CRTBPExample {
 	void doExample()
 	{
 		//double mu = 0.15;
+		//double mu = 0.15;
 		//double mu = 3.035909999e-6;
-		double mu=0.012277471;
-		//double mu = 0.3;
+		//double mu=0.012277471;
+		double mu = 0.2;
 		CRTBP myCRTBP = new CRTBP(mu);
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
@@ -99,12 +100,19 @@ public class CRTBPExample {
 		String Labelmu = "mu = " + myCRTBP.mu;
 		p.addLabel(Labelmu, java.awt.Color.black, 1, .9 * size);
 
+		myCRTBP.findZeroVelocity();
+		LinePlot lzv = new LinePlot("zero vel", Color.blue,myCRTBP.zerovel2D );
+		lzv.closed_curve = false;
+		lzv.draw_dot = true;
+		p.addPlot(lzv);
+
+		
+		
 		p.setLegendOrientation(PlotPanel.SOUTH);
 		p.setFixedBounds(0, -size, size);
 		p.setFixedBounds(1, -size, size);
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		myCRTBP.findZeroVelocity();
 				
 	}
 	
