@@ -19,7 +19,6 @@ package jat.core.ephemeris;
 
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
-import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
@@ -28,6 +27,7 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 import java.io.IOException;
+import java.util.EnumSet;
 
 /**
  * The DE405 Ephemeris data files from JPL are given in the ICRF frame. This
@@ -39,6 +39,7 @@ public class DE405Plus extends DE405APL {
 
 	public frame ephFrame;
 	jatMessages messages;
+	VectorN[] posvelICRF, posvel;
 
 	public DE405Plus() {
 		super();
@@ -51,6 +52,8 @@ public class DE405Plus extends DE405APL {
 		if (messages != null)
 			messages.addln("[DE405Plus] " + DE405_path);
 		ephFrame = frame.ICRF;
+		posvelICRF = new VectorN[12];
+		posvel = new VectorN[12];
 	}
 
 	public DE405Plus(PathUtil path) {
@@ -67,43 +70,78 @@ public class DE405Plus extends DE405APL {
 	public void setFrame(frame ephFrame) {
 
 		this.ephFrame = ephFrame;
-		if(ephFrame==frame.ECI)
-			; // must provide callback function to retrieve time for which ECI coords are to be computed
+
+	}
+
+	public void update_posvel_and_frame(Time t) throws IOException {
+
+		update_planetary_ephemeris(t);
+
+		// first get ICRF ephemeris
+		double[] pv = new double[6];
+		for (body q : EnumSet.allOf(body.class)) {
+			int bodyNumber = q.ordinal();
+			double daysec = 3600. * 24.;
+			pv[0] = planet_r[bodyNumber][1];
+			pv[1] = planet_r[bodyNumber][2];
+			pv[2] = planet_r[bodyNumber][3];
+			pv[3] = planet_rprime[bodyNumber][1] / daysec;
+			pv[4] = planet_rprime[bodyNumber][2] / daysec;
+			pv[5] = planet_rprime[bodyNumber][3] / daysec;
+
+			posvelICRF[bodyNumber] = new VectorN(pv);
+		}
+
+		// posvel[bodyNumber]=new VectorN(6);
+		// VectorN out;
+
+		// Now get transformed posvel
+		for (body q : EnumSet.allOf(body.class)) {
+			int bodyNumber = q.ordinal();
+			VectorN in = posvelICRF[bodyNumber];
+			switch (ephFrame) {
+			case ICRF:
+				posvel[bodyNumber] = in;
+				break;
+			case HEE:
+				posvel[bodyNumber] = ecliptic_obliquity_rotate(in);
+				break;
+			case ECI:
+
+				posvel[bodyNumber] = ICRF_to_ECI(in, t);
+				break;
+			default:
+				posvel[bodyNumber] = in;
+				break;
+			}
+		}
 
 	}
 
 	public VectorN get_planet_posvel(body bodyEnum, Time t) throws IOException {
-
-		VectorN in = get_planet_posvel(bodyEnum, t.jd_tt());
-		VectorN out;
-		switch (ephFrame) {
-		case ICRF:
-			out = in;
-			break;
-		case HEE:
-			out = ecliptic_obliquity_rotate(in);
-			break;
-		case ECI:
-			out = ICRF_to_ECI(in);
-			break;
-		default:
-			out = new VectorN(in);
-			break;
-		}
-
-		return out;
-
+		update_posvel_and_frame(t);
+		return posvel[bodyEnum.ordinal()];
 	}
 
 	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
-		VectorN in = get_planet_posvel(bodyEnum, t);
-		VectorN out = new VectorN(3);
 
-		out.x[0] = in.x[0];
-		out.x[1] = in.x[1];
-		out.x[2] = in.x[2];
+		update_posvel_and_frame(t);
+		// update_planetary_ephemeris(t);
+
+		double[] pos = new double[3];
+		int bodyNumber = bodyEnum.ordinal();
+		pos[0] = posvel[bodyNumber].x[0];
+		pos[1] = posvel[bodyNumber].x[1];
+		pos[2] = posvel[bodyNumber].x[2];
+
+		VectorN out = new VectorN(pos);
 
 		return out;
+
+		// pos[0] = planet_r[bodyNumber][1];
+		// pos[1] = planet_r[bodyNumber][2];
+		// pos[2] = planet_r[bodyNumber][3];
+
 	}
 
 	public VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
@@ -140,14 +178,20 @@ public class DE405Plus extends DE405APL {
 		return returnval;
 	}
 
-	private VectorN ICRF_to_ECI(VectorN in) {
-		VectorN returnval = new VectorN(6);
+	private VectorN ICRF_to_ECI(VectorN in, Time mytime) throws IOException {
 
-		// get time for which ECI coords are to be computed
+		double[] posvel = new double[6];
+		int bodyNumber = DE405Body.body.EARTH_MOON_BARY.ordinal();
+		posvel[0] = posvelICRF[bodyNumber].x[0];
+		posvel[1] = posvelICRF[bodyNumber].x[1];
+		posvel[2] = posvelICRF[bodyNumber].x[2];
+		posvel[3] = posvelICRF[bodyNumber].x[3];
+		posvel[4] = posvelICRF[bodyNumber].x[4];
+		posvel[5] = posvelICRF[bodyNumber].x[5];
 
-		TimeAPL mytime;
-		VectorN earthPos = get_planet_pos(body.EARTH_MOON_BARY, mytime);
+		VectorN earthPos = new VectorN(posvel);
 
+		VectorN returnval = in.minus(earthPos);
 		return returnval;
 	}
 

@@ -67,13 +67,8 @@
 
 package jat.core.ephemeris;
 
-import jat.core.ephemeris.DE405Body.body;
 import jat.core.util.PathUtil;
-import jat.coreNOSA.cm.Constants;
-import jat.coreNOSA.cm.cm;
-import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
-import jat.coreNOSA.spacetime.TimeUtils;
 
 import java.applet.Applet;
 import java.io.BufferedReader;
@@ -164,7 +159,9 @@ public class DE405APL {
 	 * @param jultime
 	 * @throws IOException
 	 */
-	void planetary_ephemeris(double jultime) throws IOException {
+	void update_planetary_ephemeris(Time t) throws IOException {
+
+		double jultime = t.jd_tt();
 
 		int i = 0, j = 0;
 		double[] ephemeris_r = new double[4];
@@ -172,7 +169,7 @@ public class DE405APL {
 
 		/* Get the ephemeris positions and velocities of each major planet */
 		for (i = 1; i <= 11; i++) {
-			get_planet_posvel(jultime, i, ephemeris_r, ephemeris_rprime);
+			get_ephemeris_posvel(jultime, i, ephemeris_r, ephemeris_rprime);
 			for (j = 1; j <= 3; j++) {
 				planet_r[i][j] = ephemeris_r[j];
 				planet_rprime[i][j] = ephemeris_rprime[j];
@@ -210,7 +207,7 @@ public class DE405APL {
 	 * @param ephemeris_rprime
 	 * @throws IOException
 	 */
-	void get_planet_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[]) throws IOException {
+	void get_ephemeris_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[]) throws IOException {
 
 		int interval = 0, numbers_to_skip = 0, pointer = 0, j = 0, k = 0, subinterval = 0;
 
@@ -254,7 +251,7 @@ public class DE405APL {
 		 * appropriate for jultime, or if we need to load a new set.
 		 */
 		if ((jultime < ephemeris_dates[1]) || (jultime > ephemeris_dates[2]))
-			get_ephemeris_coefficients_new(jultime);
+			get_ephemeris_coefficients(jultime);
 
 		interval = (int) (Math.floor((jultime - ephemeris_dates[1]) / interval_duration) + 1);
 		interval_start_time = (interval - 1) * interval_duration + ephemeris_dates[1];
@@ -347,7 +344,7 @@ public class DE405APL {
 	 *             from the Internet
 	 */
 
-	void get_ephemeris_coefficients_new(double jultime) throws IOException {
+	void get_ephemeris_coefficients(double jultime) throws IOException {
 
 		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
 		String fileName = null;
@@ -532,70 +529,8 @@ public class DE405APL {
 	}
 
 
-	protected VectorN get_planet_posvel(body bodyEnum, double jd) throws IOException {
-		double daysec = 3600. * 24.;
 
-		double[] posvel = new double[6];
-		planetary_ephemeris(jd);
-		int bodyNumber = bodyEnum.ordinal();
-		posvel[0] = planet_r[bodyNumber][1];
-		posvel[1] = planet_r[bodyNumber][2];
-		posvel[2] = planet_r[bodyNumber][3];
-		posvel[3] = planet_rprime[bodyNumber][1] / daysec;
-		posvel[4] = planet_rprime[bodyNumber][2] / daysec;
-		posvel[5] = planet_rprime[bodyNumber][3] / daysec;
 
-		VectorN out = new VectorN(posvel);
-		return out;
-	}
-
-	private VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
-		get_planet_posvel(bodyEnum, t.jd_tt());
-		double[] pos = new double[3];
-		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
-
-		int bodyNumber = bodyEnum.ordinal();
-		planetary_ephemeris(jultime);
-		pos[0] = planet_r[bodyNumber][1];
-		pos[1] = planet_r[bodyNumber][2];
-		pos[2] = planet_r[bodyNumber][3];
-
-		VectorN out = new VectorN(pos);
-
-		return out;
-	}
-
-	private VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
-		double daysec = 3600. * 24.;
-		get_planet_posvel(bodyEnum, t.jd_tt());
-		double[] vel = new double[3];
-		double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
-
-		planetary_ephemeris(jultime);
-		int bodyNumber = bodyEnum.ordinal();
-		vel[0] = planet_rprime[bodyNumber][1] / daysec;
-		vel[1] = planet_rprime[bodyNumber][2] / daysec;
-		vel[2] = planet_rprime[bodyNumber][3] / daysec;
-
-		VectorN out = new VectorN(vel);
-
-		return out;
-	}
-
-	VectorN ecliptic_obliquity_rotate(VectorN r) {
-		VectorN returnval = new VectorN(3);
-		double x, y, z, eps, c, s;
-		x = r.get(0);
-		y = r.get(1);
-		z = r.get(2);
-		eps = cm.Rad(Constants.eps);
-		c = Math.cos(eps);
-		s = Math.sin(eps);
-		returnval.x[0] = x;
-		returnval.x[1] = c * y + s * z;
-		returnval.x[2] = -s * y + c * z;
-		return returnval;
-	}
 
 	// public static void main(String args[]) {
 	//
@@ -634,3 +569,75 @@ public class DE405APL {
 	// }
 
 }
+
+
+
+
+
+
+//private VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
+//get_planet_posvel(bodyEnum, t.jd_tt());
+//double[] pos = new double[3];
+//double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+//
+//int bodyNumber = bodyEnum.ordinal();
+//planetary_ephemeris(jultime);
+//pos[0] = planet_r[bodyNumber][1];
+//pos[1] = planet_r[bodyNumber][2];
+//pos[2] = planet_r[bodyNumber][3];
+//
+//VectorN out = new VectorN(pos);
+//
+//return out;
+//}
+
+//private VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
+//double daysec = 3600. * 24.;
+//get_planet_posvel(bodyEnum, t.jd_tt());
+//double[] vel = new double[3];
+//double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+//
+//planetary_ephemeris(jultime);
+//int bodyNumber = bodyEnum.ordinal();
+//vel[0] = planet_rprime[bodyNumber][1] / daysec;
+//vel[1] = planet_rprime[bodyNumber][2] / daysec;
+//vel[2] = planet_rprime[bodyNumber][3] / daysec;
+//
+//VectorN out = new VectorN(vel);
+//
+//return out;
+//}
+
+
+//VectorN ecliptic_obliquity_rotate(VectorN r) {
+//VectorN returnval = new VectorN(3);
+//double x, y, z, eps, c, s;
+//x = r.get(0);
+//y = r.get(1);
+//z = r.get(2);
+//eps = cm.Rad(Constants.eps);
+//c = Math.cos(eps);
+//s = Math.sin(eps);
+//returnval.x[0] = x;
+//returnval.x[1] = c * y + s * z;
+//returnval.x[2] = -s * y + c * z;
+//return returnval;
+//}
+
+
+//protected VectorN get_planet_posvel(body bodyEnum, double jd) throws IOException {
+//double daysec = 3600. * 24.;
+//
+//double[] posvel = new double[6];
+//planetary_ephemeris(jd);
+//int bodyNumber = bodyEnum.ordinal();
+//posvel[0] = planet_r[bodyNumber][1];
+//posvel[1] = planet_r[bodyNumber][2];
+//posvel[2] = planet_r[bodyNumber][3];
+//posvel[3] = planet_rprime[bodyNumber][1] / daysec;
+//posvel[4] = planet_rprime[bodyNumber][2] / daysec;
+//posvel[5] = planet_rprime[bodyNumber][3] / daysec;
+//
+//VectorN out = new VectorN(posvel);
+//return out;
+//}

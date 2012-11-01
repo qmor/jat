@@ -18,6 +18,7 @@
 package jat.application.EarthMoon;
 
 import jat.application.missionPlan.Flight;
+import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
@@ -74,6 +75,8 @@ public class EarthMoonMain extends JApplet {
 		emParam.path = new PathUtil(this);
 		emParam.path = new PathUtil(this,emParam.messages);
 		emParam.Eph = new DE405Plus(emParam.path,emParam.messages);
+		emParam.Eph.setFrame(DE405Frame.frame.ECI);
+		//emParam.Eph.setFrame(DE405Frame.frame.ICRF);
 		
 		emGUI = new EarthMoonGUI(this);
 		emPlot = new EarthMoonPlot(this);
