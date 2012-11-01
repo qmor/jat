@@ -19,6 +19,7 @@ package jat.core.ephemeris;
 
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
+import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
@@ -38,7 +39,6 @@ public class DE405Plus extends DE405APL {
 
 	public frame ephFrame;
 	jatMessages messages;
-
 
 	public DE405Plus() {
 		super();
@@ -67,19 +67,24 @@ public class DE405Plus extends DE405APL {
 	public void setFrame(frame ephFrame) {
 
 		this.ephFrame = ephFrame;
+		if(ephFrame==frame.ECI)
+			; // must provide callback function to retrieve time for which ECI coords are to be computed
 
 	}
 
 	public VectorN get_planet_posvel(body bodyEnum, Time t) throws IOException {
-		VectorN in = get_planet_posvel(bodyEnum, t.jd_tt());
 
+		VectorN in = get_planet_posvel(bodyEnum, t.jd_tt());
 		VectorN out;
 		switch (ephFrame) {
 		case ICRF:
-			out = new VectorN(in);
+			out = in;
 			break;
 		case HEE:
-			out = new VectorN(ecliptic_obliquity_rotate(new VectorN(in)));
+			out = ecliptic_obliquity_rotate(in);
+			break;
+		case ECI:
+			out = ICRF_to_ECI(in);
 			break;
 		default:
 			out = new VectorN(in);
@@ -131,6 +136,17 @@ public class DE405Plus extends DE405APL {
 		returnval.x[3] = vx;
 		returnval.x[4] = c * vy + s * vz;
 		returnval.x[5] = -s * vy + c * vz;
+
+		return returnval;
+	}
+
+	private VectorN ICRF_to_ECI(VectorN in) {
+		VectorN returnval = new VectorN(6);
+
+		// get time for which ECI coords are to be computed
+
+		TimeAPL mytime;
+		VectorN earthPos = get_planet_pos(body.EARTH_MOON_BARY, mytime);
 
 		return returnval;
 	}
