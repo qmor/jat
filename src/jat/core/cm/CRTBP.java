@@ -46,8 +46,9 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 	double[] yStart;
 	public double C;
 	public Vector3D LibPoints[];
-	 double C1, C2, C3, C4, C5;
-	double[] Ci = new double[5];
+	public double C1, C2, C3, C4, C5;
+
+	// double[] Ci = new double[5];
 
 	public CRTBP(double mu) {
 		this.mu = mu;
@@ -217,6 +218,7 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		BrentSolver brs = new BrentSolver();
 		JF.setC(C);
 		double x = -1.;
+		double lasty = 0;
 		while ((x += .01) < 1.3) {
 			JF.setx(x);
 
@@ -224,7 +226,8 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 			boolean success = false;
 			try {
 				success = true;
-				y = brs.solve(100, JF, -.1, .8);
+				y = brs.solve(100, JF, lasty - .4, lasty + .4);
+				// y = brs.solve(100, JF, -.1, .8);
 				// double y = bis.solve(100, JF, 0, 2);
 			} catch (NoBracketingException e) {
 				success = false;
@@ -237,6 +240,8 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 
 					xzv.add(x);
 					yzv.add(y);
+					lasty = y;
+					//System.out.println("last y " + lasty);
 				}
 
 			}

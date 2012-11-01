@@ -40,7 +40,6 @@ public class DE405Plus extends DE405APL {
 	jatMessages messages;
 
 
-	//TODO: this for applications. to be tested.
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
