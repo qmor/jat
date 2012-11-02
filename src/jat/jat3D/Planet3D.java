@@ -21,7 +21,6 @@ import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
-import jat.coreNOSA.cm.cm;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -48,17 +47,18 @@ public class Planet3D extends Body3D {
 	Color3f Planetcolor; // planet color if texture not found
 	Appearance appear;
 	String images_path;
-	//int divisions = 60; // number of divisions for sphere
+
+	// int divisions = 60; // number of divisions for sphere
 
 	public Planet3D(PathUtil p, jatMessages messages, body planet, float scale) {
 		super();
 		this.scale = scale;
-		//radius = (float) 1000f;
+		// radius = (float) 1000f;
 		this.messages = messages;
 		images_path = p.root_path + "data/jat3D/images_hires/";
-					
+
 		String fileName = null;
-		
+
 		switch (planet) {
 		case MERCURY:
 			fileName = images_path + "mercury.jpg";
@@ -77,12 +77,12 @@ public class Planet3D extends Body3D {
 			break;
 		case MARS:
 			fileName = images_path + "mars.jpg";
-			radius = (float) cm.mars_radius;
+			radius = (float) SolarSystemBodies.Bodies[body.MARS.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		case JUPITER:
 			fileName = images_path + "jupiter.jpg";
-			radius = (float) cm.jupiter_radius;
+			radius = (float) SolarSystemBodies.Bodies[body.JUPITER.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case SATURN:
@@ -90,17 +90,33 @@ public class Planet3D extends Body3D {
 			radius = (float) SolarSystemBodies.Bodies[body.SATURN.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
+		case URANUS:
+			fileName = images_path + "uranus.jpg";
+			radius = (float) SolarSystemBodies.Bodies[body.URANUS.ordinal()].radius;
+			Planetcolor = Colors.orange;
+			break;
+		case NEPTUNE:
+			fileName = images_path + "neptune.jpg";
+			radius = (float) SolarSystemBodies.Bodies[body.NEPTUNE.ordinal()].radius;
+			Planetcolor = Colors.orange;
+			break;
+		case PLUTO:
+			fileName = images_path + "pluto.jpg";
+			radius = (float) SolarSystemBodies.Bodies[body.PLUTO.ordinal()].radius;
+			Planetcolor = Colors.orange;
+			break;
+
 		case MOON:
 			fileName = images_path + "moon.jpg";
-			radius = (float) cm.moon_radius;
+			radius = (float) SolarSystemBodies.Bodies[body.MOON.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		}
-		
-		
+
 		// Create a URL for the desired page
 		// If it is called from an applet, it starts with "file:" or "http:"
-		// If it's an application, we need to add "file:" so that BufferReader works
+		// If it's an application, we need to add "file:" so that BufferReader
+		// works
 		boolean application;
 		if (fileName.startsWith("file") || fileName.startsWith("http"))
 			application = false;
@@ -108,7 +124,7 @@ public class Planet3D extends Body3D {
 			application = true;
 		if (application)
 			fileName = "file:" + fileName;
-		messages.addln("[Planet3D] "+fileName);
+		messages.addln("[Planet3D] " + fileName);
 		try {
 			URL TextureURL = new URL(fileName);
 			BufferedImage img = ImageIO.read(TextureURL);
@@ -120,14 +136,16 @@ public class Planet3D extends Body3D {
 			app.setTexture(tex.getTexture());
 		} catch (MalformedURLException e) {
 			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
-			//e.printStackTrace();
+			System.out.println("MalformedURLException");
+			// e.printStackTrace();
 		} catch (IOException e) {
 			app = createMatAppear_star(Colors.blue, Colors.white, 10.0f);
-			//e.printStackTrace();
+			System.out.println("IOException");
+			// e.printStackTrace();
 		}
-		
-		addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));		
-		
+
+		addChild(new Sphere(scale * radius, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, app));
+
 	}
 
 	protected static Appearance createMatAppear_planet(Color3f dColor, Color3f sColor, float shine) {
@@ -141,7 +159,6 @@ public class Planet3D extends Body3D {
 		return appear;
 	}
 
-	
 	static Appearance createMatAppear_star(Color3f dColor, Color3f sColor, float shine) {
 		Appearance appear = new Appearance();
 		Material material = new Material();
@@ -152,5 +169,5 @@ public class Planet3D extends Body3D {
 		appear.setMaterial(material);
 		return appear;
 	}
-	
-	}
+
+}

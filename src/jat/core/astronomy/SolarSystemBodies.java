@@ -27,13 +27,13 @@ public class SolarSystemBodies {
 		body body;
 		public double radius; // km
 		public double mass; // kg
-		public double orbitalPeriod; // days
+		public double orbitalPeriod; // earth days
 
 		public Body(jat.core.ephemeris.DE405Body.body body, double radius, double mass, double orbitalPeriod) {
 			this.body = body;
-			this.radius = radius;
-			this.mass = mass;
-			this.orbitalPeriod = orbitalPeriod;
+			this.radius = radius; // km
+			this.mass = mass; // kg
+			this.orbitalPeriod = orbitalPeriod; // earth days
 		}
 
 
@@ -49,11 +49,10 @@ public class SolarSystemBodies {
 		Bodies[4] = new Body(body.MARS, 3396., 641.85e21, 687);
 		Bodies[5] = new Body(body.JUPITER, 69911, 1898600.0e21, 4332.59);
 		Bodies[6] = new Body(body.SATURN, 54364, 568460.0e21, 10759.22);
-		Bodies[7] = new Body(body.JUPITER, 1, 1, 1);
-		Bodies[8] = new Body(body.NEPTUNE, 1, 1, 1);
-		Bodies[9] = new Body(body.URANUS, 1, 1, 1);
-		Bodies[10] = new Body(body.PLUTO, 1, 1, 1);
-		Bodies[11] = new Body(body.MOON, 1737.1, 7.3477e22, 27.321582);
+		Bodies[7] = new Body(body.NEPTUNE, 24764, 1.0243e26, 60190.03);
+		Bodies[8] = new Body(body.URANUS, 25559, 8.6810e25, 30799.095);
+		Bodies[9] = new Body(body.PLUTO, 1153, 1.305e22, 89865);
+		Bodies[10] = new Body(body.MOON, 1737.1, 7.3477e22, 27.321582);
 
 	}
 

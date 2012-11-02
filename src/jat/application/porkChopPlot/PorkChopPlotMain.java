@@ -39,18 +39,20 @@ public class PorkChopPlotMain extends JApplet {
 
 	public PorkChopPlotMain(PathUtil path, DE405Plus Eph) {
 		// PathUtil p =new PathUtil(this);
-		pcpParams = new PorkChopPlotParameters(body.EARTH_MOON_BARY, body.MARS, 2003, 1, 1, 2003,
-				7, 1, 500, 10);
+		pcpParams = new PorkChopPlotParameters(body.EARTH_MOON_BARY, body.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
 		pcpParams.path = path;
 		pcpParams.Eph = Eph;
 	}
 
 	public PorkChopPlotMain() {
-		pcpParams = new PorkChopPlotParameters(body.EARTH_MOON_BARY, body.MARS, 2003, 1, 1, 2003,
-				7, 1, 500, 10);
+		pcpParams = new PorkChopPlotParameters(body.EARTH_MOON_BARY, body.MARS, 2003, 1, 1, 2003, 7, 1, 500, 10);
 	}
 
 	public void init() {
+	}
+
+	public void start() {
+
 		// if we are the first class called, create PathUtil and Ephemeris
 		if (pcpParams.path == null) {
 			pcpParams.path = new PathUtil(this);

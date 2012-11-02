@@ -10,18 +10,21 @@ public class EarthMoonParameters {
 	TimeAPL simulationDate;
 	int numberOfBodies = DE405Body.body.values().length;
 	boolean[] planetOnOff;
+	float[] planetMagnification;
 	PathUtil path;
 	jatMessages messages;
 	DE405Plus Eph;
 
-
 	public EarthMoonParameters() {
-		messages=new jatMessages();
+		messages = new jatMessages();
 		planetOnOff = new boolean[numberOfBodies];
+		planetMagnification=new float[numberOfBodies];
 		simulationDate = new TimeAPL(2003, 3, 1, 12, 0, 0);
 
-		for (int i = 0; i < numberOfBodies; i++)
-			this.planetOnOff[i] = false;
+		for (int i = 0; i < numberOfBodies; i++) {
+			planetOnOff[i] = false;
+			planetMagnification[i]=1.f;
+		}
 	}
 
 	public EarthMoonParameters(boolean[] planetOnOff) {

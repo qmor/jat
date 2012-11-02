@@ -77,12 +77,12 @@ public class MissionPlanMain extends JApplet {
 
 	public void start() {
 		 //Message console
-		 MissionPlanConsole E = new MissionPlanConsole();
-		 JFrame jf = new JFrame();
-		 jf.setSize(800, 400);
-		 jf.getContentPane().add(E);
-		 jf.setVisible(true);
-		 E.init();
+		// MissionPlanConsole E = new MissionPlanConsole();
+		// JFrame jf = new JFrame();
+		// jf.setSize(800, 400);
+		// jf.getContentPane().add(E);
+		// jf.setVisible(true);
+		// E.init();
 
 		mpParam = new MissionPlanParameters();
 		mpParam.path = new PathUtil(this,mpParam.messages);

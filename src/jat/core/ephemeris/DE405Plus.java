@@ -32,7 +32,7 @@ import java.util.EnumSet;
 /**
  * The DE405 Ephemeris data files from JPL are given in the ICRF frame. This
  * class allows to choose the frame for which position and velocity are
- * calculated (See DE405Frame)
+ * calculated (See DE405Frame.java)
  * 
  */
 public class DE405Plus extends DE405APL {
@@ -44,6 +44,8 @@ public class DE405Plus extends DE405APL {
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
+		posvelICRF = new VectorN[12];
+		posvel = new VectorN[12];
 	}
 
 	public DE405Plus(PathUtil path, jatMessages messages) {
@@ -60,17 +62,12 @@ public class DE405Plus extends DE405APL {
 		this.path = path;
 		DE405_path = path.DE405Path;
 		ephFrame = frame.ICRF;
+		posvelICRF = new VectorN[12];
+		posvel = new VectorN[12];
 	}
 
-	// public DE405Plus(Applet myApplet) {
-	// super(myApplet);
-	// ephFrame = frame.ICRF;
-	// }
-
 	public void setFrame(frame ephFrame) {
-
 		this.ephFrame = ephFrame;
-
 	}
 
 	public void update_posvel_and_frame(Time t) throws IOException {
@@ -92,10 +89,7 @@ public class DE405Plus extends DE405APL {
 			posvelICRF[bodyNumber] = new VectorN(pv);
 		}
 
-		// posvel[bodyNumber]=new VectorN(6);
-		// VectorN out;
-
-		// Now get transformed posvel
+		// Now transform posvel to desired reference frame
 		for (body q : EnumSet.allOf(body.class)) {
 			int bodyNumber = q.ordinal();
 			VectorN in = posvelICRF[bodyNumber];
@@ -126,7 +120,6 @@ public class DE405Plus extends DE405APL {
 	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
 
 		update_posvel_and_frame(t);
-		// update_planetary_ephemeris(t);
 
 		double[] pos = new double[3];
 		int bodyNumber = bodyEnum.ordinal();
@@ -138,19 +131,19 @@ public class DE405Plus extends DE405APL {
 
 		return out;
 
-		// pos[0] = planet_r[bodyNumber][1];
-		// pos[1] = planet_r[bodyNumber][2];
-		// pos[2] = planet_r[bodyNumber][3];
-
 	}
 
 	public VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
-		VectorN in = get_planet_posvel(bodyEnum, t);
-		VectorN out = new VectorN(3);
 
-		out.x[0] = in.x[3];
-		out.x[1] = in.x[4];
-		out.x[2] = in.x[5];
+		update_posvel_and_frame(t);
+
+		double[] vel = new double[3];
+		int bodyNumber = bodyEnum.ordinal();
+		vel[0] = posvel[bodyNumber].x[3];
+		vel[1] = posvel[bodyNumber].x[4];
+		vel[2] = posvel[bodyNumber].x[5];
+
+		VectorN out = new VectorN(vel);
 
 		return out;
 

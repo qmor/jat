@@ -62,11 +62,12 @@ public class EarthMoonPlot extends JatPlot3D {
 		planets = new Planet3D[emMain.emParam.numberOfBodies];
 		SolarSystemBodies sb = new SolarSystemBodies();
 
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 11; i++) {
 			if (param.planetOnOff[i]) {
-				planets[i] = new Planet3D(param.path, param.messages, body.fromInt(i), 30.f);
+				planets[i] = new Planet3D(param.path, param.messages, body.fromInt(i), param.planetMagnification[i]);
 				jatScene.add(planets[i], body.name[i]);
-				// if (i == 3)
+				boolean later=true; 
+				if (later)
 				{
 					ephemerisPlanets[i] = new Ephemeris3D(Eph, body.fromInt(i), param.simulationDate,
 							SolarSystemBodies.Bodies[i].orbitalPeriod);

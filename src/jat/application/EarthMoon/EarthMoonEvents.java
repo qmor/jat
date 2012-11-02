@@ -18,12 +18,16 @@
 package jat.application.EarthMoon;
 
 import jat.application.missionPlan.Flight;
+import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.spacetime.TimeAPL;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.CalDate;
+import jat.jat3D.Ephemeris3D;
+import jat.jat3D.Planet3D;
 import jat.jat3D.behavior.jat_Rotate;
 import jat.jat3D.plot3D.Rainbow3f;
 
@@ -41,6 +45,7 @@ import javax.vecmath.Vector3f;
 class EarthMoonEvents implements ActionListener, ItemListener {
 
 	EarthMoonMain emMain;
+	EarthMoonParameters param;
 	EarthMoonGUI emGUI;
 	jat_Rotate jat_rotate;
 	jatMessages messages;
@@ -54,7 +59,8 @@ class EarthMoonEvents implements ActionListener, ItemListener {
 
 	public EarthMoonEvents(EarthMoonMain mpmain) {
 		this.emMain = mpmain;
-		this.Eph = emMain.emParam.Eph;
+		param = emMain.emParam;
+		Eph = emMain.emParam.Eph;
 		messages = emMain.emParam.messages;
 		timer = new Timer(50, this);
 		// timer = new Timer(1000, this);
@@ -99,8 +105,6 @@ class EarthMoonEvents implements ActionListener, ItemListener {
 			}
 		}
 
-
-
 		// Periodic timer events
 
 		CalDate caldate;
@@ -133,7 +137,8 @@ class EarthMoonEvents implements ActionListener, ItemListener {
 
 		if (emGUI.chckbxCameraRotate.isSelected()) {
 			Vector3f sphereCoord = jat_rotate.getV_current_sphere();
-			//System.out.println(sphereCoord.x + " " + sphereCoord.y + " " + sphereCoord.z);
+			// System.out.println(sphereCoord.x + " " + sphereCoord.y + " " +
+			// sphereCoord.z);
 
 			if (sphereCoord.z > 1)
 				directionDown = true;
@@ -163,28 +168,44 @@ class EarthMoonEvents implements ActionListener, ItemListener {
 		}
 	}
 
-
 	void update_scene(TimeAPL mytime) {
 
 		try {
-//			for (int i = 1; i < 7; i++) {
-//				mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body.fromInt(i), mytime)));
+			for (int i = 1; i < 11; i++) {
+				if (param.planetOnOff[i]) {
 
-			
-			//myEph.get_planet_pos(DE405Plus.body.MOON, mytime).print("Moon");
-			//myEph.get_planet_pos(DE405Plus.body.EARTH_MOON_BARY, mytime).print("EARTH_MOON_BARY");
-			
-			VectorN moonPos=Eph.get_planet_pos(DE405Body.body.MOON, mytime);
-			VectorN earthPos=Eph.get_planet_pos(DE405Body.body.EARTH_MOON_BARY, mytime);
+					emMain.emPlot.planets[i].set_position(Eph.get_planet_pos(body.fromInt(i), mytime));
+				}
+			}
 
-			moonPos.print("Moon pos "+Eph.ephFrame);
-			
-			//VectorN moonPosEC=earthPosHC.minus(moonPosHC);
-			//VectorN moonPosEC=new VectorN(3);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(emGUI, "DE405 Ephemeris data file not found.");
+			e.printStackTrace();
+			System.exit(0);
+			// e.printStackTrace();
+		}
 
-			//moonPos.x[0]=
-			//mpmain.mpPlot.planet[1].set_position(myEph.get_planet_pos(body[10], mytime));
-			//mpmain.emPlot.bodies[DE405Plus.body.MOON.ordinal()].set_position(moonPosEC);
+		try {
+			// for (int i = 1; i < 7; i++) {
+			// mpmain.mpPlot.planet[i].set_position(ecliptic_obliquity_rotate(myEph.get_planet_pos(body.fromInt(i),
+			// mytime)));
+
+			// myEph.get_planet_pos(DE405Plus.body.MOON, mytime).print("Moon");
+			// myEph.get_planet_pos(DE405Plus.body.EARTH_MOON_BARY,
+			// mytime).print("EARTH_MOON_BARY");
+
+			VectorN moonPos = Eph.get_planet_pos(DE405Body.body.MOON, mytime);
+			VectorN earthPos = Eph.get_planet_pos(DE405Body.body.EARTH_MOON_BARY, mytime);
+
+			// moonPos.print("Moon pos "+Eph.ephFrame);
+
+			// VectorN moonPosEC=earthPosHC.minus(moonPosHC);
+			// VectorN moonPosEC=new VectorN(3);
+
+			// moonPos.x[0]=
+			// mpmain.mpPlot.planet[1].set_position(myEph.get_planet_pos(body[10],
+			// mytime));
+			// mpmain.emPlot.bodies[DE405Plus.body.MOON.ordinal()].set_position(moonPosEC);
 
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(emGUI, "DE405 Ephemeris data file not found.");

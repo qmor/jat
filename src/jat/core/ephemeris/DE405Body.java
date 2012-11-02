@@ -22,7 +22,7 @@ import java.util.EnumSet;
 public class DE405Body {
 
 	public enum body {
-		BLANK, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
+		SUN, MERCURY, VENUS, EARTH_MOON_BARY, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
 		private static final int amount = EnumSet.allOf(body.class).size();
 		private static body[] val = new body[amount];
 		static {
