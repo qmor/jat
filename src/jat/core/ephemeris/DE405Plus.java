@@ -174,7 +174,7 @@ public class DE405Plus extends DE405APL {
 	private VectorN ICRF_to_ECI(VectorN in, Time mytime) throws IOException {
 
 		double[] posvel = new double[6];
-		int bodyNumber = DE405Body.body.EARTH_MOON_BARY.ordinal();
+		int bodyNumber = DE405Body.body.EARTH.ordinal();
 		posvel[0] = posvelICRF[bodyNumber].x[0];
 		posvel[1] = posvelICRF[bodyNumber].x[1];
 		posvel[2] = posvelICRF[bodyNumber].x[2];

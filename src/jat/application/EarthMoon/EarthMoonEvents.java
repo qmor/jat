@@ -195,7 +195,7 @@ class EarthMoonEvents implements ActionListener, ItemListener {
 			// mytime).print("EARTH_MOON_BARY");
 
 			VectorN moonPos = Eph.get_planet_pos(DE405Body.body.MOON, mytime);
-			VectorN earthPos = Eph.get_planet_pos(DE405Body.body.EARTH_MOON_BARY, mytime);
+			VectorN earthPos = Eph.get_planet_pos(DE405Body.body.EARTH, mytime);
 
 			// moonPos.print("Moon pos "+Eph.ephFrame);
 

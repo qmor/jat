@@ -21,8 +21,8 @@ public class mars_odyssey {
 		double tof = 200. * 86400.0;
 
 		Lambert lambert = new Lambert(Constants.GM_Sun / 1.e9);
-		VectorN r0 = my_eph.get_planet_pos(body.EARTH_MOON_BARY, departure_time);
-		VectorN v0 = my_eph.get_planet_vel(body.EARTH_MOON_BARY, departure_time);
+		VectorN r0 = my_eph.get_planet_pos(body.EARTH, departure_time);
+		VectorN v0 = my_eph.get_planet_vel(body.EARTH, departure_time);
 		r0.print("r0");
 		v0.print("v0");
 		System.out.println("orbital velocity of earth " + v0.mag());

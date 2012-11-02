@@ -70,9 +70,9 @@ public class Planet3D extends Body3D {
 			radius = (float) SolarSystemBodies.Bodies[body.VENUS.ordinal()].radius;
 			Planetcolor = Colors.green;
 			break;
-		case EARTH_MOON_BARY:
+		case EARTH:
 			fileName = images_path + "earth.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.EARTH_MOON_BARY.ordinal()].radius;
+			radius = (float) SolarSystemBodies.Bodies[body.EARTH.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		case MARS:
