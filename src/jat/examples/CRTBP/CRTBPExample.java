@@ -48,7 +48,8 @@ public class CRTBPExample {
 		// double mu = 0.2;
 
 		CRTBP myCRTBP = new CRTBP(mu);
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8,
+				100.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(myCRTBP.stepHandler);
 
 		FirstOrderDifferentialEquations ode = myCRTBP;
@@ -65,14 +66,17 @@ public class CRTBPExample {
 												// at
 												// time tf
 		if (print) {
-			System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", tf, y[0], y[1], y[2], myCRTBP.JacobiIntegral(y));
+			System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", tf, y[0], y[1],
+					y[2], myCRTBP.JacobiIntegral(y));
 			System.out.println();
-			// }
 		}
-		Double[] objArray = myCRTBP.time.toArray(new Double[myCRTBP.time.size()]);
+		Double[] objArray = myCRTBP.time
+				.toArray(new Double[myCRTBP.time.size()]);
 		double[] timeArray = ArrayUtils.toPrimitive(objArray);
-		double[] xsolArray = ArrayUtils.toPrimitive(myCRTBP.xsol.toArray(new Double[myCRTBP.time.size()]));
-		double[] ysolArray = ArrayUtils.toPrimitive(myCRTBP.ysol.toArray(new Double[myCRTBP.time.size()]));
+		double[] xsolArray = ArrayUtils.toPrimitive(myCRTBP.xsol
+				.toArray(new Double[myCRTBP.time.size()]));
+		double[] ysolArray = ArrayUtils.toPrimitive(myCRTBP.ysol
+				.toArray(new Double[myCRTBP.time.size()]));
 
 		double[][] XY = new double[timeArray.length][2];
 
@@ -102,7 +106,8 @@ public class CRTBPExample {
 
 		String Labelmu = "mu = " + myCRTBP.mu;
 		p.addLabel(Labelmu, java.awt.Color.black, 1, .9 * plotSize);
-		String initial = "initial x,v = (" + y0[0] + "," + y0[1] + "),(" + y0[3] + "," + y0[4] + ")";
+		String initial = "initial x,v = (" + y0[0] + "," + y0[1] + "),("
+				+ y0[3] + "," + y0[4] + ")";
 		p.addLabel(initial, java.awt.Color.black, 1, .8 * plotSize);
 		String Jacobi = "spacecraft C = " + myCRTBP.C;
 		p.addLabel(Jacobi, java.awt.Color.black, 1, .7 * plotSize);
@@ -111,8 +116,10 @@ public class CRTBPExample {
 
 		myCRTBP.findZeroVelocity();
 		int size = myCRTBP.xzv.size();
-		double[] xzvArray = ArrayUtils.toPrimitive(myCRTBP.xzv.toArray(new Double[size]));
-		double[] yzvArray = ArrayUtils.toPrimitive(myCRTBP.yzv.toArray(new Double[size]));
+		double[] xzvArray = ArrayUtils.toPrimitive(myCRTBP.xzv
+				.toArray(new Double[size]));
+		double[] yzvArray = ArrayUtils.toPrimitive(myCRTBP.yzv
+				.toArray(new Double[size]));
 		double[][] XYzv = new double[size][2];
 		for (int i = 0; i < size; i++) {
 			XYzv[i][0] = xzvArray[i];

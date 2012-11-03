@@ -40,7 +40,8 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
  * calculated (See DE405Frame.java)
  * 
  */
-public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
+public class DE405Plus extends DE405APL implements
+		FirstOrderDifferentialEquations {
 
 	public frame ephFrame;
 	jatMessages messages;
@@ -53,6 +54,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		ephFrame = frame.ICRF;
 		posvelICRF = new VectorN[12];
 		posvel = new VectorN[12];
+		sb = new SolarSystemBodies();
 	}
 
 	public DE405Plus(PathUtil path, jatMessages messages) {
@@ -72,6 +74,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		ephFrame = frame.ICRF;
 		posvelICRF = new VectorN[12];
 		posvel = new VectorN[12];
+		sb = new SolarSystemBodies();
 	}
 
 	public void setFrame(frame ephFrame) {
@@ -79,24 +82,28 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	}
 
 	public void computeDerivatives(double t, double[] yval, double[] yDot) {
+		double x, y, z, xdot, ydot, zdot;
 
-		double x = yval[0];
+		x = yval[0];
+		y = yval[1];
+		z = yval[2];
+
 		double x2 = x * x;
-		double y = yval[0];
-		double y2 = x * x;
-		double z = yval[0];
-		double z2 = x * x;
+		double y2 = y * y;
+		double z2 = z * z;
 		double r_sc_sun = Math.sqrt(x2 + y2 + z2);
 		double r_sc_sun3 = r_sc_sun * r_sc_sun * r_sc_sun;
-		double mu_sun=sb.Bodies[body.SUN.ordinal()].mu;
-		
+		double mu_sun = sb.Bodies[body.SUN.ordinal()].mu;
+
 		// Derivatives
 		yDot[0] = yval[3];
 		yDot[1] = yval[4];
 		yDot[2] = yval[5];
-		yDot[3] = -mu_sun*x/r_sc_sun3;
-		yDot[4] = -mu_sun*y/r_sc_sun3;
-		yDot[5] = -mu_sun*z/r_sc_sun3;
+		yDot[3] = -mu_sun * x / r_sc_sun3;
+		yDot[4] = -mu_sun * y / r_sc_sun3;
+		yDot[5] = -mu_sun * z / r_sc_sun3;
+
+		// System.out.println("computeDerivatives called");
 	}
 
 	public int getDimension() {
@@ -111,7 +118,11 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 			double t = interpolator.getCurrentTime();
 			double[] y = interpolator.getInterpolatedState();
 			if (printSteps) {
-				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2], energy(y));
+				String nf = "%14.3f ";
+				String format = nf + nf + nf + nf + nf;
+				System.out.printf(format, t, y[0], y[1], y[2], energy(y));
+				// System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0],
+				// y[1], y[2], energy(y));
 				System.out.println();
 			}
 			// time.add(t);
