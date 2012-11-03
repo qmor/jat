@@ -84,6 +84,10 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		yDot[5] = fac1 * (zc) + fac2 * (zc);
 	}
 
+	public int getDimension() {
+		return 6;
+	}
+
 	public StepHandler stepHandler = new StepHandler() {
 		public void init(double t0, double[] y0, double t) {
 			C = JacobiIntegral(y0);
@@ -104,9 +108,6 @@ public class CRTBP implements FirstOrderDifferentialEquations {
 		}
 	};
 
-	public int getDimension() {
-		return 6;
-	}
 
 	public double JacobiIntegral(double yin[]) {
 		// double[] yin = new double[6];

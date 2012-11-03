@@ -28,6 +28,7 @@ public class SolarSystemBodies {
 		public double radius; // km
 		public double mass; // kg
 		public double orbitalPeriod; // earth days
+		public double mu; // (km^3 * s^−2)
 
 		public Body(jat.core.ephemeris.DE405Body.body body, double radius, double mass, double orbitalPeriod) {
 			this.body = body;
@@ -43,6 +44,7 @@ public class SolarSystemBodies {
 
 		Bodies = new SolarSystemBodies.Body[12];
 
+		Bodies[0] = new Body(body.SUN, 6.96342e5, 1.9891e30, 0);
 		Bodies[1] = new Body(body.MERCURY, 2439.7, 330.2e21, 88);
 		Bodies[2] = new Body(body.VENUS, 6051.8, 4868.5e21, 225);
 		Bodies[3] = new Body(body.EARTH, 6378.1, 5972.2E21, 365);
@@ -54,6 +56,25 @@ public class SolarSystemBodies {
 		Bodies[9] = new Body(body.PLUTO, 1153, 1.305e22, 89865);
 		Bodies[10] = new Body(body.MOON, 1737.1, 7.3477e22, 27.321582);
 
+		Bodies[body.SUN.ordinal()].mu=132712440018.;
+		Bodies[body.MERCURY.ordinal()].mu=22032.;
+		
+
+//		Venus	324,859
+//		Earth	398,600.4418
+//		Moon	4,902.7779
+//		Mars	42,828
+//		Ceres	63.1
+//		Jupiter	126,686,534
+//		Saturn	37,931,187
+//		Uranus	5,793,939
+//		Neptune	6,836,529
+//		Pluto	871
+//		Eris	1,108
+		
+		
+		
+		
 	}
 
 }

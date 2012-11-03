@@ -17,6 +17,7 @@
 
 package jat.core.ephemeris;
 
+import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.util.PathUtil;
@@ -29,17 +30,23 @@ import jat.coreNOSA.spacetime.Time;
 import java.io.IOException;
 import java.util.EnumSet;
 
+import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math3.ode.sampling.StepHandler;
+import org.apache.commons.math3.ode.sampling.StepInterpolator;
+
 /**
  * The DE405 Ephemeris data files from JPL are given in the ICRF frame. This
  * class allows to choose the frame for which position and velocity are
  * calculated (See DE405Frame.java)
  * 
  */
-public class DE405Plus extends DE405APL {
+public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
 
 	public frame ephFrame;
 	jatMessages messages;
 	VectorN[] posvelICRF, posvel;
+	public boolean printSteps = false;
+	SolarSystemBodies sb;
 
 	public DE405Plus() {
 		super();
@@ -56,6 +63,7 @@ public class DE405Plus extends DE405APL {
 		ephFrame = frame.ICRF;
 		posvelICRF = new VectorN[12];
 		posvel = new VectorN[12];
+		sb = new SolarSystemBodies();
 	}
 
 	public DE405Plus(PathUtil path) {
@@ -68,6 +76,52 @@ public class DE405Plus extends DE405APL {
 
 	public void setFrame(frame ephFrame) {
 		this.ephFrame = ephFrame;
+	}
+
+	public void computeDerivatives(double t, double[] yval, double[] yDot) {
+
+		double x = yval[0];
+		double x2 = x * x;
+		double y = yval[0];
+		double y2 = x * x;
+		double z = yval[0];
+		double z2 = x * x;
+		double r_sc_sun = Math.sqrt(x2 + y2 + z2);
+		double r_sc_sun3 = r_sc_sun * r_sc_sun * r_sc_sun;
+		double mu_sun=sb.Bodies[body.SUN.ordinal()].mu;
+		
+		// Derivatives
+		yDot[0] = yval[3];
+		yDot[1] = yval[4];
+		yDot[2] = yval[5];
+		yDot[3] = -mu_sun*x/r_sc_sun3;
+		yDot[4] = -mu_sun*y/r_sc_sun3;
+		yDot[5] = -mu_sun*z/r_sc_sun3;
+	}
+
+	public int getDimension() {
+		return 6;
+	}
+
+	public StepHandler stepHandler = new StepHandler() {
+		public void init(double t0, double[] y0, double t) {
+		}
+
+		public void handleStep(StepInterpolator interpolator, boolean isLast) {
+			double t = interpolator.getCurrentTime();
+			double[] y = interpolator.getInterpolatedState();
+			if (printSteps) {
+				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2], energy(y));
+				System.out.println();
+			}
+			// time.add(t);
+			// xsol.add(y[0]);
+			// ysol.add(y[1]);
+		}
+	};
+
+	public double energy(double yin[]) {
+		return 2.1;
 	}
 
 	public void update_posvel_and_frame(Time t) throws IOException {
