@@ -36,7 +36,6 @@ public class TimeAPL extends Time {
 
 	public TimeAPL(CalDate date) {
 		super(date);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TimeAPL(int Yr, int Mon, int D, int Hr, int Mn, double S) {
@@ -45,8 +44,8 @@ public class TimeAPL extends Time {
 	}
 
 	public TimeAPL plus(double seconds) {
-		double jd = this.jd_utc() + seconds / 86400.;
-		return new TimeAPL(jd);
+		double mjd = this.mjd_utc() + seconds / 86400.;
+		return new TimeAPL(mjd);
 	}
 
 	/**

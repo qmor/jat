@@ -63,6 +63,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		ephFrame = frame.ICRF;
 		posvelICRF = new VectorN[12];
 		posvel = new VectorN[12];
+		sb = new SolarSystemBodies();
 	}
 
 	public DE405Plus(PathUtil path, jatMessages messages) {
@@ -89,40 +90,77 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.ephFrame = ephFrame;
 	}
 
-	public void computeDerivatives(double t, double[] yval, double[] yDot) {
-		double mu;
-		double x, x2, y, y2, z, z2;
+	public void computeDerivativesA(double t, double[] yval, double[] yDot) {
+		double x, y, z, x2, y2, z2, xdot, ydot, zdot;
 		double r_sc_body, r_sc_body3;
-		VectorN bodyPos;
-		TimeAPL EphTime;
+		double mu_sun;
 
-		// Derivatives
-		// contribution from the sun
-		mu = sb.Bodies[body.SUN.ordinal()].mu;
-		EphTime =  integrationStartTime.plus(t);
-		integrationStartTime.println();
-		EphTime.println();
-		
-		try {
-			bodyPos = get_planet_pos(body.SUN, EphTime);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		x = yval[0];
+		y = yval[1];
+		z = yval[2];
+
 		x2 = x * x;
-		y = yval[0];
-		y2 = x * x;
-		z = yval[0];
-		z2 = x * x;
+		y2 = y * y;
+		z2 = z * z;
 		r_sc_body = Math.sqrt(x2 + y2 + z2);
 		r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+		mu_sun = sb.Bodies[body.SUN.ordinal()].mu;
 
+		// Derivatives
 		yDot[0] = yval[3];
 		yDot[1] = yval[4];
 		yDot[2] = yval[5];
-		yDot[3] = -mu * x / r_sc_body3;
-		yDot[4] = -mu * y / r_sc_body3;
-		yDot[5] = -mu * z / r_sc_body3;
+		yDot[3] = -mu_sun * x / r_sc_body3;
+		yDot[4] = -mu_sun * y / r_sc_body3;
+		yDot[5] = -mu_sun * z / r_sc_body3;
+
+		// System.out.println("computeDerivatives called");
+	}
+
+	public void computeDerivatives(double t, double[] yval, double[] yDot) {
+		double mu_body;
+		double xBody = 0, yBody=0, zBody=0; // x, y, z coordinates of body i in frame
+		double x, x2, y, y2, z, z2; // x, y, z distance from spacecraft to body
+									// i and squares
+		double r_sc_body, r_sc_body3; // distance from spacecraft to body i
+		VectorN bodyPos, earthPos;
+		TimeAPL EphTime;
+		//
+
+		// Derivatives
+		EphTime = integrationStartTime.plus(t);
+		// integrationStartTime.println();
+		// EphTime.println();
+
+		try {
+			bodyPos = get_planet_pos(body.SUN, EphTime);
+			xBody=bodyPos.x[0];
+			yBody=bodyPos.x[1];
+			zBody=bodyPos.x[2];
+			//bodyPos.print("sun pos");
+			earthPos = get_planet_pos(body.EARTH, EphTime);
+			//earthPos.print("earth pos");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		x = yval[0]-xBody;
+		x2 = x * x;
+		y = yval[1]-yBody;
+		y2 = y * y;
+		z = yval[2]-zBody;
+		z2 = z * z;
+		r_sc_body = Math.sqrt(x2 + y2 + z2);
+		r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+
+		// contribution from the sun
+		mu_body = sb.Bodies[body.SUN.ordinal()].mu;
+		yDot[0] = yval[3];
+		yDot[1] = yval[4];
+		yDot[2] = yval[5];
+		yDot[3] = -mu_body * x / r_sc_body3;
+		yDot[4] = -mu_body * y / r_sc_body3;
+		yDot[5] = -mu_body * z / r_sc_body3;
 	}
 
 	public int getDimension() {
@@ -137,7 +175,9 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 			double t = interpolator.getCurrentTime();
 			double[] y = interpolator.getInterpolatedState();
 			if (printSteps) {
-				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2], energy(y));
+				String nf = "%14.3f ";
+				String format = nf + nf + nf + nf + nf;
+				System.out.printf(format, t, y[0], y[1], y[2], energy(y));
 				System.out.println();
 			}
 			// time.add(t);
