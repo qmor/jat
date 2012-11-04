@@ -19,6 +19,7 @@ package jat.examples.ephemeris;
 
 import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
@@ -33,10 +34,12 @@ public class DE405_propagate {
 		double[] y = { 1e8, 0, 0, 0, 25, 0 }; // initial state
 
 		PathUtil path = new PathUtil();
-
 		DE405Plus Eph = new DE405Plus(path);
 		Eph.setFrame(DE405Frame.frame.HEE);
 		Eph.printSteps = true;
+		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
+		Eph.setIntegrationStartTime(myTime);
+
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;

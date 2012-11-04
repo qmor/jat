@@ -44,9 +44,16 @@ public class TimeAPL extends Time {
 		// TODO Auto-generated constructor stub
 	}
 
+	public TimeAPL plus(double seconds) {
+		double jd = this.jd_utc() + seconds / 86400.;
+		return new TimeAPL(jd);
+	}
+
 	/**
-	 * @param t1 later time
-	 * @param t2 earlier time
+	 * @param t1
+	 *            later time
+	 * @param t2
+	 *            earlier time
 	 * @return time difference in days
 	 */
 	public static double minus(TimeAPL t1, TimeAPL t2) {
@@ -57,8 +64,8 @@ public class TimeAPL extends Time {
 		Calendar cal = cm.JD_to_Calendar(jd_tt());
 		return cal;
 	}
-	
-	public void print(){
+
+	public void print() {
 		String dateformat = "%tD";
 
 		String.format(dateformat, getCalendar());
@@ -66,15 +73,15 @@ public class TimeAPL extends Time {
 		System.out.print(String.format(dateformat, getCalendar()));
 	}
 
-	public void printspace(){
+	public void printspace() {
 		print();
 		System.out.print(" ");
 	}
-	
-	public void println(){
+
+	public void println() {
 		print();
 		System.out.println();
-	
+
 	}
 
 }

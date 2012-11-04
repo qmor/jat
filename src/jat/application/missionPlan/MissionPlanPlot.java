@@ -68,7 +68,7 @@ public class MissionPlanPlot extends JatPlot3D {
 				// if (i == 3)
 				{
 					ephemerisPlanets[i] = new Ephemeris3D(Eph, body.fromInt(i), param.simulationDate,
-							SolarSystemBodies.Bodies[i].orbitalPeriod);
+							sb.Bodies[i].orbitalPeriod);
 					jatScene.add(ephemerisPlanets[i], "ephemeris" + body.name[i]);
 				}
 			}

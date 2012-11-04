@@ -20,6 +20,7 @@ package jat.core.ephemeris;
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
+import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
@@ -40,21 +41,28 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
  * calculated (See DE405Frame.java)
  * 
  */
-public class DE405Plus extends DE405APL implements
-		FirstOrderDifferentialEquations {
+public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
 
 	public frame ephFrame;
 	jatMessages messages;
 	VectorN[] posvelICRF, posvel;
 	public boolean printSteps = false;
 	SolarSystemBodies sb;
+	public TimeAPL integrationStartTime;
+
+	public TimeAPL getIntegrationStartTime() {
+		return integrationStartTime;
+	}
+
+	public void setIntegrationStartTime(TimeAPL integrationStartTime) {
+		this.integrationStartTime = integrationStartTime;
+	}
 
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
 		posvelICRF = new VectorN[12];
 		posvel = new VectorN[12];
-		sb = new SolarSystemBodies();
 	}
 
 	public DE405Plus(PathUtil path, jatMessages messages) {
@@ -82,28 +90,39 @@ public class DE405Plus extends DE405APL implements
 	}
 
 	public void computeDerivatives(double t, double[] yval, double[] yDot) {
-		double x, y, z, xdot, ydot, zdot;
-
-		x = yval[0];
-		y = yval[1];
-		z = yval[2];
-
-		double x2 = x * x;
-		double y2 = y * y;
-		double z2 = z * z;
-		double r_sc_sun = Math.sqrt(x2 + y2 + z2);
-		double r_sc_sun3 = r_sc_sun * r_sc_sun * r_sc_sun;
-		double mu_sun = sb.Bodies[body.SUN.ordinal()].mu;
+		double mu;
+		double x, x2, y, y2, z, z2;
+		double r_sc_body, r_sc_body3;
+		VectorN bodyPos;
+		TimeAPL EphTime;
 
 		// Derivatives
+		// contribution from the sun
+		mu = sb.Bodies[body.SUN.ordinal()].mu;
+		EphTime =  integrationStartTime.plus(t);
+		integrationStartTime.println();
+		EphTime.println();
+		
+		try {
+			bodyPos = get_planet_pos(body.SUN, EphTime);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		x = yval[0];
+		x2 = x * x;
+		y = yval[0];
+		y2 = x * x;
+		z = yval[0];
+		z2 = x * x;
+		r_sc_body = Math.sqrt(x2 + y2 + z2);
+		r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+
 		yDot[0] = yval[3];
 		yDot[1] = yval[4];
 		yDot[2] = yval[5];
-		yDot[3] = -mu_sun * x / r_sc_sun3;
-		yDot[4] = -mu_sun * y / r_sc_sun3;
-		yDot[5] = -mu_sun * z / r_sc_sun3;
-
-		// System.out.println("computeDerivatives called");
+		yDot[3] = -mu * x / r_sc_body3;
+		yDot[4] = -mu * y / r_sc_body3;
+		yDot[5] = -mu * z / r_sc_body3;
 	}
 
 	public int getDimension() {
@@ -118,11 +137,7 @@ public class DE405Plus extends DE405APL implements
 			double t = interpolator.getCurrentTime();
 			double[] y = interpolator.getInterpolatedState();
 			if (printSteps) {
-				String nf = "%14.3f ";
-				String format = nf + nf + nf + nf + nf;
-				System.out.printf(format, t, y[0], y[1], y[2], energy(y));
-				// System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0],
-				// y[1], y[2], energy(y));
+				System.out.printf("%9.6f %9.6f %9.6f %9.6f %9.6f", t, y[0], y[1], y[2], energy(y));
 				System.out.println();
 			}
 			// time.add(t);

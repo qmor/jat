@@ -21,7 +21,7 @@ import jat.core.ephemeris.DE405Body.body;
 
 public class SolarSystemBodies {
 
-	public static Body[] Bodies;
+	public  Body[] Bodies;
 
 	public class Body {
 		body body;

@@ -47,6 +47,7 @@ public class Planet3D extends Body3D {
 	Color3f Planetcolor; // planet color if texture not found
 	Appearance appear;
 	String images_path;
+	SolarSystemBodies sb;
 
 	// int divisions = 60; // number of divisions for sphere
 
@@ -56,59 +57,59 @@ public class Planet3D extends Body3D {
 		// radius = (float) 1000f;
 		this.messages = messages;
 		images_path = p.root_path + "data/jat3D/images_hires/";
+		sb = new SolarSystemBodies();
 
 		String fileName = null;
 
 		switch (planet) {
 		case MERCURY:
 			fileName = images_path + "mercury.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.MERCURY.ordinal()].radius;
+			radius = (float) sb.Bodies[body.MERCURY.ordinal()].radius;
 			Planetcolor = Colors.red;
 			break;
 		case VENUS:
 			fileName = images_path + "venus.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.VENUS.ordinal()].radius;
+			radius = (float) sb.Bodies[body.VENUS.ordinal()].radius;
 			Planetcolor = Colors.green;
 			break;
 		case EARTH:
 			fileName = images_path + "earth.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.EARTH.ordinal()].radius;
+			radius = (float) sb.Bodies[body.EARTH.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		case MARS:
 			fileName = images_path + "mars.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.MARS.ordinal()].radius;
+			radius = (float) sb.Bodies[body.MARS.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		case JUPITER:
 			fileName = images_path + "jupiter.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.JUPITER.ordinal()].radius;
+			radius = (float) sb.Bodies[body.JUPITER.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case SATURN:
 			fileName = images_path + "saturn.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.SATURN.ordinal()].radius;
+			radius = (float) sb.Bodies[body.SATURN.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case URANUS:
 			fileName = images_path + "uranus.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.URANUS.ordinal()].radius;
+			radius = (float) sb.Bodies[body.URANUS.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case NEPTUNE:
 			fileName = images_path + "neptune.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.NEPTUNE.ordinal()].radius;
+			radius = (float) sb.Bodies[body.NEPTUNE.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
 		case PLUTO:
 			fileName = images_path + "pluto.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.PLUTO.ordinal()].radius;
+			radius = (float) sb.Bodies[body.PLUTO.ordinal()].radius;
 			Planetcolor = Colors.orange;
 			break;
-
 		case MOON:
 			fileName = images_path + "moon.jpg";
-			radius = (float) SolarSystemBodies.Bodies[body.MOON.ordinal()].radius;
+			radius = (float) sb.Bodies[body.MOON.ordinal()].radius;
 			Planetcolor = Colors.blue;
 			break;
 		}
