@@ -26,7 +26,7 @@ import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 
-public class DE405_propagate {
+public class DE405PropagateText {
 	static boolean print = false;
 
 	void doExample() {
@@ -57,7 +57,7 @@ public class DE405_propagate {
 
 	public static void main(String[] args) {
 
-		DE405_propagate ex = new DE405_propagate();
+		DE405PropagateText ex = new DE405PropagateText();
 		ex.doExample();
 
 	}

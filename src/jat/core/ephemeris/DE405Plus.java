@@ -29,6 +29,7 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
@@ -49,6 +50,10 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public boolean printSteps = false;
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
+	public ArrayList<Double> time = new ArrayList<Double>();
+	public ArrayList<Double> xsol = new ArrayList<Double>();
+	public ArrayList<Double> ysol = new ArrayList<Double>();
+	public ArrayList<Double> zsol = new ArrayList<Double>();
 
 	public TimeAPL getIntegrationStartTime() {
 		return integrationStartTime;
@@ -90,32 +95,6 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.ephFrame = ephFrame;
 	}
 
-	public void computeDerivativesA(double t, double[] yval, double[] yDot) {
-		double x, y, z, x2, y2, z2, xdot, ydot, zdot;
-		double r_sc_body, r_sc_body3;
-		double mu_sun;
-
-		x = yval[0];
-		y = yval[1];
-		z = yval[2];
-
-		x2 = x * x;
-		y2 = y * y;
-		z2 = z * z;
-		r_sc_body = Math.sqrt(x2 + y2 + z2);
-		r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
-		mu_sun = sb.Bodies[body.SUN.ordinal()].mu;
-
-		// Derivatives
-		yDot[0] = yval[3];
-		yDot[1] = yval[4];
-		yDot[2] = yval[5];
-		yDot[3] = -mu_sun * x / r_sc_body3;
-		yDot[4] = -mu_sun * y / r_sc_body3;
-		yDot[5] = -mu_sun * z / r_sc_body3;
-
-		// System.out.println("computeDerivatives called");
-	}
 
 	public void computeDerivatives(double t, double[] yval, double[] yDot) {
 		double mu_body;
@@ -180,9 +159,9 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				System.out.printf(format, t, y[0], y[1], y[2], energy(y));
 				System.out.println();
 			}
-			// time.add(t);
-			// xsol.add(y[0]);
-			// ysol.add(y[1]);
+			time.add(t);
+			xsol.add(y[0]);
+			ysol.add(y[1]);
 		}
 	};
 
