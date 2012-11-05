@@ -95,10 +95,10 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.ephFrame = ephFrame;
 	}
 
-
 	public void computeDerivatives(double t, double[] yval, double[] yDot) {
 		double mu_body;
-		double xBody = 0, yBody=0, zBody=0; // x, y, z coordinates of body i in frame
+		double xBody = 0, yBody = 0, zBody = 0; // x, y, z coordinates of body i
+												// in frame
 		double x, x2, y, y2, z, z2; // x, y, z distance from spacecraft to body
 									// i and squares
 		double r_sc_body, r_sc_body3; // distance from spacecraft to body i
@@ -110,36 +110,56 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		EphTime = integrationStartTime.plus(t);
 		// integrationStartTime.println();
 		// EphTime.println();
+		yDot[0] = yval[3];
+		yDot[1] = yval[4];
+		yDot[2] = yval[5];
 
 		try {
+			// contribution from the sun
+			mu_body = 1E-0 * sb.Bodies[body.SUN.ordinal()].mu;
 			bodyPos = get_planet_pos(body.SUN, EphTime);
-			xBody=bodyPos.x[0];
-			yBody=bodyPos.x[1];
-			zBody=bodyPos.x[2];
-			//bodyPos.print("sun pos");
-			earthPos = get_planet_pos(body.EARTH, EphTime);
-			//earthPos.print("earth pos");
+			// bodyPos.print("sun pos");
+			xBody = bodyPos.x[0];
+			yBody = bodyPos.x[1];
+			zBody = bodyPos.x[2];
+			x = yval[0] - xBody;
+			x2 = x * x;
+			y = yval[1] - yBody;
+			y2 = y * y;
+			z = yval[2] - zBody;
+			z2 = z * z;
+			r_sc_body = Math.sqrt(x2 + y2 + z2);
+			r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+			yDot[3] = -mu_body * x / r_sc_body3;
+			yDot[4] = -mu_body * y / r_sc_body3;
+			yDot[5] = -mu_body * z / r_sc_body3;
+
+			// // contribution from the earth
+			mu_body = 1E7 * sb.Bodies[body.EARTH.ordinal()].mu;
+			bodyPos = get_planet_pos(body.EARTH, EphTime);
+			//bodyPos.print("earth pos");
+			xBody = bodyPos.x[0];
+			yBody = bodyPos.x[1];
+			zBody = bodyPos.x[2];
+			x = yval[0] - xBody;
+			x2 = x * x;
+			y = yval[1] - yBody;
+			y2 = y * y;
+			z = yval[2] - zBody;
+			z2 = z * z;
+			r_sc_body = Math.sqrt(x2 + y2 + z2);
+			r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+			yDot[3] += -mu_body * x / r_sc_body3;
+			yDot[4] += -mu_body * y / r_sc_body3;
+			yDot[5] += -mu_body * z / r_sc_body3;
+
+			
+			//yDot[3] += -1E-6;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		x = yval[0]-xBody;
-		x2 = x * x;
-		y = yval[1]-yBody;
-		y2 = y * y;
-		z = yval[2]-zBody;
-		z2 = z * z;
-		r_sc_body = Math.sqrt(x2 + y2 + z2);
-		r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
-
-		// contribution from the sun
-		mu_body = sb.Bodies[body.SUN.ordinal()].mu;
-		yDot[0] = yval[3];
-		yDot[1] = yval[4];
-		yDot[2] = yval[5];
-		yDot[3] = -mu_body * x / r_sc_body3;
-		yDot[4] = -mu_body * y / r_sc_body3;
-		yDot[5] = -mu_body * z / r_sc_body3;
 	}
 
 	public int getDimension() {

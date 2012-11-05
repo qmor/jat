@@ -43,7 +43,7 @@ public class DE405PropagatePlot {
 
 	void doExample() {
 		double tf = 3600*24*300;
-		double[] y = { 2e8, 0, 0, 0, 25, 0 }; // initial state
+		double[] y = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
 
 		PathUtil path = new PathUtil();
 		DE405Plus Eph = new DE405Plus(path);

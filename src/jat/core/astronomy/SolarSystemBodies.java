@@ -58,6 +58,7 @@ public class SolarSystemBodies {
 
 		Bodies[body.SUN.ordinal()].mu=132712440018.;
 		Bodies[body.MERCURY.ordinal()].mu=22032.;
+		Bodies[body.EARTH.ordinal()].mu=398600.4418;
 		
 
 //		Venus	324,859
