@@ -48,6 +48,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	jatMessages messages;
 	VectorN[] posvelICRF, posvel;
 	public boolean printSteps = false;
+	public boolean printBodyPos = true;
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
 	public ArrayList<Double> time = new ArrayList<Double>();
@@ -102,59 +103,89 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		double x, x2, y, y2, z, z2; // x, y, z distance from spacecraft to body
 									// i and squares
 		double r_sc_body, r_sc_body3; // distance from spacecraft to body i
-		VectorN bodyPos, earthPos;
+		VectorN bodyPos;
 		TimeAPL EphTime;
-		//
 
-		// Derivatives
 		EphTime = integrationStartTime.plus(t);
 		// integrationStartTime.println();
 		// EphTime.println();
 		yDot[0] = yval[3];
 		yDot[1] = yval[4];
 		yDot[2] = yval[5];
+		yDot[3] = 0;
+		yDot[4] = 0;
+		yDot[5] = 0;
 
 		try {
+
+			for (body b : body.values()) {
+				//if (b.ordinal() == 0) 
+				{
+					mu_body = sb.Bodies[b.ordinal()].mu;
+					bodyPos = get_planet_pos(b, EphTime);
+					// bodyPos.print("pos" + b.ordinal());
+					xBody = bodyPos.x[0];
+					yBody = bodyPos.x[1];
+					zBody = bodyPos.x[2];
+					x = yval[0] - xBody;
+					x2 = x * x;
+					y = yval[1] - yBody;
+					y2 = y * y;
+					z = yval[2] - zBody;
+					z2 = z * z;
+					r_sc_body = Math.sqrt(x2 + y2 + z2);
+					r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+					yDot[3] += -mu_body * x / r_sc_body3;
+					yDot[4] += -mu_body * y / r_sc_body3;
+					yDot[5] += -mu_body * z / r_sc_body3;
+					if (printBodyPos) {
+						String nf = "%14.3f ";
+						String format = "%8s " + nf + nf + nf + nf;
+						System.out.printf(format, b.name[b.ordinal()], mu_body, xBody, xBody, xBody);
+						System.out.println();
+					}
+				}
+			}
+
 			// contribution from the sun
-			mu_body = 1E-0 * sb.Bodies[body.SUN.ordinal()].mu;
-			bodyPos = get_planet_pos(body.SUN, EphTime);
-			// bodyPos.print("sun pos");
-			xBody = bodyPos.x[0];
-			yBody = bodyPos.x[1];
-			zBody = bodyPos.x[2];
-			x = yval[0] - xBody;
-			x2 = x * x;
-			y = yval[1] - yBody;
-			y2 = y * y;
-			z = yval[2] - zBody;
-			z2 = z * z;
-			r_sc_body = Math.sqrt(x2 + y2 + z2);
-			r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
-			yDot[3] = -mu_body * x / r_sc_body3;
-			yDot[4] = -mu_body * y / r_sc_body3;
-			yDot[5] = -mu_body * z / r_sc_body3;
+			// mu_body = 1E-0 * sb.Bodies[body.SUN.ordinal()].mu;
+			// bodyPos = get_planet_pos(body.SUN, EphTime);
+			// // bodyPos.print("sun pos");
+			// xBody = bodyPos.x[0];
+			// yBody = bodyPos.x[1];
+			// zBody = bodyPos.x[2];
+			// x = yval[0] - xBody;
+			// x2 = x * x;
+			// y = yval[1] - yBody;
+			// y2 = y * y;
+			// z = yval[2] - zBody;
+			// z2 = z * z;
+			// r_sc_body = Math.sqrt(x2 + y2 + z2);
+			// r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+			// yDot[3] = -mu_body * x / r_sc_body3;
+			// yDot[4] = -mu_body * y / r_sc_body3;
+			// yDot[5] = -mu_body * z / r_sc_body3;
 
 			// // contribution from the earth
-			mu_body = 1E7 * sb.Bodies[body.EARTH.ordinal()].mu;
-			bodyPos = get_planet_pos(body.EARTH, EphTime);
-			//bodyPos.print("earth pos");
-			xBody = bodyPos.x[0];
-			yBody = bodyPos.x[1];
-			zBody = bodyPos.x[2];
-			x = yval[0] - xBody;
-			x2 = x * x;
-			y = yval[1] - yBody;
-			y2 = y * y;
-			z = yval[2] - zBody;
-			z2 = z * z;
-			r_sc_body = Math.sqrt(x2 + y2 + z2);
-			r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
-			yDot[3] += -mu_body * x / r_sc_body3;
-			yDot[4] += -mu_body * y / r_sc_body3;
-			yDot[5] += -mu_body * z / r_sc_body3;
+			// mu_body = 8E6 * sb.Bodies[body.EARTH.ordinal()].mu;
+			// bodyPos = get_planet_pos(body.EARTH, EphTime);
+			// // bodyPos.print("earth pos");
+			// xBody = bodyPos.x[0];
+			// yBody = bodyPos.x[1];
+			// zBody = bodyPos.x[2];
+			// x = yval[0] - xBody;
+			// x2 = x * x;
+			// y = yval[1] - yBody;
+			// y2 = y * y;
+			// z = yval[2] - zBody;
+			// z2 = z * z;
+			// r_sc_body = Math.sqrt(x2 + y2 + z2);
+			// r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
+			// yDot[3] += -mu_body * x / r_sc_body3;
+			// yDot[4] += -mu_body * y / r_sc_body3;
+			// yDot[5] += -mu_body * z / r_sc_body3;
 
-			
-			//yDot[3] += -1E-6;
+			// yDot[3] += -1E-6;
 
 		} catch (IOException e) {
 			e.printStackTrace();
