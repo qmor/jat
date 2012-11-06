@@ -45,7 +45,7 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
 public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
 
 	public frame ephFrame;
-	public boolean planetOnOff[]=new boolean[DE405Body.body.amount];
+	public boolean planetOnOff[] = new boolean[DE405Body.body.amount];
 	VectorN[] posvelICRF, posvel;
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
@@ -57,10 +57,21 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public boolean printSteps = false;
 	public boolean printBodyPos = false;
 
+	/**
+	 * See setIntegrationStartTime
+	 * 
+	 * @return User integration start time
+	 */
 	public TimeAPL getIntegrationStartTime() {
 		return integrationStartTime;
 	}
 
+	/**
+	 * The integrator starts with time 0 for numerical reasons. The user may
+	 * start with the launch date given in any epoch
+	 * 
+	 * @param integrationStartTime
+	 */
 	public void setIntegrationStartTime(TimeAPL integrationStartTime) {
 		this.integrationStartTime = integrationStartTime;
 	}
@@ -97,6 +108,16 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.ephFrame = ephFrame;
 	}
 
+	/**
+	 * Clear data for next integration
+	 */
+	public void reset() {
+		time.clear();
+		xsol.clear();
+		ysol.clear();
+		zsol.clear();
+	}
+
 	public void computeDerivatives(double t, double[] yval, double[] yDot) {
 		double mu_body;
 		double xBody = 0, yBody = 0, zBody = 0; // x, y, z coordinates of body i
@@ -120,7 +141,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		try {
 
 			for (body b : body.values()) {
-				if(planetOnOff[b.ordinal()])// if (b.ordinal() == 0)
+				if (planetOnOff[b.ordinal()])// if (b.ordinal() == 0)
 				{
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);

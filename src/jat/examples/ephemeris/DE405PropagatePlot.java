@@ -30,6 +30,7 @@ import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -43,7 +44,8 @@ public class DE405PropagatePlot {
 
 	void doExample() {
 		double tf = 3600 * 24 * 300;
-		double[] y = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
+		double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
+		double[] y = new double[6]; 
 
 		PathUtil path = new PathUtil();
 		DE405Plus Eph = new DE405Plus(path);
@@ -52,13 +54,13 @@ public class DE405PropagatePlot {
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);
 		Eph.planetOnOff[body.SUN.ordinal()] = true;
-		//Eph.planetOnOff[body.JUPITER.ordinal()] = true;
+		// Eph.planetOnOff[body.JUPITER.ordinal()] = true;
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 
-		dp853.integrate(ode, 0.0, y, tf, y); // now y contains final state at
+		dp853.integrate(ode, 0.0, y0, tf, y); // now y contains final state at
 												// time tf
 		if (print) {
 			String nf = "%10.3f ";
@@ -67,20 +69,20 @@ public class DE405PropagatePlot {
 			System.out.println();
 		}
 
-		int arraySize = Eph.time.size();
-		double[] timeArray = ArrayUtils.toPrimitive(Eph.time.toArray(new Double[arraySize]));
-		double[] xsolArray = ArrayUtils.toPrimitive(Eph.xsol.toArray(new Double[arraySize]));
-		double[] ysolArray = ArrayUtils.toPrimitive(Eph.ysol.toArray(new Double[arraySize]));
-		double[][] XY = new double[timeArray.length][2];
-		for (int i = 0; i < timeArray.length; i++) {
-			XY[i][0] = xsolArray[i];
-			XY[i][1] = ysolArray[i];
-		}
 
 		Plot2DPanel p = new Plot2DPanel();
-		LinePlot l = new LinePlot("spacecraft", Color.RED, XY);
-		l.closed_curve = false;
-		p.addPlot(l);
+		LinePlot l1 = new LinePlot("Jup. off", Color.RED, getXYforPlot(Eph.xsol,Eph.ysol));
+		l1.closed_curve = false;
+		p.addPlot(l1);
+
+		Eph.reset();
+		Eph.planetOnOff[body.JUPITER.ordinal()] = true;
+		dp853.integrate(ode, 0.0, y0, tf, y); // now y contains final state at
+
+		LinePlot l2 = new LinePlot("Jup. on", Color.BLUE, getXYforPlot(Eph.xsol,Eph.ysol));
+		l2.closed_curve = false;
+		p.addPlot(l2);
+		
 		VectorN EarthPos = null;
 		try {
 			EarthPos = Eph.get_planet_pos(body.EARTH, myTime);
@@ -96,6 +98,19 @@ public class DE405PropagatePlot {
 		p.setFixedBounds(1, -plotSize, plotSize);
 		new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+	}
+
+	double[][] getXYforPlot(ArrayList<Double> xsol,ArrayList<Double> ysol) {
+		int arraySize = xsol.size();
+		double[] xsolArray = ArrayUtils.toPrimitive(xsol.toArray(new Double[arraySize]));
+		double[] ysolArray = ArrayUtils.toPrimitive(ysol.toArray(new Double[arraySize]));
+		double[][] XY = new double[arraySize][2];
+		for (int i = 0; i < arraySize; i++) {
+			XY[i][0] = xsolArray[i];
+			XY[i][1] = ysolArray[i];
+		}
+
+		return XY;
 	}
 
 	void addPoint(Plot2DPanel p, String s, Color c, double x, double y) {
