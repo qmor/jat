@@ -23,7 +23,7 @@ public class DE405Body {
 
 	public enum body {
 		SUN, MERCURY, VENUS, EARTH, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO, MOON;
-		private static final int amount = EnumSet.allOf(body.class).size();
+		static final int amount = EnumSet.allOf(body.class).size();
 		private static body[] val = new body[amount];
 		static {
 			for (body q : EnumSet.allOf(body.class)) {

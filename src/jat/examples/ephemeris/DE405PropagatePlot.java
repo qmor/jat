@@ -42,7 +42,7 @@ public class DE405PropagatePlot {
 	static boolean print = false;
 
 	void doExample() {
-		double tf = 3600*24*300;
+		double tf = 3600 * 24 * 300;
 		double[] y = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
 
 		PathUtil path = new PathUtil();
@@ -51,6 +51,8 @@ public class DE405PropagatePlot {
 		Eph.printSteps = true;
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);
+		Eph.planetOnOff[body.SUN.ordinal()] = true;
+		//Eph.planetOnOff[body.JUPITER.ordinal()] = true;
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
@@ -81,7 +83,7 @@ public class DE405PropagatePlot {
 		p.addPlot(l);
 		VectorN EarthPos = null;
 		try {
-			EarthPos = Eph.get_planet_pos(body.EARTH,myTime );
+			EarthPos = Eph.get_planet_pos(body.EARTH, myTime);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

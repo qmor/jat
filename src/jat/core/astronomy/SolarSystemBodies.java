@@ -21,7 +21,7 @@ import jat.core.ephemeris.DE405Body.body;
 
 public class SolarSystemBodies {
 
-	public  Body[] Bodies;
+	public Body[] Bodies;
 
 	public class Body {
 		body body;
@@ -36,7 +36,6 @@ public class SolarSystemBodies {
 			this.mass = mass; // kg
 			this.orbitalPeriod = orbitalPeriod; // earth days
 		}
-
 
 	}
 
@@ -56,26 +55,30 @@ public class SolarSystemBodies {
 		Bodies[9] = new Body(body.PLUTO, 1153, 1.305e22, 89865);
 		Bodies[10] = new Body(body.MOON, 1737.1, 7.3477e22, 27.321582);
 
-		Bodies[body.SUN.ordinal()].mu=132712440018.;
-		Bodies[body.MERCURY.ordinal()].mu=22032.;
-		Bodies[body.EARTH.ordinal()].mu=398600.4418;
-		
+		Bodies[body.SUN.ordinal()].mu = 132712440018.;
+		Bodies[body.MERCURY.ordinal()].mu = 22032.;
+		Bodies[body.VENUS.ordinal()].mu = 324859.;
+		Bodies[body.EARTH.ordinal()].mu = 398600.4418;
+		Bodies[body.MARS.ordinal()].mu = 42828.;
+		Bodies[body.JUPITER.ordinal()].mu = 126686534.;
+		Bodies[body.SATURN.ordinal()].mu = 37931187.;
+		Bodies[body.URANUS.ordinal()].mu = 5793939.;
+		Bodies[body.NEPTUNE.ordinal()].mu = 6836529.;
+		Bodies[body.PLUTO.ordinal()].mu = 871.;
+		Bodies[body.MOON.ordinal()].mu = 4902.7779;
 
-//		Venus	324,859
-//		Earth	398,600.4418
-//		Moon	4,902.7779
-//		Mars	42,828
-//		Ceres	63.1
-//		Jupiter	126,686,534
-//		Saturn	37,931,187
-//		Uranus	5,793,939
-//		Neptune	6,836,529
-//		Pluto	871
-//		Eris	1,108
-		
-		
-		
-		
+		// Venus 324,859
+		// Earth 398,600.4418
+		// Moon 4,902.7779
+		// Mars 42,828
+		// Ceres 63.1
+		// Jupiter 126,686,534
+		// Saturn 37,931,187
+		// Uranus 5,793,939
+		// Neptune 6,836,529
+		// Pluto 871
+		// Eris 1,108
+
 	}
 
 }

@@ -45,16 +45,17 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
 public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
 
 	public frame ephFrame;
-	jatMessages messages;
+	public boolean planetOnOff[]=new boolean[DE405Body.body.amount];
 	VectorN[] posvelICRF, posvel;
-	public boolean printSteps = false;
-	public boolean printBodyPos = true;
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
 	public ArrayList<Double> time = new ArrayList<Double>();
 	public ArrayList<Double> xsol = new ArrayList<Double>();
 	public ArrayList<Double> ysol = new ArrayList<Double>();
 	public ArrayList<Double> zsol = new ArrayList<Double>();
+	jatMessages messages;
+	public boolean printSteps = false;
+	public boolean printBodyPos = false;
 
 	public TimeAPL getIntegrationStartTime() {
 		return integrationStartTime;
@@ -119,7 +120,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		try {
 
 			for (body b : body.values()) {
-				//if (b.ordinal() == 0) 
+				if(planetOnOff[b.ordinal()])// if (b.ordinal() == 0)
 				{
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);
@@ -139,9 +140,9 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 					yDot[4] += -mu_body * y / r_sc_body3;
 					yDot[5] += -mu_body * z / r_sc_body3;
 					if (printBodyPos) {
-						String nf = "%14.3f ";
-						String format = "%8s " + nf + nf + nf + nf;
-						System.out.printf(format, b.name[b.ordinal()], mu_body, xBody, xBody, xBody);
+						String nf = "%16.3f ";
+						String format = "%8s " + nf + nf + nf + nf + nf;
+						System.out.printf(format, b.name[b.ordinal()], mu_body, xBody, yBody, zBody, bodyPos.mag());
 						System.out.println();
 					}
 				}
