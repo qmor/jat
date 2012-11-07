@@ -120,10 +120,9 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 	public void computeDerivatives(double t, double[] yval, double[] yDot) {
 		double mu_body;
-		double xBody = 0, yBody = 0, zBody = 0; // x, y, z coordinates of body i
-												// in frame
-		double x, x2, y, y2, z, z2; // x, y, z distance from spacecraft to body
-									// i and squares
+		double xBody = 0, yBody = 0, zBody = 0; // xyz coords of body i in frame
+		double x, y, z; // x, y, z distance from spacecraft to body i
+		double x2, y2, z2; // squares of distances x, y, z spacecraft to body
 		double r_sc_body, r_sc_body3; // distance from spacecraft to body i
 		VectorN bodyPos;
 		TimeAPL EphTime;
@@ -169,46 +168,6 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				}
 			}
 
-			// contribution from the sun
-			// mu_body = 1E-0 * sb.Bodies[body.SUN.ordinal()].mu;
-			// bodyPos = get_planet_pos(body.SUN, EphTime);
-			// // bodyPos.print("sun pos");
-			// xBody = bodyPos.x[0];
-			// yBody = bodyPos.x[1];
-			// zBody = bodyPos.x[2];
-			// x = yval[0] - xBody;
-			// x2 = x * x;
-			// y = yval[1] - yBody;
-			// y2 = y * y;
-			// z = yval[2] - zBody;
-			// z2 = z * z;
-			// r_sc_body = Math.sqrt(x2 + y2 + z2);
-			// r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
-			// yDot[3] = -mu_body * x / r_sc_body3;
-			// yDot[4] = -mu_body * y / r_sc_body3;
-			// yDot[5] = -mu_body * z / r_sc_body3;
-
-			// // contribution from the earth
-			// mu_body = 8E6 * sb.Bodies[body.EARTH.ordinal()].mu;
-			// bodyPos = get_planet_pos(body.EARTH, EphTime);
-			// // bodyPos.print("earth pos");
-			// xBody = bodyPos.x[0];
-			// yBody = bodyPos.x[1];
-			// zBody = bodyPos.x[2];
-			// x = yval[0] - xBody;
-			// x2 = x * x;
-			// y = yval[1] - yBody;
-			// y2 = y * y;
-			// z = yval[2] - zBody;
-			// z2 = z * z;
-			// r_sc_body = Math.sqrt(x2 + y2 + z2);
-			// r_sc_body3 = r_sc_body * r_sc_body * r_sc_body;
-			// yDot[3] += -mu_body * x / r_sc_body3;
-			// yDot[4] += -mu_body * y / r_sc_body3;
-			// yDot[5] += -mu_body * z / r_sc_body3;
-
-			// yDot[3] += -1E-6;
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -229,7 +188,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 			if (printSteps) {
 				String nf = "%14.3f ";
 				String format = nf + nf + nf + nf + nf;
-				System.out.printf(format, t, y[0], y[1], y[2], energy(y));
+				System.out.printf(format, t, y[0], y[1], y[2], energy(t, y));
 				System.out.println();
 			}
 			time.add(t);
@@ -238,8 +197,51 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		}
 	};
 
-	public double energy(double yin[]) {
-		return 2.1;
+	public double energy(double t, double[] yval) {
+		double mu_body;
+		double xBody = 0, yBody = 0, zBody = 0; // xyz coords of body i in frame
+		double x, y, z; // x, y, z distance from spacecraft to body i
+		double x2, y2, z2; // squares of distances x, y, z spacecraft to body
+		double vx, vy, vz, v2; // velocities x, y, z of spacecraft, square
+		double r_sc_body; // distance from spacecraft to body i
+		VectorN bodyPos;
+		TimeAPL EphTime;
+		double potential = 0;
+
+		EphTime = integrationStartTime.plus(t);
+		vx = yval[3];
+		vy = yval[4];
+		vz = yval[5];
+		v2 = vx * vx + vy * vy + vz + vz;
+		try {
+			for (body b : body.values()) {
+				if (planetOnOff[b.ordinal()]) {
+					//System.out.println(b.name[b.ordinal()]);
+					mu_body = sb.Bodies[b.ordinal()].mu;
+					bodyPos = get_planet_pos(b, EphTime);
+					// bodyPos.print("pos" + b.ordinal());
+					xBody = bodyPos.x[0];
+					yBody = bodyPos.x[1];
+					zBody = bodyPos.x[2];
+					x = yval[0] - xBody;
+					x2 = x * x;
+					y = yval[1] - yBody;
+					y2 = y * y;
+					z = yval[2] - zBody;
+					z2 = z * z;
+					r_sc_body = Math.sqrt(x2 + y2 + z2);
+					//System.out.println(r_sc_body);
+					potential += -mu_body / r_sc_body;
+					//System.out.println(potential);
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return v2/2. + potential;
+		// return v2;
+
 	}
 
 	public void update_posvel_and_frame(Time t) throws IOException {

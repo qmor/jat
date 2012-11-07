@@ -65,7 +65,7 @@ public class DE405PropagatePlot {
 		if (print) {
 			String nf = "%10.3f ";
 			String format = nf + nf + nf + nf + nf;
-			System.out.printf(format, tf, y[0], y[1], y[2], Eph.energy(y));
+			System.out.printf(format, tf, y[0], y[1], y[2], Eph.energy(tf,y));
 			System.out.println();
 		}
 

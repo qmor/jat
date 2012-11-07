@@ -17,6 +17,7 @@
 
 package jat.examples.ephemeris;
 
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
@@ -30,8 +31,9 @@ public class DE405PropagateText {
 	static boolean print = false;
 
 	void doExample() {
-		double tf = 10000000.;
-		double[] y = { 1e8, 0, 0, 0, 25, 0 }; // initial state
+		//double tf = 10000000.;
+		double tf = 3600 * 24 * 500;
+		double[] y = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
 
 		PathUtil path = new PathUtil();
 		DE405Plus Eph = new DE405Plus(path);
@@ -39,7 +41,7 @@ public class DE405PropagateText {
 		Eph.printSteps = true;
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);
-
+		Eph.planetOnOff[body.SUN.ordinal()] = true;
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
@@ -50,7 +52,7 @@ public class DE405PropagateText {
 		if (print) {
 			String nf = "%10.3f ";
 			String format = nf + nf + nf + nf + nf;
-			System.out.printf(format, tf, y[0], y[1], y[2], Eph.energy(y));
+			System.out.printf(format, tf, y[0], y[1], y[2], Eph.energy(tf, y));
 			System.out.println();
 		}
 	}
