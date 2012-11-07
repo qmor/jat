@@ -194,6 +194,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 			time.add(t);
 			xsol.add(y[0]);
 			ysol.add(y[1]);
+			zsol.add(y[2]);
 		}
 	};
 

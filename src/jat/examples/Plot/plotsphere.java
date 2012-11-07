@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.application.orbitviewer;
+package jat.examples.Plot;
 
 import jat.core.plot.plot.FrameView;
 import jat.core.plot.plot.Plot3DPanel;

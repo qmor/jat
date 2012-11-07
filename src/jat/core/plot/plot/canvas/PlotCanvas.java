@@ -64,7 +64,7 @@ public abstract class PlotCanvas extends JPanel implements MouseListener,
 	public LegendPanel linkedLegendPanel;
 	public LinkedList<Plot> plots;
 	public LinkedList<Plotable> objects;
-	public Timer timer;
+	public Timer timer; // rotates plot
 	boolean timer_on_off = true;
 
 	// ///////////////////////////////////////////

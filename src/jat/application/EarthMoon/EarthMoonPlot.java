@@ -18,9 +18,8 @@
 package jat.application.EarthMoon;
 
 import jat.core.astronomy.SolarSystemBodies;
-import jat.core.ephemeris.DE405Body;
-import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Plus;
 import jat.jat3D.BodyGroup3D;
 import jat.jat3D.Ephemeris3D;
 import jat.jat3D.Planet3D;
