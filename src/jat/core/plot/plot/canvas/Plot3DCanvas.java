@@ -25,7 +25,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
-
 /**
  * BSD License
  * 
@@ -200,11 +199,13 @@ public class Plot3DCanvas extends PlotCanvas {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// TODO implement this as a callback
+
 		// System.out.println("timer");
 		int[] t = new int[] { 1, 0 };
 		((AWTDrawer3D) draw).rotate(t, new int[] { getWidth(), getHeight() });
 		repaint();
-	}
 
+	}
 
 }

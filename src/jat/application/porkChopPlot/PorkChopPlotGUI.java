@@ -102,8 +102,8 @@ public class PorkChopPlotGUI extends JPanel {
 		// depart_date_picker.getModel().setSelected(true);
 
 		arrival_date_picker = JDateComponentFactory.createJDatePicker();
-		depart_date_picker.setTextEditable(true);
-		depart_date_picker.setShowYearButtons(true);
+		arrival_date_picker.setTextEditable(true);
+		arrival_date_picker.setShowYearButtons(true);
 
 		PlanetSelectionPanel = new JPanel();
 		add(PlanetSelectionPanel);
