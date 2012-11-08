@@ -35,9 +35,10 @@ public class DE405PropagatorMain extends JApplet {
 	static int appletwidth = 900; // Width of Applet
 	static int appletheight = 700;
 	JFormattedTextField yearfield;
-	DE405PropagatorEvents dpE;
+	//DE405PropagatorEvents dpE;
 	DE405PropagatorGUI dpGUI;
 	DE405PropagatorPlot dpPlot;
+	DE405PropagatorParameters dpParam;
 	Container level1_Pane;
 	public DE405Plus Eph;
 
@@ -52,10 +53,12 @@ public class DE405PropagatorMain extends JApplet {
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);
 		Eph.planetOnOff[body.SUN.ordinal()] = true;
+		dpParam=new DE405PropagatorParameters();
 
 		level1_Pane = getContentPane();
 		dpGUI = new DE405PropagatorGUI(this);
 		level1_Pane.add(dpGUI, BorderLayout.WEST);
+		dpGUI.updateGUI();
 
 		dpPlot = new DE405PropagatorPlot(this);
 		dpPlot.make_plot();

@@ -25,21 +25,25 @@ import java.awt.event.ItemListener;
 class DE405PropagatorEvents implements ActionListener, ItemListener {
 	DE405PropagatorGUI dpGUI;
 	DE405PropagatorMain dpMain;
+	DE405PropagatorParameters dpParam;
 
 	public DE405PropagatorEvents(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
-		this.dpGUI = dpMain.dpGUI;
+		this.dpParam = dpMain.dpParam;
 	}
 
 	public void actionPerformed(ActionEvent ev) {
 
 		// Read in values
-		// if (ev.getSource() == dpMain.dpGUI.setButton) {
-		// System.out.println("button 1 pressed");
+		if (ev.getSource() == dpMain.dpGUI.btnPlot) {
+			this.dpGUI = dpMain.dpGUI;
+			System.out.println("plot button pressed");
+			//System.out.println(dpMain.dpGUI.tf_y);
+			System.out.println(dpGUI.tf_y.getValue());
+			dpParam.y0[1] = (Double) dpGUI.tf_y.getValue();
 
-		// dpMain.dpPlot.a = (Double) dpMain.dpGUI.semimajorfield.getValue();
-		boolean later = false;
-		if (later) {
+			// dpMain.dpPlot.a = (Double)
+			// dpMain.dpGUI.semimajorfield.getValue();
 			dpMain.dpPlot.plot.removeAllPlots();
 			dpMain.dpPlot.add_scene();
 		}

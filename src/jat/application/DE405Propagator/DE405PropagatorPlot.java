@@ -44,10 +44,12 @@ public class DE405PropagatorPlot extends JPanel {
 	int step;
 	DE405PropagatorMain dpMain;
 	DE405Plus Eph;
+	DE405PropagatorParameters dpParam;
 
 	public DE405PropagatorPlot(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
 		this.Eph = dpMain.Eph;
+		this.dpParam = dpMain.dpParam;
 	}
 
 	public void add_scene() {
@@ -57,7 +59,7 @@ public class DE405PropagatorPlot extends JPanel {
 		// points[0][1]=sat.rv.x[1];
 		// points[0][2]=sat.rv.x[2];
 
-		// plot.addSpherePlot("earth", cm.earth_radius);
+		plot.addSpherePlot("sun", 1e6);
 		// plot.addLinePlot("orbit", XYZ, true);
 		// plot.addScatterPlot("satellite" ,1,5, points);
 		doExample();
@@ -79,14 +81,14 @@ public class DE405PropagatorPlot extends JPanel {
 
 	void doExample() {
 		double tf = 3600 * 24 * 300;
-		double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
+		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
 		double[] y = new double[6];
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 
-		dp853.integrate(ode, 0.0, y0, tf, y); // now y contains final state at
+		dp853.integrate(ode, 0.0, dpParam.y0, tf, y); // now y contains final state at
 												// time tf
 		if (print) {
 			String nf = "%10.3f ";
@@ -96,7 +98,7 @@ public class DE405PropagatorPlot extends JPanel {
 		}
 
 		// Plot2DPanel p = new Plot2DPanel();
-		LinePlot l1 = new LinePlot("Jup. off", Color.RED, getXYZforPlot(Eph.xsol, Eph.ysol, Eph.zsol));
+		LinePlot l1 = new LinePlot("spacecraft", Color.RED, getXYZforPlot(Eph.xsol, Eph.ysol, Eph.zsol));
 		l1.closed_curve = false;
 		plot.addPlot(l1);
 
