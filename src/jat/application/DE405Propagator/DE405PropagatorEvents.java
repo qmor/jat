@@ -40,7 +40,12 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 			System.out.println("plot button pressed");
 			//System.out.println(dpMain.dpGUI.tf_y);
 			System.out.println(dpGUI.tf_y.getValue());
+			dpParam.y0[0] = (Double) dpGUI.tf_x.getValue();
 			dpParam.y0[1] = (Double) dpGUI.tf_y.getValue();
+			dpParam.y0[2] = (Double) dpGUI.tf_z.getValue();
+			dpParam.y0[3] = (Double) dpGUI.tf_vx.getValue();
+			dpParam.y0[4] = (Double) dpGUI.tf_vy.getValue();
+			dpParam.y0[5] = (Double) dpGUI.tf_vz.getValue();
 
 			// dpMain.dpPlot.a = (Double)
 			// dpMain.dpGUI.semimajorfield.getValue();

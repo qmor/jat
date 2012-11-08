@@ -54,14 +54,7 @@ public class DE405PropagatorPlot extends JPanel {
 
 	public void add_scene() {
 
-		// points=new double[1][3] ;
-		// points[0][0]=sat.rv.x[0];
-		// points[0][1]=sat.rv.x[1];
-		// points[0][2]=sat.rv.x[2];
-
 		plot.addSpherePlot("sun", 1e6);
-		// plot.addLinePlot("orbit", XYZ, true);
-		// plot.addScatterPlot("satellite" ,1,5, points);
 		doExample();
 		double size = max;
 		plot.setFixedBounds(0, -size, size);
@@ -87,9 +80,10 @@ public class DE405PropagatorPlot extends JPanel {
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
-
-		dp853.integrate(ode, 0.0, dpParam.y0, tf, y); // now y contains final state at
-												// time tf
+		Eph.reset();
+		dp853.integrate(ode, 0.0, dpParam.y0, tf, y); // now y contains final
+														// state at
+		// time tf
 		if (print) {
 			String nf = "%10.3f ";
 			String format = nf + nf + nf + nf + nf;
@@ -106,11 +100,6 @@ public class DE405PropagatorPlot extends JPanel {
 		// Eph.planetOnOff[body.JUPITER.ordinal()] = true;
 		// dp853.integrate(ode, 0.0, y0, tf, y); // now y contains final state
 		// at
-
-		// LinePlot l2 = new LinePlot("Jup. on", Color.BLUE,
-		// getXYforPlot(Eph.xsol,Eph.ysol));
-		// l2.closed_curve = false;
-		// p.addPlot(l2);
 
 		// VectorN EarthPos = null;
 		// try {
