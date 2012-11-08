@@ -64,6 +64,21 @@ public class TimeAPL extends Time {
 		return cal;
 	}
 
+	public int getYear() {
+		Calendar cal = cm.JD_to_Calendar(jd_tt());
+		return cal.get(Calendar.YEAR);
+	}
+
+	public int getMonth() {
+		Calendar cal = cm.JD_to_Calendar(jd_tt());
+		return cal.get(Calendar.MONTH);
+	}
+
+	public int getDay() {
+		Calendar cal = cm.JD_to_Calendar(jd_tt());
+		return cal.get(Calendar.DAY_OF_MONTH);
+	}
+
 	public void print() {
 		String dateformat = "%tD";
 

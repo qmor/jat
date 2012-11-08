@@ -41,6 +41,7 @@ public class DE405PropagatorGUI extends JPanel {
 	DE405PropagatorMain dpMain;
 	public JCheckBox chckbxRotation;
 	public JFormattedTextField tf_x, tf_y, tf_z, tf_vx, tf_vy, tf_vz;
+	JFormattedTextField tf_tf;
 	public JButton btnPlot;
 	JDatePicker depart_date_picker;
 
@@ -58,9 +59,9 @@ public class DE405PropagatorGUI extends JPanel {
 		add(level1_Pane, BorderLayout.WEST);
 		GridBagLayout gbl_level1_Pane = new GridBagLayout();
 		gbl_level1_Pane.columnWidths = new int[] { 0, 0 };
-		gbl_level1_Pane.rowHeights = new int[] { 60, 60, 60, 60, 0 };
-		gbl_level1_Pane.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-		gbl_level1_Pane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_level1_Pane.rowHeights = new int[] { 60, 60, 60, 60, 0, 0 };
+		gbl_level1_Pane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_level1_Pane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		level1_Pane.setLayout(gbl_level1_Pane);
 
 		JPanel panelPlanets = new JPanel();
@@ -84,6 +85,8 @@ public class DE405PropagatorGUI extends JPanel {
 		panelPlanets.add(checkBoxJupiter);
 
 		JPanel panelDate = new JPanel();
+		panelDate.setBorder(new TitledBorder(null, "Start Date, Flight Time", TitledBorder.LEADING, TitledBorder.TOP,
+				null, null));
 		GridBagConstraints gbc_panelDate = new GridBagConstraints();
 		gbc_panelDate.fill = GridBagConstraints.BOTH;
 		gbc_panelDate.insets = new Insets(0, 0, 5, 0);
@@ -91,6 +94,10 @@ public class DE405PropagatorGUI extends JPanel {
 		gbc_panelDate.gridy = 1;
 		level1_Pane.add(panelDate, gbc_panelDate);
 		panelDate.add((JComponent) depart_date_picker);
+		panelDate.setLayout(new GridLayout(2, 1, 0, 0));
+
+		tf_tf = new JFormattedTextField();
+		panelDate.add(tf_tf);
 
 		JPanel panelIC = new JPanel();
 		GridBagConstraints gbc_panelIC = new GridBagConstraints();
@@ -132,6 +139,7 @@ public class DE405PropagatorGUI extends JPanel {
 
 		chckbxRotation = new JCheckBox("Rotate");
 		GridBagConstraints gbc_chckbxRotation = new GridBagConstraints();
+		gbc_chckbxRotation.insets = new Insets(0, 0, 5, 0);
 		gbc_chckbxRotation.fill = GridBagConstraints.BOTH;
 		gbc_chckbxRotation.gridx = 0;
 		gbc_chckbxRotation.gridy = 3;
@@ -141,7 +149,6 @@ public class DE405PropagatorGUI extends JPanel {
 		btnPlot.addActionListener(dpE);
 	}
 
-
 	public void updateGUI() {
 
 		tf_x.setValue(dpMain.dpParam.y0[0]);
@@ -150,6 +157,11 @@ public class DE405PropagatorGUI extends JPanel {
 		tf_vx.setValue(dpMain.dpParam.y0[3]);
 		tf_vy.setValue(dpMain.dpParam.y0[4]);
 		tf_vz.setValue(dpMain.dpParam.y0[5]);
+		tf_tf.setValue(dpMain.dpParam.tf);
+		depart_date_picker.getModel().setYear(dpMain.dpParam.simulationDate.getYear());
+		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth());
+		depart_date_picker.getModel().setDay(dpMain.dpParam.simulationDate.getDay());
+		depart_date_picker.getModel().setSelected(true);
 
 	}
 }

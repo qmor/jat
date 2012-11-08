@@ -73,21 +73,21 @@ public class DE405PropagatorPlot extends JPanel {
 	static boolean print = true;
 
 	void doExample() {
-		double tf = 3600 * 24 * 300;
+		//double tf = 3600 * 24 * 300;
 		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
 		double[] y = new double[6];
 
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 		Eph.reset();
-		dp853.integrate(ode, 0.0, dpParam.y0, tf, y); // now y contains final
+		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y); // now y contains final
 														// state at
 		// time tf
 		if (print) {
 			String nf = "%10.3f ";
 			String format = nf + nf + nf + nf + nf;
-			System.out.printf(format, tf, y[0], y[1], y[2], Eph.energy(tf, y));
+			System.out.printf(format, dpParam.tf, y[0], y[1], y[2], Eph.energy(dpParam.tf, y));
 			System.out.println();
 		}
 

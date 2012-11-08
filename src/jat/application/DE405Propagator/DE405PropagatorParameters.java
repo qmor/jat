@@ -13,8 +13,9 @@ public class DE405PropagatorParameters {
 	PathUtil path;
 	jatMessages messages;
 	DE405Plus Eph;
-	//double x, y, z, vx, vy, vz;
+	// double x, y, z, vx, vy, vz;
 	double[] y0 = { 200000000., 0, 0, 0, 24.2, 0 }; // initial state
+	double tf = 40000000.;
 
 	public DE405PropagatorParameters() {
 		messages = new jatMessages();
