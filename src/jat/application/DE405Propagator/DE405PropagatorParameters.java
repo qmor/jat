@@ -8,24 +8,25 @@ import jat.core.util.jatMessages;
 
 public class DE405PropagatorParameters {
 	TimeAPL simulationDate;
-	int number = body.values().length;
-	boolean[] planetOnOff;
+	int numberOfBodies = body.values().length;
+	boolean[] showPlanet = new boolean[numberOfBodies];
+	boolean[] bodyGravOnOff = new boolean[numberOfBodies];
 	PathUtil path;
 	jatMessages messages;
 	DE405Plus Eph;
 	// double x, y, z, vx, vy, vz;
 	double[] y0 = { 200000000., 0, 0, 0, 24.2, 0 }; // initial state
 	// double tf = 40000000.;
-	double tf = 1000000.;
+	double tf = 10000.;
 
 	public DE405PropagatorParameters() {
 		messages = new jatMessages();
-		planetOnOff = new boolean[number];
 		simulationDate = new TimeAPL(2003, 3, 1, 12, 0, 0);
 
-		for (int i = 0; i < number; i++)
-			this.planetOnOff[i] = true;
-
+		for (int i = 0; i < numberOfBodies; i++) {
+			this.showPlanet[i] = true;
+			bodyGravOnOff[i] = false;
+		}
 		// earth orbit
 		y0[0] = -1.394163164819393E8;
 		y0[1] = 48928187.1;
@@ -35,7 +36,7 @@ public class DE405PropagatorParameters {
 	}
 
 	public DE405PropagatorParameters(boolean[] planetOnOff) {
-		this.planetOnOff = planetOnOff;
+		this.showPlanet = planetOnOff;
 	}
 
 }

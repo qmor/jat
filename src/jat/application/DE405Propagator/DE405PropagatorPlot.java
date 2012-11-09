@@ -19,6 +19,7 @@ package jat.application.DE405Propagator;
 
 import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.plot.plot.Plot3DPanel;
 import jat.core.plot.plot.PlotPanel;
 import jat.core.plot.plot.plots.LinePlot;
@@ -48,11 +49,12 @@ public class DE405PropagatorPlot extends JPanel {
 	DE405PropagatorMain dpMain;
 	DE405Plus Eph;
 	DE405PropagatorParameters dpParam;
+	static boolean print = false;
 
 	public DE405PropagatorPlot(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
-		this.Eph = dpMain.Eph;
 		this.dpParam = dpMain.dpParam;
+		this.Eph = dpMain.dpParam.Eph;
 	}
 
 	public void add_scene() {
@@ -74,18 +76,27 @@ public class DE405PropagatorPlot extends JPanel {
 		add_scene();
 	}
 
-	static boolean print = true;
-
 	void doExample() {
 		// double tf = 3600 * 24 * 300;
-		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state		
+		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
 		double[] y = new double[6];
+		// for()
+
+		for (body b : body.values()) {
+			Eph.bodyGravOnOff[b.ordinal()] = dpParam.bodyGravOnOff[b.ordinal()];
+		}
+		dpParam.y0[0] = (Double) dpMain.dpGUI.tf_x.getValue();
+		dpParam.y0[1] = (Double) dpMain.dpGUI.tf_y.getValue();
+		dpParam.y0[2] = (Double) dpMain.dpGUI.tf_z.getValue();
+		dpParam.y0[3] = (Double) dpMain.dpGUI.tf_vx.getValue();
+		dpParam.y0[4] = (Double) dpMain.dpGUI.tf_vy.getValue();
+		dpParam.y0[5] = (Double) dpMain.dpGUI.tf_vz.getValue();
+		dpParam.tf = (Double) dpMain.dpGUI.tf_tf.getValue();
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 		Eph.reset();
-		Eph.planetOnOff[DE405Body.body.EARTH.ordinal()] = true;
 
 		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
 		if (print) {
@@ -98,7 +109,6 @@ public class DE405PropagatorPlot extends JPanel {
 		LinePlot l1 = new LinePlot("spacecraft", Color.RED, getXYZforPlot(Eph.xsol, Eph.ysol, Eph.zsol));
 		l1.closed_curve = false;
 		plot.addPlot(l1);
-
 
 		VectorN EarthPos = null;
 		try {

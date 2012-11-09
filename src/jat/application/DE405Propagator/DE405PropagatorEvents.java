@@ -17,6 +17,8 @@
 
 package jat.application.DE405Propagator;
 
+import jat.core.ephemeris.DE405Body.body;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -25,11 +27,12 @@ import java.awt.event.ItemListener;
 class DE405PropagatorEvents implements ActionListener, ItemListener {
 	DE405PropagatorGUI dpGUI;
 	DE405PropagatorMain dpMain;
-	DE405PropagatorParameters dpParam;
+
+	// DE405PropagatorParameters dpParam;
 
 	public DE405PropagatorEvents(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
-		this.dpParam = dpMain.dpParam;
+		// this.dpParam = dpMain.dpParam;
 	}
 
 	public void actionPerformed(ActionEvent ev) {
@@ -38,17 +41,7 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 		if (ev.getSource() == dpMain.dpGUI.btnPlot) {
 			this.dpGUI = dpMain.dpGUI;
 			System.out.println("plot button pressed");
-			// System.out.println(dpMain.dpGUI.tf_y);
-			System.out.println(dpGUI.tf_y.getValue());
-			dpParam.y0[0] = (Double) dpGUI.tf_x.getValue();
-			dpParam.y0[1] = (Double) dpGUI.tf_y.getValue();
-			dpParam.y0[2] = (Double) dpGUI.tf_z.getValue();
-			dpParam.y0[3] = (Double) dpGUI.tf_vx.getValue();
-			dpParam.y0[4] = (Double) dpGUI.tf_vy.getValue();
-			dpParam.y0[5] = (Double) dpGUI.tf_vz.getValue();
-			dpParam.tf = (Double) dpGUI.tf_tf.getValue();
-			// dpMain.dpPlot.a = (Double)
-			// dpMain.dpGUI.semimajorfield.getValue();
+
 			dpMain.dpPlot.plot.removeAllPlots();
 			dpMain.dpPlot.add_scene();
 		}
@@ -67,8 +60,17 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 				dpMain.dpPlot.plot.plotCanvas.timer.start();
 			else
 				dpMain.dpPlot.plot.plotCanvas.timer.stop();
-
 		}
+
+		
+		dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] =dpMain.dpGUI.chckbxEarth.isSelected() ;
+
+		
+		
+//		if (source == dpMain.dpGUI.chckbxEarth) {
+//			dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] = true;
+//		}
+
 	}
 
 }

@@ -17,6 +17,7 @@
 
 package jat.application.DE405Propagator;
 
+import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Body.body;
@@ -40,21 +41,24 @@ public class DE405PropagatorMain extends JApplet {
 	DE405PropagatorPlot dpPlot;
 	DE405PropagatorParameters dpParam;
 	Container level1_Pane;
-	public DE405Plus Eph;
 
 	public void init() {
 	}
 
 	public void start() {
-		PathUtil path = new PathUtil(this);
-		Eph = new DE405Plus(path);
-		Eph.setFrame(DE405Frame.frame.HEE);
-		//Eph.setFrame(DE405Frame.frame.ICRF);
-		Eph.printSteps = true;
-		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
-		Eph.setIntegrationStartTime(myTime);
-		Eph.planetOnOff[body.SUN.ordinal()] = true;
 		dpParam=new DE405PropagatorParameters();
+		PathUtil path = new PathUtil(this);
+		dpParam.Eph = new DE405Plus(path);
+		dpParam.Eph.setFrame(DE405Frame.frame.HEE);
+		//Eph.setFrame(DE405Frame.frame.ICRF);
+		dpParam.Eph.printSteps = true;
+		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
+		dpParam.Eph.setIntegrationStartTime(myTime);
+		dpParam.bodyGravOnOff[body.SUN.ordinal()] = true;
+		dpParam.bodyGravOnOff[body.EARTH.ordinal()] = true;
+//		dpParam.Eph.bodyGravOnOff[body.SUN.ordinal()] = true;
+//		dpParam.Eph.bodyGravOnOff[body.EARTH.ordinal()] = true;
+
 
 		level1_Pane = getContentPane();
 		dpGUI = new DE405PropagatorGUI(this);

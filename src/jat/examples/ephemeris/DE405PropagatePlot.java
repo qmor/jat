@@ -53,7 +53,7 @@ public class DE405PropagatePlot {
 		Eph.printSteps = true;
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);
-		Eph.planetOnOff[body.SUN.ordinal()] = true;
+		Eph.bodyGravOnOff[body.SUN.ordinal()] = true;
 		// Eph.planetOnOff[body.JUPITER.ordinal()] = true;
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
@@ -76,7 +76,7 @@ public class DE405PropagatePlot {
 		p.addPlot(l1);
 
 		Eph.reset();
-		Eph.planetOnOff[body.JUPITER.ordinal()] = true;
+		Eph.bodyGravOnOff[body.JUPITER.ordinal()] = true;
 		dp853.integrate(ode, 0.0, y0, tf, y); // now y contains final state at
 
 		LinePlot l2 = new LinePlot("Jup. on", Color.BLUE, getXYforPlot(Eph.xsol,Eph.ysol));

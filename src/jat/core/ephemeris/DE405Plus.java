@@ -45,7 +45,7 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
 public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
 
 	public frame ephFrame;
-	public boolean planetOnOff[] = new boolean[DE405Body.body.amount];
+	public boolean bodyGravOnOff[] = new boolean[DE405Body.body.amount];
 	VectorN[] posvelICRF, posvel;
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
@@ -140,7 +140,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		try {
 
 			for (body b : body.values()) {
-				if (planetOnOff[b.ordinal()])// if (b.ordinal() == 0)
+				if (bodyGravOnOff[b.ordinal()])// if (b.ordinal() == 0)
 				{
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);
@@ -216,7 +216,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		v2 = vx * vx + vy * vy + vz + vz;
 		try {
 			for (body b : body.values()) {
-				if (planetOnOff[b.ordinal()]) {
+				if (bodyGravOnOff[b.ordinal()]) {
 					//System.out.println(b.name[b.ordinal()]);
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);

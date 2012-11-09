@@ -35,6 +35,8 @@ import javax.swing.JFormattedTextField;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class DE405PropagatorGUI extends JPanel {
 	private static final long serialVersionUID = 1321470082814219656L;
@@ -88,8 +90,7 @@ public class DE405PropagatorGUI extends JPanel {
 		panelPlanets.add(chckbxJupiter);
 
 		JPanel panelDate = new JPanel();
-		panelDate.setBorder(new TitledBorder(null, "Start Date, Flight Time", TitledBorder.LEADING, TitledBorder.TOP,
-				null, null));
+		panelDate.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Start Date, Flight Time [s]", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagConstraints gbc_panelDate = new GridBagConstraints();
 		gbc_panelDate.fill = GridBagConstraints.BOTH;
 		gbc_panelDate.insets = new Insets(0, 0, 5, 0);
@@ -149,16 +150,17 @@ public class DE405PropagatorGUI extends JPanel {
 		level1_Pane.add(chckbxRotation, gbc_chckbxRotation);
 
 		chckbxRotation.addItemListener(dpE);
+		chckbxEarth.addItemListener(dpE);
 		btnPlot.addActionListener(dpE);
 	}
 
 	public void updateGUI() {
 
-		if (dpMain.dpParam.planetOnOff[DE405Body.body.MERCURY.ordinal()])
+		if (dpMain.dpParam.bodyGravOnOff[DE405Body.body.MERCURY.ordinal()])
+			chckbxMercury.setSelected(true);
+		if (dpMain.dpParam.bodyGravOnOff[DE405Body.body.EARTH.ordinal()])
 			chckbxEarth.setSelected(true);
-		if (dpMain.dpParam.planetOnOff[DE405Body.body.EARTH.ordinal()])
-			chckbxEarth.setSelected(true);
-		if (dpMain.dpParam.planetOnOff[DE405Body.body.JUPITER.ordinal()])
+		if (dpMain.dpParam.bodyGravOnOff[DE405Body.body.JUPITER.ordinal()])
 			chckbxJupiter.setSelected(true);
 
 		

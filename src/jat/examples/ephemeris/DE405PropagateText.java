@@ -41,7 +41,7 @@ public class DE405PropagateText {
 		Eph.printSteps = true;
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);
-		Eph.planetOnOff[body.SUN.ordinal()] = true;
+		Eph.bodyGravOnOff[body.SUN.ordinal()] = true;
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
