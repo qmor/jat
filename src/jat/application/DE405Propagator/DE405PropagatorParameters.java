@@ -15,7 +15,8 @@ public class DE405PropagatorParameters {
 	DE405Plus Eph;
 	// double x, y, z, vx, vy, vz;
 	double[] y0 = { 200000000., 0, 0, 0, 24.2, 0 }; // initial state
-	double tf = 40000000.;
+	// double tf = 40000000.;
+	double tf = 1000000.;
 
 	public DE405PropagatorParameters() {
 		messages = new jatMessages();
@@ -24,15 +25,13 @@ public class DE405PropagatorParameters {
 
 		for (int i = 0; i < number; i++)
 			this.planetOnOff[i] = true;
-	
-		// earth orbit
-		y0[0]=-1.394163164819393E8;
-		y0[1]=4.892838708144717E7;
-		y0[2]=-1458.2923902980983;
-		y0[4]=-30;
 
-	
-	
+		// earth orbit
+		y0[0] = -1.394163164819393E8;
+		y0[1] = 48928187.1;
+		y0[2] = -6558.3;
+		y0[4] = -30;
+
 	}
 
 	public DE405PropagatorParameters(boolean[] planetOnOff) {

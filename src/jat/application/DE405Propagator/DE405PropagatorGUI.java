@@ -17,6 +17,8 @@
 
 package jat.application.DE405Propagator;
 
+import jat.core.ephemeris.DE405Body;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
@@ -44,6 +46,7 @@ public class DE405PropagatorGUI extends JPanel {
 	JFormattedTextField tf_tf;
 	public JButton btnPlot;
 	JDatePicker depart_date_picker;
+	public JCheckBox chckbxMercury, chckbxEarth, chckbxJupiter;
 
 	public DE405PropagatorGUI(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
@@ -75,14 +78,14 @@ public class DE405PropagatorGUI extends JPanel {
 				null));
 		panelPlanets.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JCheckBox checkBox = new JCheckBox("Mercury");
-		panelPlanets.add(checkBox);
+		chckbxMercury = new JCheckBox("Mercury");
+		panelPlanets.add(chckbxMercury);
 
-		JCheckBox chckbxEarth = new JCheckBox("Earth");
+		chckbxEarth = new JCheckBox("Earth");
 		panelPlanets.add(chckbxEarth);
 
-		JCheckBox checkBoxJupiter = new JCheckBox("Jupiter");
-		panelPlanets.add(checkBoxJupiter);
+		chckbxJupiter = new JCheckBox("Jupiter");
+		panelPlanets.add(chckbxJupiter);
 
 		JPanel panelDate = new JPanel();
 		panelDate.setBorder(new TitledBorder(null, "Start Date, Flight Time", TitledBorder.LEADING, TitledBorder.TOP,
@@ -151,17 +154,25 @@ public class DE405PropagatorGUI extends JPanel {
 
 	public void updateGUI() {
 
+		if (dpMain.dpParam.planetOnOff[DE405Body.body.MERCURY.ordinal()])
+			chckbxEarth.setSelected(true);
+		if (dpMain.dpParam.planetOnOff[DE405Body.body.EARTH.ordinal()])
+			chckbxEarth.setSelected(true);
+		if (dpMain.dpParam.planetOnOff[DE405Body.body.JUPITER.ordinal()])
+			chckbxJupiter.setSelected(true);
+
+		
+		depart_date_picker.getModel().setYear(dpMain.dpParam.simulationDate.getYear());
+		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth());
+		depart_date_picker.getModel().setDay(dpMain.dpParam.simulationDate.getDay());
+		depart_date_picker.getModel().setSelected(true);
+		tf_tf.setValue(dpMain.dpParam.tf);
 		tf_x.setValue(dpMain.dpParam.y0[0]);
 		tf_y.setValue(dpMain.dpParam.y0[1]);
 		tf_z.setValue(dpMain.dpParam.y0[2]);
 		tf_vx.setValue(dpMain.dpParam.y0[3]);
 		tf_vy.setValue(dpMain.dpParam.y0[4]);
 		tf_vz.setValue(dpMain.dpParam.y0[5]);
-		tf_tf.setValue(dpMain.dpParam.tf);
-		depart_date_picker.getModel().setYear(dpMain.dpParam.simulationDate.getYear());
-		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth());
-		depart_date_picker.getModel().setDay(dpMain.dpParam.simulationDate.getDay());
-		depart_date_picker.getModel().setSelected(true);
 
 	}
 }

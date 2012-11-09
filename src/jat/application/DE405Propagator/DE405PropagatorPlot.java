@@ -78,22 +78,16 @@ public class DE405PropagatorPlot extends JPanel {
 
 	void doExample() {
 		// double tf = 3600 * 24 * 300;
-		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
-
-		dpParam.y0[0]=-1.394163164819393E8;
-		dpParam.y0[1]=4.892838708144717E7;
-		dpParam.y0[2]=-1458.2923902980983;
-		
+		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state		
 		double[] y = new double[6];
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 		Eph.reset();
-		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y); // now y contains
-																// final
-		// state at
-		// time tf
+		Eph.planetOnOff[DE405Body.body.EARTH.ordinal()] = true;
+
+		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
 		if (print) {
 			String nf = "%10.3f ";
 			String format = nf + nf + nf + nf + nf;
@@ -105,7 +99,6 @@ public class DE405PropagatorPlot extends JPanel {
 		l1.closed_curve = false;
 		plot.addPlot(l1);
 
-		Eph.planetOnOff[DE405Body.body.EARTH.ordinal()] = true;
 
 		VectorN EarthPos = null;
 		try {
