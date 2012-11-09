@@ -24,6 +24,15 @@ public class DE405PropagatorParameters {
 
 		for (int i = 0; i < number; i++)
 			this.planetOnOff[i] = true;
+	
+		// earth orbit
+		y0[0]=-1.394163164819393E8;
+		y0[1]=4.892838708144717E7;
+		y0[2]=-1458.2923902980983;
+		y0[4]=-30;
+
+	
+	
 	}
 
 	public DE405PropagatorParameters(boolean[] planetOnOff) {

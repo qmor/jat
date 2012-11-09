@@ -49,6 +49,7 @@ public class DE405PropagatorMain extends JApplet {
 		PathUtil path = new PathUtil(this);
 		Eph = new DE405Plus(path);
 		Eph.setFrame(DE405Frame.frame.HEE);
+		//Eph.setFrame(DE405Frame.frame.ICRF);
 		Eph.printSteps = true;
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		Eph.setIntegrationStartTime(myTime);

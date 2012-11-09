@@ -17,12 +17,15 @@
 
 package jat.application.DE405Propagator;
 
+import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.plot.plot.Plot3DPanel;
 import jat.core.plot.plot.PlotPanel;
 import jat.core.plot.plot.plots.LinePlot;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -60,6 +63,7 @@ public class DE405PropagatorPlot extends JPanel {
 		plot.setFixedBounds(0, -size, size);
 		plot.setFixedBounds(1, -size, size);
 		plot.setFixedBounds(2, -size, size);
+		plot.setLegendOrientation(PlotPanel.SOUTH);
 	}
 
 	public void make_plot() {
@@ -73,16 +77,22 @@ public class DE405PropagatorPlot extends JPanel {
 	static boolean print = true;
 
 	void doExample() {
-		//double tf = 3600 * 24 * 300;
+		// double tf = 3600 * 24 * 300;
 		// double[] y0 = { 2e8, 0, 0, 0, 24.2, 0 }; // initial state
+
+		dpParam.y0[0]=-1.394163164819393E8;
+		dpParam.y0[1]=4.892838708144717E7;
+		dpParam.y0[2]=-1458.2923902980983;
+		
 		double[] y = new double[6];
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 		Eph.reset();
-		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y); // now y contains final
-														// state at
+		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y); // now y contains
+																// final
+		// state at
 		// time tf
 		if (print) {
 			String nf = "%10.3f ";
@@ -91,31 +101,20 @@ public class DE405PropagatorPlot extends JPanel {
 			System.out.println();
 		}
 
-		// Plot2DPanel p = new Plot2DPanel();
 		LinePlot l1 = new LinePlot("spacecraft", Color.RED, getXYZforPlot(Eph.xsol, Eph.ysol, Eph.zsol));
 		l1.closed_curve = false;
 		plot.addPlot(l1);
 
-		// Eph.reset();
-		// Eph.planetOnOff[body.JUPITER.ordinal()] = true;
-		// dp853.integrate(ode, 0.0, y0, tf, y); // now y contains final state
-		// at
+		Eph.planetOnOff[DE405Body.body.EARTH.ordinal()] = true;
 
-		// VectorN EarthPos = null;
-		// try {
-		// EarthPos = Eph.get_planet_pos(body.EARTH, myTime);
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// addPoint(p, "Earth", java.awt.Color.BLUE, EarthPos.x[0],
-		// EarthPos.x[1]);
+		VectorN EarthPos = null;
+		try {
+			EarthPos = Eph.get_planet_pos(DE405Body.body.EARTH, dpMain.dpParam.simulationDate);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		plot.setLegendOrientation(PlotPanel.SOUTH);
-		// double plotSize = 2e8;
-		// p.setFixedBounds(0, -plotSize, plotSize);
-		// p.setFixedBounds(1, -plotSize, plotSize);
-		// new FrameView(p).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0], EarthPos.x[1], EarthPos.x[2]);
 
 	}
 
@@ -128,10 +127,18 @@ public class DE405PropagatorPlot extends JPanel {
 		for (int i = 0; i < arraySize; i++) {
 			XYZ[i][0] = xsolArray[i];
 			XYZ[i][1] = ysolArray[i];
-			XYZ[i][2] = ysolArray[i];
+			XYZ[i][2] = zsolArray[i];
 		}
 
 		return XYZ;
+	}
+
+	void addPoint(Plot3DPanel p, String s, Color c, double x, double y, double z) {
+		double[][] points = new double[1][3];
+		points[0][0] = x;
+		points[0][1] = y;
+		points[0][2] = z;
+		p.addScatterPlot(s, c, points);
 	}
 
 }
