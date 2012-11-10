@@ -45,6 +45,13 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 			dpMain.dpPlot.plot.removeAllPlots();
 			dpMain.dpPlot.add_scene();
 		}
+
+	
+		if (ev.getSource() == dpMain.dpGUI.comboBoxFrame) {
+			 System.out.println("Frame combo box");
+
+		}
+	
 	}
 
 	// }// End of ActionPerformed

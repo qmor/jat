@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package jat.coreNOSA.algorithm.optimization;
+package jat.core.algorithm.optimization;
 
 public class DataArraySearch {
 	float[][] fdata;

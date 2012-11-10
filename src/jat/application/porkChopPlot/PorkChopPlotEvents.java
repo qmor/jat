@@ -17,9 +17,9 @@
 
 package jat.application.porkChopPlot;
 
+import jat.core.algorithm.optimization.DataArraySearch;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.spacetime.TimeAPL;
-import jat.coreNOSA.algorithm.optimization.DataArraySearch;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

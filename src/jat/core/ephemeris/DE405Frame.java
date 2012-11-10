@@ -62,7 +62,7 @@ import java.util.EnumSet;
 public class DE405Frame {
 
 	public enum frame {
-		ICRF, ECEF, ECI, HEEQ, HEE, HAE;
+		J2000, ICRF, GCRF,ECEF, ECI, HEEQ, HEE, HAE;
 		private static final int amount = EnumSet.allOf(frame.class).size();
 		private static frame[] val = new frame[amount];
 		static {
@@ -70,9 +70,9 @@ public class DE405Frame {
 				val[q.ordinal()] = q;
 			}
 		}
+		public static String[] name = { "J2000","ICRF", "GCRF","ECEF", "ECI", "HEEQ", "HEE", "HAE" };
 
 	}
 
-	public static String[] frameName = { "ICRF", "ECEF", "ECI", "HEEQ", "HEE", "HAE" };
 
 }
