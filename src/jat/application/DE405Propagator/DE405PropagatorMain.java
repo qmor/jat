@@ -17,10 +17,9 @@
 
 package jat.application.DE405Propagator;
 
-import jat.core.ephemeris.DE405Body;
+import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Plus;
-import jat.core.ephemeris.DE405Body.body;
 import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
 
@@ -55,9 +54,8 @@ public class DE405PropagatorMain extends JApplet {
 		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
 		dpParam.Eph.setIntegrationStartTime(myTime);
 		dpParam.bodyGravOnOff[body.SUN.ordinal()] = true;
+		dpParam.bodyGravOnOff[body.MOON.ordinal()] = true;
 		dpParam.bodyGravOnOff[body.EARTH.ordinal()] = true;
-//		dpParam.Eph.bodyGravOnOff[body.SUN.ordinal()] = true;
-//		dpParam.Eph.bodyGravOnOff[body.EARTH.ordinal()] = true;
 
 
 		level1_Pane = getContentPane();

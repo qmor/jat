@@ -63,7 +63,11 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 		}
 
 		
-		dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] =dpMain.dpGUI.chckbxEarth.isSelected() ;
+		dpMain.dpParam.Eph.bodyGravOnOff[body.SUN.ordinal()] =dpMain.dpGUI.chckbxSun.isSelected() ;
+		dpMain.dpParam.Eph.bodyGravOnOff[body.MERCURY.ordinal()] =dpMain.dpGUI.chckbxMercury.isSelected() ;
+		dpMain.dpParam.Eph.bodyGravOnOff[body.VENUS.ordinal()] =dpMain.dpGUI.chckbxVenus.isSelected() ;
+		dpMain.dpParam.Eph.bodyGravOnOff[body.EARTH.ordinal()] =dpMain.dpGUI.chckbxEarth.isSelected() ;
+		dpMain.dpParam.Eph.bodyGravOnOff[body.MOON.ordinal()] =dpMain.dpGUI.chckbxMoon.isSelected() ;
 
 		
 		
