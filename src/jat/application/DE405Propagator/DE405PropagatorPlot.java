@@ -59,7 +59,7 @@ public class DE405PropagatorPlot extends JPanel {
 
 	public void add_scene() {
 
-		plot.addSpherePlot("sun", 1e6);
+		//plot.addSpherePlot("sun", 1e6);
 		doExample();
 		double size = max;
 		plot.setFixedBounds(0, -size, size);
@@ -111,12 +111,15 @@ public class DE405PropagatorPlot extends JPanel {
 		plot.addPlot(l1);
 
 		VectorN EarthPos = null;
+		VectorN SunPos = null;
 		try {
-			EarthPos = Eph.get_planet_pos(DE405Body.body.EARTH, dpMain.dpParam.simulationDate);
+			SunPos = Eph.get_planet_pos(body.SUN, dpMain.dpParam.simulationDate);
+			EarthPos = Eph.get_planet_pos(body.EARTH, dpMain.dpParam.simulationDate);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		addPoint(plot, "Sun", java.awt.Color.ORANGE, SunPos.x[0], SunPos.x[1], SunPos.x[2]);
 		addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0], EarthPos.x[1], EarthPos.x[2]);
 
 	}

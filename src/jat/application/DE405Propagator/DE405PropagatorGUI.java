@@ -17,6 +17,7 @@
 
 package jat.application.DE405Propagator;
 
+import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
 
@@ -209,7 +210,7 @@ public class DE405PropagatorGUI extends JPanel {
 		chckbxJupiter.setSelected(dpMain.dpParam.bodyGravOnOff[body.JUPITER.ordinal()]);
 		chckbxSaturn.setSelected(dpMain.dpParam.bodyGravOnOff[body.SATURN.ordinal()]);
 
-		comboBoxFrame.setSelectedIndex(dpMain.dpParam.Eph.ephFrame.ordinal());		
+		comboBoxFrame.setSelectedIndex(dpMain.dpParam.Frame.ordinal());		
 		
 		depart_date_picker.getModel().setYear(dpMain.dpParam.simulationDate.getYear());
 		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth());

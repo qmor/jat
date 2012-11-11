@@ -18,6 +18,7 @@
 package jat.application.DE405Propagator;
 
 import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Frame.frame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,12 +47,12 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 			dpMain.dpPlot.add_scene();
 		}
 
-	
 		if (ev.getSource() == dpMain.dpGUI.comboBoxFrame) {
-			 System.out.println("Frame combo box");
-
+			System.out.println("Frame combo box");
+			int selection=dpMain.dpGUI.comboBoxFrame.getSelectedIndex();
+			dpMain.dpParam.Eph.setFrame(frame.fromInt(selection));
 		}
-	
+
 	}
 
 	// }// End of ActionPerformed
@@ -69,19 +70,22 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 				dpMain.dpPlot.plot.plotCanvas.timer.stop();
 		}
 
-		
-		dpMain.dpParam.bodyGravOnOff[body.SUN.ordinal()] =dpMain.dpGUI.chckbxSun.isSelected() ;
-		dpMain.dpParam.bodyGravOnOff[body.MERCURY.ordinal()] =dpMain.dpGUI.chckbxMercury.isSelected() ;
-		dpMain.dpParam.bodyGravOnOff[body.VENUS.ordinal()] =dpMain.dpGUI.chckbxVenus.isSelected() ;
-		dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] =dpMain.dpGUI.chckbxEarth.isSelected() ;
-		dpMain.dpParam.bodyGravOnOff[body.MOON.ordinal()] =dpMain.dpGUI.chckbxMoon.isSelected() ;
-		dpMain.dpParam.bodyGravOnOff[body.JUPITER.ordinal()] =dpMain.dpGUI.chckbxJupiter.isSelected() ;
-
-		
-		
-//		if (source == dpMain.dpGUI.chckbxEarth) {
-//			dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] = true;
-//		}
+		if (source == dpMain.dpGUI.chckbxSun)
+			dpMain.dpParam.bodyGravOnOff[body.SUN.ordinal()] = dpMain.dpGUI.chckbxSun.isSelected();
+		if (source == dpMain.dpGUI.chckbxMercury)
+			dpMain.dpParam.bodyGravOnOff[body.MERCURY.ordinal()] = dpMain.dpGUI.chckbxMercury.isSelected();
+		if (source == dpMain.dpGUI.chckbxVenus)
+			dpMain.dpParam.bodyGravOnOff[body.VENUS.ordinal()] = dpMain.dpGUI.chckbxVenus.isSelected();
+		if (source == dpMain.dpGUI.chckbxEarth)
+			dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] = dpMain.dpGUI.chckbxEarth.isSelected();
+		if (source == dpMain.dpGUI.chckbxMars)
+			dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()] = dpMain.dpGUI.chckbxMars.isSelected();
+		if (source == dpMain.dpGUI.chckbxMoon)
+			dpMain.dpParam.bodyGravOnOff[body.MOON.ordinal()] = dpMain.dpGUI.chckbxMoon.isSelected();
+		if (source == dpMain.dpGUI.chckbxJupiter)
+			dpMain.dpParam.bodyGravOnOff[body.JUPITER.ordinal()] = dpMain.dpGUI.chckbxJupiter.isSelected();
+		if (source == dpMain.dpGUI.chckbxSaturn)
+			dpMain.dpParam.bodyGravOnOff[body.JUPITER.ordinal()] = dpMain.dpGUI.chckbxSaturn.isSelected();
 
 	}
 

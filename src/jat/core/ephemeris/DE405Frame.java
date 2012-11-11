@@ -17,6 +17,8 @@
 
 package jat.core.ephemeris;
 
+import jat.core.ephemeris.DE405Body.body;
+
 import java.util.EnumSet;
 
 
@@ -70,6 +72,11 @@ public class DE405Frame {
 				val[q.ordinal()] = q;
 			}
 		}
+
+		public static frame fromInt(int i) {
+			return val[i];
+		}
+
 		public static String[] name = { "J2000","ICRF", "GCRF","ECEF", "ECI", "HEEQ", "HEE", "HAE" };
 
 	}

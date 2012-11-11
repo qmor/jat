@@ -17,47 +17,36 @@
 
 package jat.application.DE405Propagator;
 
-import jat.core.ephemeris.DE405Body.body;
-import jat.core.ephemeris.DE405Frame;
+import jat.application.DE405Propagator.scenario.earthOrbitECI;
 import jat.core.ephemeris.DE405Plus;
-import jat.core.spacetime.TimeAPL;
 import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JApplet;
-import javax.swing.JFormattedTextField;
 
 public class DE405PropagatorMain extends JApplet {
 
 	private static final long serialVersionUID = -6469847628986520750L;
-	static int appletwidth = 900; // Width of Applet
-	static int appletheight = 700;
-	JFormattedTextField yearfield;
-	//DE405PropagatorEvents dpE;
 	DE405PropagatorGUI dpGUI;
 	DE405PropagatorPlot dpPlot;
 	DE405PropagatorParameters dpParam;
-	Container level1_Pane;
 
 	public void init() {
 	}
 
 	public void start() {
-		dpParam=new DE405PropagatorParameters();
+		//dpParam=new DE405PropagatorParameters();
+		dpParam=new earthOrbitECI();
+		//dpParam=new sunOrbit();
 		PathUtil path = new PathUtil(this);
 		dpParam.Eph = new DE405Plus(path);
-		dpParam.Eph.setFrame(DE405Frame.frame.HEE);
-		//Eph.setFrame(DE405Frame.frame.ICRF);
 		dpParam.Eph.printSteps = true;
-		TimeAPL myTime = new TimeAPL(2003, 3, 1, 12, 0, 0);
-		dpParam.Eph.setIntegrationStartTime(myTime);
-		dpParam.bodyGravOnOff[body.SUN.ordinal()] = true;
-		dpParam.bodyGravOnOff[body.MOON.ordinal()] = true;
-		dpParam.bodyGravOnOff[body.EARTH.ordinal()] = true;
+		dpParam.Eph.setIntegrationStartTime(dpParam.simulationDate);
 
 
+		Container level1_Pane;
 		level1_Pane = getContentPane();
 		dpGUI = new DE405PropagatorGUI(this);
 		level1_Pane.add(dpGUI, BorderLayout.WEST);

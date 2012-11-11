@@ -357,9 +357,9 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		posvel[4] = posvelICRF[bodyNumber].x[4];
 		posvel[5] = posvelICRF[bodyNumber].x[5];
 
-		VectorN earthPos = new VectorN(posvel);
+		VectorN earthPosVel = new VectorN(posvel);
 
-		VectorN returnval = in.minus(earthPos);
+		VectorN returnval = in.minus(earthPosVel);
 		return returnval;
 	}
 
