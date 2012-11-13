@@ -17,7 +17,7 @@
 
 package jat.application.DE405Propagator;
 
-import jat.application.DE405Propagator.scenario.earthOrbitECI;
+import jat.application.DE405Propagator.scenario.sunOrbit;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
@@ -32,19 +32,23 @@ public class DE405PropagatorMain extends JApplet {
 	DE405PropagatorGUI dpGUI;
 	DE405PropagatorPlot dpPlot;
 	DE405PropagatorParameters dpParam;
+	DE405PropagatorGlobals dpGlobals;
 
 	public void init() {
 	}
 
 	public void start() {
-		//dpParam=new DE405PropagatorParameters();
-		dpParam=new earthOrbitECI();
-		//dpParam=new sunOrbit();
+		// dpParam=new DE405PropagatorParameters();
+		//dpParam = new earthOrbitECI();
+		 dpParam=new sunOrbit();
+		dpGlobals = new DE405PropagatorGlobals();
+
 		PathUtil path = new PathUtil(this);
 		dpParam.Eph = new DE405Plus(path);
+		dpParam.Eph.setUnitsMaster(dpGlobals.uc);
+		dpGlobals.uc.addUser(dpParam.Eph.getUnits());
 		dpParam.Eph.printSteps = true;
 		dpParam.Eph.setIntegrationStartTime(dpParam.simulationDate);
-
 
 		Container level1_Pane;
 		level1_Pane = getContentPane();
@@ -57,5 +61,10 @@ public class DE405PropagatorMain extends JApplet {
 
 		level1_Pane.add(dpPlot.plot);
 
+		
+		
+		dpGlobals.uc.printList();
+		
+		
 	}
 }

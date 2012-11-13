@@ -17,9 +17,8 @@
 
 package jat.application.DE405Propagator;
 
-import jat.core.ephemeris.DE405Body;
-import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.plot.plot.Plot3DPanel;
 import jat.core.plot.plot.PlotPanel;
 import jat.core.plot.plot.plots.LinePlot;
@@ -32,6 +31,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
@@ -39,8 +39,6 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 public class DE405PropagatorPlot extends JPanel {
 
 	private static final long serialVersionUID = 4814672707864836820L;
-	double max = 1e8;
-
 	Plot3DPanel plot;
 	int steps = 200;
 	double[][] XYZ = new double[steps][3];
@@ -61,10 +59,11 @@ public class DE405PropagatorPlot extends JPanel {
 
 		//plot.addSpherePlot("sun", 1e6);
 		doExample();
-		double size = max;
-		plot.setFixedBounds(0, -size, size);
-		plot.setFixedBounds(1, -size, size);
-		plot.setFixedBounds(2, -size, size);
+		Vector3D y0v=new Vector3D(dpParam.y0[0],dpParam.y0[1],dpParam.y0[2]);
+		double plotBounds = y0v.getNorm();
+		plot.setFixedBounds(0, -plotBounds, plotBounds);
+		plot.setFixedBounds(1, -plotBounds, plotBounds);
+		plot.setFixedBounds(2, -plotBounds, plotBounds);
 		plot.setLegendOrientation(PlotPanel.SOUTH);
 	}
 

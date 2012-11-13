@@ -21,6 +21,12 @@ import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.spacetime.TimeAPL;
+import jat.core.units.unitCheck;
+import jat.core.units.unitModel;
+import jat.core.units.unitSet;
+import jat.core.units.unitSet.distanceUnit;
+import jat.core.units.unitSet.massUnit;
+import jat.core.units.unitSet.timeUnit;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.cm.Constants;
@@ -42,7 +48,7 @@ import org.apache.commons.math3.ode.sampling.StepInterpolator;
  * calculated (See DE405Frame.java)
  * 
  */
-public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations {
+public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquations, unitModel {
 
 	public frame ephFrame;
 	public boolean bodyGravOnOff[] = new boolean[DE405Body.body.amount];
@@ -56,7 +62,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	jatMessages messages;
 	public boolean printSteps = false;
 	public boolean printBodyPos = false;
-
+	unitSet uS=new unitSet("DE405Plus",distanceUnit.km,timeUnit.sec,massUnit.kg);
+	
 	/**
 	 * See setIntegrationStartTime
 	 * 
@@ -187,8 +194,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 			double[] y = interpolator.getInterpolatedState();
 			if (printSteps) {
 				String nf = "%14.3f ";
-				String format = nf + nf + nf + nf + nf;
-				System.out.printf(format, t, y[0], y[1], y[2], energy(t, y));
+				String format = nf + nf + nf + nf + nf+ nf + nf + nf;
+				System.out.printf(format, t, y[0], y[1], y[2], y[3], y[4], y[5], energy(t, y));
 				System.out.println();
 			}
 			time.add(t);
@@ -361,6 +368,29 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 		VectorN returnval = in.minus(earthPosVel);
 		return returnval;
+	}
+
+	@Override
+	public void setUnits(unitSet u) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public unitSet getUnits() {
+		return uS;
+	}
+
+	@Override
+	public void setUnitsMaster(unitCheck uc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addUnitsUser(unitSet u) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
