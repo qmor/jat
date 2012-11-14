@@ -56,6 +56,7 @@ public class SolarSystemBodies {
 		Bodies[10] = new Body(body.MOON, 1737.1, 7.3477e22, 27.321582);
 
 		Bodies[body.SUN.ordinal()].mu = 132712440018.;
+		Bodies[body.SUN.ordinal()].mu = 398600.4418;
 		Bodies[body.MERCURY.ordinal()].mu = 22032.;
 		Bodies[body.VENUS.ordinal()].mu = 324859.;
 		Bodies[body.EARTH.ordinal()].mu = 398600.4418;

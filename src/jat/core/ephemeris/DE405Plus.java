@@ -61,7 +61,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public ArrayList<Double> zsol = new ArrayList<Double>();
 	jatMessages messages;
 	public boolean printSteps = false;
-	public boolean printBodyPos = false;
+	public boolean printBodyPos = true;
 	unitSet uS=new unitSet("DE405Plus",distanceUnit.km,timeUnit.sec,massUnit.kg);
 	
 	/**
