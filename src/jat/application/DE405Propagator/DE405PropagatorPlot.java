@@ -60,7 +60,7 @@ public class DE405PropagatorPlot extends JPanel {
 		//plot.addSpherePlot("sun", 1e6);
 		doExample();
 		Vector3D y0v=new Vector3D(dpParam.y0[0],dpParam.y0[1],dpParam.y0[2]);
-		double plotBounds = y0v.getNorm();
+		double plotBounds = 2*y0v.getNorm();
 		plot.setFixedBounds(0, -plotBounds, plotBounds);
 		plot.setFixedBounds(1, -plotBounds, plotBounds);
 		plot.setFixedBounds(2, -plotBounds, plotBounds);

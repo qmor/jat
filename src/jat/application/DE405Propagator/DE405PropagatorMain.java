@@ -42,8 +42,8 @@ public class DE405PropagatorMain extends JApplet {
 	public void start() {
 		// dpParam=new DE405PropagatorParameters();
 		dpParam = new sunOrbit();
-		dpParam = new earthOrbitECI();
 		dpParam = new testOrbit();
+		dpParam = new earthOrbitECI();
 		dpGlobals = new DE405PropagatorGlobals();
 
 		PathUtil path = new PathUtil(this);
