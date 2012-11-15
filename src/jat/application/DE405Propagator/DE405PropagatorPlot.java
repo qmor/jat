@@ -48,6 +48,7 @@ public class DE405PropagatorPlot extends JPanel {
 	DE405Plus Eph;
 	DE405PropagatorParameters dpParam;
 	static boolean print = false;
+	double plotBounds;
 
 	public DE405PropagatorPlot(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
@@ -57,10 +58,10 @@ public class DE405PropagatorPlot extends JPanel {
 
 	public void add_scene() {
 
-		//plot.addSpherePlot("sun", 1e6);
+		plot.addSpherePlot("Earth", 6378.1);
 		doExample();
-		Vector3D y0v=new Vector3D(dpParam.y0[0],dpParam.y0[1],dpParam.y0[2]);
-		double plotBounds = 2*y0v.getNorm();
+		// Vector3D y0v=new Vector3D(dpParam.y0[0],dpParam.y0[1],dpParam.y0[2]);
+		// double plotBounds = 2*y0v.getNorm();
 		plot.setFixedBounds(0, -plotBounds, plotBounds);
 		plot.setFixedBounds(1, -plotBounds, plotBounds);
 		plot.setFixedBounds(2, -plotBounds, plotBounds);
@@ -110,16 +111,21 @@ public class DE405PropagatorPlot extends JPanel {
 		plot.addPlot(l1);
 
 		VectorN EarthPos = null;
+		VectorN MoonPos = null;
 		VectorN SunPos = null;
 		try {
 			SunPos = Eph.get_planet_pos(body.SUN, dpMain.dpParam.simulationDate);
 			EarthPos = Eph.get_planet_pos(body.EARTH, dpMain.dpParam.simulationDate);
+			MoonPos = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		addPoint(plot, "Sun", java.awt.Color.ORANGE, SunPos.x[0], SunPos.x[1], SunPos.x[2]);
-		addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0], EarthPos.x[1], EarthPos.x[2]);
+		// addPoint(plot, "Sun", java.awt.Color.ORANGE, SunPos.x[0],
+		// SunPos.x[1], SunPos.x[2]);
+		addPoint(plot, "Moon", java.awt.Color.GRAY, MoonPos.x[0], MoonPos.x[1], MoonPos.x[2]);
+		// addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0],
+		// EarthPos.x[1], EarthPos.x[2]);
 
 	}
 
@@ -129,10 +135,19 @@ public class DE405PropagatorPlot extends JPanel {
 		double[] ysolArray = ArrayUtils.toPrimitive(ysol.toArray(new Double[arraySize]));
 		double[] zsolArray = ArrayUtils.toPrimitive(zsol.toArray(new Double[arraySize]));
 		double[][] XYZ = new double[arraySize][3];
+		plotBounds = 0.;
 		for (int i = 0; i < arraySize; i++) {
 			XYZ[i][0] = xsolArray[i];
 			XYZ[i][1] = ysolArray[i];
 			XYZ[i][2] = zsolArray[i];
+			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][0]));
+			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][1]));
+			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][2]));
+			
+//			if (Math.abs(XYZ[i][0]) > plotBounds)
+//				plotBounds = Math.abs(XYZ[i][0]);
+
+		
 		}
 
 		return XYZ;
