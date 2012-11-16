@@ -75,7 +75,8 @@ public class EarthMoonMain extends JApplet {
 		emParam.path = new PathUtil(this);
 		emParam.path = new PathUtil(this,emParam.messages);
 		emParam.Eph = new DE405Plus(emParam.path,emParam.messages);
-		emParam.Eph.setFrame(DE405Frame.frame.ECI);
+		//emParam.Eph.setFrame(DE405Frame.frame.ECI);
+		emParam.Eph.setFrame(DE405Frame.frame.MEOP);
 		//emParam.Eph.setFrame(DE405Frame.frame.ICRF);
 		emParam.planetOnOff[3]=true;
 		emParam.planetOnOff[10]=true;

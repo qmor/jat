@@ -60,11 +60,14 @@ import java.util.EnumSet;
  * ecliptic). This system is (to first order) fixed with respect to the distant
  * stars. It is subject to slow change owing to the various slow motions of the
  * Earth's rotation axis with respect to the fixed stars.
+
+ * MEOP - Moon Earth Orbit Plane
+ *
  */
 public class DE405Frame {
 
 	public enum frame {
-		J2000, ICRF, GCRF,ECEF, ECI, HEEQ, HEE, HAE;
+		J2000, ICRF, GCRF,ECEF, ECI, HEEQ, HEE, HAE, MEOP;
 		private static final int amount = EnumSet.allOf(frame.class).size();
 		private static frame[] val = new frame[amount];
 		static {
@@ -77,7 +80,7 @@ public class DE405Frame {
 			return val[i];
 		}
 
-		public static String[] name = { "J2000","ICRF", "GCRF","ECEF", "ECI", "HEEQ", "HEE", "HAE" };
+		public static String[] name = { "J2000","ICRF", "GCRF","ECEF", "ECI", "HEEQ", "HEE", "HAE","MEOP" };
 
 	}
 

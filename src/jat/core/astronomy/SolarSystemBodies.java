@@ -18,10 +18,17 @@
 package jat.core.astronomy;
 
 import jat.core.ephemeris.DE405Body.body;
+import jat.core.units.unitCheck;
+import jat.core.units.unitModel;
+import jat.core.units.unitSet;
+import jat.core.units.unitSet.distanceUnit;
+import jat.core.units.unitSet.massUnit;
+import jat.core.units.unitSet.timeUnit;
 
-public class SolarSystemBodies {
+public class SolarSystemBodies implements  unitModel {
 
 	public Body[] Bodies;
+	unitSet uS=new unitSet("SolarSystemBodies",distanceUnit.km,timeUnit.sec,massUnit.kg);
 
 	public class Body {
 		body body;
@@ -67,6 +74,29 @@ public class SolarSystemBodies {
 		Bodies[body.PLUTO.ordinal()].mu = 871.;
 		Bodies[body.MOON.ordinal()].mu = 4902.7779;
 
+	}
+
+	@Override
+	public void setUnits(unitSet u) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public unitSet getUnits() {
+		return uS;
+	}
+
+	@Override
+	public void setUnitsMaster(unitCheck uc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addUnitsUser(unitSet u) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

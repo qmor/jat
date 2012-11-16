@@ -283,8 +283,10 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				posvel[bodyNumber] = ecliptic_obliquity_rotate(in);
 				break;
 			case ECI:
-
 				posvel[bodyNumber] = ICRF_to_ECI(in, t);
+				break;
+			case MEOP:
+				posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t), 28.);
 				break;
 			default:
 				posvel[bodyNumber] = in;
@@ -338,6 +340,28 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		y = rv.get(1);
 		z = rv.get(2);
 		eps = cm.Rad(Constants.eps);
+		c = Math.cos(eps);
+		s = Math.sin(eps);
+		returnval.x[0] = x;
+		returnval.x[1] = c * y + s * z;
+		returnval.x[2] = -s * y + c * z;
+		vx = rv.get(3);
+		vy = rv.get(4);
+		vz = rv.get(5);
+		returnval.x[3] = vx;
+		returnval.x[4] = c * vy + s * vz;
+		returnval.x[5] = -s * vy + c * vz;
+
+		return returnval;
+	}
+
+	VectorN ICRFxAxis_rotate(VectorN rv, double angleDegrees) {
+		VectorN returnval = new VectorN(6);
+		double x, y, z, vx, vy, vz, eps, c, s;
+		x = rv.get(0);
+		y = rv.get(1);
+		z = rv.get(2);
+		eps = cm.Rad(angleDegrees);
 		c = Math.cos(eps);
 		s = Math.sin(eps);
 		returnval.x[0] = x;

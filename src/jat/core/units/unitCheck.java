@@ -20,12 +20,14 @@ public class unitCheck {
 	public void printList() {
 
 		String sf = "%8s ";
-		String format = "%20s"+" " + sf+" " + sf +" "+ sf;
+		String format = "%20s" + " " + sf + " " + sf + " " + sf;
 		System.out.printf(format, "className", "distance", "time", "mass");
 		System.out.println();
 
-		for (unitSet uS : unitUserList)
+		for (unitSet uS : unitUserList) {
 			System.out.printf(format, uS.className, uS.distance, uS.time, uS.mass);
-			
+			System.out.println();
+		}
+
 	}
 }

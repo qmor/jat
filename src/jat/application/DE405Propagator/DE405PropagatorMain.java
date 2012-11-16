@@ -52,6 +52,7 @@ public class DE405PropagatorMain extends JApplet {
 		dpParam.Eph = new DE405Plus(path);
 		dpParam.Eph.setUnitsMaster(dpGlobals.uc);
 		dpGlobals.uc.addUser(dpParam.Eph.getUnits());
+		dpGlobals.uc.addUser(dpGlobals.sb.getUnits());
 		dpParam.Eph.printSteps = true;
 		dpParam.Eph.setIntegrationStartTime(dpParam.simulationDate);
 
