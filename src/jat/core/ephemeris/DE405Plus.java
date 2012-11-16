@@ -286,7 +286,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				posvel[bodyNumber] = ICRF_to_ECI(in, t);
 				break;
 			case MEOP:
-				posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t), 28.);
+				posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t), Constants.eps+5.1);
 				break;
 			default:
 				posvel[bodyNumber] = in;

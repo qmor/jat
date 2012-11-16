@@ -20,22 +20,23 @@ public class earthMoonECI extends DE405PropagatorParameters {
 
 		simulationDate = new TimeAPL(2003, 3, 1, 12, 0, 0);
 
-		// earth orbit
-//		SolarSystemBodies sb = new SolarSystemBodies();
-	//	double altitude = 150.;
-
-		
-		//y0[0] = sb.Bodies[body.EARTH.ordinal()].radius+altitude;
+		// earth orbit to moon and back
 
 		y0[0] = 0;
-		y0[1] = 6927;
-		y0[2] = 3839.69;
-		y0[3] = -9.85;
+		y0[1] = 7000.;
+		y0[2] = 0;
+		y0[3] = -10.47;
 		y0[4] = 0;
-		y0[5] = 0;
-		tf = 200000.;
+		y0[5] = -1.5;
+		tf = 20000000.;
 		//tf = 60*60;
 
 	}
 
 }
+//y0[0] = 0;
+//y0[1] = 6927;
+//y0[2] = 3839.69;
+//SolarSystemBodies sb = new SolarSystemBodies();
+//	double altitude = 150.;
+//y0[0] = sb.Bodies[body.EARTH.ordinal()].radius+altitude;

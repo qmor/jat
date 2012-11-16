@@ -111,19 +111,22 @@ public class DE405PropagatorPlot extends JPanel {
 		plot.addPlot(l1);
 
 		VectorN EarthPos = null;
-		VectorN MoonPos = null;
+		VectorN MoonPost0 = null;
+		VectorN MoonPostf = null;
 		VectorN SunPos = null;
 		try {
 			SunPos = Eph.get_planet_pos(body.SUN, dpMain.dpParam.simulationDate);
 			EarthPos = Eph.get_planet_pos(body.EARTH, dpMain.dpParam.simulationDate);
-			MoonPos = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate);
+			MoonPost0 = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate);
+			MoonPostf = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate.plus(dpMain.dpParam.tf));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// addPoint(plot, "Sun", java.awt.Color.ORANGE, SunPos.x[0],
 		// SunPos.x[1], SunPos.x[2]);
-		addPoint(plot, "Moon", java.awt.Color.GRAY, MoonPos.x[0], MoonPos.x[1], MoonPos.x[2]);
+		addPoint(plot, "Moon", java.awt.Color.GRAY, MoonPost0.x[0], MoonPost0.x[1], MoonPost0.x[2]);
+		addPoint(plot, "Moon tf", java.awt.Color.GRAY, MoonPostf.x[0], MoonPostf.x[1], MoonPostf.x[2]);
 		// addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0],
 		// EarthPos.x[1], EarthPos.x[2]);
 
