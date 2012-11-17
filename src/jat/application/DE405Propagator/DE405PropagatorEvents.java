@@ -19,6 +19,7 @@ package jat.application.DE405Propagator;
 
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
+import jat.core.spacetime.TimeAPL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +44,17 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 			this.dpGUI = dpMain.dpGUI;
 			System.out.println("plot button pressed");
 
+			// retrieve start date from date picker
+			int year=dpGUI.depart_date_picker.getModel().getYear();
+			int month=dpGUI.depart_date_picker.getModel().getMonth()+1;
+			int day=dpGUI.depart_date_picker.getModel().getDay();
+
+			dpMain.dpParam.simulationDate=new TimeAPL(year, month, day, 12, 0, 0);
+			
+			
+			
 			dpMain.dpPlot.plot.removeAllPlots();
+
 			dpMain.dpPlot.add_scene();
 		}
 

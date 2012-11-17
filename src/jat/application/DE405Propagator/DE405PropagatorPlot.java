@@ -96,6 +96,7 @@ public class DE405PropagatorPlot extends JPanel {
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
+		Eph.setIntegrationStartTime(dpParam.simulationDate);
 		Eph.reset();
 
 		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
