@@ -48,8 +48,10 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 			int year=dpGUI.depart_date_picker.getModel().getYear();
 			int month=dpGUI.depart_date_picker.getModel().getMonth()+1;
 			int day=dpGUI.depart_date_picker.getModel().getDay();
+			int hour = (Integer) dpGUI.spinnerHour.getValue();
 
-			dpMain.dpParam.simulationDate=new TimeAPL(year, month, day, 12, 0, 0);
+			System.out.println(hour);
+			dpMain.dpParam.simulationDate=new TimeAPL(year, month, day, hour, 0, 0);
 			
 			
 			

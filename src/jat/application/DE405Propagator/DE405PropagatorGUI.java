@@ -40,6 +40,8 @@ import javax.swing.border.TitledBorder;
 import net.sourceforge.jdatepicker.JDateComponentFactory;
 import net.sourceforge.jdatepicker.JDatePicker;
 import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class DE405PropagatorGUI extends JPanel {
 	private static final long serialVersionUID = 1321470082814219656L;
@@ -58,6 +60,10 @@ public class DE405PropagatorGUI extends JPanel {
 	public JCheckBox chckbxSun;
 	public JCheckBox chckbxMoon;
 	public JComboBox comboBoxFrame;
+	public JSpinner spinnerHour;
+	private JPanel panel;
+	public JSpinner spinnerMinute;
+	private JLabel lblNewLabel_2;
 
 	public DE405PropagatorGUI(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
@@ -87,7 +93,7 @@ public class DE405PropagatorGUI extends JPanel {
 		level1_Pane.add(panelPlanets, gbc_panelPlanets);
 		panelPlanets.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Body On/Off",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelPlanets.setLayout(new GridLayout(0, 1, 0, 0));
+		panelPlanets.setLayout(new GridLayout(0, 2, 0, 0));
 
 		chckbxSun = new JCheckBox("Sun");
 		panelPlanets.add(chckbxSun);
@@ -113,7 +119,6 @@ public class DE405PropagatorGUI extends JPanel {
 		chckbxSaturn = new JCheckBox("Saturn");
 		panelPlanets.add(chckbxSaturn);
 
-		
 		JPanel panelFrame = new JPanel();
 		panelFrame.setBorder(new TitledBorder(null, "Frame", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagConstraints gbc_panelFrame = new GridBagConstraints();
@@ -123,12 +128,10 @@ public class DE405PropagatorGUI extends JPanel {
 		gbc_panelFrame.gridy = 1;
 		level1_Pane.add(panelFrame, gbc_panelFrame);
 		panelFrame.setLayout(new GridLayout(1, 1, 0, 0));
-		
+
 		comboBoxFrame = new JComboBox(frame.name);
 		panelFrame.add(comboBoxFrame);
 
-		
-		
 		JPanel panelDate = new JPanel();
 		panelDate.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Start Date, Flight Time [s]",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -139,11 +142,25 @@ public class DE405PropagatorGUI extends JPanel {
 		gbc_panelDate.gridy = 2;
 		level1_Pane.add(panelDate, gbc_panelDate);
 		panelDate.add((JComponent) depart_date_picker);
-		panelDate.setLayout(new GridLayout(2, 1, 0, 0));
+		panelDate.setLayout(new GridLayout(3, 1, 0, 0));
+
+		panel = new JPanel();
+		panelDate.add(panel);
+
+		spinnerHour = new JSpinner();
+		spinnerHour.setModel(new SpinnerNumberModel(0, 0, 23, 1));
+		panel.add(spinnerHour);
+
+		lblNewLabel_2 = new JLabel(":");
+		panel.add(lblNewLabel_2);
+
+		spinnerMinute = new JSpinner();
+		spinnerMinute.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+		panel.add(spinnerMinute);
 
 		tf_tf = new JFormattedTextField();
+		tf_tf.setColumns(2);
 		panelDate.add(tf_tf);
-		
 
 		JPanel panelIC = new JPanel();
 		GridBagConstraints gbc_panelIC = new GridBagConstraints();
@@ -205,17 +222,18 @@ public class DE405PropagatorGUI extends JPanel {
 		chckbxMercury.setSelected(dpMain.dpParam.bodyGravOnOff[body.MERCURY.ordinal()]);
 		chckbxVenus.setSelected(dpMain.dpParam.bodyGravOnOff[body.VENUS.ordinal()]);
 		chckbxEarth.setSelected(dpMain.dpParam.bodyGravOnOff[body.EARTH.ordinal()]);
-		chckbxMoon.setSelected(dpMain.dpParam.bodyGravOnOff[body.MOON.ordinal()]);		
+		chckbxMoon.setSelected(dpMain.dpParam.bodyGravOnOff[body.MOON.ordinal()]);
 		chckbxMars.setSelected(dpMain.dpParam.bodyGravOnOff[body.MARS.ordinal()]);
 		chckbxJupiter.setSelected(dpMain.dpParam.bodyGravOnOff[body.JUPITER.ordinal()]);
 		chckbxSaturn.setSelected(dpMain.dpParam.bodyGravOnOff[body.SATURN.ordinal()]);
 
-		comboBoxFrame.setSelectedIndex(dpMain.dpParam.Frame.ordinal());		
-		
+		comboBoxFrame.setSelectedIndex(dpMain.dpParam.Frame.ordinal());
+
 		depart_date_picker.getModel().setYear(dpMain.dpParam.simulationDate.getYear());
 		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth());
 		depart_date_picker.getModel().setDay(dpMain.dpParam.simulationDate.getDay());
 		depart_date_picker.getModel().setSelected(true);
+		spinnerHour.setValue(dpMain.dpParam.simulationDate.getHour());
 		tf_tf.setValue(dpMain.dpParam.tf);
 		tf_x.setValue(dpMain.dpParam.y0[0]);
 		tf_y.setValue(dpMain.dpParam.y0[1]);
