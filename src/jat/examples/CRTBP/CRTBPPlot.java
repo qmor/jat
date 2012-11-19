@@ -25,6 +25,7 @@ import jat.core.plot.plot.plots.LinePlot;
 
 import java.awt.Color;
 
+import javax.swing.JApplet;
 import javax.swing.JFrame;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -32,18 +33,22 @@ import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 
-public class CRTBPPlot {
+public class CRTBPPlot extends JApplet {
 	static boolean print = false;
 
+	public void init() {
+		doExample();
+	}
+
 	void doExample() {
-		// double mu = 0.15;
-		// double[] y0 = { .1, 0, 0, 1.35, 1.33, 0 }; // initial state
+		double mu = 0.15;
+		double[] y0 = { .11, 0, 0, 1.35, 1.33, 0 }; // initial state
 
 		// double mu = 0.1;
 		// double mu = 3.035909999e-6;
 
-		double mu = 0.012277471;
-		double[] y0 = { .1, 0, 0, 2.69, 2.69, 0 }; // initial state
+		// double mu = 0.012277471;
+		// double[] y0 = { .1, 0, 0, 2.69, 2.69, 0 }; // initial state
 
 		// double mu = 0.2;
 
@@ -53,12 +58,12 @@ public class CRTBPPlot {
 
 		FirstOrderDifferentialEquations ode = myCRTBP;
 
-		double tf = 10.;
+		double tf;
 		double[] y = new double[6]; // initial state
 
 		// for (int i = 1; i < 2; i++) {
 		// tf = i * 20.;
-		tf = 100.;
+		tf = 40.;
 		System.arraycopy(y0, 0, y, 0, 6);
 
 		dp853.integrate(ode, 0.0, y, tf, y); // now y contains final state
@@ -131,12 +136,12 @@ public class CRTBPPlot {
 		p.addScatterPlot(s, c, points);
 	}
 
-	public static void main(String[] args) {
-
-		CRTBPPlot ex = new CRTBPPlot();
-		ex.doExample();
-
-	}
+	// public static void main(String[] args) {
+	//
+	// CRTBPPlot ex = new CRTBPPlot();
+	// ex.doExample();
+	//
+	// }
 
 }
 
