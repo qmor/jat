@@ -19,6 +19,7 @@ package jat.application.DE405Propagator;
 
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.ephemeris.EphemerisPlotData;
 import jat.core.plot.plot.Plot3DPanel;
 import jat.core.plot.plot.PlotPanel;
 import jat.core.plot.plot.plots.LinePlot;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
@@ -126,11 +126,18 @@ public class DE405PropagatorPlot extends JPanel {
 
 		// addPoint(plot, "Sun", java.awt.Color.ORANGE, SunPos.x[0],
 		// SunPos.x[1], SunPos.x[2]);
-		addPoint(plot, "Moon", java.awt.Color.GRAY, MoonPost0.x[0], MoonPost0.x[1], MoonPost0.x[2]);
+		addPoint(plot, "Moon t0", java.awt.Color.GRAY, MoonPost0.x[0], MoonPost0.x[1], MoonPost0.x[2]);
 		addPoint(plot, "Moon tf", java.awt.Color.GRAY, MoonPostf.x[0], MoonPostf.x[1], MoonPostf.x[2]);
 		// addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0],
 		// EarthPos.x[1], EarthPos.x[2]);
 
+		EphemerisPlotData epd=new EphemerisPlotData(dpMain.dpParam.Eph,body.MOON,dpMain.dpParam.simulationDate,dpParam.tf,100);		
+		LinePlot lMoon = new LinePlot("Moon", Color.green, epd.XYZ);
+		lMoon.closed_curve = false;
+		plot.addPlot(lMoon);
+		
+		
+		
 	}
 
 	double[][] getXYZforPlot(ArrayList<Double> xsol, ArrayList<Double> ysol, ArrayList<Double> zsol) {
@@ -147,13 +154,8 @@ public class DE405PropagatorPlot extends JPanel {
 			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][0]));
 			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][1]));
 			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][2]));
-			
-//			if (Math.abs(XYZ[i][0]) > plotBounds)
-//				plotBounds = Math.abs(XYZ[i][0]);
-
-		
 		}
-
+		plotBounds/=1.5;
 		return XYZ;
 	}
 
