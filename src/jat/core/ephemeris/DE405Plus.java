@@ -62,8 +62,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	jatMessages messages;
 	public boolean printSteps = false;
 	public boolean printBodyPos = false;
-	unitSet uS=new unitSet("DE405Plus",distanceUnit.km,timeUnit.sec,massUnit.kg);
-	
+	unitSet uS = new unitSet("DE405Plus", distanceUnit.km, timeUnit.sec, massUnit.kg);
+
 	/**
 	 * See setIntegrationStartTime
 	 * 
@@ -194,7 +194,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 			double[] y = interpolator.getInterpolatedState();
 			if (printSteps) {
 				String nf = "%14.3f ";
-				String format = nf + nf + nf + nf + nf+ nf + nf + nf;
+				String format = nf + nf + nf + nf + nf + nf + nf + nf;
 				System.out.printf(format, t, y[0], y[1], y[2], y[3], y[4], y[5], energy(t, y));
 				System.out.println();
 			}
@@ -224,7 +224,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		try {
 			for (body b : body.values()) {
 				if (bodyGravOnOff[b.ordinal()]) {
-					//System.out.println(b.name[b.ordinal()]);
+					// System.out.println(b.name[b.ordinal()]);
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);
 					// bodyPos.print("pos" + b.ordinal());
@@ -238,16 +238,16 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 					z = yval[2] - zBody;
 					z2 = z * z;
 					r_sc_body = Math.sqrt(x2 + y2 + z2);
-					//System.out.println(r_sc_body);
+					// System.out.println(r_sc_body);
 					potential += -mu_body / r_sc_body;
-					//System.out.println(potential);
+					// System.out.println(potential);
 				}
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return v2/2. + potential;
+		return v2 / 2. + potential;
 		// return v2;
 
 	}
@@ -286,7 +286,10 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				posvel[bodyNumber] = ICRF_to_ECI(in, t);
 				break;
 			case MEOP:
-				posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t), Constants.eps+5.1);
+				//posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t), Constants.eps + 5.1);
+				//posvel[bodyNumber] = ICRF_to_ECI(in, t);
+				posvel[bodyNumber] = ICRF_to_MEOP(ICRF_to_ECI(in, t), t);
+				
 				break;
 			default:
 				posvel[bodyNumber] = in;
@@ -394,10 +397,43 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		return returnval;
 	}
 
-	@Override
+	private VectorN ICRF_to_MEOP(VectorN in, Time t) throws IOException {
+
+		// vector from earth to moon at time t
+		int MOON = DE405Body.body.MOON.ordinal();
+		int EARTH = DE405Body.body.EARTH.ordinal();
+
+		double[] posvel = new double[6];
+		posvel[0] = posvelICRF[EARTH].x[0];
+		posvel[1] = posvelICRF[EARTH].x[1];
+		posvel[2] = posvelICRF[EARTH].x[2];
+		posvel[3] = posvelICRF[EARTH].x[3];
+		posvel[4] = posvelICRF[EARTH].x[4];
+		posvel[5] = posvelICRF[EARTH].x[5];
+		VectorN EarthPosVel = new VectorN(posvel);
+		posvel[0] = posvelICRF[MOON].x[0];
+		posvel[1] = posvelICRF[MOON].x[1];
+		posvel[2] = posvelICRF[MOON].x[2];
+		posvel[3] = posvelICRF[MOON].x[3];
+		posvel[4] = posvelICRF[MOON].x[4];
+		posvel[5] = posvelICRF[MOON].x[5];
+		VectorN MoonPosVel = new VectorN(posvel);
+
+		VectorN EarthtoMoonposvel = MoonPosVel.minus(EarthPosVel);
+		VectorN EarthtoMoonpos = new VectorN(EarthtoMoonposvel.x[0], EarthtoMoonposvel.x[1], EarthtoMoonposvel.x[2]);
+		VectorN MoonVel = new VectorN(MoonPosVel.x[3], MoonPosVel.x[4], MoonPosVel.x[5]);
+		VectorN PlaneNormal = EarthtoMoonpos.crossProduct(MoonVel);
+		VectorN xAxis = new VectorN(1e8, 0, 0);
+
+		double angle = PlaneNormal.angle(xAxis);
+
+		VectorN returnval = ICRFxAxis_rotate(in, cm.Degree(angle));
+		return returnval;
+	}
+
 	public void setUnits(unitSet u) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -408,13 +444,13 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	@Override
 	public void setUnitsMaster(unitCheck uc) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void addUnitsUser(unitSet u) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
