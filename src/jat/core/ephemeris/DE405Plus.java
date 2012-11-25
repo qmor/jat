@@ -20,6 +20,7 @@ package jat.core.ephemeris;
 import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
+import jat.core.spacetime.ReferenceFrame;
 import jat.core.spacetime.TimeAPL;
 import jat.core.units.unitCheck;
 import jat.core.units.unitModel;
@@ -97,8 +98,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		if (messages != null)
 			messages.addln("[DE405Plus] " + DE405_path);
 		ephFrame = frame.ICRF;
-		posvelICRF = new VectorN[12];
-		posvel = new VectorN[12];
+		posvelICRF = new VectorN[11];
+		posvel = new VectorN[11];
 		sb = new SolarSystemBodies();
 	}
 
@@ -106,8 +107,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.path = path;
 		DE405_path = path.DE405Path;
 		ephFrame = frame.ICRF;
-		posvelICRF = new VectorN[12];
-		posvel = new VectorN[12];
+		posvelICRF = new VectorN[11];
+		posvel = new VectorN[11];
 		sb = new SolarSystemBodies();
 	}
 
@@ -151,7 +152,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				{
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);
-					// bodyPos.print("pos" + b.ordinal());
+					bodyPos.print("pos" + b.ordinal());
 					xBody = bodyPos.x[0];
 					yBody = bodyPos.x[1];
 					zBody = bodyPos.x[2];
@@ -274,6 +275,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		// Now transform posvel to desired reference frame
 		for (body q : EnumSet.allOf(body.class)) {
 			int bodyNumber = q.ordinal();
+			System.out.println("[DE405Plus ]" + bodyNumber);
 			VectorN in = posvelICRF[bodyNumber];
 			switch (ephFrame) {
 			case ICRF:
@@ -283,13 +285,14 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				posvel[bodyNumber] = ecliptic_obliquity_rotate(in);
 				break;
 			case ECI:
-				posvel[bodyNumber] = ICRF_to_ECI(in, t);
+				posvel[bodyNumber] = ReferenceFrame.ICRF_to_ECI(posvelICRF, in, t);
 				break;
 			case MEOP:
-				//posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t), Constants.eps + 5.1);
-				//posvel[bodyNumber] = ICRF_to_ECI(in, t);
-				posvel[bodyNumber] = ICRF_to_MEOP(ICRF_to_ECI(in, t), t);
-				
+				// posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t),
+				// Constants.eps + 5.1);
+				// posvel[bodyNumber] = ICRF_to_ECI(in, t);
+				posvel[bodyNumber] = ReferenceFrame.ICRF_to_MEOP(posvelICRF, in, t);
+
 				break;
 			default:
 				posvel[bodyNumber] = in;
@@ -355,79 +358,6 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		returnval.x[4] = c * vy + s * vz;
 		returnval.x[5] = -s * vy + c * vz;
 
-		return returnval;
-	}
-
-	VectorN ICRFxAxis_rotate(VectorN rv, double angleDegrees) {
-		VectorN returnval = new VectorN(6);
-		double x, y, z, vx, vy, vz, eps, c, s;
-		x = rv.get(0);
-		y = rv.get(1);
-		z = rv.get(2);
-		eps = cm.Rad(angleDegrees);
-		c = Math.cos(eps);
-		s = Math.sin(eps);
-		returnval.x[0] = x;
-		returnval.x[1] = c * y + s * z;
-		returnval.x[2] = -s * y + c * z;
-		vx = rv.get(3);
-		vy = rv.get(4);
-		vz = rv.get(5);
-		returnval.x[3] = vx;
-		returnval.x[4] = c * vy + s * vz;
-		returnval.x[5] = -s * vy + c * vz;
-
-		return returnval;
-	}
-
-	private VectorN ICRF_to_ECI(VectorN in, Time mytime) throws IOException {
-
-		double[] posvel = new double[6];
-		int bodyNumber = DE405Body.body.EARTH.ordinal();
-		posvel[0] = posvelICRF[bodyNumber].x[0];
-		posvel[1] = posvelICRF[bodyNumber].x[1];
-		posvel[2] = posvelICRF[bodyNumber].x[2];
-		posvel[3] = posvelICRF[bodyNumber].x[3];
-		posvel[4] = posvelICRF[bodyNumber].x[4];
-		posvel[5] = posvelICRF[bodyNumber].x[5];
-
-		VectorN earthPosVel = new VectorN(posvel);
-
-		VectorN returnval = in.minus(earthPosVel);
-		return returnval;
-	}
-
-	private VectorN ICRF_to_MEOP(VectorN in, Time t) throws IOException {
-
-		// vector from earth to moon at time t
-		int MOON = DE405Body.body.MOON.ordinal();
-		int EARTH = DE405Body.body.EARTH.ordinal();
-
-		double[] posvel = new double[6];
-		posvel[0] = posvelICRF[EARTH].x[0];
-		posvel[1] = posvelICRF[EARTH].x[1];
-		posvel[2] = posvelICRF[EARTH].x[2];
-		posvel[3] = posvelICRF[EARTH].x[3];
-		posvel[4] = posvelICRF[EARTH].x[4];
-		posvel[5] = posvelICRF[EARTH].x[5];
-		VectorN EarthPosVel = new VectorN(posvel);
-		posvel[0] = posvelICRF[MOON].x[0];
-		posvel[1] = posvelICRF[MOON].x[1];
-		posvel[2] = posvelICRF[MOON].x[2];
-		posvel[3] = posvelICRF[MOON].x[3];
-		posvel[4] = posvelICRF[MOON].x[4];
-		posvel[5] = posvelICRF[MOON].x[5];
-		VectorN MoonPosVel = new VectorN(posvel);
-
-		VectorN EarthtoMoonposvel = MoonPosVel.minus(EarthPosVel);
-		VectorN EarthtoMoonpos = new VectorN(EarthtoMoonposvel.x[0], EarthtoMoonposvel.x[1], EarthtoMoonposvel.x[2]);
-		VectorN MoonVel = new VectorN(MoonPosVel.x[3], MoonPosVel.x[4], MoonPosVel.x[5]);
-		VectorN PlaneNormal = EarthtoMoonpos.crossProduct(MoonVel);
-		VectorN xAxis = new VectorN(1e8, 0, 0);
-
-		double angle = PlaneNormal.angle(xAxis);
-
-		VectorN returnval = ICRFxAxis_rotate(in, cm.Degree(angle));
 		return returnval;
 	}
 

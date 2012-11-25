@@ -79,7 +79,6 @@ import java.net.URL;
 
 public class DE405APL {
 
-
 	// static final double au = 149597870.691; // Length of an A.U., in km
 	static double emrat = 81.30056; // Ratio of mass of Earth to mass of Moon
 	static int interval_duration = 32; // duration of interval section in
@@ -140,14 +139,14 @@ public class DE405APL {
 
 		path = new PathUtil();
 		DE405_path = path.DE405Path;
-		//System.out.println("[DE405APL 1 DE405_path] " + DE405_path);
+		// System.out.println("[DE405APL 1 DE405_path] " + DE405_path);
 	}
 
 	public DE405APL(Applet myApplet) {
 
 		path = new PathUtil(myApplet);
 		DE405_path = path.DE405Path;
-		//System.out.println("[DE405APL 2 DE405_path] " + DE405_path);
+		// System.out.println("[DE405APL 2 DE405_path] " + DE405_path);
 	}
 
 	/**
@@ -159,10 +158,10 @@ public class DE405APL {
 	 * @param jultime
 	 * @throws IOException
 	 */
-	void update_planetary_ephemeris(Time t) throws IOException {
+	protected void update_planetary_ephemeris(Time t) throws IOException {
 
 		double jultime = t.jd_tt();
-
+		System.out.println("[DE405APL jultime]" + jultime);
 		int i = 0, j = 0;
 		double[] ephemeris_r = new double[4];
 		double[] ephemeris_rprime = new double[4];
@@ -207,7 +206,8 @@ public class DE405APL {
 	 * @param ephemeris_rprime
 	 * @throws IOException
 	 */
-	void get_ephemeris_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[]) throws IOException {
+	private void get_ephemeris_posvel(double jultime, int i, double ephemeris_r[], double ephemeris_rprime[])
+			throws IOException {
 
 		int interval = 0, numbers_to_skip = 0, pointer = 0, j = 0, k = 0, subinterval = 0;
 
@@ -276,6 +276,7 @@ public class DE405APL {
 		for (j = 1; j <= 3; j++) {
 			for (k = 1; k <= number_of_coefs[i]; k++) {
 				/* Read the pointer'th coefficient as the array entry coef[j][k] */
+				//System.out.println("[DE405APL j k pointer]" + j + " " + k + " " + pointer);
 				coef[j][k] = ephemeris_coefficients[pointer];
 				pointer = pointer + 1;
 			}
@@ -344,7 +345,7 @@ public class DE405APL {
 	 *             from the Internet
 	 */
 
-	void get_ephemeris_coefficients(double jultime) throws IOException {
+	private void get_ephemeris_coefficients(double jultime) throws IOException {
 
 		int mantissa1 = 0, mantissa2 = 0, exponent = 0, i = 0, records = 0, j = 0;
 		String fileName = null;
@@ -440,8 +441,10 @@ public class DE405APL {
 
 			try {
 				// Create a URL for the desired page
-				// If it is called from an applet, it starts with "file:" or "http:"
-				// If it's an application, we need to add "file:" so that BufferReader works
+				// If it is called from an applet, it starts with "file:" or
+				// "http:"
+				// If it's an application, we need to add "file:" so that
+				// BufferReader works
 				boolean application;
 				if (fileName.startsWith("file") || fileName.startsWith("http"))
 					application = false;
@@ -450,7 +453,7 @@ public class DE405APL {
 				if (application)
 					fileName = "file:" + fileName;
 				URL url = new URL(fileName);
-				//System.out.println("[DE405APL filename] " + fileName);
+				// System.out.println("[DE405APL filename] " + fileName);
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
 				/* Read each record in the file */
@@ -528,116 +531,40 @@ public class DE405APL {
 
 	}
 
-
-
-
-
-	// public static void main(String args[]) {
-	//
-	// /* USER MUST SPECIFY jultime HERE. Example value is 2451545.0 */
-	// double jultime = 2451545.0;
-	//
-	// int i = 0, j = 0;
-	//
-	// DE405APL testBody = new DE405APL();
-	//
-	// /*
-	// * This is the call to "planetary_ephemeris", which will put planetary
-	// * positions into the array "planet_r", and planetary velocities into
-	// * the array "planet_rprime".
-	// */
-	// try {
-	// testBody.planetary_ephemeris(jultime);
-	// } catch (IOException e) {
-	// System.out.println("exception caught in DE405APL main:");
-	// e.printStackTrace();
-	// }
-	//
-	// /* The following simply sends the output to the screen */
-	// for (i = 1; i <= 11; i++) {
-	//
-	// System.out.println("Planet " + i);
-	// System.out.println("     position");
-	// for (j = 1; j <= 3; j++)
-	// System.out.println(testBody.planet_r[i][j]);
-	// System.out.println("     velocity");
-	// for (j = 1; j <= 3; j++)
-	// System.out.println(testBody.planet_rprime[i][j]);
-	//
-	// }
-	//
-	// }
-
 }
 
-
-
-
-
-
-//private VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
-//get_planet_posvel(bodyEnum, t.jd_tt());
-//double[] pos = new double[3];
-//double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+// public static void main(String args[]) {
 //
-//int bodyNumber = bodyEnum.ordinal();
-//planetary_ephemeris(jultime);
-//pos[0] = planet_r[bodyNumber][1];
-//pos[1] = planet_r[bodyNumber][2];
-//pos[2] = planet_r[bodyNumber][3];
+// /* USER MUST SPECIFY jultime HERE. Example value is 2451545.0 */
+// double jultime = 2451545.0;
 //
-//VectorN out = new VectorN(pos);
+// int i = 0, j = 0;
 //
-//return out;
-//}
-
-//private VectorN get_planet_vel(body bodyEnum, Time t) throws IOException {
-//double daysec = 3600. * 24.;
-//get_planet_posvel(bodyEnum, t.jd_tt());
-//double[] vel = new double[3];
-//double jultime = TimeUtils.MJDtoJD(TimeUtils.TTtoTDB(t.mjd_tt()));
+// DE405APL testBody = new DE405APL();
 //
-//planetary_ephemeris(jultime);
-//int bodyNumber = bodyEnum.ordinal();
-//vel[0] = planet_rprime[bodyNumber][1] / daysec;
-//vel[1] = planet_rprime[bodyNumber][2] / daysec;
-//vel[2] = planet_rprime[bodyNumber][3] / daysec;
+// /*
+// * This is the call to "planetary_ephemeris", which will put planetary
+// * positions into the array "planet_r", and planetary velocities into
+// * the array "planet_rprime".
+// */
+// try {
+// testBody.planetary_ephemeris(jultime);
+// } catch (IOException e) {
+// System.out.println("exception caught in DE405APL main:");
+// e.printStackTrace();
+// }
 //
-//VectorN out = new VectorN(vel);
+// /* The following simply sends the output to the screen */
+// for (i = 1; i <= 11; i++) {
 //
-//return out;
-//}
-
-
-//VectorN ecliptic_obliquity_rotate(VectorN r) {
-//VectorN returnval = new VectorN(3);
-//double x, y, z, eps, c, s;
-//x = r.get(0);
-//y = r.get(1);
-//z = r.get(2);
-//eps = cm.Rad(Constants.eps);
-//c = Math.cos(eps);
-//s = Math.sin(eps);
-//returnval.x[0] = x;
-//returnval.x[1] = c * y + s * z;
-//returnval.x[2] = -s * y + c * z;
-//return returnval;
-//}
-
-
-//protected VectorN get_planet_posvel(body bodyEnum, double jd) throws IOException {
-//double daysec = 3600. * 24.;
+// System.out.println("Planet " + i);
+// System.out.println("     position");
+// for (j = 1; j <= 3; j++)
+// System.out.println(testBody.planet_r[i][j]);
+// System.out.println("     velocity");
+// for (j = 1; j <= 3; j++)
+// System.out.println(testBody.planet_rprime[i][j]);
 //
-//double[] posvel = new double[6];
-//planetary_ephemeris(jd);
-//int bodyNumber = bodyEnum.ordinal();
-//posvel[0] = planet_r[bodyNumber][1];
-//posvel[1] = planet_r[bodyNumber][2];
-//posvel[2] = planet_r[bodyNumber][3];
-//posvel[3] = planet_rprime[bodyNumber][1] / daysec;
-//posvel[4] = planet_rprime[bodyNumber][2] / daysec;
-//posvel[5] = planet_rprime[bodyNumber][3] / daysec;
+// }
 //
-//VectorN out = new VectorN(posvel);
-//return out;
-//}
+// }

@@ -118,7 +118,7 @@ public class TimeUtils {
 
 	   public static int tai_utc(double mjd){
 	       if (mjd < 0.0) {
-	           System.out.println("MJD before the beginning of the leap sec table");
+	           System.out.println("[TimeUtils] MJD before the beginning of the leap sec table");
 	           return 0;
 	       }
 	       if ((mjd >=41317.0)&&(mjd < 41499.0)) return 10;
@@ -146,7 +146,7 @@ public class TimeUtils {
 	       if ((mjd >=51179.0)&&(mjd < 53736.0)) return 32;
 	       if  (mjd >= 53736.0) return 33;
 
-	       System.out.println("Input MJD out of bounds");
+	       System.out.println("[TimeUtils] Input MJD out of bounds");
 	       return 0;
 	   }
 	   

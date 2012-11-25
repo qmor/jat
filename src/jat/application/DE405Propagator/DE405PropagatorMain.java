@@ -21,6 +21,7 @@ import jat.application.DE405Propagator.scenario.earthMoonECI;
 import jat.application.DE405Propagator.scenario.earthOrbitECI;
 import jat.application.DE405Propagator.scenario.sunOrbit;
 import jat.application.DE405Propagator.scenario.testOrbit;
+import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
@@ -42,10 +43,11 @@ public class DE405PropagatorMain extends JApplet {
 
 	public void start() {
 		// dpParam=new DE405PropagatorParameters();
-		dpParam = new sunOrbit();
 		dpParam = new testOrbit();
+		dpParam = new sunOrbit();
 		dpParam = new earthOrbitECI();
 		dpParam = new earthMoonECI();
+		//dpParam.Frame=frame.ECI;
 		dpGlobals = new DE405PropagatorGlobals();
 
 		PathUtil path = new PathUtil(this);
