@@ -15,8 +15,9 @@ public class earthMoonECI extends DE405PropagatorParameters {
 		bodyGravOnOff[body.EARTH.ordinal()] = true;
 		bodyGravOnOff[body.MOON.ordinal()] = true;
 
-		//Frame = frame.ECI;
-		Frame = frame.MEOP;
+		//Frame = frame.MEOP;
+		//Frame = frame.HEE;
+		Frame = frame.ECI;
 
 		simulationDate = new TimeAPL(2003, 2, 27, 12, 0, 0);
 

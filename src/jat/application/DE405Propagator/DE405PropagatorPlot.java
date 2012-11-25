@@ -77,6 +77,40 @@ public class DE405PropagatorPlot extends JPanel {
 	}
 
 	void doExample() {
+
+		// Spacecraft Trajectory
+		double[] y = new double[6];
+		for (body b : body.values()) {
+			Eph.bodyGravOnOff[b.ordinal()] = dpParam.bodyGravOnOff[b.ordinal()];
+		}
+		dpParam.y0[0] = (Double) dpMain.dpGUI.tf_x.getValue();
+		dpParam.y0[1] = (Double) dpMain.dpGUI.tf_y.getValue();
+		dpParam.y0[2] = (Double) dpMain.dpGUI.tf_z.getValue();
+		dpParam.y0[3] = (Double) dpMain.dpGUI.tf_vx.getValue();
+		dpParam.y0[4] = (Double) dpMain.dpGUI.tf_vy.getValue();
+		dpParam.y0[5] = (Double) dpMain.dpGUI.tf_vz.getValue();
+		dpParam.tf = (Double) dpMain.dpGUI.tf_tf.getValue();
+
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
+		dp853.addStepHandler(Eph.stepHandler);
+		FirstOrderDifferentialEquations ode = Eph;
+		Eph.setIntegrationStartTime(dpParam.simulationDate);
+		Eph.reset();
+
+		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
+		if (print) {
+			String nf = "%10.3f ";
+			String format = nf + nf + nf + nf + nf;
+			System.out.printf(format, dpParam.tf, y[0], y[1], y[2], Eph.energy(dpParam.tf, y));
+			System.out.println();
+		}
+
+		LinePlot l1 = new LinePlot("spacecraft", Color.RED, getXYZforPlot(Eph.xsol, Eph.ysol, Eph.zsol));
+		l1.closed_curve = false;
+		plot.addPlot(l1);
+
+
+		
 		
 		VectorN EarthPos = null;
 		VectorN MoonPost0 = null;
@@ -105,39 +139,6 @@ public class DE405PropagatorPlot extends JPanel {
 		
 		
 		
-		// Spacecraft Trajectory
-		double[] y = new double[6];
-		for (body b : body.values()) {
-			Eph.bodyGravOnOff[b.ordinal()] = dpParam.bodyGravOnOff[b.ordinal()];
-		}
-		dpParam.y0[0] = (Double) dpMain.dpGUI.tf_x.getValue();
-		dpParam.y0[1] = (Double) dpMain.dpGUI.tf_y.getValue();
-		dpParam.y0[2] = (Double) dpMain.dpGUI.tf_z.getValue();
-		dpParam.y0[3] = (Double) dpMain.dpGUI.tf_vx.getValue();
-		dpParam.y0[4] = (Double) dpMain.dpGUI.tf_vy.getValue();
-		dpParam.y0[5] = (Double) dpMain.dpGUI.tf_vz.getValue();
-		dpParam.tf = (Double) dpMain.dpGUI.tf_tf.getValue();
-
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
-		dp853.addStepHandler(Eph.stepHandler);
-		FirstOrderDifferentialEquations ode = Eph;
-		Eph.setIntegrationStartTime(dpParam.simulationDate);
-		Eph.reset();
-
-/*
-		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
-		if (print) {
-			String nf = "%10.3f ";
-			String format = nf + nf + nf + nf + nf;
-			System.out.printf(format, dpParam.tf, y[0], y[1], y[2], Eph.energy(dpParam.tf, y));
-			System.out.println();
-		}
-
-		LinePlot l1 = new LinePlot("spacecraft", Color.RED, getXYZforPlot(Eph.xsol, Eph.ysol, Eph.zsol));
-		l1.closed_curve = false;
-		plot.addPlot(l1);
-
-	*/	
 		
 	}
 

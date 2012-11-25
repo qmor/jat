@@ -53,7 +53,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 	public frame ephFrame;
 	public boolean bodyGravOnOff[] = new boolean[DE405Body.body.amount];
-	VectorN[] posvelICRF, posvel;
+	VectorN[] posUserFrame = new VectorN[11], velUserFrame = new VectorN[11];
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
 	public ArrayList<Double> time = new ArrayList<Double>();
@@ -87,8 +87,6 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
-		posvelICRF = new VectorN[12];
-		posvel = new VectorN[12];
 		sb = new SolarSystemBodies();
 	}
 
@@ -96,10 +94,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.path = path;
 		DE405_path = path.DE405Path;
 		if (messages != null)
-			messages.addln("[DE405Plus] " + DE405_path);
+			messages.addln("[DE405Plus path] " + DE405_path);
 		ephFrame = frame.ICRF;
-		posvelICRF = new VectorN[11];
-		posvel = new VectorN[11];
 		sb = new SolarSystemBodies();
 	}
 
@@ -107,8 +103,6 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		this.path = path;
 		DE405_path = path.DE405Path;
 		ephFrame = frame.ICRF;
-		posvelICRF = new VectorN[11];
-		posvel = new VectorN[11];
 		sb = new SolarSystemBodies();
 	}
 
@@ -152,7 +146,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				{
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);
-					bodyPos.print("pos" + b.ordinal());
+					bodyPos.print("[DE405Plus] position of " + b.ordinal());
 					xBody = bodyPos.x[0];
 					yBody = bodyPos.x[1];
 					zBody = bodyPos.x[2];
@@ -257,45 +251,39 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 		update_planetary_ephemeris(t);
 
-		// first get ICRF ephemeris
-		double[] pv = new double[6];
+		// transform pos and vel to desired reference frame
 		for (body q : EnumSet.allOf(body.class)) {
 			int bodyNumber = q.ordinal();
-			double daysec = 3600. * 24.;
-			pv[0] = planet_r[bodyNumber][1];
-			pv[1] = planet_r[bodyNumber][2];
-			pv[2] = planet_r[bodyNumber][3];
-			pv[3] = planet_rprime[bodyNumber][1] / daysec;
-			pv[4] = planet_rprime[bodyNumber][2] / daysec;
-			pv[5] = planet_rprime[bodyNumber][3] / daysec;
+			// System.out.println("[DE405Plus bodyNumber]" + bodyNumber);
+			// VectorN in = posvelICRF[bodyNumber];
 
-			posvelICRF[bodyNumber] = new VectorN(pv);
-		}
-
-		// Now transform posvel to desired reference frame
-		for (body q : EnumSet.allOf(body.class)) {
-			int bodyNumber = q.ordinal();
-			System.out.println("[DE405Plus ]" + bodyNumber);
-			VectorN in = posvelICRF[bodyNumber];
 			switch (ephFrame) {
 			case ICRF:
-				posvel[bodyNumber] = in;
+				posUserFrame[bodyNumber] = posICRF[bodyNumber];
+				velUserFrame[bodyNumber] = velICRF[bodyNumber];
 				break;
 			case HEE:
-				posvel[bodyNumber] = ecliptic_obliquity_rotate(in);
+				posUserFrame[bodyNumber] = ReferenceFrame.ecliptic_obliquity_rotate(posICRF[bodyNumber]);
+				velUserFrame[bodyNumber] = ReferenceFrame.ecliptic_obliquity_rotate(velICRF[bodyNumber]);
+				// posvel[bodyNumber] = ecliptic_obliquity_rotate(in);
 				break;
 			case ECI:
-				posvel[bodyNumber] = ReferenceFrame.ICRF_to_ECI(posvelICRF, in, t);
+				posUserFrame[bodyNumber] = ReferenceFrame.ICRF_to_ECIpos(this,posICRF[bodyNumber],t);
+				velUserFrame[bodyNumber] = ReferenceFrame.ICRF_to_ECIvel(this,velICRF[bodyNumber],t);
+				// posvel[bodyNumber] = ReferenceFrame.ICRF_to_ECI(posvelICRF,
+				// in, t);
 				break;
 			case MEOP:
 				// posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t),
 				// Constants.eps + 5.1);
 				// posvel[bodyNumber] = ICRF_to_ECI(in, t);
-				posvel[bodyNumber] = ReferenceFrame.ICRF_to_MEOP(posvelICRF, in, t);
+				// posvel[bodyNumber] = ReferenceFrame.ICRF_to_MEOP(posvelICRF,
+				// in, t);
 
 				break;
 			default:
-				posvel[bodyNumber] = in;
+				posUserFrame[bodyNumber] = posICRF[bodyNumber];
+				velUserFrame[bodyNumber] = velICRF[bodyNumber];
 				break;
 			}
 		}
@@ -304,22 +292,24 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 	public VectorN get_planet_posvel(body bodyEnum, Time t) throws IOException {
 		update_posvel_and_frame(t);
-		return posvel[bodyEnum.ordinal()];
+
+		VectorN posvel = new VectorN(6);
+
+		posvel.x[0] = posUserFrame[bodyEnum.ordinal()].x[0];
+		posvel.x[1] = posUserFrame[bodyEnum.ordinal()].x[1];
+		posvel.x[2] = posUserFrame[bodyEnum.ordinal()].x[2];
+		posvel.x[3] = velUserFrame[bodyEnum.ordinal()].x[0];
+		posvel.x[4] = velUserFrame[bodyEnum.ordinal()].x[1];
+		posvel.x[5] = velUserFrame[bodyEnum.ordinal()].x[2];
+
+		return posvel;
 	}
 
 	public VectorN get_planet_pos(body bodyEnum, Time t) throws IOException {
 
 		update_posvel_and_frame(t);
 
-		double[] pos = new double[3];
-		int bodyNumber = bodyEnum.ordinal();
-		pos[0] = posvel[bodyNumber].x[0];
-		pos[1] = posvel[bodyNumber].x[1];
-		pos[2] = posvel[bodyNumber].x[2];
-
-		VectorN out = new VectorN(pos);
-
-		return out;
+		return posUserFrame[bodyEnum.ordinal()];
 
 	}
 
@@ -327,38 +317,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 		update_posvel_and_frame(t);
 
-		double[] vel = new double[3];
-		int bodyNumber = bodyEnum.ordinal();
-		vel[0] = posvel[bodyNumber].x[3];
-		vel[1] = posvel[bodyNumber].x[4];
-		vel[2] = posvel[bodyNumber].x[5];
+		return velUserFrame[bodyEnum.ordinal()];
 
-		VectorN out = new VectorN(vel);
-
-		return out;
-
-	}
-
-	VectorN ecliptic_obliquity_rotate(VectorN rv) {
-		VectorN returnval = new VectorN(6);
-		double x, y, z, vx, vy, vz, eps, c, s;
-		x = rv.get(0);
-		y = rv.get(1);
-		z = rv.get(2);
-		eps = cm.Rad(Constants.eps);
-		c = Math.cos(eps);
-		s = Math.sin(eps);
-		returnval.x[0] = x;
-		returnval.x[1] = c * y + s * z;
-		returnval.x[2] = -s * y + c * z;
-		vx = rv.get(3);
-		vy = rv.get(4);
-		vz = rv.get(5);
-		returnval.x[3] = vx;
-		returnval.x[4] = c * vy + s * vz;
-		returnval.x[5] = -s * vy + c * vz;
-
-		return returnval;
 	}
 
 	public void setUnits(unitSet u) {
@@ -384,3 +344,19 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	}
 
 }
+
+// first get ICRF ephemeris
+// double[] pv = new double[6];
+// for (body q : EnumSet.allOf(body.class)) {
+// int bodyNumber = q.ordinal();
+// double daysec = 3600. * 24.;
+// pv[0] = planet_r[bodyNumber][1];
+// pv[1] = planet_r[bodyNumber][2];
+// pv[2] = planet_r[bodyNumber][3];
+// pv[3] = planet_rprime[bodyNumber][1] / daysec;
+// pv[4] = planet_rprime[bodyNumber][2] / daysec;
+// pv[5] = planet_rprime[bodyNumber][3] / daysec;
+
+// posvelICRF[bodyNumber] = new VectorN(pv);
+// }
+

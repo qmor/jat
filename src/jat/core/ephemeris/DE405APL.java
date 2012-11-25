@@ -68,6 +68,7 @@
 package jat.core.ephemeris;
 
 import jat.core.util.PathUtil;
+import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
 import java.applet.Applet;
@@ -132,6 +133,9 @@ public class DE405APL {
 	 */
 	double[][] planet_r = new double[12][4];
 	double[][] planet_rprime = new double[12][4];
+	public VectorN posICRF[] = new VectorN[12];
+	public VectorN velICRF[] = new VectorN[12];
+
 	public PathUtil path;
 	String DE405_path;
 
@@ -161,7 +165,7 @@ public class DE405APL {
 	protected void update_planetary_ephemeris(Time t) throws IOException {
 
 		double jultime = t.jd_tt();
-		System.out.println("[DE405APL jultime]" + jultime);
+		//System.out.println("[DE405APL jultime]" + jultime);
 		int i = 0, j = 0;
 		double[] ephemeris_r = new double[4];
 		double[] ephemeris_rprime = new double[4];
@@ -173,6 +177,7 @@ public class DE405APL {
 				planet_r[i][j] = ephemeris_r[j];
 				planet_rprime[i][j] = ephemeris_rprime[j];
 			}
+
 		}
 
 		/*
@@ -187,6 +192,17 @@ public class DE405APL {
 			planet_r[10][j] = planet_r[3][j] + planet_r[10][j];
 			planet_rprime[3][j] = planet_rprime[3][j] - planet_rprime[10][j] / (1 + emrat);
 			planet_rprime[10][j] = planet_rprime[3][j] + planet_rprime[10][j];
+		}
+
+		// in vector form
+		// Sun
+		posICRF[0] = new VectorN(0, 0, 0);
+		velICRF[0] = new VectorN(0, 0, 0);
+		double daysec = 3600. * 24.;
+		for (i = 1; i <= 11; i++) {
+			posICRF[i] = new VectorN(planet_r[i][1], planet_r[i][2], planet_r[i][3]);
+			velICRF[i] = new VectorN(planet_rprime[i][1] / daysec, planet_rprime[i][2] / daysec, planet_rprime[i][3]
+					/ daysec);
 		}
 
 	}
@@ -276,7 +292,8 @@ public class DE405APL {
 		for (j = 1; j <= 3; j++) {
 			for (k = 1; k <= number_of_coefs[i]; k++) {
 				/* Read the pointer'th coefficient as the array entry coef[j][k] */
-				//System.out.println("[DE405APL j k pointer]" + j + " " + k + " " + pointer);
+				// System.out.println("[DE405APL j k pointer]" + j + " " + k +
+				// " " + pointer);
 				coef[j][k] = ephemeris_coefficients[pointer];
 				pointer = pointer + 1;
 			}
