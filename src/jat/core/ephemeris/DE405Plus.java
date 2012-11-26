@@ -30,8 +30,6 @@ import jat.core.units.unitSet.massUnit;
 import jat.core.units.unitSet.timeUnit;
 import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
-import jat.coreNOSA.cm.Constants;
-import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
@@ -53,7 +51,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 	public frame ephFrame;
 	public boolean bodyGravOnOff[] = new boolean[DE405Body.body.amount];
-	VectorN[] posUserFrame = new VectorN[11], velUserFrame = new VectorN[11];
+	public VectorN[] posUserFrame = new VectorN[11];
+	public VectorN[] velUserFrame = new VectorN[11];
 	SolarSystemBodies sb;
 	public TimeAPL integrationStartTime;
 	public ArrayList<Double> time = new ArrayList<Double>();
@@ -64,25 +63,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public boolean printSteps = false;
 	public boolean printBodyPos = false;
 	unitSet uS = new unitSet("DE405Plus", distanceUnit.km, timeUnit.sec, massUnit.kg);
-
-	/**
-	 * See setIntegrationStartTime
-	 * 
-	 * @return User integration start time
-	 */
-	public TimeAPL getIntegrationStartTime() {
-		return integrationStartTime;
-	}
-
-	/**
-	 * The integrator starts with time 0 for numerical reasons. The user may
-	 * start with the launch date given in any epoch
-	 * 
-	 * @param integrationStartTime
-	 */
-	public void setIntegrationStartTime(TimeAPL integrationStartTime) {
-		this.integrationStartTime = integrationStartTime;
-	}
+	VectorN EarthMoonPlaneNormal;
 
 	public DE405Plus() {
 		super();
@@ -108,6 +89,44 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 	public void setFrame(frame ephFrame) {
 		this.ephFrame = ephFrame;
+	}
+
+	/**
+	 * The plane of the moon's orbit around the earth changes over time. Choose one for your simulation.
+	 * @param t Time
+	 * @throws IOException 
+	 */
+	public void setEarthMoonPlaneNormal(TimeAPL t) throws IOException {
+		
+		int MOON = body.MOON.ordinal();
+		int EARTH = body.EARTH.ordinal();
+
+		update_planetary_ephemeris(t);
+		
+		VectorN MoonPos = posICRF[MOON].minus(posICRF[EARTH]);
+		VectorN MoonVel = velICRF[MOON].minus(velICRF[EARTH]);
+		MoonPos.print("[DE405Plus pos] "+ body.name[MOON]);
+		MoonVel.print("[DE405Plus vel] "+ body.name[MOON]);
+		
+	}
+
+	/**
+	 * See setIntegrationStartTime
+	 * 
+	 * @return User integration start time
+	 */
+	public TimeAPL getIntegrationStartTime() {
+		return integrationStartTime;
+	}
+
+	/**
+	 * The integrator starts with time 0 for numerical reasons. The user may
+	 * start with the launch date given in any epoch
+	 * 
+	 * @param integrationStartTime
+	 */
+	public void setIntegrationStartTime(TimeAPL integrationStartTime) {
+		this.integrationStartTime = integrationStartTime;
 	}
 
 	/**
@@ -251,41 +270,31 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 		update_planetary_ephemeris(t);
 
-		// transform pos and vel to desired reference frame
+		// Default frame is ICRF
 		for (body q : EnumSet.allOf(body.class)) {
 			int bodyNumber = q.ordinal();
+			posUserFrame[bodyNumber] = posICRF[bodyNumber];
+			velUserFrame[bodyNumber] = velICRF[bodyNumber];
 			// System.out.println("[DE405Plus bodyNumber]" + bodyNumber);
-			// VectorN in = posvelICRF[bodyNumber];
+		}
 
-			switch (ephFrame) {
-			case ICRF:
-				posUserFrame[bodyNumber] = posICRF[bodyNumber];
-				velUserFrame[bodyNumber] = velICRF[bodyNumber];
-				break;
-			case HEE:
-				posUserFrame[bodyNumber] = ReferenceFrame.ecliptic_obliquity_rotate(posICRF[bodyNumber]);
-				velUserFrame[bodyNumber] = ReferenceFrame.ecliptic_obliquity_rotate(velICRF[bodyNumber]);
-				// posvel[bodyNumber] = ecliptic_obliquity_rotate(in);
-				break;
-			case ECI:
-				posUserFrame[bodyNumber] = ReferenceFrame.ICRF_to_ECIpos(this,posICRF[bodyNumber],t);
-				velUserFrame[bodyNumber] = ReferenceFrame.ICRF_to_ECIvel(this,velICRF[bodyNumber],t);
-				// posvel[bodyNumber] = ReferenceFrame.ICRF_to_ECI(posvelICRF,
-				// in, t);
-				break;
-			case MEOP:
-				// posvel[bodyNumber] = ICRFxAxis_rotate(ICRF_to_ECI(in, t),
-				// Constants.eps + 5.1);
-				// posvel[bodyNumber] = ICRF_to_ECI(in, t);
-				// posvel[bodyNumber] = ReferenceFrame.ICRF_to_MEOP(posvelICRF,
-				// in, t);
-
-				break;
-			default:
-				posUserFrame[bodyNumber] = posICRF[bodyNumber];
-				velUserFrame[bodyNumber] = velICRF[bodyNumber];
-				break;
-			}
+		// transform pos and vel to desired reference frame
+		switch (ephFrame) {
+		case ICRF:
+			break;
+		case HEE:
+			ReferenceFrame.ICRFtoHEE(this);
+			break;
+		case ECI:
+			ReferenceFrame.ICRFtoECI(this);
+			break;
+		case MEOP:
+			ReferenceFrame.ICRFtoMEOP(this);
+			break;
+		default:
+			// posUserFrame[bodyNumber] = posICRF[bodyNumber];
+			// velUserFrame[bodyNumber] = velICRF[bodyNumber];
+			break;
 		}
 
 	}
@@ -344,19 +353,3 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	}
 
 }
-
-// first get ICRF ephemeris
-// double[] pv = new double[6];
-// for (body q : EnumSet.allOf(body.class)) {
-// int bodyNumber = q.ordinal();
-// double daysec = 3600. * 24.;
-// pv[0] = planet_r[bodyNumber][1];
-// pv[1] = planet_r[bodyNumber][2];
-// pv[2] = planet_r[bodyNumber][3];
-// pv[3] = planet_rprime[bodyNumber][1] / daysec;
-// pv[4] = planet_rprime[bodyNumber][2] / daysec;
-// pv[5] = planet_rprime[bodyNumber][3] / daysec;
-
-// posvelICRF[bodyNumber] = new VectorN(pv);
-// }
-

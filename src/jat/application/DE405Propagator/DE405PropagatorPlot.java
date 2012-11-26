@@ -95,6 +95,11 @@ public class DE405PropagatorPlot extends JPanel {
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 		Eph.setIntegrationStartTime(dpParam.simulationDate);
+		try {
+			Eph.setEarthMoonPlaneNormal(dpParam.simulationDate);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		Eph.reset();
 
 		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
@@ -109,9 +114,6 @@ public class DE405PropagatorPlot extends JPanel {
 		l1.closed_curve = false;
 		plot.addPlot(l1);
 
-
-		
-		
 		VectorN EarthPos = null;
 		VectorN MoonPost0 = null;
 		VectorN MoonPostf = null;
@@ -132,14 +134,12 @@ public class DE405PropagatorPlot extends JPanel {
 		// addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0],
 		// EarthPos.x[1], EarthPos.x[2]);
 
-		EphemerisPlotData epd=new EphemerisPlotData(dpMain.dpParam.Eph,body.MOON,dpMain.dpParam.simulationDate,dpParam.tf,100);		
+		EphemerisPlotData epd = new EphemerisPlotData(dpMain.dpParam.Eph, body.MOON, dpMain.dpParam.simulationDate,
+				dpParam.tf, 100);
 		LinePlot lMoon = new LinePlot("Moon", Color.green, epd.XYZ);
 		lMoon.closed_curve = false;
 		plot.addPlot(lMoon);
-		
-		
-		
-		
+
 	}
 
 	double[][] getXYZforPlot(ArrayList<Double> xsol, ArrayList<Double> ysol, ArrayList<Double> zsol) {
@@ -153,11 +153,11 @@ public class DE405PropagatorPlot extends JPanel {
 			XYZ[i][0] = xsolArray[i];
 			XYZ[i][1] = ysolArray[i];
 			XYZ[i][2] = zsolArray[i];
-			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][0]));
-			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][1]));
-			plotBounds=Math.max(plotBounds, Math.abs(XYZ[i][2]));
+			plotBounds = Math.max(plotBounds, Math.abs(XYZ[i][0]));
+			plotBounds = Math.max(plotBounds, Math.abs(XYZ[i][1]));
+			plotBounds = Math.max(plotBounds, Math.abs(XYZ[i][2]));
 		}
-		plotBounds/=1.5;
+		plotBounds /= 1.5;
 		return XYZ;
 	}
 
