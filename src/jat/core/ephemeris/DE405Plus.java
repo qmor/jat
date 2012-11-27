@@ -63,7 +63,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public boolean printSteps = false;
 	public boolean printBodyPos = false;
 	unitSet uS = new unitSet("DE405Plus", distanceUnit.km, timeUnit.sec, massUnit.kg);
-	VectorN EarthMoonPlaneNormal;
+	public VectorN EarthMoonPlaneNormal;
 
 	public DE405Plus() {
 		super();
@@ -92,22 +92,30 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	}
 
 	/**
-	 * The plane of the moon's orbit around the earth changes over time. Choose one for your simulation.
-	 * @param t Time
-	 * @throws IOException 
+	 * The plane of the moon's orbit around the earth changes over time. Choose
+	 * one for your simulation.
+	 * 
+	 * @param t
+	 *            Time
+	 * @throws IOException
 	 */
 	public void setEarthMoonPlaneNormal(TimeAPL t) throws IOException {
-		
+
 		int MOON = body.MOON.ordinal();
 		int EARTH = body.EARTH.ordinal();
 
 		update_planetary_ephemeris(t);
-		
+
 		VectorN MoonPos = posICRF[MOON].minus(posICRF[EARTH]);
 		VectorN MoonVel = velICRF[MOON].minus(velICRF[EARTH]);
-		MoonPos.print("[DE405Plus pos] "+ body.name[MOON]);
-		MoonVel.print("[DE405Plus vel] "+ body.name[MOON]);
+		MoonPos.unitize();
+		MoonVel.unitize();
+		MoonPos.print("[DE405Plus pos unit] " + body.name[MOON]);
+		MoonVel.print("[DE405Plus vel unit] " + body.name[MOON]);
+
+		EarthMoonPlaneNormal=MoonPos.crossProduct(MoonVel);
 		
+		// .times(300000.)
 	}
 
 	/**
@@ -165,7 +173,7 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 				{
 					mu_body = sb.Bodies[b.ordinal()].mu;
 					bodyPos = get_planet_pos(b, EphTime);
-					bodyPos.print("[DE405Plus] position of " + b.ordinal());
+					// bodyPos.print("[DE405Plus] position of " + b.ordinal());
 					xBody = bodyPos.x[0];
 					yBody = bodyPos.x[1];
 					zBody = bodyPos.x[2];

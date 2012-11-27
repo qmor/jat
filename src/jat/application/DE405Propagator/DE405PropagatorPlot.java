@@ -140,6 +140,9 @@ public class DE405PropagatorPlot extends JPanel {
 		lMoon.closed_curve = false;
 		plot.addPlot(lMoon);
 
+		VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
+		addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0], v.x[1], v.x[2]);
+
 	}
 
 	double[][] getXYZforPlot(ArrayList<Double> xsol, ArrayList<Double> ysol, ArrayList<Double> zsol) {

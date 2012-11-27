@@ -55,7 +55,7 @@ public class DE405PropagatorMain extends JApplet {
 		dpParam.Eph.setUnitsMaster(dpGlobals.uc);
 		dpGlobals.uc.addUser(dpParam.Eph.getUnits());
 		dpGlobals.uc.addUser(dpGlobals.sb.getUnits());
-		dpParam.Eph.printSteps = true;
+		//dpParam.Eph.printSteps = true;
 
 		Container level1_Pane;
 		level1_Pane = getContentPane();
