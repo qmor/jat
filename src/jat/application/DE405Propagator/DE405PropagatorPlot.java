@@ -143,6 +143,9 @@ public class DE405PropagatorPlot extends JPanel {
 		VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
 		addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0], v.x[1], v.x[2]);
 
+		VectorN vr = Eph.rotationAxis.times(100000);
+		addPoint(plot, "rot axis", java.awt.Color.MAGENTA, vr.x[0], vr.x[1], vr.x[2]);
+
 	}
 
 	double[][] getXYZforPlot(ArrayList<Double> xsol, ArrayList<Double> ysol, ArrayList<Double> zsol) {

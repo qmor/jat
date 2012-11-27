@@ -54,8 +54,10 @@ public class ReferenceFrame {
 
 	public static void ICRFtoMEOP(DE405Plus Eph) {
 		ICRFtoECI(Eph);
-		
-		
+
+		VectorN zAxis=new VectorN(0,0,1);
+		//VectorN rotationAxis=Eph.EarthMoonPlaneNormal.crossProduct(zAxis);
+		Eph.rotationAxis=Eph.EarthMoonPlaneNormal.crossProduct(zAxis);
 		
 		// int EARTH = body.EARTH.ordinal();
 		// for (body q : EnumSet.allOf(body.class)) {

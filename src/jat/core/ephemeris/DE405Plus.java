@@ -64,7 +64,8 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 	public boolean printBodyPos = false;
 	unitSet uS = new unitSet("DE405Plus", distanceUnit.km, timeUnit.sec, massUnit.kg);
 	public VectorN EarthMoonPlaneNormal;
-
+	public VectorN  rotationAxis;
+	
 	public DE405Plus() {
 		super();
 		ephFrame = frame.ICRF;
@@ -115,7 +116,9 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 
 		EarthMoonPlaneNormal=MoonPos.crossProduct(MoonVel);
 		
-		// .times(300000.)
+		VectorN zAxis=new VectorN(0,0,1);
+		rotationAxis=EarthMoonPlaneNormal.crossProduct(zAxis);
+		rotationAxis.print("[DE405Plus rotation axis] ");
 	}
 
 	/**
