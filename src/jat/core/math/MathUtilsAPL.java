@@ -18,20 +18,40 @@ package jat.core.math;
 
 public class MathUtilsAPL {
 
-	
-	/** Machine precision for float.
+	final static double factor1 = Math.PI / 180.;
+	final static double factor2 = 180. / Math.PI;
+
+	public static double Radians(double Degrees) {
+		return Degrees * factor1;
+	}
+
+	public static double Degrees(double Radians) {
+		return Radians * factor2;
+	}
+
+	/**
+	 * Machine precision for float.
 	 */
 	public final static float MACHEPS = 1.1920929E-7f;
 
+	public static void calculateMachineEpsilonFloat() {
+		float machEps = 1.0f;
+
+		do {
+			machEps /= 2.0f;
+		} while ((float) (1.0 + (machEps / 2.0)) != 1.0);
+
+		System.out.println("Calculated machine epsilon (float): " + machEps);
+	}
+
+	public static void main(String[] args) {
+
+		System.out.println("2 PI radians = "+Degrees(2*Math.PI)+" Degrees");
+		System.out.println("180 Degrees = "+Radians(180.)+" Radians");
 	
-    public static void calculateMachineEpsilonFloat() {
-        float machEps = 1.0f;
- 
-        do {
-           machEps /= 2.0f;
-        }
-        while ((float)(1.0 + (machEps/2.0)) != 1.0);
- 
-        System.out.println( "Calculated machine epsilon: " + machEps );
-    }
+		calculateMachineEpsilonFloat();
+	
+	}
+
+
 }

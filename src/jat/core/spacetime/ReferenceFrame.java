@@ -20,8 +20,9 @@ package jat.core.spacetime;
 import jat.core.ephemeris.DE405Body;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Plus;
+import jat.core.math.MathUtilsAPL;
+import jat.core.math.arbaxisrot.RotationMatrixFull;
 import jat.coreNOSA.cm.Constants;
-import jat.coreNOSA.cm.cm;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 
@@ -47,18 +48,52 @@ public class ReferenceFrame {
 			int bodyNumber = q.ordinal();
 			Eph.posUserFrame[bodyNumber] = Eph.posICRF[bodyNumber].minus(Eph.posICRF[EARTH]);
 			Eph.velUserFrame[bodyNumber] = Eph.velICRF[bodyNumber].minus(Eph.velICRF[EARTH]);
-			//Eph.posUserFrame[bodyNumber].print("[ReferenceFrame body] " + body.name[bodyNumber]);
-			//Eph.velUserFrame[bodyNumber].print("[ReferenceFrame body] " + body.name[bodyNumber]);
+			// Eph.posUserFrame[bodyNumber].print("[ReferenceFrame body] " +
+			// body.name[bodyNumber]);
+			// Eph.velUserFrame[bodyNumber].print("[ReferenceFrame body] " +
+			// body.name[bodyNumber]);
 		}
 	}
 
 	public static void ICRFtoMEOP(DE405Plus Eph) {
+		double[] point = new double[3];
+		double[] axis = new double[3];
+
 		ICRFtoECI(Eph);
 
-		VectorN zAxis=new VectorN(0,0,1);
-		//VectorN rotationAxis=Eph.EarthMoonPlaneNormal.crossProduct(zAxis);
-		Eph.rotationAxis=Eph.EarthMoonPlaneNormal.crossProduct(zAxis);
-		
+		for (body q : EnumSet.allOf(body.class)) {
+			int bodyNumber = q.ordinal();
+
+			point[0] = Eph.posUserFrame[bodyNumber].x[0];
+			point[1] = Eph.posUserFrame[bodyNumber].x[1];
+			point[2] = Eph.posUserFrame[bodyNumber].x[2];
+
+			axis[0]=Eph.rotationAxis.x[0];
+			axis[1]=Eph.rotationAxis.x[1];
+			axis[2]=Eph.rotationAxis.x[2];
+			
+			double theta=MathUtilsAPL.Radians(23);
+			VectorN zAxis=new VectorN(0,0,1);
+
+			double angle=Eph.EarthMoonPlaneNormal.angle(zAxis);
+			
+			//RotationMatrixFull rM = new RotationMatrixFull(0, 0, 0, axis[0], axis[1], axis[2], theta);
+			RotationMatrixFull rM = new RotationMatrixFull(0, 0, 0, axis[0], axis[1], axis[2], angle);
+			
+			double[] result = rM.timesXYZ(point);
+			
+			Eph.posUserFrame[bodyNumber] = new VectorN(result[0],result[1],result[2]);
+
+			
+			
+			//Eph.velUserFrame[bodyNumber] = ecliptic_obliquity_rotate(Eph.velICRF[bodyNumber]);
+
+		}
+
+		// VectorN zAxis=new VectorN(0,0,1);
+		// VectorN rotationAxis=Eph.EarthMoonPlaneNormal.crossProduct(zAxis);
+		// Eph.rotationAxis=Eph.EarthMoonPlaneNormal.crossProduct(zAxis);
+
 		// int EARTH = body.EARTH.ordinal();
 		// for (body q : EnumSet.allOf(body.class)) {
 		// int bodyNumber = q.ordinal();
@@ -112,7 +147,7 @@ public class ReferenceFrame {
 		x = rv.get(0);
 		y = rv.get(1);
 		z = rv.get(2);
-		eps = cm.Rad(angleDegrees);
+		eps = MathUtilsAPL.Radians(angleDegrees);
 		c = Math.cos(eps);
 		s = Math.sin(eps);
 		returnval.x[0] = x;
@@ -165,7 +200,7 @@ public class ReferenceFrame {
 		x = rv.get(0);
 		y = rv.get(1);
 		z = rv.get(2);
-		eps = cm.Rad(Constants.eps);
+		eps = MathUtilsAPL.Radians(Constants.eps);
 		c = Math.cos(eps);
 		s = Math.sin(eps);
 		returnval.x[0] = x;
