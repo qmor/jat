@@ -19,16 +19,16 @@ public class earthMoonECI extends DE405PropagatorParameters {
 		//Frame = frame.ECI;
 		Frame = frame.MEOP;
 
-		simulationDate = new TimeAPL(2003, 2, 27, 12, 0, 0);
+		simulationDate = new TimeAPL(2003, 2, 28, 13, 30, 0);
 
 		// earth orbit to moon and back
 		y0[0] = -7000.;
 		y0[1] = 0.;
 		y0[2] = 0;
 		y0[3] = 0.;
-		y0[4] = -10.25;
-		y0[5] = -2.6;
-		tf = 1000000.;
+		y0[4] = -10.6;
+		y0[5] = 0;
+		tf = 700000.;
 
 	}
 
