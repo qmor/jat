@@ -17,16 +17,19 @@
 
 package jat.application.DE405Propagator;
 
-import jat.application.DE405Propagator.scenario.earthMoonECI;
-import jat.application.DE405Propagator.scenario.earthOrbitECI;
-import jat.application.DE405Propagator.scenario.sunOrbit;
-import jat.application.DE405Propagator.scenario.testOrbit;
+import jat.application.DE405Propagator.ParameterSet.earthMoonMEOP;
+import jat.application.DE405Propagator.ParameterSet.earthOrbitECI;
+import jat.application.DE405Propagator.ParameterSet.sunOrbit;
+import jat.application.DE405Propagator.ParameterSet.testOrbit;
+import jat.application.missionPlan.Flight;
 import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JApplet;
 
@@ -37,16 +40,18 @@ public class DE405PropagatorMain extends JApplet {
 	DE405PropagatorPlot dpPlot;
 	DE405PropagatorParameters dpParam;
 	DE405PropagatorGlobals dpGlobals;
+	List<DE405PropagatorParameters> ParameterSetList = new ArrayList<DE405PropagatorParameters>();
 
 	public void init() {
 	}
 
 	public void start() {
+		ParameterSetList.add(new earthOrbitECI());
 		// dpParam=new DE405PropagatorParameters();
 		dpParam = new testOrbit();
 		dpParam = new sunOrbit();
 		dpParam = new earthOrbitECI();
-		dpParam = new earthMoonECI();
+		dpParam = new earthMoonMEOP();
 		//dpParam.Frame=frame.ECI;
 		dpGlobals = new DE405PropagatorGlobals();
 

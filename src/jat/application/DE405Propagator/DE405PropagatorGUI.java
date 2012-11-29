@@ -200,12 +200,28 @@ public class DE405PropagatorGUI extends JPanel {
 		btnPlot = new JButton("Plot");
 		panelIC.add(btnPlot);
 
+		
+		JPanel panelParameters = new JPanel();
+		panelParameters.setBorder(new TitledBorder(null, "Parameter Set", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_panelFrame2 = new GridBagConstraints();
+		gbc_panelFrame2.fill = GridBagConstraints.BOTH;
+		gbc_panelFrame2.insets = new Insets(0, 0, 5, 5);
+		gbc_panelFrame2.gridx = 0;
+		gbc_panelFrame2.gridy = 4;
+		level1_Pane.add(panelParameters, gbc_panelFrame2);
+		panelParameters.setLayout(new GridLayout(1, 1, 0, 0));
+
+		comboBoxFrame = new JComboBox(frame.name);
+		panelParameters.add(comboBoxFrame);
+
+		
+		
 		chckbxRotation = new JCheckBox("Rotate");
 		GridBagConstraints gbc_chckbxRotation = new GridBagConstraints();
 		gbc_chckbxRotation.insets = new Insets(0, 0, 5, 5);
 		gbc_chckbxRotation.fill = GridBagConstraints.BOTH;
 		gbc_chckbxRotation.gridx = 0;
-		gbc_chckbxRotation.gridy = 4;
+		gbc_chckbxRotation.gridy = 5;
 		level1_Pane.add(chckbxRotation, gbc_chckbxRotation);
 
 		chckbxRotation.addItemListener(dpE);

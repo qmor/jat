@@ -8,6 +8,7 @@ import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 
 public class DE405PropagatorParameters {
+	public String Name;
 	public  TimeAPL simulationDate;
 	int numberOfBodies = body.values().length;
 	boolean[] showPlanet = new boolean[numberOfBodies];
