@@ -71,7 +71,7 @@ public class TimeAPL extends Time {
 
 	public int getMonth() {
 		Calendar cal = cm.JD_to_Calendar(jd_tt());
-		return cal.get(Calendar.MONTH);
+		return cal.get(Calendar.MONTH)+1;
 	}
 
 	public int getDay() {
@@ -82,6 +82,11 @@ public class TimeAPL extends Time {
 	public int getHour() {
 		Calendar cal = cm.JD_to_Calendar(jd_tt());
 		return cal.get(Calendar.HOUR_OF_DAY);
+	}
+
+	public int getMinute() {
+		Calendar cal = cm.JD_to_Calendar(jd_tt());
+		return cal.get(Calendar.MINUTE);
 	}
 
 	public void print() {

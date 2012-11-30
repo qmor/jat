@@ -83,13 +83,6 @@ public class DE405PropagatorPlot extends JPanel {
 		for (body b : body.values()) {
 			Eph.bodyGravOnOff[b.ordinal()] = dpParam.bodyGravOnOff[b.ordinal()];
 		}
-		dpParam.y0[0] = (Double) dpMain.dpGUI.tf_x.getValue();
-		dpParam.y0[1] = (Double) dpMain.dpGUI.tf_y.getValue();
-		dpParam.y0[2] = (Double) dpMain.dpGUI.tf_z.getValue();
-		dpParam.y0[3] = (Double) dpMain.dpGUI.tf_vx.getValue();
-		dpParam.y0[4] = (Double) dpMain.dpGUI.tf_vy.getValue();
-		dpParam.y0[5] = (Double) dpMain.dpGUI.tf_vz.getValue();
-		dpParam.tf = (Double) dpMain.dpGUI.tf_tf.getValue();
 
 		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);

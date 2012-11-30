@@ -111,14 +111,14 @@ public class DE405Plus extends DE405APL implements FirstOrderDifferentialEquatio
 		VectorN MoonVel = velICRF[MOON].minus(velICRF[EARTH]);
 		MoonPos.unitize();
 		MoonVel.unitize();
-		MoonPos.print("[DE405Plus pos unit] " + body.name[MOON]);
-		MoonVel.print("[DE405Plus vel unit] " + body.name[MOON]);
+		//MoonPos.print("[DE405Plus pos unit] " + body.name[MOON]);
+		//MoonVel.print("[DE405Plus vel unit] " + body.name[MOON]);
 
 		EarthMoonPlaneNormal=MoonPos.crossProduct(MoonVel);
 		
 		VectorN zAxis=new VectorN(0,0,1);
 		rotationAxis=EarthMoonPlaneNormal.crossProduct(zAxis);
-		rotationAxis.print("[DE405Plus rotation axis] ");
+		//rotationAxis.print("[DE405Plus rotation axis] ");
 	}
 
 	/**

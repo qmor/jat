@@ -44,24 +44,13 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 			this.dpGUI = dpMain.dpGUI;
 			System.out.println("plot button pressed");
 
-			// retrieve start date from date picker
-			int year=dpGUI.depart_date_picker.getModel().getYear();
-			int month=dpGUI.depart_date_picker.getModel().getMonth()+1;
-			int day=dpGUI.depart_date_picker.getModel().getDay();
-			int hour = (Integer) dpGUI.spinnerHour.getValue();
-
-			System.out.println(hour);
-			dpMain.dpParam.simulationDate=new TimeAPL(year, month, day, hour, 0, 0);
-						
+			dpGUI.GUIToParam();
 			dpMain.dpPlot.plot.removeAllPlots();
-
 			dpMain.dpPlot.add_scene();
 		}
 
 		if (ev.getSource() == dpMain.dpGUI.comboBoxFrame) {
-			System.out.println("Frame combo box");
-			int selection=dpMain.dpGUI.comboBoxFrame.getSelectedIndex();
-			dpMain.dpParam.Eph.setFrame(frame.fromInt(selection));
+			System.out.println("[DE405PropagatorEvents] Frame combo box");
 		}
 
 	}
