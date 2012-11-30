@@ -11,6 +11,8 @@ public class earthOrbitECI extends DE405PropagatorParameters {
 	public earthOrbitECI() {
 		super();
 
+		Name = "earthMoonECI";
+
 		// bodyGravOnOff[body.SUN.ordinal()] = true;
 		bodyGravOnOff[body.EARTH.ordinal()] = true;
 

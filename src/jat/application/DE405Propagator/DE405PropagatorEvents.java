@@ -52,9 +52,7 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 
 			System.out.println(hour);
 			dpMain.dpParam.simulationDate=new TimeAPL(year, month, day, hour, 0, 0);
-			
-			
-			
+						
 			dpMain.dpPlot.plot.removeAllPlots();
 
 			dpMain.dpPlot.add_scene();

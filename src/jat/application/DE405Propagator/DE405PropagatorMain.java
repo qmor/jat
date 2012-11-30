@@ -21,8 +21,6 @@ import jat.application.DE405Propagator.ParameterSet.earthMoonMEOP;
 import jat.application.DE405Propagator.ParameterSet.earthOrbitECI;
 import jat.application.DE405Propagator.ParameterSet.sunOrbit;
 import jat.application.DE405Propagator.ParameterSet.testOrbit;
-import jat.application.missionPlan.Flight;
-import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
@@ -40,19 +38,19 @@ public class DE405PropagatorMain extends JApplet {
 	DE405PropagatorPlot dpPlot;
 	DE405PropagatorParameters dpParam;
 	DE405PropagatorGlobals dpGlobals;
-	List<DE405PropagatorParameters> ParameterSetList = new ArrayList<DE405PropagatorParameters>();
+	public List<DE405PropagatorParameters> ParameterSetList = new ArrayList<DE405PropagatorParameters>();
 
 	public void init() {
 	}
 
 	public void start() {
+		ParameterSetList.add(new earthMoonMEOP());
 		ParameterSetList.add(new earthOrbitECI());
-		// dpParam=new DE405PropagatorParameters();
-		dpParam = new testOrbit();
-		dpParam = new sunOrbit();
-		dpParam = new earthOrbitECI();
-		dpParam = new earthMoonMEOP();
-		//dpParam.Frame=frame.ECI;
+		ParameterSetList.add(new sunOrbit());
+		// dpParam = new testOrbit();
+		// dpParam = new earthMoonMEOP();
+
+		dpParam=ParameterSetList.get(0);
 		dpGlobals = new DE405PropagatorGlobals();
 
 		PathUtil path = new PathUtil(this);
@@ -60,13 +58,13 @@ public class DE405PropagatorMain extends JApplet {
 		dpParam.Eph.setUnitsMaster(dpGlobals.uc);
 		dpGlobals.uc.addUser(dpParam.Eph.getUnits());
 		dpGlobals.uc.addUser(dpGlobals.sb.getUnits());
-		//dpParam.Eph.printSteps = true;
+		// dpParam.Eph.printSteps = true;
 
 		Container level1_Pane;
 		level1_Pane = getContentPane();
 		dpGUI = new DE405PropagatorGUI(this);
 		level1_Pane.add(dpGUI, BorderLayout.WEST);
-		dpGUI.updateGUI();
+		//dpGUI.updateGUI();
 
 		dpPlot = new DE405PropagatorPlot(this);
 		dpPlot.make_plot();

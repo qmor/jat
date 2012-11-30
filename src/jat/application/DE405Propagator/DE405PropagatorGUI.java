@@ -17,7 +17,6 @@
 
 package jat.application.DE405Propagator;
 
-import jat.core.ephemeris.DE405Frame;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
 
@@ -30,18 +29,18 @@ import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import net.sourceforge.jdatepicker.JDateComponentFactory;
 import net.sourceforge.jdatepicker.JDatePicker;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 public class DE405PropagatorGUI extends JPanel {
 	private static final long serialVersionUID = 1321470082814219656L;
@@ -60,6 +59,7 @@ public class DE405PropagatorGUI extends JPanel {
 	public JCheckBox chckbxSun;
 	public JCheckBox chckbxMoon;
 	public JComboBox comboBoxFrame;
+	public JComboBox comboBoxParameterSet;
 	public JSpinner spinnerHour;
 	private JPanel panel;
 	public JSpinner spinnerMinute;
@@ -200,22 +200,39 @@ public class DE405PropagatorGUI extends JPanel {
 		btnPlot = new JButton("Plot");
 		panelIC.add(btnPlot);
 
-		
 		JPanel panelParameters = new JPanel();
-		panelParameters.setBorder(new TitledBorder(null, "Parameter Set", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_panelFrame2 = new GridBagConstraints();
-		gbc_panelFrame2.fill = GridBagConstraints.BOTH;
-		gbc_panelFrame2.insets = new Insets(0, 0, 5, 5);
-		gbc_panelFrame2.gridx = 0;
-		gbc_panelFrame2.gridy = 4;
-		level1_Pane.add(panelParameters, gbc_panelFrame2);
+		panelParameters.setBorder(new TitledBorder(null, "Parameter Set", TitledBorder.LEADING, TitledBorder.TOP, null,
+				null));
+		GridBagConstraints gbc_panelParameters = new GridBagConstraints();
+		gbc_panelParameters.fill = GridBagConstraints.BOTH;
+		gbc_panelParameters.insets = new Insets(0, 0, 5, 5);
+		gbc_panelParameters.gridx = 0;
+		gbc_panelParameters.gridy = 4;
+		level1_Pane.add(panelParameters, gbc_panelParameters);
 		panelParameters.setLayout(new GridLayout(1, 1, 0, 0));
 
-		comboBoxFrame = new JComboBox(frame.name);
-		panelParameters.add(comboBoxFrame);
+		String[] ParameterSetNames = new String[dpMain.ParameterSetList.size()];
+		for (int i = 0; i < dpMain.ParameterSetList.size(); i++) {
+			System.out.println(dpMain.ParameterSetList.get(i).Name);
+			ParameterSetNames[i] = dpMain.ParameterSetList.get(i).Name;
+		}
 
-		
-		
+		// Iterator<DE405PropagatorParameters> iterator =
+		// dpMain.ParameterSetList.iterator();
+
+		// for(DE405PropagatorParameters element: dpMain.ParameterSetList){
+		// System.out.println(element);
+		// }
+
+		// for (dpMain.ParameterSetList p : EnumSet.allOf(body.class)) {
+		// int bodyNumber = q.ordinal();
+		// posUserFrame[bodyNumber] = posICRF[bodyNumber];
+		// velUserFrame[bodyNumber] = velICRF[bodyNumber];
+		// }
+
+		comboBoxParameterSet = new JComboBox(ParameterSetNames);
+		panelParameters.add(comboBoxParameterSet);
+
 		chckbxRotation = new JCheckBox("Rotate");
 		GridBagConstraints gbc_chckbxRotation = new GridBagConstraints();
 		gbc_chckbxRotation.insets = new Insets(0, 0, 5, 5);
@@ -224,6 +241,8 @@ public class DE405PropagatorGUI extends JPanel {
 		gbc_chckbxRotation.gridy = 5;
 		level1_Pane.add(chckbxRotation, gbc_chckbxRotation);
 
+		updateGUIValues();
+		
 		chckbxRotation.addItemListener(dpE);
 		chckbxSun.addItemListener(dpE);
 		chckbxEarth.addItemListener(dpE);
@@ -231,9 +250,11 @@ public class DE405PropagatorGUI extends JPanel {
 		chckbxJupiter.addItemListener(dpE);
 		btnPlot.addActionListener(dpE);
 		comboBoxFrame.addActionListener(dpE);
+
+	
 	}
 
-	public void updateGUI() {
+	public void updateGUIValues() {
 		chckbxSun.setSelected(dpMain.dpParam.bodyGravOnOff[body.SUN.ordinal()]);
 		chckbxMercury.setSelected(dpMain.dpParam.bodyGravOnOff[body.MERCURY.ordinal()]);
 		chckbxVenus.setSelected(dpMain.dpParam.bodyGravOnOff[body.VENUS.ordinal()]);
