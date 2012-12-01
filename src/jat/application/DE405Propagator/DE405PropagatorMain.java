@@ -20,7 +20,6 @@ package jat.application.DE405Propagator;
 import jat.application.DE405Propagator.ParameterSet.earthMoonMEOP;
 import jat.application.DE405Propagator.ParameterSet.earthOrbitECI;
 import jat.application.DE405Propagator.ParameterSet.sunOrbit;
-import jat.application.DE405Propagator.ParameterSet.testOrbit;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 

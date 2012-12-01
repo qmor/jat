@@ -20,6 +20,8 @@ package jat.application.DE405Propagator;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
 import jat.core.spacetime.TimeAPL;
+import jat.jdatepicker.JDateComponentFactory;
+import jat.jdatepicker.JDatePicker;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,8 +42,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import net.sourceforge.jdatepicker.JDateComponentFactory;
-import net.sourceforge.jdatepicker.JDatePicker;
 
 public class DE405PropagatorGUI extends JPanel {
 	private static final long serialVersionUID = 1321470082814219656L;
@@ -269,8 +269,9 @@ public class DE405PropagatorGUI extends JPanel {
 		comboBoxFrame.setSelectedIndex(dpMain.dpParam.Frame.ordinal());
 
 		depart_date_picker.getModel().setYear(dpMain.dpParam.simulationDate.getYear());
-		//depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth());
-		depart_date_picker.getModel().setMonth(1);
+		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth()-1);
+		depart_date_picker.getModel().setMonth(dpMain.dpParam.simulationDate.getMonth()-1);
+		//depart_date_picker.getModel().setMonth(3);
 		depart_date_picker.getModel().setDay(dpMain.dpParam.simulationDate.getDay());
 		depart_date_picker.getModel().setSelected(true);
 		spinnerHour.setValue(dpMain.dpParam.simulationDate.getHour());

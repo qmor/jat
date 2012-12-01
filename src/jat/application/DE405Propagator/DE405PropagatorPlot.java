@@ -56,6 +56,14 @@ public class DE405PropagatorPlot extends JPanel {
 		this.Eph = dpMain.dpParam.Eph;
 	}
 
+	public void make_plot() {
+		// create your PlotPanel (you can use it as a JPanel) with a legend at
+		// SOUTH
+		plot = new Plot3DPanel("SOUTH");
+		// add grid plot to the PlotPanel
+		add_scene();
+	}
+
 	public void add_scene() {
 
 		plot.addSpherePlot("Earth", 6378.1);
@@ -68,33 +76,26 @@ public class DE405PropagatorPlot extends JPanel {
 		plot.setLegendOrientation(PlotPanel.SOUTH);
 	}
 
-	public void make_plot() {
-		// create your PlotPanel (you can use it as a JPanel) with a legend at
-		// SOUTH
-		plot = new Plot3DPanel("SOUTH");
-		// add grid plot to the PlotPanel
-		add_scene();
-	}
-
 	void doExample() {
 
-		// Spacecraft Trajectory
-		double[] y = new double[6];
+		// Update Ephemeris to current user parameters
 		for (body b : body.values()) {
 			Eph.bodyGravOnOff[b.ordinal()] = dpParam.bodyGravOnOff[b.ordinal()];
 		}
-
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf / 10.0, 1.0e-10, 1.0e-10);
-		dp853.addStepHandler(Eph.stepHandler);
-		FirstOrderDifferentialEquations ode = Eph;
 		Eph.setIntegrationStartTime(dpParam.simulationDate);
 		try {
 			Eph.setEarthMoonPlaneNormal(dpParam.simulationDate);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		Eph.setFrame(dpParam.Frame);
 		Eph.reset();
 
+		// Spacecraft Trajectory
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf, 1.0e-10, 1.0e-10);
+		dp853.addStepHandler(Eph.stepHandler);
+		FirstOrderDifferentialEquations ode = Eph;
+		double[] y = new double[6];
 		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
 		if (print) {
 			String nf = "%10.3f ";
@@ -133,11 +134,13 @@ public class DE405PropagatorPlot extends JPanel {
 		lMoon.closed_curve = false;
 		plot.addPlot(lMoon);
 
-		VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
-		addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0], v.x[1], v.x[2]);
-
-		VectorN vr = Eph.rotationAxis.times(100000);
-		addPoint(plot, "rot axis", java.awt.Color.MAGENTA, vr.x[0], vr.x[1], vr.x[2]);
+		// VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
+		// addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0],
+		// v.x[1], v.x[2]);
+		//
+		// VectorN vr = Eph.rotationAxis.times(100000);
+		// addPoint(plot, "rot axis", java.awt.Color.MAGENTA, vr.x[0], vr.x[1],
+		// vr.x[2]);
 
 	}
 
