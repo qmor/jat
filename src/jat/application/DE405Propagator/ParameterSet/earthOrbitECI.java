@@ -28,9 +28,9 @@ public class earthOrbitECI extends DE405PropagatorParameters {
 		y0[1] = 0;
 		y0[2] = 0;
 		y0[3] = 0;
-		y0[4] = 10;
+		y0[4] = 8;
 		y0[5] = 0;
-		tf = 60*60;
+		tf = 3*60*60;
 
 	}
 

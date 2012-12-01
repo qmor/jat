@@ -18,7 +18,7 @@ public class sunOrbit  extends DE405PropagatorParameters{
 		
 		Frame=frame.HEE;
 //		Frame=frame.ICRF;
-		simulationDate = new TimeAPL(2003, 3, 1, 12, 0, 0);
+		simulationDate = new TimeAPL(2010, 2, 10, 12, 0, 0);
 	
 		y0[0] = 200000000.;
 		y0[1] = 0;

@@ -38,6 +38,7 @@ public class DE405PropagatorMain extends JApplet {
 	DE405PropagatorParameters dpParam;
 	DE405PropagatorGlobals dpGlobals;
 	public List<DE405PropagatorParameters> ParameterSetList = new ArrayList<DE405PropagatorParameters>();
+	public int selectedParameterSet = 2;
 
 	public void init() {
 	}
@@ -49,7 +50,7 @@ public class DE405PropagatorMain extends JApplet {
 		// dpParam = new testOrbit();
 		// dpParam = new earthMoonMEOP();
 
-		dpParam=ParameterSetList.get(0);
+		dpParam = ParameterSetList.get(selectedParameterSet);
 		dpGlobals = new DE405PropagatorGlobals();
 
 		PathUtil path = new PathUtil(this);
@@ -63,7 +64,7 @@ public class DE405PropagatorMain extends JApplet {
 		level1_Pane = getContentPane();
 		dpGUI = new DE405PropagatorGUI(this);
 		level1_Pane.add(dpGUI, BorderLayout.WEST);
-		//dpGUI.updateGUI();
+		// dpGUI.updateGUI();
 
 		dpPlot = new DE405PropagatorPlot(this);
 		dpPlot.make_plot();

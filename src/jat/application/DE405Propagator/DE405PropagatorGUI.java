@@ -283,6 +283,9 @@ public class DE405PropagatorGUI extends JPanel {
 		tf_vx.setValue(dpMain.dpParam.y0[3]);
 		tf_vy.setValue(dpMain.dpParam.y0[4]);
 		tf_vz.setValue(dpMain.dpParam.y0[5]);
+
+		comboBoxParameterSet.setSelectedIndex(dpMain.selectedParameterSet);
+	
 	}
 
 	public void GUIToParam() {
