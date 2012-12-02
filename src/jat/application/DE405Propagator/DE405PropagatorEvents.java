@@ -18,8 +18,6 @@
 package jat.application.DE405Propagator;
 
 import jat.core.ephemeris.DE405Body.body;
-import jat.core.ephemeris.DE405Frame.frame;
-import jat.core.spacetime.TimeAPL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,7 +40,7 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 		// Read in values
 		if (ev.getSource() == dpMain.dpGUI.btnPlot) {
 			this.dpGUI = dpMain.dpGUI;
-			System.out.println("plot button pressed");
+			// System.out.println("plot button pressed");
 
 			dpGUI.GUIToParam();
 			dpMain.dpPlot.plot.removeAllPlots();
@@ -51,6 +49,19 @@ class DE405PropagatorEvents implements ActionListener, ItemListener {
 
 		if (ev.getSource() == dpMain.dpGUI.comboBoxFrame) {
 			System.out.println("[DE405PropagatorEvents] Frame combo box");
+		}
+
+		if (ev.getSource() == dpMain.dpGUI.comboBoxParameterSet) {
+			//System.out.println("[DE405PropagatorEvents] ParameterSet combo box");
+
+			boolean changed = true;
+			if (changed) {
+
+				int index = dpMain.dpGUI.comboBoxParameterSet.getSelectedIndex();
+				dpMain.dpParam = dpMain.ParameterSetList.get(index);
+				dpMain.dpGUI.ParamToGUI();
+			}
+
 		}
 
 	}

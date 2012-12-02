@@ -48,7 +48,7 @@ public class DE405PropagatorGUI extends JPanel {
 	DE405PropagatorEvents dpE;
 	JPanel level2_Pane_Plot;
 	DE405PropagatorMain dpMain;
-	DE405PropagatorParameters dpParam;
+	//DE405PropagatorParameters dpParam;
 	public JCheckBox chckbxRotation;
 	public JFormattedTextField tf_x, tf_y, tf_z, tf_vx, tf_vy, tf_vz;
 	JFormattedTextField tf_tf;
@@ -69,7 +69,7 @@ public class DE405PropagatorGUI extends JPanel {
 
 	public DE405PropagatorGUI(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
-		this.dpParam = dpMain.dpParam;
+		//this.dpParam = dpMain.dpParam;
 		dpE = new DE405PropagatorEvents(dpMain);
 
 		depart_date_picker = JDateComponentFactory.createJDatePicker();
@@ -253,7 +253,7 @@ public class DE405PropagatorGUI extends JPanel {
 		chckbxJupiter.addItemListener(dpE);
 		btnPlot.addActionListener(dpE);
 		comboBoxFrame.addActionListener(dpE);
-
+		comboBoxParameterSet.addActionListener(dpE);
 	}
 
 	public void ParamToGUI() {
@@ -284,30 +284,30 @@ public class DE405PropagatorGUI extends JPanel {
 		tf_vy.setValue(dpMain.dpParam.y0[4]);
 		tf_vz.setValue(dpMain.dpParam.y0[5]);
 
-		comboBoxParameterSet.setSelectedIndex(dpMain.selectedParameterSet);
+		//comboBoxParameterSet.setSelectedIndex(dpMain.selectedParameterSet);
 	
 	}
 
 	public void GUIToParam() {
 
-		dpParam.y0[0] = (Double) dpMain.dpGUI.tf_x.getValue();
-		dpParam.y0[1] = (Double) dpMain.dpGUI.tf_y.getValue();
-		dpParam.y0[2] = (Double) dpMain.dpGUI.tf_z.getValue();
-		dpParam.y0[3] = (Double) dpMain.dpGUI.tf_vx.getValue();
-		dpParam.y0[4] = (Double) dpMain.dpGUI.tf_vy.getValue();
-		dpParam.y0[5] = (Double) dpMain.dpGUI.tf_vz.getValue();
-		dpParam.tf = (Double) dpMain.dpGUI.tf_tf.getValue();
+		dpMain.dpParam.y0[0] = (Double) dpMain.dpGUI.tf_x.getValue();
+		dpMain.dpParam.y0[1] = (Double) dpMain.dpGUI.tf_y.getValue();
+		dpMain.dpParam.y0[2] = (Double) dpMain.dpGUI.tf_z.getValue();
+		dpMain.dpParam.y0[3] = (Double) dpMain.dpGUI.tf_vx.getValue();
+		dpMain.dpParam.y0[4] = (Double) dpMain.dpGUI.tf_vy.getValue();
+		dpMain.dpParam.y0[5] = (Double) dpMain.dpGUI.tf_vz.getValue();
+		dpMain.dpParam.tf = (Double) dpMain.dpGUI.tf_tf.getValue();
 		// retrieve start date from date picker
 		int year = depart_date_picker.getModel().getYear();
 		int month = depart_date_picker.getModel().getMonth() + 1;
-		System.out.println("[DE405PropagatorGUI] month "+ month);
+		//System.out.println("[DE405PropagatorGUI] month "+ month);
 		int day = depart_date_picker.getModel().getDay();
 		int hour = (Integer) spinnerHour.getValue();
 		int minute = (Integer) spinnerMinute.getValue();
 		//System.out.println("[DE405PropagatorGUI] hour "+ hour);
-		dpParam.simulationDate = new TimeAPL(year, month, day, hour, minute, 0);
+		dpMain.dpParam.simulationDate = new TimeAPL(year, month, day, hour, minute, 0);
 		int selection=comboBoxFrame.getSelectedIndex();
-		dpParam.Eph.setFrame(frame.fromInt(selection));
+		dpMain.dpGlobals.Eph.setFrame(frame.fromInt(selection));
 
 	}
 

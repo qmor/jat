@@ -38,7 +38,7 @@ public class DE405PropagatorMain extends JApplet {
 	DE405PropagatorParameters dpParam;
 	DE405PropagatorGlobals dpGlobals;
 	public List<DE405PropagatorParameters> ParameterSetList = new ArrayList<DE405PropagatorParameters>();
-	public int selectedParameterSet = 2;
+	public int selectedParameterSet = 0;
 
 	public void init() {
 	}
@@ -54,9 +54,9 @@ public class DE405PropagatorMain extends JApplet {
 		dpGlobals = new DE405PropagatorGlobals();
 
 		PathUtil path = new PathUtil(this);
-		dpParam.Eph = new DE405Plus(path);
-		dpParam.Eph.setUnitsMaster(dpGlobals.uc);
-		dpGlobals.uc.addUser(dpParam.Eph.getUnits());
+		dpGlobals.Eph = new DE405Plus(path);
+		dpGlobals.Eph.setUnitsMaster(dpGlobals.uc);
+		dpGlobals.uc.addUser(dpGlobals.Eph.getUnits());
 		dpGlobals.uc.addUser(dpGlobals.sb.getUnits());
 		// dpParam.Eph.printSteps = true;
 

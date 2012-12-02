@@ -46,14 +46,12 @@ public class DE405PropagatorPlot extends JPanel {
 	int step;
 	DE405PropagatorMain dpMain;
 	DE405Plus Eph;
-	DE405PropagatorParameters dpParam;
 	static boolean print = false;
 	double plotBounds;
 
 	public DE405PropagatorPlot(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
-		this.dpParam = dpMain.dpParam;
-		this.Eph = dpMain.dpParam.Eph;
+		this.Eph = dpMain.dpGlobals.Eph;
 	}
 
 	public void make_plot() {
@@ -80,27 +78,27 @@ public class DE405PropagatorPlot extends JPanel {
 
 		// Update Ephemeris to current user parameters
 		for (body b : body.values()) {
-			Eph.bodyGravOnOff[b.ordinal()] = dpParam.bodyGravOnOff[b.ordinal()];
+			Eph.bodyGravOnOff[b.ordinal()] = dpMain.dpParam.bodyGravOnOff[b.ordinal()];
 		}
-		Eph.setIntegrationStartTime(dpParam.simulationDate);
+		Eph.setIntegrationStartTime(dpMain.dpParam.simulationDate);
 		try {
-			Eph.setEarthMoonPlaneNormal(dpParam.simulationDate);
+			Eph.setEarthMoonPlaneNormal(dpMain.dpParam.simulationDate);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		Eph.setFrame(dpParam.Frame);
+		Eph.setFrame(dpMain.dpParam.Frame);
 		Eph.reset();
 
 		// Spacecraft Trajectory
-		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpParam.tf, 1.0e-10, 1.0e-10);
+		FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, dpMain.dpParam.tf, 1.0e-10, 1.0e-10);
 		dp853.addStepHandler(Eph.stepHandler);
 		FirstOrderDifferentialEquations ode = Eph;
 		double[] y = new double[6];
-		dp853.integrate(ode, 0.0, dpParam.y0, dpParam.tf, y);
+		dp853.integrate(ode, 0.0, dpMain.dpParam.y0, dpMain.dpParam.tf, y);
 		if (print) {
 			String nf = "%10.3f ";
 			String format = nf + nf + nf + nf + nf;
-			System.out.printf(format, dpParam.tf, y[0], y[1], y[2], Eph.energy(dpParam.tf, y));
+			System.out.printf(format, dpMain.dpParam.tf, y[0], y[1], y[2], Eph.energy(dpMain.dpParam.tf, y));
 			System.out.println();
 		}
 
@@ -128,19 +126,11 @@ public class DE405PropagatorPlot extends JPanel {
 		// addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0],
 		// EarthPos.x[1], EarthPos.x[2]);
 
-		EphemerisPlotData epd = new EphemerisPlotData(dpMain.dpParam.Eph, body.MOON, dpMain.dpParam.simulationDate,
-				dpParam.tf, 100);
+		EphemerisPlotData epd = new EphemerisPlotData(Eph, body.MOON, dpMain.dpParam.simulationDate,
+				dpMain.dpParam.tf, 100);
 		LinePlot lMoon = new LinePlot("Moon", Color.green, epd.XYZ);
 		lMoon.closed_curve = false;
 		plot.addPlot(lMoon);
-
-		// VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
-		// addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0],
-		// v.x[1], v.x[2]);
-		//
-		// VectorN vr = Eph.rotationAxis.times(100000);
-		// addPoint(plot, "rot axis", java.awt.Color.MAGENTA, vr.x[0], vr.x[1],
-		// vr.x[2]);
 
 	}
 
@@ -172,3 +162,13 @@ public class DE405PropagatorPlot extends JPanel {
 	}
 
 }
+
+
+// VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
+// addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0],
+// v.x[1], v.x[2]);
+//
+// VectorN vr = Eph.rotationAxis.times(100000);
+// addPoint(plot, "rot axis", java.awt.Color.MAGENTA, vr.x[0], vr.x[1],
+// vr.x[2]);
+
