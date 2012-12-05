@@ -24,11 +24,12 @@ import jat.core.units.unitSet;
 import jat.core.units.unitSet.distanceUnit;
 import jat.core.units.unitSet.massUnit;
 import jat.core.units.unitSet.timeUnit;
+import java.awt.Color;
 
-public class SolarSystemBodies implements  unitModel {
+public class SolarSystemBodies implements unitModel {
 
 	public Body[] Bodies;
-	unitSet uS=new unitSet("SolarSystemBodies",distanceUnit.km,timeUnit.sec,massUnit.kg);
+	unitSet uS = new unitSet("SolarSystemBodies", distanceUnit.km, timeUnit.sec, massUnit.kg);
 
 	public class Body {
 		body body;
@@ -36,6 +37,7 @@ public class SolarSystemBodies implements  unitModel {
 		public double mass; // kg
 		public double orbitalPeriod; // earth days
 		public double mu; // (km^3 * s^−2)
+		public Color color;
 
 		public Body(jat.core.ephemeris.DE405Body.body body, double radius, double mass, double orbitalPeriod) {
 			this.body = body;
@@ -74,12 +76,17 @@ public class SolarSystemBodies implements  unitModel {
 		Bodies[body.PLUTO.ordinal()].mu = 871.;
 		Bodies[body.MOON.ordinal()].mu = 4902.7779;
 
+		Bodies[body.SUN.ordinal()].color = Color.ORANGE;
+		Bodies[body.EARTH.ordinal()].color = Color.BLUE;
+		Bodies[body.JUPITER.ordinal()].color = Color.MAGENTA;
+		Bodies[body.MOON.ordinal()].color = Color.GRAY;
+
 	}
 
 	@Override
 	public void setUnits(unitSet u) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -90,13 +97,13 @@ public class SolarSystemBodies implements  unitModel {
 	@Override
 	public void setUnitsMaster(unitCheck uc) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void addUnitsUser(unitSet u) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

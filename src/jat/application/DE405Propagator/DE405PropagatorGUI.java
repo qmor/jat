@@ -307,7 +307,7 @@ public class DE405PropagatorGUI extends JPanel {
 		//System.out.println("[DE405PropagatorGUI] hour "+ hour);
 		dpMain.dpParam.simulationDate = new TimeAPL(year, month, day, hour, minute, 0);
 		int selection=comboBoxFrame.getSelectedIndex();
-		dpMain.dpGlobals.Eph.setFrame(frame.fromInt(selection));
+		dpMain.dpParam.Frame=frame.fromInt(selection);
 
 	}
 

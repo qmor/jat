@@ -17,6 +17,7 @@
 
 package jat.application.DE405Propagator;
 
+import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.EphemerisPlotData;
@@ -48,6 +49,7 @@ public class DE405PropagatorPlot extends JPanel {
 	DE405Plus Eph;
 	static boolean print = false;
 	double plotBounds;
+	SolarSystemBodies sb = new SolarSystemBodies();
 
 	public DE405PropagatorPlot(DE405PropagatorMain dpMain) {
 		this.dpMain = dpMain;
@@ -63,18 +65,6 @@ public class DE405PropagatorPlot extends JPanel {
 	}
 
 	public void add_scene() {
-
-		plot.addSpherePlot("Earth", 6378.1);
-		doExample();
-		// Vector3D y0v=new Vector3D(dpParam.y0[0],dpParam.y0[1],dpParam.y0[2]);
-		// double plotBounds = 2*y0v.getNorm();
-		plot.setFixedBounds(0, -plotBounds, plotBounds);
-		plot.setFixedBounds(1, -plotBounds, plotBounds);
-		plot.setFixedBounds(2, -plotBounds, plotBounds);
-		plot.setLegendOrientation(PlotPanel.SOUTH);
-	}
-
-	void doExample() {
 
 		// Update Ephemeris to current user parameters
 		for (body b : body.values()) {
@@ -106,28 +96,80 @@ public class DE405PropagatorPlot extends JPanel {
 		l1.closed_curve = false;
 		plot.addPlot(l1);
 
-		VectorN EarthPos = null;
-		VectorN MoonPost0 = null;
-		VectorN MoonPostf = null;
-		VectorN SunPos = null;
-		try {
-			SunPos = Eph.get_planet_pos(body.SUN, dpMain.dpParam.simulationDate);
-			EarthPos = Eph.get_planet_pos(body.EARTH, dpMain.dpParam.simulationDate);
-			MoonPost0 = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate);
-			MoonPostf = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate.plus(dpMain.dpParam.tf));
-		} catch (IOException e) {
-			e.printStackTrace();
+		addBodies();
+
+		// Vector3D y0v=new Vector3D(dpParam.y0[0],dpParam.y0[1],dpParam.y0[2]);
+		// double plotBounds = 2*y0v.getNorm();
+		plot.setFixedBounds(0, -plotBounds, plotBounds);
+		plot.setFixedBounds(1, -plotBounds, plotBounds);
+		plot.setFixedBounds(2, -plotBounds, plotBounds);
+		plot.setLegendOrientation(PlotPanel.SOUTH);
+	}
+
+	void addBodies() {
+		int bodyNumber;
+		//int x, y, z;
+		VectorN BodyPos;
+
+		// central body gets as sphere
+
+		switch (Eph.ephFrame) {
+		case ICRF:
+			plot.addSpherePlot("Sun", java.awt.Color.ORANGE, sb.Bodies[body.SUN.ordinal()].radius);
+			break;
+		case HEE:
+			plot.addSpherePlot("Sun", java.awt.Color.ORANGE, sb.Bodies[body.SUN.ordinal()].radius);
+			break;
+		case ECI:
+			plot.addSpherePlot("Earth", java.awt.Color.BLUE, sb.Bodies[body.EARTH.ordinal()].radius);
+			break;
+		case MEOP:
+			plot.addSpherePlot("Earth", java.awt.Color.BLUE, sb.Bodies[body.EARTH.ordinal()].radius);
+			break;
+		default:
+			break;
 		}
+
+		// other bodies get a point
+		for (body b : body.values()) {
+			bodyNumber = b.ordinal();
+			if (Eph.bodyGravOnOff[bodyNumber] == true) {
+				try {
+					BodyPos = Eph.get_planet_pos(b, dpMain.dpParam.simulationDate);
+					addPoint(plot, body.name[bodyNumber], sb.Bodies[bodyNumber].color, BodyPos.x[0], BodyPos.x[1],
+							BodyPos.x[2]);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+
+			}
+		}
+
+//		VectorN EarthPos = null;
+//		VectorN MoonPost0 = null;
+//		VectorN MoonPostf = null;
+//		VectorN SunPos = null;
+//		try {
+//			SunPos = Eph.get_planet_pos(body.SUN, dpMain.dpParam.simulationDate);
+//			EarthPos = Eph.get_planet_pos(body.EARTH, dpMain.dpParam.simulationDate);
+//			MoonPost0 = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate);
+//			MoonPostf = Eph.get_planet_pos(body.MOON, dpMain.dpParam.simulationDate.plus(dpMain.dpParam.tf));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 		// addPoint(plot, "Sun", java.awt.Color.ORANGE, SunPos.x[0],
 		// SunPos.x[1], SunPos.x[2]);
-		addPoint(plot, "Moon t0", java.awt.Color.GRAY, MoonPost0.x[0], MoonPost0.x[1], MoonPost0.x[2]);
-		addPoint(plot, "Moon tf", java.awt.Color.GRAY, MoonPostf.x[0], MoonPostf.x[1], MoonPostf.x[2]);
+		// addPoint(plot, "Moon t0", java.awt.Color.GRAY, MoonPost0.x[0],
+		// MoonPost0.x[1], MoonPost0.x[2]);
+		// addPoint(plot, "Moon tf", java.awt.Color.GRAY, MoonPostf.x[0],
+		// MoonPostf.x[1], MoonPostf.x[2]);
 		// addPoint(plot, "Earth", java.awt.Color.MAGENTA, EarthPos.x[0],
 		// EarthPos.x[1], EarthPos.x[2]);
 
-		EphemerisPlotData epd = new EphemerisPlotData(Eph, body.MOON, dpMain.dpParam.simulationDate,
-				dpMain.dpParam.tf, 100);
+		EphemerisPlotData epd = new EphemerisPlotData(Eph, body.MOON, dpMain.dpParam.simulationDate, dpMain.dpParam.tf,
+				100);
 		LinePlot lMoon = new LinePlot("Moon", Color.green, epd.XYZ);
 		lMoon.closed_curve = false;
 		plot.addPlot(lMoon);
@@ -162,7 +204,6 @@ public class DE405PropagatorPlot extends JPanel {
 	}
 
 }
-
 
 // VectorN v = Eph.EarthMoonPlaneNormal.times(100000);
 // addPoint(plot, "Moon-Earth normal", java.awt.Color.pink, v.x[0],
