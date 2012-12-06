@@ -19,30 +19,34 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
-
 /**
  * BSD License
  * 
  * @author Yann RICHET
  */
 
+// 2012 Tobias Berthold added toolbar buttons
+
 public class PlotToolBar extends JToolBar {
 
-	// TODO redesign icons...
-	
+
 	private static final long serialVersionUID = 1L;
 
 	protected ButtonGroup buttonGroup;
 
 	protected JToggleButton buttonCenter;
 
-	//protected JToggleButton buttonEdit;
+	// protected JToggleButton buttonEdit;
 
 	protected JToggleButton buttonZoom;
 
+	protected JToggleButton buttonZoomTrajectory;
+
+	protected JToggleButton buttonZoomToMax;
+
 	protected JToggleButton buttonRotate;
 
-	//protected JToggleButton buttonViewCoords;
+	// protected JToggleButton buttonViewCoords;
 
 	protected JButton buttonSetScales;
 
@@ -90,11 +94,21 @@ public class PlotToolBar extends JToolBar {
 		buttonZoom.setToolTipText("Zoom");
 		buttonZoom.setSelected(plotCanvas.ActionMode == PlotCanvas.ZOOM);
 
-		//buttonEdit = new JToggleButton(new ImageIcon(PlotPanel.class.getResource("icons/edit.png")));
-		//buttonEdit.setToolTipText("Edit mode");
+		buttonZoomTrajectory = new JToggleButton(new ImageIcon(PlotPanel.class.getResource("icons/zoomTrajectory.png")));
+		buttonZoomTrajectory.setToolTipText("Zoom to Trajectory");
+		buttonZoomTrajectory.setSelected(plotCanvas.ActionMode == PlotCanvas.ZOOM);
 
-		//buttonViewCoords = new JToggleButton(new ImageIcon(PlotPanel.class.getResource("icons/position.png")));
-		//buttonViewCoords.setToolTipText("Highlight coordinates / Highlight plot");
+		buttonZoomToMax = new JToggleButton(new ImageIcon(PlotPanel.class.getResource("icons/zoomToMax.png")));
+		buttonZoomToMax.setToolTipText("Zoom to Max Data");
+		buttonZoomToMax.setSelected(plotCanvas.ActionMode == PlotCanvas.ZOOM);
+
+		// buttonEdit = new JToggleButton(new
+		// ImageIcon(PlotPanel.class.getResource("icons/edit.png")));
+		// buttonEdit.setToolTipText("Edit mode");
+
+		// buttonViewCoords = new JToggleButton(new
+		// ImageIcon(PlotPanel.class.getResource("icons/position.png")));
+		// buttonViewCoords.setToolTipText("Highlight coordinates / Highlight plot");
 
 		buttonSetScales = new JButton(new ImageIcon(PlotPanel.class.getResource("icons/scale.png")));
 		buttonSetScales.setToolTipText("Set scales");
@@ -108,11 +122,11 @@ public class PlotToolBar extends JToolBar {
 		buttonReset = new JButton(new ImageIcon(PlotPanel.class.getResource("icons/back.png")));
 		buttonReset.setToolTipText("Reset zoom & axes");
 
-		/*buttonEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				plotCanvas.ActionMode = PlotCanvas.EDIT;
-			}
-		});*/
+		/*
+		 * buttonEdit.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { plotCanvas.ActionMode =
+		 * PlotCanvas.EDIT; } });
+		 */
 
 		buttonZoom.setSelected(true);
 		buttonZoom.addActionListener(new ActionListener() {
@@ -121,17 +135,41 @@ public class PlotToolBar extends JToolBar {
 			}
 		});
 
+		buttonZoomTrajectory.setSelected(true);
+		buttonZoomTrajectory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double size = 100000;
+				plotCanvas.setFixedBounds(0, -size, size);
+				plotCanvas.setFixedBounds(1, -size, size);
+				plotCanvas.setFixedBounds(2, -size, size);
+				// plotCanvas.ActionMode = PlotCanvas.ZOOM;
+			}
+		});
+
+
+		buttonZoomToMax.setSelected(true);
+		buttonZoomToMax.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double size = 1e9;
+				plotCanvas.setFixedBounds(0, -size, size);
+				plotCanvas.setFixedBounds(1, -size, size);
+				plotCanvas.setFixedBounds(2, -size, size);
+			}
+		});
+
+		
+		
 		buttonCenter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				plotCanvas.ActionMode = PlotCanvas.TRANSLATION;
 			}
 		});
 
-		/*buttonViewCoords.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				plotCanvas.setNoteCoords(buttonViewCoords.isSelected());
-			}
-		});*/
+		/*
+		 * buttonViewCoords.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) {
+		 * plotCanvas.setNoteCoords(buttonViewCoords.isSelected()); } });
+		 */
 
 		buttonSetScales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -159,14 +197,18 @@ public class PlotToolBar extends JToolBar {
 
 		buttonGroup.add(buttonCenter);
 		buttonGroup.add(buttonZoom);
-		//buttonGroup.add(buttonEdit);
+		buttonGroup.add(buttonZoomTrajectory);
+		buttonGroup.add(buttonZoomToMax);
+		// buttonGroup.add(buttonEdit);
 
 		add(buttonCenter, null);
 		add(buttonZoom, null);
+		add(buttonZoomTrajectory, null);
+		add(buttonZoomToMax, null);
 		add(buttonReset, null);
-		//add(buttonViewCoords, null);
+		// add(buttonViewCoords, null);
 		add(buttonSetScales, null);
-		//add(buttonEdit, null);
+		// add(buttonEdit, null);
 		add(buttonSavePNGFile, null);
 		add(buttonDatas, null);
 
@@ -180,9 +222,9 @@ public class PlotToolBar extends JToolBar {
 			buttonSavePNGFile.setEnabled(false);
 		}
 
-		//buttonEdit.setEnabled(plotCanvas.getEditable());
+		// buttonEdit.setEnabled(plotCanvas.getEditable());
 
-		//buttonViewCoords.setEnabled(plotCanvas.getNotable());
+		// buttonViewCoords.setEnabled(plotCanvas.getNotable());
 
 		// allow mixed (2D/3D) plots managed by one toolbar
 		if (plotCanvas instanceof Plot3DCanvas) {
@@ -221,7 +263,8 @@ public class PlotToolBar extends JToolBar {
 		try {
 			plotPanel.toGraphicFile(file);
 		} catch (IOException e) {
-			JOptionPane.showConfirmDialog(null, "Save failed : " + e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showConfirmDialog(null, "Save failed : " + e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
