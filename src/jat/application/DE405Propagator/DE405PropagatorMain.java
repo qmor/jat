@@ -17,6 +17,7 @@
 
 package jat.application.DE405Propagator;
 
+import jat.application.DE405Propagator.ParameterSet.EarthToJupiter;
 import jat.application.DE405Propagator.ParameterSet.earthMoonMEOP;
 import jat.application.DE405Propagator.ParameterSet.earthOrbitECI;
 import jat.application.DE405Propagator.ParameterSet.sunOrbit;
@@ -47,6 +48,7 @@ public class DE405PropagatorMain extends JApplet {
 		ParameterSetList.add(new earthMoonMEOP());
 		ParameterSetList.add(new earthOrbitECI());
 		ParameterSetList.add(new sunOrbit());
+		ParameterSetList.add(new EarthToJupiter());
 		// dpParam = new testOrbit();
 		// dpParam = new earthMoonMEOP();
 
