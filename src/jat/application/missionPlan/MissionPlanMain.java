@@ -17,8 +17,8 @@
 
 package jat.application.missionPlan;
 
-import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Frame.frame;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.util.PathUtil;
 
 import java.awt.BorderLayout;

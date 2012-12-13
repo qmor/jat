@@ -17,7 +17,6 @@
 
 package jat.jat3D;
 
-import jat.core.util.PathUtil;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 

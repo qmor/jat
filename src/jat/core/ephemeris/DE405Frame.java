@@ -17,8 +17,6 @@
 
 package jat.core.ephemeris;
 
-import jat.core.ephemeris.DE405Body.body;
-
 import java.util.EnumSet;
 
 

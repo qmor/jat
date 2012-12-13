@@ -18,16 +18,13 @@
 package jat.application.EarthMoon;
 
 import jat.application.missionPlan.Flight;
-import jat.core.astronomy.SolarSystemBodies;
 import jat.core.ephemeris.DE405Body;
-import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.spacetime.TimeAPL;
 import jat.core.util.jatMessages;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.CalDate;
-import jat.jat3D.Ephemeris3D;
-import jat.jat3D.Planet3D;
 import jat.jat3D.behavior.jat_Rotate;
 import jat.jat3D.plot3D.Rainbow3f;
 

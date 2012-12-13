@@ -18,8 +18,8 @@
 package jat.examples.PorkChopPlot;
 
 import jat.core.cm.porkChopPlot;
-import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Body.body;
+import jat.core.ephemeris.DE405Plus;
 import jat.core.plot.plot.Plot3DPanel;
 import jat.core.spacetime.TimeAPL;
 

@@ -1,10 +1,10 @@
 package jat.examples.DatePicker;
 
-import jat.jdatepicker.JDateComponentFactory;
-import jat.jdatepicker.JDatePicker;
-
 import javax.swing.JApplet;
 import javax.swing.JComponent;
+
+import net.sourceforge.jdatepicker.JDateComponentFactory;
+import net.sourceforge.jdatepicker.JDatePicker;
 
 public class DatePickerExample extends JApplet{
 

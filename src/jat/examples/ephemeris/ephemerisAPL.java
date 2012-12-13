@@ -17,9 +17,9 @@
 
 package jat.examples.ephemeris;
 
-import jat.core.ephemeris.DE405Plus;
 import jat.core.ephemeris.DE405Body.body;
 import jat.core.ephemeris.DE405Frame.frame;
+import jat.core.ephemeris.DE405Plus;
 import jat.coreNOSA.math.MatrixVector.data.VectorN;
 import jat.coreNOSA.spacetime.Time;
 

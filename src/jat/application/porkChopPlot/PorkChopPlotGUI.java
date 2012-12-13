@@ -17,9 +17,6 @@
 package jat.application.porkChopPlot;
 
 import jat.core.ephemeris.DE405Body.body;
-import jat.jdatepicker.JDateComponentFactory;
-import jat.jdatepicker.JDatePicker;
-import jat.jdatepicker.impl.JDatePickerImpl;
 
 import java.awt.GridLayout;
 
@@ -35,6 +32,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
+
+import net.sourceforge.jdatepicker.JDateComponentFactory;
+import net.sourceforge.jdatepicker.JDatePicker;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
 
 

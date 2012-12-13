@@ -24,6 +24,7 @@ import jat.core.units.unitSet;
 import jat.core.units.unitSet.distanceUnit;
 import jat.core.units.unitSet.massUnit;
 import jat.core.units.unitSet.timeUnit;
+
 import java.awt.Color;
 
 public class SolarSystemBodies implements unitModel {
