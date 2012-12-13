@@ -59,7 +59,7 @@
 		</jar>
 	</target>
 
-	<!--JAT Examples Creates the deployable jar file  -->
+	<!--JAT Tests Creates the deployable jar file  -->
 	<target name="jattests.jar" depends="clean,makedir">
 		<jar destfile="${dist.dir}\jattests.jar" basedir="${build.dir}" includes="**/tests/">
 			<manifest>
@@ -77,7 +77,7 @@
 		</jar>
 	</target>
 
-	<!--JAT Examples Creates the deployable jar file  -->
+	<!--JAT Examples NOSA Creates the deployable jar file  -->
 	<target name="jatexamplesNOSA.jar" depends="clean,makedir">
 		<jar destfile="${dist.dir}\jatexamplesNOSA.jar" basedir="${build.dir}" includes="**/examplesNOSA/" excludes="**/core/">
 			<manifest>
